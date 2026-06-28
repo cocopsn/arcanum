@@ -213,7 +213,7 @@ Función **pura** `present(readModel, now) -> ViewModel`. Recibe `now` EXPLÍCIT
 - **`r(now) = exp(-(now - last_reinforced)/S)`** por módulo → carga del sigilo (módulos activos y completados).
 - **`review_queue` efectiva**: módulos `status=completed` con `due_ts ≤ now` (vencidos) ordenados por `due_ts`; los `due_ts > now` aún no entran.
 - **Racha viva hoy**: si la racha del fold (§6.3) sigue activa dado `now` (mismo día que `Dₙ`, o gap absorbible por `shields`), si no, "rota/en riesgo".
-- **Rito del día**: si HOY ya es día calificado o falta el acto.
+- **Rito del día**: el acto calificador pendiente hoy. Cumplido si HOY (en TZ) ya tiene ≥1 evento calificador (`error.resolved` / sesión ≥25min / `checkpoint.passed`, §6.3); pendiente si no. La home lo presenta como rito a completar (§11).
 
 Por ser pura con `now` inyectado, es testeable con relojes fijos y NO rompe el determinismo del fold. (Sigilo de módulo activo: arranca en `r=1.0` al `module.started` y decae hasta reforzar — señal honesta "úsalo o se enfría".)
 
@@ -263,7 +263,7 @@ Supabase Auth email+password. La app es 100% usable offline y sin sesión (todo 
 
 Metadata local en Dexie (no en el envelope): cada evento local lleva `synced: 0|1`; un singleton `sync_meta { pull_cursor: number }` donde `pull_cursor` es el último `seq` del servidor visto.
 
-- **Push:** seleccionar eventos locales con `synced=0`; mapear al **contrato de fila** (envelope SIN `user_id`); `supabase.from('events').upsert(rows, { onConflict: 'id', ignoreDuplicates: true })`; al éxito marcar `synced=1`. Idempotente (PK por `id`).
+- **Push:** seleccionar eventos locales con `synced=0`; mapear al **contrato de fila** (envelope SIN `user_id`); `supabase.from('events').upsert(rows, { onConflict: 'id', ignoreDuplicates: true })`; al éxito marcar `synced=1`. Idempotente (PK por `id`). Re-pushear una fila ya presente (ignoreDuplicates) NO reasigna su `seq` → el stream de pull nunca se reordena.
 - **Pull:** `select * where seq > pull_cursor order by seq` (cursor sobre `seq` del servidor, monotónico → cero eventos saltados aunque el `ts` de cliente esté sesgado); proyectar cada fila al envelope (descartar `user_id`/`seq`/`created_at`); `db.events.put` (idempotente por `id`, marcar `synced=1`); avanzar `pull_cursor = max(seq)` recibido.
 - **Cola offline:** la propia tabla local de eventos ES la cola (fuente de verdad). El sync solo reconcilia.
 - **Backoff:** reintentos con backoff exponencial + jitter; cap. Estado de sync visible en UI (para que el usuario sepa que su log está respaldado — mitiga el miedo al desalojo de IndexedDB).
@@ -445,6 +445,6 @@ Regla dura: `src/core/*` cero imports de React/Next/Dexie/Supabase.
 3. **Profundidad de derivación** — tabla XP completa, escudos, mastery decay, review_queue + tests del core.
 4. **PWA shell + UI arcana + loop de dopamina** — manifest, Serwist, tokens 3-capas, burst/sigilo/llama, home final, prueba de fuego (scoring manual), reto-en-blanco del módulo.
 5. **Supabase live + sync** — aplicar `0001_events.sql`, auth single-user, push/pull idempotente, test de integración contra el proyecto real.
-6. **Polish + test pass completo + verify** — `pnpm test` verde, `pnpm build` verde, PWA instalable; commits limpios. Recordatorio de rotación de secrets (R1).
+6. **Polish + test pass completo + verify** — `pnpm test` verde, `pnpm build` verde, PWA instalable; commits limpios. **Rotación de secrets (R1) como gate de salida** — la milla no cierra sin las llaves rotadas.
 
 Una milla está cerrada cuando build + tests pasan y la home renderiza datos derivados reales — no cuando "compila".
