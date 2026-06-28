@@ -183,7 +183,7 @@ This is the §6.3 algorithm. Input: sorted unique array of qualified-day ordinal
 
 **Files:** `src/core/read-model.ts`, `src/core/projector.ts`, `src/core/projector.test.ts`
 
-The projector folds events (sorted `(ts,id)`) into a `ReadModel`. It runs the two-phase XP/streak: Phase 1 derives qualified-day ordinals + closed-streak map (via `streak.ts`); Phase 2 sums XP using each XP event's day's closed streak. Mastery state per module updated on reinforcing events. Goals/modules/edges upserted. Output `ReadModel`: `{goals[], modules[], edges[], stats:{totalXp,grade,currentStreak,longestStreak,shields,lastQualifiedDay}, reviewDue:[{moduleId,dueDays}], cursor:{ts,id}|null}`. `dueDays` stored (clock-free); NO `r(now)`.
+The projector folds events (sorted `(ts,id)`) into a `ReadModel`. It runs the two-phase XP/streak: Phase 1 derives qualified-day ordinals + closed-streak map (via `streak.ts`); Phase 2 sums XP using each XP event's day's closed streak. Mastery state per module updated on reinforcing events. Goals/modules/edges upserted. Output `ReadModel`: `{goals[], modules[], edges[], qualifiedDays[], stats:{totalXp,grade,currentStreak,longestStreak,shields,lastQualifiedDay}, reviewDue:[{moduleId,dueDays}], cursor:{ts,id}|null}`. `dueDays` stored (clock-free); NO `r(now)`. (Note: `qualifiedDays:number[]` is on the ReadModel from THIS task so `present()` in Task 4.3 can check "is today qualified" — include it in 4.1's tests, not as a later back-edit.)
 
 - [ ] **Step 1: Failing tests:**
   - Empty log → zeroed ReadModel, grade Neophyte.
@@ -203,6 +203,7 @@ The projector folds events (sorted `(ts,id)`) into a `ReadModel`. It runs the tw
 - [ ] **Step 1: Failing tests:**
   - `projectIncremental(prevReadModel, prevCursor, newEvents)` applied event-by-event in order equals `project(allEvents)` (incremental == rebuild) when newEvents all sort after cursor.
   - Out-of-order: if a newEvent sorts `< cursor`, `projectIncremental` returns a sentinel/throws `NEEDS_REBUILD` (or the wrapper detects and calls full `project`). Test the wrapper `applyEvents(model, cursor, events)` → when out-of-order present, result deep-equals `project(union)`.
+  - **Fast-path is real (not a hidden no-op):** `applyEvents` returns `{model, cursor, rebuilt: boolean}`. Assert `rebuilt===false` for append-after-cursor AND that it touched only new events (e.g. it does NOT call full `project` — inject/spy a `fullProject` dep, assert call count 0); assert `rebuilt===true` for the out-of-order case. This proves the cursor fast-path is taken rather than the "always re-fold" escape hatch silently defeating incrementality.
 - [ ] **Step 2-4:** FAIL → implement. Because XP/streak are two-phase (day-bucketed), true incremental XP is only valid when the new event's day ≥ last day; simplest correct approach for Phase 0: `applyEvents` appends to an in-memory event array and re-runs `project` when ANY new event is out-of-order OR affects an already-closed day; otherwise fast-path. Spec only requires `incremental == rebuild` to hold — implement `applyEvents` to **guarantee** equality (re-fold when in doubt). Document this. → PASS.
 - [ ] **Step 5: Commit** — `feat(core): incremental projection with out-of-order rebuild guarantee`.
 
@@ -214,9 +215,9 @@ The projector folds events (sorted `(ts,id)`) into a `ReadModel`. It runs the tw
   - `present(readModel, nowMs)` returns `ViewModel` with per-module `retrievability=r(now)`; for a module reinforced at day D with S, assert value equals `exp(-(nowDays-D)/S)`.
   - `reviewQueue`: only modules with status completed and `dueDays <= nowDays`, sorted ascending by dueDays.
   - Streak alive: readModel.lastQualifiedDay == today(now) → `streakAlive:true`; gap within shields → alive; gap beyond shields → false.
-  - Rito del día: `ritoPending` true unless today already qualified (needs the qualified-day set — pass it through ReadModel or recompute from events? Decision: ReadModel carries `qualifiedDays` ordinals so present can check today). Add `qualifiedDays` to ReadModel.
+  - Rito del día: `ritoPending` true unless today already qualified — `present` reads `readModel.qualifiedDays` (already added in Task 4.1) and checks `civilDay(now)`'s ordinal.
   - Purity: same readModel + two different `now` → different ViewModel but readModel untouched.
-- [ ] **Step 2-4:** FAIL → implement; add `qualifiedDays:number[]` to ReadModel (update projector + its tests) → PASS.
+- [ ] **Step 2-4:** FAIL → implement (consumes `readModel.qualifiedDays` from 4.1; no read-model shape change here) → PASS.
 - [ ] **Step 5: Commit** — `feat(core): present(readModel, now) — r(now), review-due, streak-alive, rito`.
 
 ---
