@@ -1,7 +1,7 @@
 "use client";
 
 import { useArcanumStore, useArcanumSync } from "@/app/providers";
-import { makeEvent, type EventType, type Json } from "@/core/event";
+import { makeEvent, newEventId, type EventType, type Json } from "@/core/event";
 import { getDeviceId } from "@/lib/device";
 
 interface Refs {
@@ -34,6 +34,13 @@ export function useActions() {
     completeModule: (refs: Refs) => fire("module.completed", {}, refs),
     submitFiretest: (refs: Refs, reached: number, ceiling: number) =>
       fire("firetest.attempted", { reached, ceiling }, refs),
+    createNote: async (refs: Refs, title: string, markdown: string): Promise<string> => {
+      const noteId = newEventId();
+      await fire("note.created", { note_id: noteId, title, markdown }, refs);
+      return noteId;
+    },
+    updateNote: (noteId: string, title: string, markdown: string) =>
+      fire("note.updated", { note_id: noteId, title, markdown }),
     rebuild: () => store.getState().rebuild(Date.now()),
   };
 }

@@ -38,7 +38,7 @@ export function xpBase(event: ArcanumEvent): number {
     }
     case "note.created": {
       const p = event.payload as unknown as NoteCreatedPayload;
-      return Number(p.length) >= X.noteMinLen ? X.note : 0;
+      return (p.markdown?.length ?? 0) >= X.noteMinLen ? X.note : 0;
     }
     default:
       return 0;

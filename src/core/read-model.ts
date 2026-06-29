@@ -50,6 +50,22 @@ export interface ReviewItem {
   dueDays: number;
 }
 
+export interface NoteRM {
+  id: string;
+  /** anchor: born inside a module, or loose at goal level */
+  moduleId: string | null;
+  goalId: string | null;
+  title: string;
+  /** raw Obsidian markdown — reconstructed from the log */
+  markdown: string;
+  /** [[wikilink]] target titles this note links to */
+  links: string[];
+  /** ids of notes that link to THIS note (bidirectional backlinks) */
+  backlinks: string[];
+  createdTs: number;
+  updatedTs: number;
+}
+
 export interface ReadModel {
   goals: Goal[];
   modules: ModuleRM[];
@@ -59,5 +75,7 @@ export interface ReadModel {
   stats: Stats;
   /** completed modules with their clock-free dueDays (spec §5) */
   reviewDue: ReviewItem[];
+  /** Obsidian notes graph, content reconstructed from the log */
+  notes: NoteRM[];
   cursor: { ts: number; id: string } | null;
 }

@@ -23,6 +23,7 @@ export const EVENT_TYPES = [
   "firetest.attempted",
   "note.created",
   "note.updated",
+  "sleepcycle.generated",
 ] as const;
 
 export type EventType = (typeof EVENT_TYPES)[number];
@@ -84,10 +85,22 @@ export interface FiretestAttemptedPayload {
 }
 export interface NoteCreatedPayload {
   note_id: string;
-  length: number;
+  title: string;
+  /** raw Obsidian-compatible markdown — the source of truth, lives in the log */
+  markdown: string;
 }
 export interface NoteUpdatedPayload {
   note_id: string;
+  title: string;
+  markdown: string;
+}
+export interface SleepcycleGeneratedPayload {
+  /** civil day (TZ) the rite folded over */
+  day: string;
+  /** local 24h fold summary (clock-free derivation) */
+  digest: Json;
+  /** AI enrichment, or null when no provider was available (honest degradation) */
+  ai: { provider: string; patterns: string; axioms: string } | null;
 }
 
 export function newEventId(): string {

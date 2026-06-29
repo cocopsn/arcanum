@@ -13,6 +13,7 @@ import { ModuleCard } from "@/ui/ModuleCard";
 import { SyncStatus } from "@/ui/SyncStatus";
 import { AuthSheet } from "@/ui/AuthSheet";
 import { CodiceSheet } from "@/ui/CodiceSheet";
+import { NotesSheet } from "@/ui/NotesSheet";
 import { AscensionCeremony } from "@/ui/AscensionCeremony";
 import { InstallCoachMark } from "@/ui/InstallCoachMark";
 import type { ReadModel, Stats } from "@/core/read-model";
@@ -26,6 +27,10 @@ export function HomeView() {
   const store = useArcanumStore();
   const [authOpen, setAuthOpen] = useState(false);
   const [codiceOpen, setCodiceOpen] = useState(false);
+  const [notes, setNotes] = useState<{ open: boolean; moduleId: string | null }>({
+    open: false,
+    moduleId: null,
+  });
 
   if (status === "loading") {
     return (
@@ -50,13 +55,25 @@ export function HomeView() {
 
         <Hero stats={readModel.stats} viewModel={viewModel} />
         <RitoDelDia pending={viewModel.ritoPending} />
-        <Goals readModel={readModel} viewModel={viewModel} />
+        <Goals
+          readModel={readModel}
+          viewModel={viewModel}
+          onNotes={(moduleId) => setNotes({ open: true, moduleId })}
+        />
         <InstallCoachMark />
-        <Footer onCodice={() => setCodiceOpen(true)} />
+        <Footer
+          onCodice={() => setCodiceOpen(true)}
+          onNotes={() => setNotes({ open: true, moduleId: null })}
+        />
       </main>
 
       <AuthSheet open={authOpen} onClose={() => setAuthOpen(false)} />
       <CodiceSheet open={codiceOpen} onClose={() => setCodiceOpen(false)} />
+      <NotesSheet
+        open={notes.open}
+        moduleId={notes.moduleId}
+        onClose={() => setNotes({ open: false, moduleId: null })}
+      />
       {ceremony && (
         <AscensionCeremony grade={ceremony} onDismiss={() => store.getState().dismissCeremony()} />
       )}
@@ -104,11 +121,15 @@ function Hero({ stats, viewModel }: { stats: Stats; viewModel: ViewModel }) {
 function Goals({
   readModel,
   viewModel,
+  onNotes,
 }: {
   readModel: ReadModel;
   viewModel: ViewModel;
+  onNotes: (moduleId: string) => void;
 }) {
   const rByModule = new Map(viewModel.modules.map((m) => [m.id, m.retrievability]));
+  const noteCount = (moduleId: string) =>
+    readModel.notes.filter((n) => n.moduleId === moduleId).length;
   return (
     <div className="space-y-5">
       {readModel.goals
@@ -137,6 +158,8 @@ function Goals({
                     module={m}
                     retrievability={rByModule.get(m.id) ?? 0}
                     goalId={goal.id}
+                    noteCount={noteCount(m.id)}
+                    onNotes={() => onNotes(m.id)}
                   />
                 ))}
               </div>
@@ -147,21 +170,20 @@ function Goals({
   );
 }
 
-function Footer({ onCodice }: { onCodice: () => void }) {
+function Footer({ onCodice, onNotes }: { onCodice: () => void; onNotes: () => void }) {
   const { rebuild } = useActions();
+  const item = "min-h-11 text-[11px] uppercase tracking-[0.2em] text-text-faint transition";
   return (
-    <div className="flex items-center justify-center gap-4">
-      <button
-        onClick={onCodice}
-        className="min-h-11 text-[11px] uppercase tracking-[0.2em] text-text-faint transition hover:text-rank"
-      >
+    <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1">
+      <button onClick={onNotes} className={`${item} hover:text-topic`}>
+        Notas
+      </button>
+      <span className="text-text-faint" aria-hidden>·</span>
+      <button onClick={onCodice} className={`${item} hover:text-rank`}>
         Códice
       </button>
       <span className="text-text-faint" aria-hidden>·</span>
-      <button
-        onClick={() => void rebuild()}
-        className="min-h-11 text-[11px] uppercase tracking-[0.2em] text-text-faint transition hover:text-text-muted"
-      >
+      <button onClick={() => void rebuild()} className={`${item} hover:text-text-muted`}>
         Reconstruir índice
       </button>
     </div>
