@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { streakTimeline } from "@/core/streak";
+import { streakTimeline, streakAsOfDay } from "@/core/streak";
 
 describe("streakTimeline (spec §6.3 pin-down cases)", () => {
   it("consecutive days build the streak", () => {
@@ -49,5 +49,29 @@ describe("streakTimeline (spec §6.3 pin-down cases)", () => {
     expect(r.state.current).toBe(7);
     expect(r.state.shields).toBe(1);
     expect(r.state.longest).toBe(7);
+  });
+});
+
+describe("streakAsOfDay", () => {
+  it("returns the day's closed streak for a qualified day", () => {
+    const r = streakTimeline([0, 1, 2]);
+    expect(streakAsOfDay(r, 1)).toBe(2);
+    expect(streakAsOfDay(r, 2)).toBe(3);
+  });
+
+  it("returns 0 before the first qualified day", () => {
+    const r = streakTimeline([5, 6]);
+    expect(streakAsOfDay(r, 4)).toBe(0);
+  });
+
+  it("carries the streak onto a later non-qualified day within shield budget", () => {
+    const r = streakTimeline([0, 1, 2, 3, 4, 5, 6]); // shields 1 after day 6
+    expect(streakAsOfDay(r, 7)).toBe(7); // 1 day later, 1 shield → carried
+    expect(streakAsOfDay(r, 8)).toBe(0); // 2 days later, only 1 shield → broken
+  });
+
+  it("breaks onto a non-qualified day when no shields", () => {
+    const r = streakTimeline([0, 1, 2]); // shields 0
+    expect(streakAsOfDay(r, 3)).toBe(0);
   });
 });
