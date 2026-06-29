@@ -284,6 +284,19 @@ describe("project — Phase 4 Canvas obligations", () => {
     expect(res.model.obligations.map((o) => o.id).sort()).toEqual(["a", "b"]);
   });
 
+  it("module.evaluated folds the latest evaluation per module (last wins), auditable", () => {
+    const events = [
+      makeEvent("module.upserted", { title: "M", prereqs: [], kind: "core" }, { ...dev(DAY1_A), moduleId: "m1" }),
+      makeEvent("module.evaluated", { summary: "v1", strengths: ["a"], gaps: ["b"], challenge: "c", score: 0.4, source: "heuristic", provider: null }, { ...dev(DAY1_A), moduleId: "m1" }),
+      makeEvent("module.evaluated", { summary: "v2", strengths: ["x"], gaps: [], challenge: "deriva", score: 0.8, source: "ai", provider: "openai" }, { ...dev(DAY2), moduleId: "m1" }),
+    ];
+    const rm = project(events);
+    expect(rm.evaluations).toHaveLength(1);
+    const ev = rm.evaluations[0]!;
+    expect([ev.summary, ev.score, ev.source, ev.provider]).toEqual(["v2", 0.8, "ai", "openai"]);
+    expect(project(events)).toEqual(rm); // idempotent under re-fold
+  });
+
   it("celebratedGrade derives the max acknowledged grade from the log; null when none", () => {
     expect(project([]).celebratedGrade).toBeNull();
     const rm = project([

@@ -27,6 +27,7 @@ export const EVENT_TYPES = [
   "roadmap.node.moved",
   "canvas.synced",
   "grade.celebrated",
+  "module.evaluated",
 ] as const;
 
 export type EventType = (typeof EVENT_TYPES)[number];
@@ -126,6 +127,23 @@ export interface SleepcycleGeneratedPayload {
  */
 export interface GradeCelebratedPayload {
   index: number;
+}
+
+/**
+ * An adversarial-but-fair evaluation of a module's mastery (Bloque 5). module_id is
+ * in the envelope. Enters the LOG (auditable, reconstructible) — NOT mutable state.
+ * Produced by the AI router (Asuka-style) or a local heuristic fallback (no IA).
+ */
+export interface ModuleEvaluatedPayload {
+  summary: string;
+  strengths: string[];
+  gaps: string[];
+  /** the adversarial push — a from-first-principles challenge on the weak spot */
+  challenge: string;
+  /** 0..1 mastery read, or null */
+  score: number | null;
+  source: "ai" | "heuristic";
+  provider: string | null;
 }
 
 /** One scraped Canvas obligation (compliance, NOT a mastery module). Fase 4. */

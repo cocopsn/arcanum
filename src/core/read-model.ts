@@ -107,6 +107,19 @@ export interface ObligationRM {
   promotedModuleId: string | null;
 }
 
+/** Latest adversarial evaluation of a module (Bloque 5), folded from the log. */
+export interface EvaluationRM {
+  moduleId: string;
+  summary: string;
+  strengths: string[];
+  gaps: string[];
+  challenge: string;
+  score: number | null;
+  source: "ai" | "heuristic";
+  provider: string | null;
+  ts: number;
+}
+
 /** Canvas connection health (Fase 4). Failure is a NORMAL state, never an error. */
 export interface CanvasStatusRM {
   /** latest scrape ATTEMPT ts (ok or not), epoch ms — null if never */
@@ -137,5 +150,7 @@ export interface ReadModel {
   /** highest grade index whose ceremony was acknowledged in the LOG, or null if
    *  none yet — universe-wide (synced), so a grade celebrates exactly once (Fase 4) */
   celebratedGrade: number | null;
+  /** latest evaluation per module (Bloque 5), folded from module.evaluated events */
+  evaluations: EvaluationRM[];
   cursor: { ts: number; id: string } | null;
 }

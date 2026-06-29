@@ -157,3 +157,56 @@
 .react-flow__attribution a {
   color: var(--text-faint);
 }
+
+/* ── Subject map · Duolingo-style topic path (Bloque 4) ── */
+.topic-badge {
+  animation: topic-fade 460ms ease both;
+}
+@keyframes topic-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+.topic-disc {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  box-shadow: 0 2px 10px -4px rgba(0, 0, 0, 0.5);
+  transition: box-shadow 0.4s ease, border-color 0.4s ease, opacity 0.4s ease, filter 0.4s ease;
+}
+.topic-badge[data-status="available"] .topic-disc {
+  border-color: color-mix(in srgb, var(--accent) 50%, var(--line));
+  box-shadow: 0 0 22px -6px var(--accent);
+}
+.topic-badge[data-status="started"] .topic-disc {
+  border-color: color-mix(in srgb, var(--accent) 62%, var(--line));
+  box-shadow: 0 0 26px -5px var(--accent);
+}
+.topic-badge[data-status="completed"] .topic-disc {
+  border-color: color-mix(in srgb, var(--accent) 55%, var(--line));
+  background: color-mix(in srgb, var(--surface) 80%, var(--accent));
+}
+.topic-badge[data-status="sealed"] .topic-disc {
+  border-style: dashed;
+  opacity: 0.6;
+  filter: grayscale(0.4);
+}
+.topic-badge:focus-visible {
+  outline: none;
+}
+.topic-badge:focus-visible .topic-disc {
+  outline: 2px solid color-mix(in srgb, var(--accent) 60%, transparent);
+  outline-offset: 3px;
+}
+.topic-pulse {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  width: 7px;
+  height: 7px;
+  border-radius: var(--r-pill);
+  box-shadow: 0 0 8px currentColor;
+  animation: rf-breathe 2.2s ease-in-out infinite;
+}

@@ -15,6 +15,7 @@ import {
   type CanvasSyncedPayload,
   type ObligationInput,
   type GradeCelebratedPayload,
+  type ModuleEvaluatedPayload,
 } from "@/core/event";
 import { parseWikilinks } from "@/core/wikilink";
 import { wouldCreateCycle } from "@/core/roadmap";
@@ -39,6 +40,7 @@ import type {
   SleepCycleRM,
   ObligationRM,
   CanvasStatusRM,
+  EvaluationRM,
 } from "@/core/read-model";
 
 const TZ = ARCANUM_CONFIG.tz;
@@ -106,6 +108,8 @@ interface Acc {
   canvasCookieStale: boolean;
   /** highest acknowledged grade index from grade.celebrated events, or null (Fase 4) */
   celebratedGrade: number | null;
+  /** latest evaluation per module (Bloque 5) */
+  evaluations: Map<string, EvaluationRM>;
 }
 
 function applyDomain(acc: Acc, e: ArcanumEvent): void {
@@ -306,6 +310,24 @@ function applyDomain(acc: Acc, e: ArcanumEvent): void {
       acc.celebratedGrade = Math.max(acc.celebratedGrade ?? -1, idx);
       return;
     }
+    case "module.evaluated": {
+      const id = e.module_id;
+      if (!id) return;
+      const p = e.payload as unknown as ModuleEvaluatedPayload;
+      // last evaluation per module wins (fold order = ts order)
+      acc.evaluations.set(id, {
+        moduleId: id,
+        summary: typeof p.summary === "string" ? p.summary : "",
+        strengths: Array.isArray(p.strengths) ? p.strengths.map(String) : [],
+        gaps: Array.isArray(p.gaps) ? p.gaps.map(String) : [],
+        challenge: typeof p.challenge === "string" ? p.challenge : "",
+        score: typeof p.score === "number" && Number.isFinite(p.score) ? p.score : null,
+        source: p.source === "ai" ? "ai" : "heuristic",
+        provider: typeof p.provider === "string" ? p.provider : null,
+        ts: e.ts,
+      });
+      return;
+    }
     default:
       return;
   }
@@ -347,6 +369,7 @@ function emptyAcc(): Acc {
     canvasLastOkTs: null,
     canvasCookieStale: false,
     celebratedGrade: null,
+    evaluations: new Map(),
   };
 }
 
@@ -365,6 +388,7 @@ function accFromModel(prev: ReadModel): Acc {
     canvasLastOkTs: prev.canvas.lastOkTs,
     canvasCookieStale: prev.canvas.cookieStale,
     celebratedGrade: prev.celebratedGrade,
+    evaluations: new Map(prev.evaluations.map((ev) => [ev.moduleId, ev])),
   };
 }
 
@@ -402,6 +426,7 @@ function assemble(
     obligations,
     canvas,
     celebratedGrade: acc.celebratedGrade,
+    evaluations: [...acc.evaluations.values()],
     qualifiedDays,
     stats: {
       totalXp: acc.totalXp,
