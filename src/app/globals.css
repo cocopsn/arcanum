@@ -11,7 +11,7 @@
   body {
     background-color: var(--ink);
     color: var(--text);
-    font-family: var(--font-serif), Georgia, "Times New Roman", serif;
+    font-family: var(--font-sans), system-ui, sans-serif;
     -webkit-tap-highlight-color: transparent;
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;

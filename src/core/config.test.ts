@@ -30,8 +30,8 @@ describe("ARCANUM_CONFIG", () => {
     expect(ARCANUM_CONFIG.mastery).toMatchObject({ S0: 1, reviewThreshold: 0.8 });
     expect(ARCANUM_CONFIG.streak).toMatchObject({ shieldEvery: 7, shieldMax: 2 });
     expect(ARCANUM_CONFIG.tz).toBe("America/Monterrey");
-    expect(ARCANUM_CONFIG.rankAura.Neophyte).toBe("#8C90A0");
-    expect(ARCANUM_CONFIG.rankAura.Ipsissimus).toBe("#E3DCF5");
+    expect(ARCANUM_CONFIG.rankAura.Neophyte).toBe("#9A93C8");
+    expect(ARCANUM_CONFIG.rankAura.Ipsissimus).toBe("#F2E4FF");
     expect(Object.keys(ARCANUM_CONFIG.rankAura)).toHaveLength(11);
   });
 });

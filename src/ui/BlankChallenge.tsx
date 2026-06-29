@@ -19,7 +19,7 @@ export function BlankChallenge({
 
   return (
     <div className="space-y-3">
-      <p className="font-display text-[15px] leading-snug text-text">
+      <p className="font-serif text-[15px] leading-snug text-text">
         El reto va primero. Trabaja <span className="text-topic">{title}</span> sin
         recursos. Cuando un muro te detenga, regístralo; cuando lo superes y
         entiendas el porqué, sella el insight.
@@ -40,7 +40,7 @@ export function BlankChallenge({
             setInsight("");
             setBusy(false);
           }}
-          className="min-h-11 rounded-[var(--r-sm)] border border-rank bg-[var(--rank-soft)] px-4 py-2 font-display text-sm tracking-wide text-rank transition hover:brightness-125 disabled:opacity-40"
+          className="min-h-11 rounded-[var(--r-sm)] border border-rank bg-[var(--rank-soft)] px-4 py-2 text-sm tracking-wide text-rank transition hover:brightness-125 disabled:opacity-40"
         >
           Muro superado · +25 XP
         </button>

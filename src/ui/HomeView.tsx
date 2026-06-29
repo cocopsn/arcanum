@@ -11,6 +11,7 @@ import { XpBurst } from "@/ui/XpBurst";
 import { RitoDelDia } from "@/ui/RitoDelDia";
 import { ModuleCard } from "@/ui/ModuleCard";
 import { SyncStatus } from "@/ui/SyncStatus";
+import { AuthSheet } from "@/ui/AuthSheet";
 import { InstallCoachMark } from "@/ui/InstallCoachMark";
 import type { ReadModel, Stats } from "@/core/read-model";
 import type { ViewModel } from "@/core/present";
@@ -19,6 +20,7 @@ export function HomeView() {
   const status = useArcanum((s) => s.status);
   const readModel = useArcanum((s) => s.readModel);
   const viewModel = useArcanum((s) => s.viewModel);
+  const [authOpen, setAuthOpen] = useState(false);
 
   if (status === "loading") {
     return (
@@ -38,7 +40,7 @@ export function HomeView() {
           <span className="font-display text-sm tracking-[0.4em] text-text-muted">
             ARCANUM
           </span>
-          <SyncStatus />
+          <SyncStatus onOpen={() => setAuthOpen(true)} />
         </header>
 
         <Hero stats={readModel.stats} viewModel={viewModel} />
@@ -47,6 +49,7 @@ export function HomeView() {
         <InstallCoachMark />
         <RebuildButton />
       </main>
+      <AuthSheet open={authOpen} onClose={() => setAuthOpen(false)} />
     </RankAura>
   );
 }

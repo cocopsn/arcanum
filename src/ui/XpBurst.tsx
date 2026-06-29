@@ -12,8 +12,8 @@ export function XpBurst({ amount }: { amount: number }) {
       animate={{ opacity: 1, y: reduce ? 0 : -30, scale: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: reduce ? 0.2 : 0.95, ease: "easeOut" }}
-      className="tnum pointer-events-none select-none font-mono text-lg font-medium text-rank"
-      style={{ textShadow: "0 0 14px var(--rank-glow)" }}
+      className="tnum pointer-events-none select-none font-display text-lg text-gold"
+      style={{ textShadow: "0 0 16px var(--gold-glow)" }}
     >
       +{amount} XP
     </motion.div>

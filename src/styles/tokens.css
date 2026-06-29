@@ -1,28 +1,34 @@
-/* ARCANUM — 3-layer color system (spec §9). Structural layer is constant;
-   --topic-* is set per active goal; --rank-* is swapped per hermetic grade
-   (RankAura sets them inline). */
+/* ARCANUM — gilded-grimoire palette, 3-layer (spec §9). Cool near-black with
+   high-luminosity accents that glow: old gold (XP), arcane purple (grade/aura),
+   cold amber (streak flame). Depth via luminosity + glow, not saturation. */
 
 :root {
-  /* Layer 1 — structure (constant, grimoire dark). Legibility anchor. */
-  --ink: #0c0b12;
-  --ink-deep: #07060c;
-  --surface: #15131f;
-  --surface-raised: #1e1b2b;
-  --line: #2c2840;
-  --line-soft: #221f30;
-  --text: #ece7da;
-  --text-muted: #9a93ae;
-  --text-faint: #635d74;
-  --overlay-scrim: rgba(7, 6, 12, 0.72);
+  /* Layer 1 — structure (constant). Cool near-black, NOT flat pure black. */
+  --ink: #08080b;
+  --ink-deep: #050507;
+  --surface: #0e0e14;
+  --surface-raised: #16161f;
+  --line: #232231;
+  --line-soft: #19182333;
+  --text: #ece7db; /* warm parchment, high luminosity */
+  --text-muted: #9e98ac;
+  --text-faint: #5f5a6e;
+  --overlay-scrim: rgba(5, 5, 7, 0.78);
+
+  /* Reward accents — luminous, gilded. */
+  --gold: #eccb7e;
+  --gold-glow: rgba(236, 203, 126, 0.45);
+  --amber: #e6ad55; /* cold amber — the streak candleflame */
+  --amber-glow: rgba(230, 173, 85, 0.5);
 
   /* Layer 2 — topic accent (default ITC cyan; overridable per goal). */
-  --topic: #25b0c9;
-  --topic-deep: #11202a;
+  --topic: #2ec0d6;
+  --topic-deep: #0b1f25;
 
-  /* Layer 3 — rank aura (default Neophyte pewter; RankAura overrides inline). */
-  --rank: #8c90a0;
-  --rank-soft: rgba(140, 144, 160, 0.14);
-  --rank-glow: rgba(140, 144, 160, 0.4);
+  /* Layer 3 — rank aura (default Neophyte; RankAura overrides inline). */
+  --rank: #9a93c8;
+  --rank-soft: rgba(154, 147, 200, 0.14);
+  --rank-glow: rgba(154, 147, 200, 0.4);
 
   /* shape */
   --r-sm: 8px;

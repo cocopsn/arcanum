@@ -48,19 +48,21 @@ export const ARCANUM_CONFIG = {
     shieldMax: 2,
   },
 
-  // Grade → aura hex (spec §9.3). Re-tunable alongside tokens.css.
+  // Grade → aura hex (spec §9.3): arcane-purple luminosity ramp. Ascending =
+  // brighter, richer violet (dim cool → vivid amethyst → near-white iridescent).
+  // Re-tunable alongside tokens.css.
   rankAura: {
-    Neophyte: "#8C90A0",
-    Zelator: "#5C6BB0",
-    Theoricus: "#2A9D9A",
-    Practicus: "#2BA35E",
-    Philosophus: "#2E78E0",
-    "Adeptus Minor": "#5A4FE0",
-    "Adeptus Major": "#7C43E8",
-    "Adeptus Exemptus": "#A23BD8",
-    "Magister Templi": "#C0356B",
-    Magus: "#C9B6FF",
-    Ipsissimus: "#E3DCF5",
+    Neophyte: "#9A93C8",
+    Zelator: "#8E86DA",
+    Theoricus: "#837CE6",
+    Practicus: "#8A6FEE",
+    Philosophus: "#9562F0",
+    "Adeptus Minor": "#A452F2",
+    "Adeptus Major": "#B566F4",
+    "Adeptus Exemptus": "#C783F6",
+    "Magister Templi": "#D6A0F8",
+    Magus: "#E6C4FC",
+    Ipsissimus: "#F2E4FF",
   },
 
   // Per-topic default accents (spec §9.2). Editable per goal.

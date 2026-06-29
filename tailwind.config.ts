@@ -18,6 +18,8 @@ const config: Config = {
           faint: "var(--text-faint)",
         },
         topic: "var(--topic)",
+        gold: "var(--gold)",
+        amber: "var(--amber)",
         rank: {
           DEFAULT: "var(--rank)",
           soft: "var(--rank-soft)",
@@ -25,10 +27,9 @@ const config: Config = {
         },
       },
       fontFamily: {
-        sans: ["var(--font-serif)", "Georgia", "serif"],
+        sans: ["var(--font-sans)", "system-ui", "sans-serif"],
         serif: ["var(--font-serif)", "Georgia", "serif"],
         display: ["var(--font-display)", "Georgia", "serif"],
-        mono: ["var(--font-mono)", "ui-monospace", "monospace"],
       },
       boxShadow: {
         aura: "0 0 0 1px var(--rank-soft), 0 8px 40px -12px var(--rank-glow)",

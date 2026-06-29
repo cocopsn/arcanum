@@ -6,6 +6,7 @@ import { signIn } from "@/sync/auth";
 import { createDb } from "@/db/schema";
 import { appendEvent, getAllEvents } from "@/db/repo";
 import { push, pull } from "@/sync/sync";
+import { createArcanumStore } from "@/store/arcanum-store";
 import { makeEvent, newEventId } from "@/core/event";
 
 // Live round-trip against the real Supabase project. Gated: only runs with
@@ -32,6 +33,38 @@ describe.skipIf(!RUN)("Supabase live integration", () => {
     const dbB = createDb(`it-b-${id}`);
     await pull(dbB, makeSyncClient(sb));
     expect((await getAllEvents(dbB)).some((e) => e.id === id)).toBe(true);
+
+    await dbA.delete();
+    await dbB.delete();
+  });
+
+  it("store loop (live): event on A → appears on B with deterministic re-fold", async () => {
+    const tag = newEventId();
+    const dbA = createDb(`it-store-a-${tag}`);
+    const dbB = createDb(`it-store-b-${tag}`);
+    const A = createArcanumStore(dbA);
+    const B = createArcanumStore(dbB);
+    const now = Date.now();
+    await A.getState().hydrate(now);
+    await B.getState().hydrate(now);
+    await A.getState().setAuth("it");
+    await B.getState().setAuth("it");
+    const client = () => makeSyncClient(sb);
+
+    await A.getState().sync(client(), now);
+    await B.getState().sync(client(), now);
+
+    // a real learning event on device A
+    await A.getState().dispatch(makeEvent("error.resolved", { insight: tag }, { ts: now, deviceId: "A" }), now);
+    await A.getState().sync(client(), now);
+
+    // device B pulls and re-folds
+    await B.getState().sync(client(), now);
+
+    expect(B.getState().readModel.stats.totalXp).toBe(A.getState().readModel.stats.totalXp);
+    expect(B.getState().readModel.goals).toEqual(A.getState().readModel.goals);
+    expect(B.getState().readModel.modules).toEqual(A.getState().readModel.modules);
+    expect(B.getState().syncState).toBe("synced");
 
     await dbA.delete();
     await dbB.delete();

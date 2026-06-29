@@ -15,7 +15,14 @@ export function getSupabase(): SupabaseClient {
     );
   }
   _client = createClient(url, key, {
-    auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: false },
+    auth: {
+      persistSession: true,
+      autoRefreshToken: true,
+      detectSessionInUrl: false,
+      // Passthrough lock: avoid navigator.locks (single-user app; sidesteps a
+      // headless/old-WebView hang in getUser/refresh without weakening security).
+      lock: (_name, _acquireTimeout, fn) => fn(),
+    },
   });
   return _client;
 }

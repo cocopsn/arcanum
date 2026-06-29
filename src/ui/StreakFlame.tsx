@@ -21,12 +21,12 @@ export function StreakFlame({
           height={38}
           role="img"
           aria-label={`Racha ${streak} días`}
-          style={{ filter: alive ? "drop-shadow(0 0 8px rgba(124,77,232,0.55))" : "none" }}
+          style={{ filter: alive ? "drop-shadow(0 0 9px var(--amber-glow))" : "none" }}
         >
           <defs>
             <linearGradient id="arcfire" x1="0" y1="1" x2="0" y2="0">
-              <stop offset="0%" stopColor={alive ? "#7c4de8" : "#4a4658"} />
-              <stop offset="100%" stopColor={alive ? "#25b0c9" : "#6b6780"} />
+              <stop offset="0%" stopColor={alive ? "#c9893a" : "#4a4658"} />
+              <stop offset="100%" stopColor={alive ? "#f0c26e" : "#6b6780"} />
             </linearGradient>
           </defs>
           <path
@@ -34,12 +34,12 @@ export function StreakFlame({
             fill="url(#arcfire)"
             fillRule="evenodd"
           />
-          <path d="M16 8 C 12 16, 20 18, 16 30 C 12 18, 20 16, 16 8 Z" fill={alive ? "#cfeaf3" : "#8a86a0"} opacity="0.85" />
+          <path d="M16 8 C 12 16, 20 18, 16 30 C 12 18, 20 16, 16 8 Z" fill={alive ? "#fbe9b8" : "#8a86a0"} opacity="0.85" />
         </svg>
       </div>
 
       <div className="leading-none">
-        <span className="tnum font-mono text-2xl text-text">{streak}</span>
+        <span className="tnum font-display text-2xl text-text">{streak}</span>
         <span className="ml-1 text-xs text-text-muted">días</span>
         <div className="mt-1 flex gap-1" aria-label={`${shields} escudos`}>
           {Array.from({ length: ARCANUM_CONFIG.streak.shieldMax }, (_, i) => (
@@ -56,8 +56,8 @@ function Shield({ active }: { active: boolean }) {
     <svg viewBox="0 0 16 18" width={12} height={14} aria-hidden>
       <path
         d="M8 1 L14 3 V8 C14 13, 8 16, 8 16 C8 16, 2 13, 2 8 V3 Z"
-        fill={active ? "var(--topic)" : "none"}
-        stroke={active ? "var(--topic)" : "var(--line)"}
+        fill={active ? "var(--amber)" : "none"}
+        stroke={active ? "var(--amber)" : "var(--line)"}
         strokeWidth="1"
         opacity={active ? 0.9 : 0.6}
       />

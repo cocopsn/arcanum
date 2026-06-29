@@ -59,12 +59,12 @@ export function ModuleCard({
       >
         <ModuleSigil charge={retrievability} />
         <div className="flex-1">
-          <div className="font-display text-base text-text">{module.title}</div>
+          <div className="font-serif text-base text-text">{module.title}</div>
           <div className="text-[11px] uppercase tracking-[0.15em] text-topic">
             {STATUS[module.status]}
           </div>
         </div>
-        <div className="tnum font-mono text-sm text-topic">{charge}%</div>
+        <div className="tnum font-sans text-sm text-topic">{charge}%</div>
       </button>
 
       {open && (

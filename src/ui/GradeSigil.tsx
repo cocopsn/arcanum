@@ -57,11 +57,17 @@ export function GradeSigil({ stats }: { stats: Stats }) {
       </svg>
 
       <div className="text-center">
-        <div className="font-display text-xl tracking-[0.18em] text-[var(--rank)]">
+        <div className="font-display text-xl tracking-[0.18em] text-rank">
           {stats.grade.toUpperCase()}
         </div>
-        <div className="tnum mt-1 font-mono text-sm text-text-muted">
-          {stats.totalXp.toLocaleString("en-US")} XP
+        <div className="tnum mt-1.5 text-sm">
+          <span
+            className="font-display text-base text-gold"
+            style={{ textShadow: "0 0 12px var(--gold-glow)" }}
+          >
+            {stats.totalXp.toLocaleString("en-US")}
+          </span>
+          <span className="ml-1 text-text-muted">XP</span>
           {g.nextXp != null && (
             <span className="text-text-faint"> / {g.nextXp.toLocaleString("en-US")}</span>
           )}
