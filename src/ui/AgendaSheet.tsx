@@ -73,7 +73,7 @@ function ObligationCard({
             href={ob.url}
             target="_blank"
             rel="noreferrer noopener"
-            className="inline-flex min-h-9 items-center text-[11px] uppercase tracking-[0.14em] text-text-faint transition hover:text-text-muted"
+            className="inline-flex min-h-11 items-center text-[11px] uppercase tracking-[0.14em] text-text-faint transition hover:text-text-muted"
           >
             Abrir en Canvas ↗
           </a>
@@ -82,14 +82,14 @@ function ObligationCard({
         )}
 
         {ob.promotedModuleId ? (
-          <span className="inline-flex min-h-9 items-center text-[11px] uppercase tracking-[0.14em] text-rank">✦ módulo</span>
+          <span className="inline-flex min-h-11 items-center text-[11px] uppercase tracking-[0.14em] text-rank">✦ módulo</span>
         ) : picking ? (
           <div className="flex items-center gap-1.5">
             <select
               value={goalId}
               onChange={(e) => setGoalId(e.target.value)}
               aria-label="Meta del módulo"
-              className="min-h-9 rounded-[var(--r-sm)] border border-line bg-ink px-2 text-xs text-text focus:border-topic focus:outline-none"
+              className="min-h-11 rounded-[var(--r-sm)] border border-line bg-ink px-2 text-xs text-text focus:border-topic focus:outline-none"
             >
               {goals.map((g) => (
                 <option key={g.id} value={g.id}>
@@ -105,14 +105,14 @@ function ObligationCard({
                 setPicking(false);
                 setBusy(false);
               }}
-              className="min-h-9 rounded-[var(--r-sm)] border border-topic bg-[var(--topic-deep)] px-2.5 text-xs text-topic transition hover:brightness-125 disabled:opacity-40"
+              className="min-h-11 rounded-[var(--r-sm)] border border-topic bg-[var(--topic-deep)] px-2.5 text-xs text-topic transition hover:brightness-125 disabled:opacity-40"
             >
               Crear
             </button>
             <button
               onClick={() => setPicking(false)}
               aria-label="Cancelar"
-              className="min-h-9 px-1.5 text-text-faint transition hover:text-text"
+              className="min-h-11 px-1.5 text-text-faint transition hover:text-text"
             >
               ×
             </button>
@@ -124,7 +124,7 @@ function ObligationCard({
               setPicking(true);
             }}
             disabled={goals.length === 0}
-            className="inline-flex min-h-9 items-center rounded-[var(--r-sm)] border border-line px-2.5 text-[11px] uppercase tracking-[0.14em] text-text-muted transition hover:border-rank hover:text-rank disabled:opacity-40"
+            className="inline-flex min-h-11 items-center rounded-[var(--r-sm)] border border-line px-2.5 text-[11px] uppercase tracking-[0.14em] text-text-muted transition hover:border-rank hover:text-rank disabled:opacity-40"
           >
             Ascender a módulo
           </button>
@@ -201,7 +201,7 @@ export function AgendaSheet({ open, onClose }: { open: boolean; onClose: () => v
               </span>
             )}
           </div>
-          {canvas.cookieStale && (
+          {canvas.cookieStale && canvas.lastOkTs !== null && (
             <div className="mt-1.5 text-[11px] text-amber">
               Sesión de Canvas expirada — mostrando lo último que se pudo leer. Renueva la cookie del scraper.
             </div>
