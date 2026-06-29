@@ -9,6 +9,7 @@ import { FireTest } from "@/ui/FireTest";
 import { BlankChallenge } from "@/ui/BlankChallenge";
 import { NotesSheet } from "@/ui/NotesSheet";
 import { Quiz } from "@/ui/subject/Quiz";
+import { ExitGate } from "@/ui/subject/ExitGate";
 import { EvaluationPanel } from "@/ui/subject/EvaluationPanel";
 import { TutorSheet } from "@/ui/subject/TutorSheet";
 import { nodeStatus } from "@/core/roadmap";
@@ -101,38 +102,39 @@ export function TopicDetailSheet({
           )}
         </div>
 
-        {/* RICH CONTENT — on demand, collapsed. The resource comes AFTER the wall. */}
+        {/* CELL BODY — canonical source anchored, on demand. The resource is AFTER the wall. */}
         {content && (
           <details className="group mt-5 border-t border-line pt-4">
             <summary className="min-h-11 cursor-pointer list-none text-[11px] uppercase tracking-[0.18em] text-text-faint transition hover:text-text-muted">
-              ⌄ Contenido del tópico
+              ⌄ Cuerpo de la celda · fuente canónica
             </summary>
             <div className="mt-3 space-y-4">
-              <p className="font-serif text-[15px] leading-relaxed text-text-muted">{content.summary}</p>
+              <p className="text-[13px] leading-relaxed text-text-muted">
+                {content.summary ??
+                  "El cuerpo se llena bajo demanda: trabaja el reto, y cuando choques, pregúntale al tutor (borrador editable). Aquí no hay contenido pre-inventado — solo la fuente real."}
+              </p>
 
-              <div>
-                <h3 className="text-[10px] uppercase tracking-[0.2em] text-text-faint">Videos</h3>
-                {content.videos.length === 0 ? (
-                  <p className="mt-1 text-[13px] text-text-faint">Por curar — genera o pega un enlace con el tutor.</p>
-                ) : (
+              {content.sourceUrls.length > 0 && (
+                <div>
+                  <h3 className="text-[10px] uppercase tracking-[0.2em] text-text-faint">Fuente</h3>
+                  <div className="mt-1 space-y-1">
+                    {content.sourceUrls.map((url) => (
+                      <a key={url} href={url} target="_blank" rel="noreferrer noopener" className="block min-h-11 py-2 text-[13px] text-topic transition hover:underline">
+                        {url.replace(/^https?:\/\//, "").slice(0, 52)} ↗
+                      </a>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {content.videos.length > 0 && (
+                <div>
+                  <h3 className="text-[10px] uppercase tracking-[0.2em] text-text-faint">Video</h3>
                   <div className="mt-1 space-y-1">
                     {content.videos.map((v) => (
                       <a key={v.url} href={v.url} target="_blank" rel="noreferrer noopener" className="block min-h-11 py-2 text-[13px] text-topic transition hover:underline">
                         {v.title} ↗
                       </a>
-                    ))}
-                  </div>
-                )}
-              </div>
-
-              {content.tools.length > 0 && (
-                <div>
-                  <h3 className="text-[10px] uppercase tracking-[0.2em] text-text-faint">Herramientas</h3>
-                  <div className="mt-1.5 flex flex-wrap gap-2">
-                    {content.tools.map((tool) => (
-                      <span key={tool} className="rounded-[var(--r-sm)] border border-line px-2.5 py-1 text-xs text-text-muted">
-                        {tool}
-                      </span>
                     ))}
                   </div>
                 </div>
@@ -141,7 +143,14 @@ export function TopicDetailSheet({
           </details>
         )}
 
-        {/* BUILT-IN QUIZ — immediate feedback, emits checkpoint.passed → mastery. */}
+        {/* EXIT GATE (WHITE ROOM) — adversarial; passing it unseals the next cell. */}
+        {content?.gate && (
+          <div className="mt-5 border-t border-line pt-4">
+            <ExitGate moduleId={mod.id} gate={content.gate} accent={accent} />
+          </div>
+        )}
+
+        {/* Legacy built-in quiz (cells without a gate). Emits checkpoint.passed → mastery. */}
         {content && content.quiz.length > 0 && (
           <div className="mt-5 border-t border-line pt-4">
             <Quiz goalId={goalId} moduleId={mod.id} questions={content.quiz} accent={accent} />

@@ -27,10 +27,11 @@ describe("buildTutorContext — local-first RAG retrieval", () => {
     expect(ctx.topicSummary).toBeNull(); // custom module → no authored content
   });
 
-  it("includes the authored summary for a seed topic, and null module → null", () => {
+  it("anchors a seed cell's canonical source into the RAG context; null module → null", () => {
     const rm = project(SEED_EVENTS);
     const ctx = buildTutorContext(rm, SEED_MODULE_ID, "q", D0)!;
-    expect(ctx.topicSummary).toBeTruthy(); // EDD has authored content
+    expect(ctx.sources.length).toBeGreaterThan(0); // real extracted source URLs
+    expect(ctx.sources.every((u) => u.startsWith("http"))).toBe(true);
     expect(buildTutorContext(rm, "ghost", "q", D0)).toBeNull();
   });
 });

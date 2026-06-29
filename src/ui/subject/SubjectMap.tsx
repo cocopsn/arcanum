@@ -5,7 +5,6 @@ import { useArcanum } from "@/app/providers";
 import { orderTopics } from "@/lib/subject-path";
 import { nodeStatus, type NodeStatus } from "@/core/roadmap";
 import { themeForGoal, type MotifId } from "@/lib/subject-themes";
-import { contentForModule } from "@/lib/subject-content";
 import { readableAccent } from "@/lib/accent";
 import { TopicDetailSheet } from "@/ui/subject/TopicDetailSheet";
 import type { ModuleRM } from "@/core/read-model";

@@ -16,6 +16,7 @@ import {
   type ObligationInput,
   type GradeCelebratedPayload,
   type ModuleEvaluatedPayload,
+  type GateEvaluatedPayload,
 } from "@/core/event";
 import { parseWikilinks } from "@/core/wikilink";
 import { wouldCreateCycle } from "@/core/roadmap";
@@ -41,6 +42,7 @@ import type {
   ObligationRM,
   CanvasStatusRM,
   EvaluationRM,
+  GateRM,
 } from "@/core/read-model";
 
 const TZ = ARCANUM_CONFIG.tz;
@@ -110,6 +112,8 @@ interface Acc {
   celebratedGrade: number | null;
   /** latest evaluation per module (Bloque 5) */
   evaluations: Map<string, EvaluationRM>;
+  /** latest exit-gate verdict per cell (WHITE ROOM) */
+  gates: Map<string, GateRM>;
 }
 
 function applyDomain(acc: Acc, e: ArcanumEvent): void {
@@ -163,6 +167,7 @@ function applyDomain(acc: Acc, e: ArcanumEvent): void {
           x: null,
           y: null,
           sourceObligationId: p.sourceObligationId ?? null,
+          gatePassed: false,
         });
       }
       return;
@@ -310,6 +315,27 @@ function applyDomain(acc: Acc, e: ArcanumEvent): void {
       acc.celebratedGrade = Math.max(acc.celebratedGrade ?? -1, idx);
       return;
     }
+    case "gate.evaluated": {
+      const id = e.module_id;
+      if (!id) return;
+      const p = e.payload as unknown as GateEvaluatedPayload;
+      const passed = p.passed === true;
+      acc.gates.set(id, {
+        moduleId: id,
+        passed,
+        score: typeof p.score === "number" && Number.isFinite(p.score) ? p.score : null,
+        summary: typeof p.summary === "string" ? p.summary : "",
+        feedback: typeof p.feedback === "string" ? p.feedback : "",
+        source: p.source === "ai" ? "ai" : "heuristic",
+        provider: typeof p.provider === "string" ? p.provider : null,
+        ts: e.ts,
+      });
+      // gatePassed is MONOTONIC — once the cell's gate is passed it stays open
+      // (a later re-evaluation can't re-seal what was already demonstrated).
+      const mod = acc.modules.get(id);
+      if (mod && passed && !mod.gatePassed) acc.modules.set(id, { ...mod, gatePassed: true });
+      return;
+    }
     case "module.evaluated": {
       const id = e.module_id;
       if (!id) return;
@@ -370,6 +396,7 @@ function emptyAcc(): Acc {
     canvasCookieStale: false,
     celebratedGrade: null,
     evaluations: new Map(),
+    gates: new Map(),
   };
 }
 
@@ -389,6 +416,7 @@ function accFromModel(prev: ReadModel): Acc {
     canvasCookieStale: prev.canvas.cookieStale,
     celebratedGrade: prev.celebratedGrade,
     evaluations: new Map(prev.evaluations.map((ev) => [ev.moduleId, ev])),
+    gates: new Map(prev.gates.map((g) => [g.moduleId, g])),
   };
 }
 
@@ -427,6 +455,7 @@ function assemble(
     canvas,
     celebratedGrade: acc.celebratedGrade,
     evaluations: [...acc.evaluations.values()],
+    gates: [...acc.gates.values()],
     qualifiedDays,
     stats: {
       totalXp: acc.totalXp,

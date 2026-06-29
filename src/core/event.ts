@@ -28,6 +28,7 @@ export const EVENT_TYPES = [
   "canvas.synced",
   "grade.celebrated",
   "module.evaluated",
+  "gate.evaluated",
 ] as const;
 
 export type EventType = (typeof EVENT_TYPES)[number];
@@ -142,6 +143,25 @@ export interface ModuleEvaluatedPayload {
   challenge: string;
   /** 0..1 mastery read, or null */
   score: number | null;
+  source: "ai" | "heuristic";
+  provider: string | null;
+}
+
+/**
+ * An adversarial EXIT GATE verdict for a cell (WHITE ROOM). The gate has REAL power
+ * over progression: only `passed:true` (granted by the rubric-anchored evaluator)
+ * marks the cell mastered → unseals the next cell (fog-of-war). In the LOG —
+ * auditable, reconstructible. The local heuristic NEVER auto-passes (honest: the
+ * gate requires the evaluator); offline progression stays via firetest/completion.
+ */
+export interface GateEvaluatedPayload {
+  passed: boolean;
+  /** 0..1 rubric score, or null */
+  score: number | null;
+  /** one-line verdict */
+  summary: string;
+  /** the adversarial, actionable critique (why it (didn't) pass) */
+  feedback: string;
   source: "ai" | "heuristic";
   provider: string | null;
 }
