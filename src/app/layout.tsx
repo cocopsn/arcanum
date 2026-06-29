@@ -31,6 +31,10 @@ export const metadata: Metadata = {
     statusBarStyle: "black-translucent",
     title: "Arcanum",
   },
+  icons: {
+    icon: "/icons/favicon-32.png",
+    apple: "/icons/apple-touch-icon.png",
+  },
 };
 
 export const viewport: Viewport = {
