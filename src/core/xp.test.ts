@@ -35,9 +35,9 @@ describe("xpBase (unrounded)", () => {
     expect(xpBase(makeEvent("firetest.attempted", { reached: 20, ceiling: 10 }, opts))).toBe(300);
   });
 
-  it("note.created pays only when substantive (length ≥ 140)", () => {
-    expect(xpBase(makeEvent("note.created", { note_id: "n", length: 140 }, opts))).toBe(5);
-    expect(xpBase(makeEvent("note.created", { note_id: "n", length: 139 }, opts))).toBe(0);
+  it("note.created pays only when substantive (markdown length ≥ 140)", () => {
+    expect(xpBase(makeEvent("note.created", { note_id: "n", title: "t", markdown: "x".repeat(140) }, opts))).toBe(5);
+    expect(xpBase(makeEvent("note.created", { note_id: "n", title: "t", markdown: "x".repeat(139) }, opts))).toBe(0);
   });
 
   it("error.logged and non-XP events → 0", () => {

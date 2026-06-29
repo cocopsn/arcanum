@@ -41,10 +41,14 @@ export function ModuleCard({
   module,
   retrievability,
   goalId,
+  noteCount,
+  onNotes,
 }: {
   module: ModuleRM;
   retrievability: number;
   goalId: string;
+  noteCount: number;
+  onNotes: () => void;
 }) {
   const { startModule, completeModule } = useActions();
   const [open, setOpen] = useState(false);
@@ -68,7 +72,13 @@ export function ModuleCard({
       </button>
 
       {open && (
-        <div className="border-t border-line p-4">
+        <div className="space-y-4 border-t border-line p-4">
+          <button
+            onClick={onNotes}
+            className="text-[11px] uppercase tracking-[0.16em] text-text-faint transition hover:text-topic"
+          >
+            Notas · {noteCount}
+          </button>
           {module.status === "idle" ? (
             <div className="space-y-4">
               <FireTest goalId={goalId} moduleId={module.id} title={module.title} />

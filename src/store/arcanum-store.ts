@@ -41,6 +41,8 @@ export interface ArcanumState {
   sync: (client: SyncClient, now: number) => Promise<void>;
   /** Pop the front ceremony once shown. */
   dismissCeremony: () => void;
+  /** Raw log (for the Sleep Cycle's 24h fold). */
+  getEvents: () => Promise<ArcanumEvent[]>;
 }
 
 export type ArcanumStore = StoreApi<ArcanumState>;
@@ -163,6 +165,10 @@ export function createArcanumStore(db: ArcanumDB): ArcanumStore {
 
       dismissCeremony() {
         set({ ceremonyQueue: get().ceremonyQueue.slice(1) });
+      },
+
+      getEvents() {
+        return getAllEvents(db);
       },
     };
   });

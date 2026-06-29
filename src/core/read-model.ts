@@ -1,4 +1,5 @@
 import type { GradeName } from "@/core/config";
+import type { Json } from "@/core/event";
 
 export interface Goal {
   id: string;
@@ -50,6 +51,33 @@ export interface ReviewItem {
   dueDays: number;
 }
 
+export interface NoteRM {
+  id: string;
+  /** anchor: born inside a module, or loose at goal level */
+  moduleId: string | null;
+  goalId: string | null;
+  title: string;
+  /** raw Obsidian markdown — reconstructed from the log */
+  markdown: string;
+  /** [[wikilink]] target titles this note links to */
+  links: string[];
+  /** ids of notes that link to THIS note (bidirectional backlinks) */
+  backlinks: string[];
+  createdTs: number;
+  updatedTs: number;
+}
+
+export interface SleepCycleRM {
+  /** event id of the sleepcycle.generated event */
+  id: string;
+  day: string;
+  ts: number;
+  /** local 24h fold (DayDigest) */
+  digest: Json;
+  /** AI enrichment, or null when no provider was available */
+  ai: { provider: string; patterns: string; axioms: string } | null;
+}
+
 export interface ReadModel {
   goals: Goal[];
   modules: ModuleRM[];
@@ -59,5 +87,9 @@ export interface ReadModel {
   stats: Stats;
   /** completed modules with their clock-free dueDays (spec §5) */
   reviewDue: ReviewItem[];
+  /** Obsidian notes graph, content reconstructed from the log */
+  notes: NoteRM[];
+  /** Sleep Cycle digests, newest last (from sleepcycle.generated events) */
+  sleepCycles: SleepCycleRM[];
   cursor: { ts: number; id: string } | null;
 }

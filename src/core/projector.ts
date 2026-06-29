@@ -7,7 +7,11 @@ import {
   type NodeArchivedPayload,
   type SessionEndedPayload,
   type CheckpointPassedPayload,
+  type NoteCreatedPayload,
+  type NoteUpdatedPayload,
+  type SleepcycleGeneratedPayload,
 } from "@/core/event";
+import { parseWikilinks } from "@/core/wikilink";
 import { ARCANUM_CONFIG } from "@/core/config";
 import { civilDayOrdinal, msToDays } from "@/core/time";
 import { xpBase, streakMultiplier } from "@/core/xp";
@@ -19,7 +23,15 @@ import {
   type StreakResult,
 } from "@/core/streak";
 import { initialMastery, reinforce } from "@/core/mastery";
-import type { ReadModel, Goal, ModuleRM, Edge, ReviewItem } from "@/core/read-model";
+import type {
+  ReadModel,
+  Goal,
+  ModuleRM,
+  Edge,
+  ReviewItem,
+  NoteRM,
+  SleepCycleRM,
+} from "@/core/read-model";
 
 const TZ = ARCANUM_CONFIG.tz;
 const M = ARCANUM_CONFIG.mastery;
@@ -51,6 +63,8 @@ interface Acc {
   modules: Map<string, ModuleRM>;
   edges: Edge[];
   edgeSet: Set<string>;
+  notes: Map<string, NoteRM>;
+  sleepCycles: SleepCycleRM[];
   totalXp: number;
 }
 
@@ -164,9 +178,66 @@ function applyDomain(acc: Acc, e: ArcanumEvent): void {
       if (mod) acc.modules.set(ref, { ...mod, archived: true });
       return;
     }
+    case "note.created": {
+      const p = e.payload as unknown as NoteCreatedPayload;
+      const id = p.note_id;
+      if (!id) return;
+      const prev = acc.notes.get(id);
+      acc.notes.set(id, {
+        id,
+        moduleId: prev?.moduleId ?? e.module_id,
+        goalId: prev?.goalId ?? e.goal_id,
+        title: p.title ?? "",
+        markdown: p.markdown ?? "",
+        links: [],
+        backlinks: [],
+        createdTs: prev?.createdTs ?? e.ts,
+        updatedTs: e.ts,
+      });
+      return;
+    }
+    case "note.updated": {
+      const p = e.payload as unknown as NoteUpdatedPayload;
+      const prev = acc.notes.get(p.note_id);
+      if (!prev) return;
+      acc.notes.set(p.note_id, {
+        ...prev,
+        title: p.title ?? prev.title,
+        markdown: p.markdown ?? prev.markdown,
+        updatedTs: e.ts,
+      });
+      return;
+    }
+    case "sleepcycle.generated": {
+      const p = e.payload as unknown as SleepcycleGeneratedPayload;
+      acc.sleepCycles.push({ id: e.id, day: p.day, ts: e.ts, digest: p.digest, ai: p.ai });
+      return;
+    }
     default:
       return;
   }
+}
+
+/** Derive the note graph: links from markdown, then bidirectional backlinks. */
+function finalizeNotes(notes: NoteRM[]): NoteRM[] {
+  const withLinks = notes.map((n) => ({
+    ...n,
+    links: parseWikilinks(n.markdown),
+    backlinks: [] as string[],
+  }));
+  const titleToId = new Map<string, string>();
+  for (const n of withLinks) titleToId.set(n.title, n.id); // last wins on title clash
+  const byId = new Map(withLinks.map((n) => [n.id, n]));
+  for (const n of withLinks) {
+    for (const target of n.links) {
+      const targetId = titleToId.get(target);
+      if (targetId && targetId !== n.id) {
+        const t = byId.get(targetId)!;
+        if (!t.backlinks.includes(n.id)) t.backlinks.push(n.id);
+      }
+    }
+  }
+  return withLinks;
 }
 
 function emptyAcc(): Acc {
@@ -175,6 +246,8 @@ function emptyAcc(): Acc {
     modules: new Map(),
     edges: [],
     edgeSet: new Set(),
+    notes: new Map(),
+    sleepCycles: [],
     totalXp: 0,
   };
 }
@@ -185,6 +258,8 @@ function accFromModel(prev: ReadModel): Acc {
     modules: new Map(prev.modules.map((m) => [m.id, m])),
     edges: [...prev.edges],
     edgeSet: new Set(prev.edges.map((e) => `${e.from}|${e.to}`)),
+    notes: new Map(prev.notes.map((n) => [n.id, n])),
+    sleepCycles: [...prev.sleepCycles],
     totalXp: prev.stats.totalXp,
   };
 }
@@ -204,6 +279,8 @@ function assemble(
     goals: [...acc.goals.values()],
     modules,
     edges: [...acc.edges],
+    notes: finalizeNotes([...acc.notes.values()]),
+    sleepCycles: [...acc.sleepCycles],
     qualifiedDays,
     stats: {
       totalXp: acc.totalXp,
