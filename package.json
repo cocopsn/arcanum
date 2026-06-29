@@ -14,7 +14,9 @@
     "icons": "node scripts/generate-icons.mjs"
   },
   "dependencies": {
+    "@dagrejs/dagre": "^3.0.0",
     "@supabase/supabase-js": "^2.45.0",
+    "@xyflow/react": "^12.11.1",
     "dexie": "^4.0.0",
     "framer-motion": "^11.0.0",
     "next": "^14.2.0",

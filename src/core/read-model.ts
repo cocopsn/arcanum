@@ -28,6 +28,11 @@ export interface ModuleRM {
   /** epoch-days of module.started, or null */
   startedDays: number | null;
   archived: boolean;
+  /** best firetest reached/ceiling ratio (for reveal), or null */
+  firetestRatio: number | null;
+  /** persisted canvas position (event-sourced), or null → auto-layout */
+  x: number | null;
+  y: number | null;
 }
 
 export interface Edge {

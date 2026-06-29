@@ -41,6 +41,17 @@ export function useActions() {
     },
     updateNote: (noteId: string, title: string, markdown: string) =>
       fire("note.updated", { note_id: noteId, title, markdown }),
+    // ── Roadmap canvas edits — all expressed as EXISTING events (log is truth) ──
+    createModule: async (goalId: string, title: string): Promise<string> => {
+      const moduleId = newEventId();
+      await fire("module.upserted", { title, prereqs: [], kind: "core" }, { goalId, moduleId });
+      return moduleId;
+    },
+    connectPrereq: (from: string, to: string) => fire("roadmap.edge.upserted", { from, to }),
+    archiveNode: (ref: string) => fire("node.archived", { ref }),
+    moveNode: (ref: string, x: number, y: number) =>
+      fire("roadmap.node.moved", { ref, x: Math.round(x), y: Math.round(y) }),
+    getEvents: () => store.getState().getEvents(),
     rebuild: () => store.getState().rebuild(Date.now()),
   };
 }

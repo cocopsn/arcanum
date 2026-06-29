@@ -4,6 +4,7 @@ import { createArcanumStore } from "@/store/arcanum-store";
 import type { SyncClient } from "@/sync/sync";
 import type { EventRow } from "@/sync/mapping";
 import { makeEvent } from "@/core/event";
+import { SEED_EVENTS } from "@/lib/seed";
 
 /** One in-memory server shared by two devices' sync clients. */
 class FakeServer {
@@ -83,7 +84,7 @@ describe("sync loop — two devices", () => {
     await A.getState().sync(server.client(), NOW);
     await A.getState().sync(server.client(), NOW);
     expect(A.getState().readModel).toEqual(before);
-    expect(server.rows).toHaveLength(2); // only the 2 seed events
+    expect(server.rows).toHaveLength(SEED_EVENTS.length); // only the seed events
   });
 
   it("sync is a no-op without a session (stays local)", async () => {

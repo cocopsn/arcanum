@@ -24,6 +24,7 @@ export const EVENT_TYPES = [
   "note.created",
   "note.updated",
   "sleepcycle.generated",
+  "roadmap.node.moved",
 ] as const;
 
 export type EventType = (typeof EVENT_TYPES)[number];
@@ -59,6 +60,12 @@ export interface EdgeUpsertedPayload {
 }
 export interface NodeArchivedPayload {
   ref: string;
+}
+export interface NodeMovedPayload {
+  /** module id */
+  ref: string;
+  x: number;
+  y: number;
 }
 export type SessionKind = "error" | "project" | "review";
 export interface SessionStartedPayload {

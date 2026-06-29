@@ -65,6 +65,12 @@ export const ARCANUM_CONFIG = {
     shieldMax: 2,
   },
 
+  // Roadmap canvas (Phase 3): a firetest at/above this reached/ceiling ratio
+  // marks a module mastered → reveals downstream nodes, skipping the path.
+  roadmap: {
+    firetestRevealThreshold: 0.7,
+  },
+
   // Per-topic default accents (spec §9.2). Editable per goal.
   topicDefaults: {
     ITC: "#25B0C9",
