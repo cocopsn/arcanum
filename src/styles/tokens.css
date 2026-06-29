@@ -12,7 +12,10 @@
   --line-soft: #19182333;
   --text: #ece7db; /* warm parchment, high luminosity */
   --text-muted: #9e98ac;
-  --text-faint: #5f5a6e;
+  /* faint is the most RECESSIVE text tier but must still clear WCAG AA on both
+     surfaces (it carries empty-state copy, confirmations + the × close control):
+     #857f93 = 5.00:1 on --surface, 4.67:1 on --surface-raised. */
+  --text-faint: #857f93;
   --overlay-scrim: rgba(5, 5, 7, 0.78);
 
   /* Reward accents — luminous, gilded. */

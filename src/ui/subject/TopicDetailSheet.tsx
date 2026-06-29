@@ -1,8 +1,10 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { useArcanum } from "@/app/providers";
 import { useActions } from "@/ui/use-actions";
+import { useFocusTrap } from "@/ui/use-focus-trap";
+import { readableAccent } from "@/lib/accent";
 import { FireTest } from "@/ui/FireTest";
 import { BlankChallenge } from "@/ui/BlankChallenge";
 import { NotesSheet } from "@/ui/NotesSheet";
@@ -36,9 +38,7 @@ export function TopicDetailSheet({
   const content = contentForModule(moduleId);
   const noteCount = readModel.notes.filter((n) => n.moduleId === moduleId).length;
 
-  useEffect(() => {
-    panelRef.current?.focus();
-  }, []);
+  useFocusTrap(panelRef);
 
   if (!mod || mod.archived) return null;
   const goalId = mod.goalId ?? "";
@@ -68,7 +68,7 @@ export function TopicDetailSheet({
               {mod.title}
             </h2>
             <div className="mt-1 text-[11px] uppercase tracking-[0.16em] text-text-muted">
-              {STATUS_LABEL[status]} · maestría <span className="tnum" style={{ color: accent }}>{Math.round(retrievability * 100)}%</span>
+              {STATUS_LABEL[status]} · maestría <span className="tnum" style={{ color: readableAccent(accent) }}>{Math.round(retrievability * 100)}%</span>
             </div>
           </div>
           <button onClick={onClose} aria-label="Cerrar" className="-mr-2 -mt-1 min-h-11 px-2 text-2xl leading-none text-text-faint transition hover:text-text">
@@ -154,7 +154,7 @@ export function TopicDetailSheet({
         </div>
 
         <div className="mt-4 flex flex-wrap items-center gap-x-5">
-          <button onClick={() => setTutorOpen(true)} className="-mx-2 inline-flex min-h-11 items-center px-2 text-[11px] uppercase tracking-[0.16em] text-text-muted transition" style={{ color: accent }}>
+          <button onClick={() => setTutorOpen(true)} className="-mx-2 inline-flex min-h-11 items-center px-2 text-[11px] uppercase tracking-[0.16em] transition" style={{ color: readableAccent(accent) }}>
             Preguntar al tutor
           </button>
           <button onClick={() => setNotesOpen(true)} className="inline-flex min-h-11 items-center text-[11px] uppercase tracking-[0.16em] text-text-muted transition hover:text-topic">

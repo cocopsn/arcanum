@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useArcanum } from "@/app/providers";
 import { useActions } from "@/ui/use-actions";
 import { NoteEditor } from "@/ui/NoteEditor";
@@ -25,6 +25,13 @@ export function NotesSheet({
     status: "idle",
   });
   const fileRef = useRef<HTMLInputElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
+
+  // Focus the panel on open so Escape is captured in THIS sheet's subtree (it is
+  // often nested inside another sheet's overlay).
+  useEffect(() => {
+    if (open) panelRef.current?.focus();
+  }, [open]);
 
   if (!open) return null;
 
@@ -81,10 +88,22 @@ export function NotesSheet({
     <div
       className="fixed inset-0 z-50 flex items-end justify-center sm:items-center"
       style={{ background: "var(--overlay-scrim)" }}
-      onClick={onClose}
+      onClick={(e) => {
+        // nested inside other sheets — don't bubble the close up and dismiss them too
+        e.stopPropagation();
+        onClose();
+      }}
+      onKeyDown={(e) => {
+        if (e.key === "Escape") {
+          e.stopPropagation();
+          onClose();
+        }
+      }}
     >
       <div
-        className="scroll-touch flex max-h-[88vh] w-full max-w-md flex-col overflow-y-auto rounded-t-[var(--r-lg)] border border-line bg-surface-raised p-6 sm:rounded-[var(--r-lg)]"
+        ref={panelRef}
+        tabIndex={-1}
+        className="scroll-touch flex max-h-[88vh] w-full max-w-md flex-col overflow-y-auto rounded-t-[var(--r-lg)] border border-line bg-surface-raised p-6 outline-none sm:rounded-[var(--r-lg)]"
         style={{ paddingBottom: "max(1.5rem, env(safe-area-inset-bottom))" }}
         onClick={(e) => e.stopPropagation()}
       >

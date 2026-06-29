@@ -6,6 +6,7 @@ import { orderTopics } from "@/lib/subject-path";
 import { nodeStatus, type NodeStatus } from "@/core/roadmap";
 import { themeForGoal, type MotifId } from "@/lib/subject-themes";
 import { contentForModule } from "@/lib/subject-content";
+import { readableAccent } from "@/lib/accent";
 import { TopicDetailSheet } from "@/ui/subject/TopicDetailSheet";
 import type { ModuleRM } from "@/core/read-model";
 
@@ -198,7 +199,7 @@ export function SubjectMap({ goalId, onClose }: { goalId: string; onClose: () =>
           ‹ Cerrar
         </button>
         <div className="text-center">
-          <div className="font-display text-sm tracking-[0.18em]" style={{ color: accent }}>
+          <div className="font-display text-sm tracking-[0.18em]" style={{ color: readableAccent(accent) }}>
             {goal.title}
           </div>
           <div className="text-[10px] tracking-[0.12em] text-text-faint">{theme.tagline}</div>

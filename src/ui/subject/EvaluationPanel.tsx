@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useArcanum } from "@/app/providers";
 import { useActions } from "@/ui/use-actions";
+import { readableAccent } from "@/lib/accent";
 
 export function EvaluationPanel({ moduleId, accent }: { moduleId: string; accent: string }) {
   const evalRM = useArcanum((s) => s.readModel.evaluations.find((e) => e.moduleId === moduleId) ?? null);
@@ -19,21 +20,21 @@ export function EvaluationPanel({ moduleId, accent }: { moduleId: string; accent
   }
 
   return (
-    <div>
+    <div aria-busy={busy}>
       <div className="flex items-center justify-between gap-2">
         <h3 className="font-display text-xs uppercase tracking-[0.22em] text-text-faint">Evaluación adversarial</h3>
         <button
           onClick={() => void run()}
           disabled={busy}
           className="min-h-11 rounded-[var(--r-sm)] border px-3 text-[11px] uppercase tracking-[0.16em] transition hover:brightness-125 disabled:opacity-40"
-          style={{ borderColor: accent, color: accent }}
+          style={{ borderColor: accent, color: readableAccent(accent) }}
         >
           {busy ? "Evaluando…" : evalRM ? "Re-evaluar" : "Evaluar dominio"}
         </button>
       </div>
 
       {evalRM ? (
-        <div className="mt-3 space-y-3">
+        <div role="status" aria-live="polite" className="mt-3 space-y-3">
           <div className="flex items-center gap-2">
             {evalRM.score !== null && (
               <span className="tnum font-display text-2xl" style={{ color: accent }}>
@@ -49,7 +50,7 @@ export function EvaluationPanel({ moduleId, accent }: { moduleId: string; accent
               <ul className="mt-1 space-y-1">
                 {evalRM.strengths.map((s, i) => (
                   <li key={i} className="text-[13px] text-text-muted">
-                    <span style={{ color: accent }}>✓</span> {s}
+                    <span style={{ color: readableAccent(accent) }}>✓</span> {s}
                   </li>
                 ))}
               </ul>

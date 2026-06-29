@@ -1,8 +1,10 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { useArcanum } from "@/app/providers";
 import { useActions } from "@/ui/use-actions";
+import { useFocusTrap } from "@/ui/use-focus-trap";
+import { readableAccent } from "@/lib/accent";
 import { buildTutorContext } from "@/lib/tutor";
 import { askTutor } from "@/sync/ai";
 
@@ -19,9 +21,7 @@ export function TutorSheet({ moduleId, accent, onClose }: { moduleId: string; ac
   const panelRef = useRef<HTMLDivElement>(null);
   const mod = readModel.modules.find((m) => m.id === moduleId) ?? null;
 
-  useEffect(() => {
-    panelRef.current?.focus();
-  }, []);
+  useFocusTrap(panelRef);
 
   async function ask() {
     if (!question.trim() || !mod) return;
@@ -47,9 +47,17 @@ export function TutorSheet({ moduleId, accent, onClose }: { moduleId: string; ac
     <div
       className="fixed inset-0 z-[70] flex items-end justify-center sm:items-center"
       style={{ background: "var(--overlay-scrim)" }}
-      onClick={onClose}
+      onClick={(e) => {
+        // rendered inside the topic sheet's overlay — don't let the backdrop click
+        // bubble up and close the topic detail too (close only the tutor)
+        e.stopPropagation();
+        onClose();
+      }}
       onKeyDown={(e) => {
-        if (e.key === "Escape") onClose();
+        if (e.key === "Escape") {
+          e.stopPropagation();
+          onClose();
+        }
       }}
     >
       <div
@@ -64,7 +72,7 @@ export function TutorSheet({ moduleId, accent, onClose }: { moduleId: string; ac
       >
         <div className="flex items-start justify-between gap-3">
           <div>
-            <h2 className="font-display text-lg tracking-[0.12em]" style={{ color: accent }}>
+            <h2 className="font-display text-lg tracking-[0.12em]" style={{ color: readableAccent(accent) }}>
               TUTOR
             </h2>
             <p className="mt-1 text-[13px] text-text-muted">
@@ -79,6 +87,7 @@ export function TutorSheet({ moduleId, accent, onClose }: { moduleId: string; ac
         <textarea
           value={question}
           onChange={(e) => setQuestion(e.target.value)}
+          aria-label="Tu pregunta al tutor"
           placeholder={`Pregunta sobre ${mod?.title ?? "el tópico"}… (te responderá según dónde estás)`}
           rows={3}
           className="w-full resize-none rounded-[var(--r-sm)] border border-line bg-ink px-3 py-2 text-sm text-text placeholder:text-text-faint focus:outline-none"
@@ -88,20 +97,20 @@ export function TutorSheet({ moduleId, accent, onClose }: { moduleId: string; ac
           onClick={() => void ask()}
           disabled={!question.trim() || phase === "thinking"}
           className="min-h-11 rounded-[var(--r-sm)] border px-4 text-sm transition hover:brightness-125 disabled:opacity-40"
-          style={{ borderColor: accent, color: accent }}
+          style={{ borderColor: accent, color: readableAccent(accent) }}
         >
           {phase === "thinking" ? "Pensando…" : "Preguntar"}
         </button>
 
         {phase === "unavailable" && (
-          <p className="text-[13px] leading-relaxed text-text-faint">
+          <p role="status" aria-live="polite" className="text-[13px] leading-relaxed text-text-faint">
             El tutor (IA) requiere sesión iniciada + keys en la Edge Function. Mientras tanto, el reto en blanco y la
             evaluación heurística funcionan sin conexión.
           </p>
         )}
 
         {phase === "draft" && (
-          <div className="space-y-3 border-t border-line pt-4">
+          <div role="status" aria-live="polite" className="space-y-3 border-t border-line pt-4">
             <div className="flex items-center justify-between">
               <h3 className="text-[11px] uppercase tracking-[0.18em] text-text-faint">Borrador · edítalo, valídalo</h3>
               {provider && <span className="text-[10px] uppercase tracking-wider text-text-faint">vía {provider}</span>}
@@ -112,6 +121,7 @@ export function TutorSheet({ moduleId, accent, onClose }: { moduleId: string; ac
                 setDraft(e.target.value);
                 setSaved(false);
               }}
+              aria-label="Borrador de la respuesta, editable"
               rows={12}
               className="scroll-touch w-full resize-none rounded-[var(--r-sm)] border border-line bg-ink p-3 font-mono text-[13px] text-text focus:border-rank focus:outline-none"
             />
