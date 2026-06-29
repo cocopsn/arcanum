@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { AnimatePresence } from "framer-motion";
-import { useArcanum } from "@/app/providers";
+import { useArcanum, useArcanumStore } from "@/app/providers";
 import { useActions } from "@/ui/use-actions";
 import { RankAura } from "@/ui/RankAura";
 import { GradeSigil } from "@/ui/GradeSigil";
@@ -12,6 +12,8 @@ import { RitoDelDia } from "@/ui/RitoDelDia";
 import { ModuleCard } from "@/ui/ModuleCard";
 import { SyncStatus } from "@/ui/SyncStatus";
 import { AuthSheet } from "@/ui/AuthSheet";
+import { CodiceSheet } from "@/ui/CodiceSheet";
+import { AscensionCeremony } from "@/ui/AscensionCeremony";
 import { InstallCoachMark } from "@/ui/InstallCoachMark";
 import type { ReadModel, Stats } from "@/core/read-model";
 import type { ViewModel } from "@/core/present";
@@ -20,7 +22,10 @@ export function HomeView() {
   const status = useArcanum((s) => s.status);
   const readModel = useArcanum((s) => s.readModel);
   const viewModel = useArcanum((s) => s.viewModel);
+  const ceremony = useArcanum((s) => s.ceremonyQueue[0] ?? null);
+  const store = useArcanumStore();
   const [authOpen, setAuthOpen] = useState(false);
+  const [codiceOpen, setCodiceOpen] = useState(false);
 
   if (status === "loading") {
     return (
@@ -47,9 +52,14 @@ export function HomeView() {
         <RitoDelDia pending={viewModel.ritoPending} />
         <Goals readModel={readModel} viewModel={viewModel} />
         <InstallCoachMark />
-        <RebuildButton />
+        <Footer onCodice={() => setCodiceOpen(true)} />
       </main>
+
       <AuthSheet open={authOpen} onClose={() => setAuthOpen(false)} />
+      <CodiceSheet open={codiceOpen} onClose={() => setCodiceOpen(false)} />
+      {ceremony && (
+        <AscensionCeremony grade={ceremony} onDismiss={() => store.getState().dismissCeremony()} />
+      )}
     </RankAura>
   );
 }
@@ -137,14 +147,23 @@ function Goals({
   );
 }
 
-function RebuildButton() {
+function Footer({ onCodice }: { onCodice: () => void }) {
   const { rebuild } = useActions();
   return (
-    <button
-      onClick={() => void rebuild()}
-      className="min-h-11 self-center text-[11px] uppercase tracking-[0.2em] text-text-faint transition hover:text-text-muted"
-    >
-      Reconstruir índice
-    </button>
+    <div className="flex items-center justify-center gap-4">
+      <button
+        onClick={onCodice}
+        className="min-h-11 text-[11px] uppercase tracking-[0.2em] text-text-faint transition hover:text-rank"
+      >
+        Códice
+      </button>
+      <span className="text-text-faint" aria-hidden>·</span>
+      <button
+        onClick={() => void rebuild()}
+        className="min-h-11 text-[11px] uppercase tracking-[0.2em] text-text-faint transition hover:text-text-muted"
+      >
+        Reconstruir índice
+      </button>
+    </div>
   );
 }

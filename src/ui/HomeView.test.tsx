@@ -19,9 +19,9 @@ describe("HomeView", () => {
     await waitFor(() => expect(screen.getByText("ITC")).toBeInTheDocument());
 
     expect(screen.getByText("Estructuras de datos: fundamentos")).toBeInTheDocument();
-    // grade is DERIVED (0 XP → Neophyte), not hardcoded
-    expect(screen.getByLabelText("Grado Neophyte")).toBeInTheDocument();
-    expect(screen.getByText("NEOPHYTE")).toBeInTheDocument();
+    // grade is DERIVED (0 XP → Scintilla), not hardcoded
+    expect(screen.getByLabelText("Sello Scintilla")).toBeInTheDocument();
+    expect(screen.getByText("SCINTILLA")).toBeInTheDocument();
     // rito pending because the seed has no qualifying event today
     expect(screen.getByText(/Aún no dejas marca hoy/i)).toBeInTheDocument();
 

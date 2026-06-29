@@ -59,4 +59,41 @@ describe("arcanum store", () => {
     expect(store.getState().viewModel.streakAlive).toBe(false); // gap > shields
     expect(store.getState().readModel).toBe(rmBefore); // read-model untouched
   });
+
+  it("crossing a grade threshold fires the ceremony exactly once (idempotent under re-fold)", async () => {
+    await store.getState().hydrate(NOW);
+    expect(store.getState().readModel.stats.grade).toBe("Scintilla");
+    expect(store.getState().ceremonyQueue).toHaveLength(0);
+
+    // two fire tests = 600 XP (non-qualifying day → mult 1.0) → crosses 500 → Faber
+    const ft = (ts: number) =>
+      makeEvent("firetest.attempted", { reached: 10, ceiling: 10 }, { ts, deviceId: "d", moduleId: SEED_MODULE_ID });
+    await store.getState().dispatch(ft(NOW), NOW);
+    await store.getState().dispatch(ft(NOW + 1), NOW + 1);
+
+    expect(store.getState().readModel.stats.totalXp).toBe(600);
+    expect(store.getState().readModel.stats.grade).toBe("Faber");
+    expect(store.getState().ceremonyQueue.map((g) => g.name)).toEqual(["Faber"]);
+
+    // re-fold must NOT replay the ceremony
+    await store.getState().rebuild(NOW);
+    expect(store.getState().ceremonyQueue.map((g) => g.name)).toEqual(["Faber"]);
+
+    // dismiss → queue empties and stays empty across re-fold
+    store.getState().dismissCeremony();
+    expect(store.getState().ceremonyQueue).toHaveLength(0);
+    await store.getState().rebuild(NOW);
+    expect(store.getState().ceremonyQueue).toHaveLength(0);
+  });
+
+  it("grade never decreases as XP accumulates", async () => {
+    await store.getState().hydrate(NOW);
+    let prev = store.getState().readModel.stats.gradeIndex;
+    for (let i = 0; i < 5; i++) {
+      await store.getState().dispatch(makeEvent("checkpoint.passed", { score: 1 }, { ts: NOW + i, deviceId: "d", moduleId: SEED_MODULE_ID }), NOW + i);
+      const idx = store.getState().readModel.stats.gradeIndex;
+      expect(idx).toBeGreaterThanOrEqual(prev);
+      prev = idx;
+    }
+  });
 });
