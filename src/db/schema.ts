@@ -12,16 +12,18 @@ export interface ProjectionRow {
   model: ReadModel;
 }
 
-export interface SyncMetaRow {
-  key: "sync";
-  /** last server `seq` pulled */
-  pullCursor: number;
+export interface MetaRow {
+  key: string;
+  /** last server `seq` pulled (key 'sync') */
+  pullCursor?: number;
+  /** highest grade index whose ascension ceremony was already shown (key 'grade_ack') */
+  ackGrade?: number;
 }
 
 export class ArcanumDB extends Dexie {
   events!: Table<StoredEvent, string>;
   projection!: Table<ProjectionRow, string>;
-  sync_meta!: Table<SyncMetaRow, string>;
+  sync_meta!: Table<MetaRow, string>;
 
   constructor(name = "arcanum") {
     super(name);

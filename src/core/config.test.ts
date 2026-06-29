@@ -2,13 +2,22 @@ import { describe, it, expect } from "vitest";
 import { ARCANUM_CONFIG } from "@/core/config";
 
 describe("ARCANUM_CONFIG", () => {
-  it("has 11 ascending grade thresholds Neophyte..Ipsissimus", () => {
+  it("has 11 ascending AUCTORUM grades Scintilla..Origo with full identity", () => {
     const g = ARCANUM_CONFIG.gradeThresholds;
     expect(g).toHaveLength(11);
-    expect(g[0]!).toEqual({ name: "Neophyte", xp: 0 });
-    expect(g[10]!).toEqual({ name: "Ipsissimus", xp: 160000 });
+    expect(g[0]!.name).toBe("Scintilla");
+    expect(g[0]!.xp).toBe(0);
+    expect(g[10]!.name).toBe("Origo");
+    expect(g[10]!.xp).toBe(160000);
     for (let i = 1; i < g.length; i++) {
       expect(g[i]!.xp).toBeGreaterThan(g[i - 1]!.xp);
+    }
+    // each grade carries epithet, latin seal, color, ceremony phrase
+    for (const grade of g) {
+      expect(grade.epithet.length).toBeGreaterThan(0);
+      expect(grade.seal.length).toBeGreaterThan(0);
+      expect(grade.color).toMatch(/^#[0-9A-Fa-f]{6}$/);
+      expect(grade.phrase.length).toBeGreaterThan(0);
     }
   });
 
@@ -26,12 +35,12 @@ describe("ARCANUM_CONFIG", () => {
     expect(x.streakMultCap).toBe(30);
   });
 
-  it("mastery + streak + tz + rankAura present and complete", () => {
+  it("mastery + streak + tz + grade ramp present", () => {
     expect(ARCANUM_CONFIG.mastery).toMatchObject({ S0: 1, reviewThreshold: 0.8 });
     expect(ARCANUM_CONFIG.streak).toMatchObject({ shieldEvery: 7, shieldMax: 2 });
     expect(ARCANUM_CONFIG.tz).toBe("America/Monterrey");
-    expect(ARCANUM_CONFIG.rankAura.Neophyte).toBe("#9A93C8");
-    expect(ARCANUM_CONFIG.rankAura.Ipsissimus).toBe("#F2E4FF");
-    expect(Object.keys(ARCANUM_CONFIG.rankAura)).toHaveLength(11);
+    const g = ARCANUM_CONFIG.gradeThresholds;
+    expect(g[0]!.color).toBe("#9A93C8"); // Scintilla
+    expect(g[10]!.color).toBe("#F2E4FF"); // Origo
   });
 });

@@ -1,23 +1,39 @@
 // Single source of all tunable constants. Changing any of these = re-fold,
 // zero data migration (spec §2 pp.5). The fold and presentation read ONLY here.
 
+export interface GradeDef {
+  name: string;
+  /** cumulative XP threshold (record-based, never decreases) */
+  xp: number;
+  /** epithet shown beside the grade */
+  epithet: string;
+  /** Latin seal engraved on the sigil */
+  seal: string;
+  /** aura ramp color (luminous purple: spark → source) */
+  color: string;
+  /** ceremony phrase spoken on ascension into this grade */
+  phrase: string;
+}
+
 export const ARCANUM_CONFIG = {
   tz: "America/Monterrey",
 
-  // Hermetic grade ladder (Golden Dawn) by accumulated XP (spec §6.2).
+  // AUCTORUM ladder — from spark to source. Global grade is CUMULATIVE: derived
+  // from total accumulated XP (which only ever grows), so it never decreases.
+  // Module mastery-with-decay is SEPARATE (the per-module sigil). Spec §6.2.
   gradeThresholds: [
-    { name: "Neophyte", xp: 0 },
-    { name: "Zelator", xp: 500 },
-    { name: "Theoricus", xp: 1500 },
-    { name: "Practicus", xp: 3500 },
-    { name: "Philosophus", xp: 7000 },
-    { name: "Adeptus Minor", xp: 13000 },
-    { name: "Adeptus Major", xp: 22000 },
-    { name: "Adeptus Exemptus", xp: 36000 },
-    { name: "Magister Templi", xp: 58000 },
-    { name: "Magus", xp: 95000 },
-    { name: "Ipsissimus", xp: 160000 },
-  ],
+    { name: "Scintilla", xp: 0, epithet: "la chispa que se niega a apagarse", seal: "Ex scintilla", color: "#9A93C8", phrase: "Una chispa. Es todo lo que el fuego necesitó para empezar." },
+    { name: "Faber", xp: 500, epithet: "el que forja a golpes", seal: "Per ictus", color: "#A79FD0", phrase: "El golpe que casi te rompe es el que te da forma." },
+    { name: "Artifex", xp: 1500, epithet: "dueño del oficio", seal: "Manu certa", color: "#B3ABD8", phrase: "Ya no peleas con la herramienta. La herramienta es tu mano." },
+    { name: "Dux", xp: 3500, epithet: "al que otros siguen", seal: "Sequuntur", color: "#BFB7DF", phrase: "Volteaste, y había gente siguiéndote sin que se lo pidieras." },
+    { name: "Fundator", xp: 7000, epithet: "el que pone la primera piedra", seal: "Prima petra", color: "#CBC3E6", phrase: "Pusiste algo en el mundo que seguirá ahí cuando cierres los ojos." },
+    { name: "Dominus", xp: 13000, epithet: "señor de lo que construyó", seal: "Dominium", color: "#D6CFEC", phrase: "Lo que construiste ya no te obedece por esfuerzo. Te obedece porque es tuyo." },
+    { name: "Princeps", xp: 22000, epithet: "el primero entre los que mandan", seal: "Primus inter", color: "#DFD8F0", phrase: "Entre los que mandan, llegaste primero." },
+    { name: "Auctor", xp: 36000, epithet: "del que otros derivan", seal: "Ex me", color: "#E6E0F4", phrase: "Otros empiezan donde tú ya estuviste." },
+    { name: "Legenda", xp: 58000, epithet: "el nombre que se cita", seal: "Nomen dicitur", color: "#ECE7F8", phrase: "Dejaste de hacer el trabajo. Ahora se cuenta el trabajo que hiciste." },
+    { name: "Aeternus", xp: 95000, epithet: "el que el tiempo no borra", seal: "Tempus non delet", color: "#F0E9FB", phrase: "El tiempo intentó borrarte. No pudo." },
+    { name: "Origo", xp: 160000, epithet: "la fuente de la que todo partió", seal: "Origo omnium", color: "#F2E4FF", phrase: "No alcanzaste la cima. Te volviste el origen del que todo parte." },
+  ] satisfies GradeDef[],
 
   // XP — reward friction, not time (spec §6.1).
   xp: {
@@ -33,7 +49,8 @@ export const ARCANUM_CONFIG = {
     streakMultCap: 30,
   },
 
-  // Mastery with decay / spaced repetition (spec §6.4).
+  // Mastery with decay / spaced repetition (spec §6.4) — per-module, SEPARATE
+  // from the cumulative global grade.
   mastery: {
     S0: 1.0,
     reviewThreshold: 0.8,
@@ -46,23 +63,6 @@ export const ARCANUM_CONFIG = {
   streak: {
     shieldEvery: 7,
     shieldMax: 2,
-  },
-
-  // Grade → aura hex (spec §9.3): arcane-purple luminosity ramp. Ascending =
-  // brighter, richer violet (dim cool → vivid amethyst → near-white iridescent).
-  // Re-tunable alongside tokens.css.
-  rankAura: {
-    Neophyte: "#9A93C8",
-    Zelator: "#8E86DA",
-    Theoricus: "#837CE6",
-    Practicus: "#8A6FEE",
-    Philosophus: "#9562F0",
-    "Adeptus Minor": "#A452F2",
-    "Adeptus Major": "#B566F4",
-    "Adeptus Exemptus": "#C783F6",
-    "Magister Templi": "#D6A0F8",
-    Magus: "#E6C4FC",
-    Ipsissimus: "#F2E4FF",
   },
 
   // Per-topic default accents (spec §9.2). Editable per goal.

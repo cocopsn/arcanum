@@ -53,3 +53,13 @@ export async function getPullCursor(db: ArcanumDB): Promise<number> {
 export async function setPullCursor(db: ArcanumDB, cursor: number): Promise<void> {
   await db.sync_meta.put({ key: "sync", pullCursor: cursor });
 }
+
+/** Highest grade index already celebrated; null if never set (first run baseline). */
+export async function getAckGrade(db: ArcanumDB): Promise<number | null> {
+  const row = await db.sync_meta.get("grade_ack");
+  return row?.ackGrade ?? null;
+}
+
+export async function setAckGrade(db: ArcanumDB, ackGrade: number): Promise<void> {
+  await db.sync_meta.put({ key: "grade_ack", ackGrade });
+}

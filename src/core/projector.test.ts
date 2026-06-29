@@ -13,7 +13,7 @@ describe("project — empty + domain", () => {
   it("empty log → zeroed read-model, Neophyte", () => {
     const rm = project([]);
     expect(rm.stats.totalXp).toBe(0);
-    expect(rm.stats.grade).toBe("Neophyte");
+    expect(rm.stats.grade).toBe("Scintilla");
     expect(rm.stats.currentStreak).toBe(0);
     expect(rm.goals).toEqual([]);
     expect(rm.modules).toEqual([]);

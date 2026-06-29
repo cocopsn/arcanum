@@ -25,7 +25,7 @@
   --topic: #2ec0d6;
   --topic-deep: #0b1f25;
 
-  /* Layer 3 — rank aura (default Neophyte; RankAura overrides inline). */
+  /* Layer 3 — rank aura (default Scintilla; RankAura overrides inline). */
   --rank: #9a93c8;
   --rank-soft: rgba(154, 147, 200, 0.14);
   --rank-glow: rgba(154, 147, 200, 0.4);

@@ -18,7 +18,7 @@ describe("seed", () => {
     expect(rm.modules).toHaveLength(1);
     expect(rm.modules[0]!.status).toBe("idle");
     expect(rm.stats.totalXp).toBe(0);
-    expect(rm.stats.grade).toBe("Neophyte");
+    expect(rm.stats.grade).toBe("Scintilla");
   });
 
   it("is idempotent — appending twice does not duplicate", async () => {

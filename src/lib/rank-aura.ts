@@ -1,5 +1,9 @@
 import { ARCANUM_CONFIG, type GradeName } from "@/core/config";
 
+const COLOR_BY_GRADE = Object.fromEntries(
+  ARCANUM_CONFIG.gradeThresholds.map((g) => [g.name, g.color]),
+) as Record<GradeName, string>;
+
 function hexToRgb(hex: string): { r: number; g: number; b: number } {
   const h = hex.replace("#", "");
   return {
@@ -10,12 +14,11 @@ function hexToRgb(hex: string): { r: number; g: number; b: number } {
 }
 
 /**
- * CSS variables for a grade's aura (spec §9.3). Ascending a grade swaps these
- * on a wrapper → the whole app retints. Derived soft/glow shades keep the hex
- * as the single source.
+ * CSS variables for a grade's aura (spec §9.3). Ascending a grade swaps these →
+ * the whole app retints. Color is the grade's own ramp value (spark → source).
  */
 export function rankAuraVars(grade: GradeName): Record<"--rank" | "--rank-soft" | "--rank-glow", string> {
-  const hex = ARCANUM_CONFIG.rankAura[grade];
+  const hex = COLOR_BY_GRADE[grade] ?? "#9A93C8";
   const { r, g, b } = hexToRgb(hex);
   return {
     "--rank": hex,
