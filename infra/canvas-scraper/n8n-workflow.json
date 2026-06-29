@@ -1,0 +1,202 @@
+{
+  "name": "ARCANUM · Canvas → obligations",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours",
+              "hoursInterval": 2
+            }
+          ]
+        }
+      },
+      "id": "sched-1",
+      "name": "Every 2 hours",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        240,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "url": "={{ $env.CANVAS_BASE_URL }}/api/v1/courses?enrollment_state=active&per_page=100",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Cookie",
+              "value": "={{ $env.CANVAS_COOKIE }}"
+            },
+            {
+              "name": "Accept",
+              "value": "application/json"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "fullResponse": true,
+              "neverError": true
+            }
+          }
+        }
+      },
+      "id": "http-courses",
+      "name": "Canvas Courses",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        480,
+        220
+      ],
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "url": "={{ $env.CANVAS_BASE_URL }}/api/v1/planner/items?start_date={{ new Date(Date.now()-14*86400000).toISOString() }}&per_page=100",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Cookie",
+              "value": "={{ $env.CANVAS_COOKIE }}"
+            },
+            {
+              "name": "Accept",
+              "value": "application/json"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "fullResponse": true,
+              "neverError": true
+            }
+          }
+        }
+      },
+      "id": "http-planner",
+      "name": "Canvas Planner",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        720,
+        300
+      ],
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "function parseIso(iso){ if(typeof iso!=='string'||!iso) return null; const t=Date.parse(iso); return Number.isFinite(t)?t:null; }\nfunction deriveStatus(sub){ if(sub&&typeof sub==='object'){ if(sub.workflow_state==='graded'||(sub.grade!=null&&sub.grade!=='')) return 'graded'; if(sub.missing===true) return 'missing'; if(sub.workflow_state==='submitted'||sub.submitted_at) return sub.late?'late':'submitted'; if(sub.late===true) return 'late'; } return 'pending'; }\nfunction parseOne(raw, courseName){ if(!raw||typeof raw!=='object') return null; const pl=raw.plannable||null; const title=(typeof raw.name==='string'&&raw.name.trim())||(pl&&typeof pl.title==='string'&&pl.title.trim())||''; if(!title) return null; const courseId=raw.course_id!=null?String(raw.course_id):null; const rawId=raw.id!=null?String(raw.id):(raw.plannable_id!=null?String(raw.plannable_id):(pl&&pl.id!=null?String(pl.id):title)); const id=courseId?(courseId+':'+rawId):rawId; const dueTs=parseIso(raw.due_at!=null?raw.due_at:(pl?pl.due_at:null)); const course=(typeof raw.context_name==='string'&&raw.context_name)||(courseId?(courseName.get(courseId)||''):'')||''; return { id: id, course: course, title: title, due_ts: dueTs, status: deriveStatus(raw.submission), url: typeof raw.html_url==='string'?raw.html_url:null }; }\nfunction parseCanvasObligations(assignments, courses){ const courseName=new Map(); if(Array.isArray(courses)){ for(const c of courses){ if(c&&c.id!=null&&typeof c.name==='string') courseName.set(String(c.id), c.name); } } if(!Array.isArray(assignments)) return []; const byId=new Map(); for(const raw of assignments){ const ob=parseOne(raw, courseName); if(ob) byId.set(ob.id, ob); } return Array.from(byId.values()); }\nfunction uuid(){ return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(ch){ const r=Math.random()*16|0; return (ch==='x'?r:(r&0x3|0x8)).toString(16); }); }\nconst fetchedTs = Date.now();\nconst c = $('Canvas Courses').first().json;\nconst p = $('Canvas Planner').first().json;\nconst coursesBody = c ? c.body : null;\nconst plannerBody = p ? p.body : null;\nconst ok = !!c && !!p && c.statusCode===200 && p.statusCode===200 && Array.isArray(coursesBody) && Array.isArray(plannerBody);\nconst obligations = ok ? parseCanvasObligations(plannerBody, coursesBody) : [];\nconst event = { id: uuid(), user_id: $env.ARCANUM_USER_ID, type: 'canvas.synced', ts: fetchedTs, device_id: $env.ARCANUM_DEVICE_ID || 'n8n-canvas', goal_id: null, module_id: null, payload: { fetched_ts: fetchedTs, ok: ok, obligations: obligations }, v: 1 };\nreturn [{ json: event }];"
+      },
+      "id": "code-build",
+      "name": "Build canvas.synced",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        960,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.SUPABASE_URL }}/rest/v1/events",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "apikey",
+              "value": "={{ $env.SUPABASE_SERVICE_ROLE }}"
+            },
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $env.SUPABASE_SERVICE_ROLE }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "Prefer",
+              "value": "return=minimal"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($json) }}",
+        "options": {}
+      },
+      "id": "http-supabase",
+      "name": "Supabase Insert",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1200,
+        300
+      ]
+    }
+  ],
+  "connections": {
+    "Every 2 hours": {
+      "main": [
+        [
+          {
+            "node": "Canvas Courses",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Canvas Courses": {
+      "main": [
+        [
+          {
+            "node": "Canvas Planner",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Canvas Planner": {
+      "main": [
+        [
+          {
+            "node": "Build canvas.synced",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build canvas.synced": {
+      "main": [
+        [
+          {
+            "node": "Supabase Insert",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "America/Monterrey"
+  },
+  "active": false,
+  "pinData": {},
+  "meta": {
+    "templateId": "arcanum-canvas-scraper"
+  }
+}

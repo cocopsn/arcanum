@@ -33,6 +33,8 @@ export interface ModuleRM {
   /** persisted canvas position (event-sourced), or null → auto-layout */
   x: number | null;
   y: number | null;
+  /** Canvas obligation this module was ascended from (Fase 4), or null */
+  sourceObligationId: string | null;
 }
 
 export interface Edge {
@@ -83,6 +85,36 @@ export interface SleepCycleRM {
   ai: { provider: string; patterns: string; axioms: string } | null;
 }
 
+/**
+ * A Canvas obligation (Fase 4) — compliance/deadline, NOT a mastery module. The
+ * mastery graph is never contaminated by these; the user manually ASCENDS the ones
+ * worth learning (a gesture that emits module.upserted with sourceObligationId).
+ */
+export interface ObligationRM {
+  id: string;
+  course: string;
+  title: string;
+  /** due date epoch ms, or null */
+  dueTs: number | null;
+  status: string;
+  source: "canvas";
+  url: string | null;
+  /** when the surviving snapshot was scraped (epoch ms) — staleness in present() */
+  fetchedTs: number;
+  /** id of the module this obligation was ascended into, or null (derived) */
+  promotedModuleId: string | null;
+}
+
+/** Canvas connection health (Fase 4). Failure is a NORMAL state, never an error. */
+export interface CanvasStatusRM {
+  /** latest scrape ATTEMPT ts (ok or not), epoch ms — null if never */
+  lastSyncTs: number | null;
+  /** latest SUCCESSFUL scrape ts, epoch ms — null if never */
+  lastOkTs: number | null;
+  /** the latest attempt failed (cookie/session expired) → showing last good data */
+  cookieStale: boolean;
+}
+
 export interface ReadModel {
   goals: Goal[];
   modules: ModuleRM[];
@@ -96,5 +128,9 @@ export interface ReadModel {
   notes: NoteRM[];
   /** Sleep Cycle digests, newest last (from sleepcycle.generated events) */
   sleepCycles: SleepCycleRM[];
+  /** Canvas obligations (Fase 4), from the last successful scrape snapshot */
+  obligations: ObligationRM[];
+  /** Canvas connection health (Fase 4) */
+  canvas: CanvasStatusRM;
   cursor: { ts: number; id: string } | null;
 }

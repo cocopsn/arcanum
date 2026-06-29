@@ -19,6 +19,7 @@ const mod = (id: string, over: Partial<ModuleRM> = {}): ModuleRM => ({
   firetestRatio: null,
   x: null,
   y: null,
+  sourceObligationId: null,
   ...over,
 });
 

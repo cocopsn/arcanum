@@ -73,6 +73,32 @@ describe("present — rito del día", () => {
   });
 });
 
+describe("present — canvas freshness (Fase 4, now-dependent)", () => {
+  const HOUR = 3_600_000;
+  const synced = (ts: number, ok: boolean) =>
+    makeEvent("canvas.synced", { fetched_ts: ts, ok, obligations: [] } as unknown as Parameters<typeof makeEvent>[1], dev(ts));
+
+  it("never connected → freshness 'none', age null", () => {
+    const vm = present(project([]), DAY(0));
+    expect(vm.canvas).toEqual({ ageMs: null, freshness: "none", cookieStale: false, lastOkTs: null });
+  });
+
+  it("fresh < 6h, recent < 24h, stale ≥ 24h", () => {
+    const rm = project([synced(DAY(0), true)]);
+    expect(present(rm, DAY(0) + 2 * HOUR).canvas.freshness).toBe("fresh");
+    expect(present(rm, DAY(0) + 10 * HOUR).canvas.freshness).toBe("recent");
+    expect(present(rm, DAY(0) + 30 * HOUR).canvas.freshness).toBe("stale");
+  });
+
+  it("a failed later scrape flags cookieStale but keeps age from the last ok", () => {
+    const rm = project([synced(DAY(0), true), synced(DAY(0) + 2 * HOUR, false)]);
+    const vm = present(rm, DAY(0) + 3 * HOUR);
+    expect(vm.canvas.cookieStale).toBe(true);
+    expect(vm.canvas.lastOkTs).toBe(DAY(0)); // age still measured from the last good scrape
+    expect(vm.canvas.ageMs).toBe(3 * HOUR);
+  });
+});
+
 describe("present — purity", () => {
   it("does not mutate the read-model; varies only with now", () => {
     const rm = project([makeEvent("error.resolved", { insight: "x" }, dev(DAY(0)))]);

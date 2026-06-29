@@ -205,3 +205,82 @@ describe("project — Phase 3 roadmap invariants", () => {
     expect(project(events).edges).toEqual([{ from: "a", to: "b" }]);
   });
 });
+
+describe("project — Phase 4 Canvas obligations", () => {
+  const O = (id: string, over: Record<string, unknown> = {}) => ({
+    id,
+    course: "C",
+    title: `T-${id}`,
+    due_ts: null,
+    status: "pending",
+    ...over,
+  });
+  const snap = (ts: number, ok: boolean, obs: unknown[]) =>
+    makeEvent("canvas.synced", { fetched_ts: ts, ok, obligations: obs } as unknown as ArcanumEvent["payload"], dev(ts));
+
+  it("an ok snapshot projects obligations + canvas health", () => {
+    const rm = project([snap(DAY1_A, true, [O("a"), O("b", { due_ts: 123, status: "graded" })])]);
+    expect(rm.obligations.map((o) => o.id).sort()).toEqual(["a", "b"]);
+    expect(rm.canvas).toEqual({ lastSyncTs: DAY1_A, lastOkTs: DAY1_A, cookieStale: false });
+    const b = rm.obligations.find((o) => o.id === "b")!;
+    expect([b.dueTs, b.status, b.source, b.fetchedTs]).toEqual([123, "graded", "canvas", DAY1_A]);
+    // a null due date must stay null — NOT become 0 (Number(null)===0 → false "overdue")
+    expect(rm.obligations.find((o) => o.id === "a")!.dueTs).toBeNull();
+  });
+
+  it("a failed scrape (cookie expired) keeps the last good data and flags stale — failure is normal", () => {
+    const rm = project([snap(DAY1_A, true, [O("a")]), snap(DAY2, false, [])]);
+    expect(rm.obligations.map((o) => o.id)).toEqual(["a"]); // last GOOD set survives
+    expect(rm.canvas).toEqual({ lastSyncTs: DAY2, lastOkTs: DAY1_A, cookieStale: true });
+  });
+
+  it("a later ok scrape replaces the set and clears stale", () => {
+    const rm = project([snap(DAY1_A, true, [O("a")]), snap(DAY2, true, [O("c"), O("d")])]);
+    expect(rm.obligations.map((o) => o.id).sort()).toEqual(["c", "d"]);
+    expect(rm.canvas).toEqual({ lastSyncTs: DAY2, lastOkTs: DAY2, cookieStale: false });
+  });
+
+  it("ascending an obligation (module.upserted w/ sourceObligationId) marks it promoted — derived + idempotent", () => {
+    const events = [
+      snap(DAY1_A, true, [O("a"), O("b")]),
+      makeEvent("goal.upserted", { title: "G", priority: 1, color: "#fff", sigil: "s" }, { ...dev(DAY1_A), goalId: "g" }),
+      makeEvent("module.upserted", { title: "T-a", prereqs: [], kind: "core", sourceObligationId: "a" }, { ...dev(DAY2), goalId: "g", moduleId: "m1" }),
+    ];
+    const rm = project(events);
+    expect(rm.obligations.find((o) => o.id === "a")!.promotedModuleId).toBe("m1");
+    expect(rm.obligations.find((o) => o.id === "b")!.promotedModuleId).toBeNull();
+    expect(rm.modules.find((m) => m.id === "m1")!.sourceObligationId).toBe("a"); // real module, linked
+    expect(project(events)).toEqual(rm); // idempotent under re-fold
+  });
+
+  it("archiving the ascended module un-marks the obligation as promoted", () => {
+    const events = [
+      snap(DAY1_A, true, [O("a")]),
+      makeEvent("module.upserted", { title: "T-a", prereqs: [], kind: "core", sourceObligationId: "a" }, { ...dev(DAY1_A), moduleId: "m1" }),
+      makeEvent("node.archived", { ref: "m1" }, dev(DAY2)),
+    ];
+    expect(project(events).obligations.find((o) => o.id === "a")!.promotedModuleId).toBeNull();
+  });
+
+  it("drops malformed rows and ignores a snapshot with non-finite fetched_ts", () => {
+    const rm = project([snap(DAY1_A, true, [O("a"), { id: "", title: "x" }, { id: "b", title: "" }, null])]);
+    expect(rm.obligations.map((o) => o.id)).toEqual(["a"]);
+    const bad = makeEvent("canvas.synced", { fetched_ts: "nope", ok: true, obligations: [O("z")] } as unknown as ArcanumEvent["payload"], dev(DAY2));
+    const rm2 = project([snap(DAY1_A, true, [O("a")]), bad]);
+    expect(rm2.obligations.map((o) => o.id)).toEqual(["a"]); // junk snapshot ignored
+    expect(rm2.canvas.lastSyncTs).toBe(DAY1_A); // not advanced by junk
+  });
+
+  it("incremental == rebuild for canvas.synced (newer day)", () => {
+    const base = [snap(DAY1_A, true, [O("a")])];
+    const prev = project(base);
+    const next = [snap(DAY2, true, [O("a"), O("b")])];
+    const all = [...base, ...next];
+    const spyP = vi.fn(project);
+    const res = applyEvents(prev, next, all, { fullProject: spyP });
+    expect(res.rebuilt).toBe(false);
+    expect(spyP).toHaveBeenCalledTimes(0);
+    expect(res.model).toEqual(project(all));
+    expect(res.model.obligations.map((o) => o.id).sort()).toEqual(["a", "b"]);
+  });
+});

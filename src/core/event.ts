@@ -25,6 +25,7 @@ export const EVENT_TYPES = [
   "note.updated",
   "sleepcycle.generated",
   "roadmap.node.moved",
+  "canvas.synced",
 ] as const;
 
 export type EventType = (typeof EVENT_TYPES)[number];
@@ -53,6 +54,9 @@ export interface ModuleUpsertedPayload {
   title: string;
   prereqs: string[];
   kind: string;
+  /** set when a module was ASCENDED from a Canvas obligation (Fase 4) — links the
+   *  learning module back to its compliance source so the agenda marks it promoted */
+  sourceObligationId?: string;
 }
 export interface EdgeUpsertedPayload {
   from: string;
@@ -108,6 +112,34 @@ export interface SleepcycleGeneratedPayload {
   digest: Json;
   /** AI enrichment, or null when no provider was available (honest degradation) */
   ai: { provider: string; patterns: string; axioms: string } | null;
+}
+
+/** One scraped Canvas obligation (compliance, NOT a mastery module). Fase 4. */
+export interface ObligationInput {
+  /** stable id from Canvas (e.g. `${courseId}:${assignmentId}`) */
+  id: string;
+  course: string;
+  title: string;
+  /** due date epoch ms, or null when Canvas has none */
+  due_ts: number | null;
+  /** Canvas status token, tolerant: pending|submitted|graded|late|missing|… */
+  status: string;
+  url?: string | null;
+}
+
+/**
+ * Written by the n8n scraper (service-role insert) and pulled by the same sync.
+ * Each event is a FULL snapshot of the current Canvas state. `ok:false` means the
+ * scrape failed (cookie expired) — a NORMAL state: the projector keeps the last
+ * good snapshot and flags the session stale, never an error.
+ */
+export interface CanvasSyncedPayload {
+  /** when n8n scraped (epoch ms) — drives data-age/staleness in present() */
+  fetched_ts: number;
+  /** did this scrape succeed? false = cookie expired / Canvas unreachable */
+  ok: boolean;
+  /** the obligations snapshot (meaningful only when ok) */
+  obligations: ObligationInput[];
 }
 
 export function newEventId(): string {

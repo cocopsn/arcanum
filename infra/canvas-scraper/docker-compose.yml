@@ -1,0 +1,38 @@
+# ARCANUM · n8n orchestrator for the Canvas scraper.
+# Levanta n8n en un droplet. Los secretos van en un archivo .env JUNTO a este
+# compose (NUNCA en el repo) — el workflow los lee por $env. Ver README.md.
+#
+#   docker compose --env-file .env up -d
+#
+# n8n queda en 127.0.0.1:5678 — NO lo expongas directo. Ponlo detrás de un
+# reverse proxy con TLS (Caddy/nginx) o accede por túnel SSH:
+#   ssh -L 5678:127.0.0.1:5678 root@<droplet>
+
+services:
+  n8n:
+    image: n8nio/n8n:1.66.0
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:5678:5678"
+    environment:
+      - GENERIC_TIMEZONE=America/Monterrey
+      - TZ=America/Monterrey
+      - N8N_HOST=${N8N_HOST:-localhost}
+      - N8N_PORT=5678
+      - N8N_PROTOCOL=${N8N_PROTOCOL:-http}
+      - WEBHOOK_URL=${WEBHOOK_URL:-http://localhost:5678/}
+      - N8N_ENCRYPTION_KEY=${N8N_ENCRYPTION_KEY}
+      - N8N_DIAGNOSTICS_ENABLED=false
+      - N8N_PERSONALIZATION_ENABLED=false
+      # ── Secrets the workflow reads via $env (set in .env on the droplet) ──
+      - CANVAS_BASE_URL=${CANVAS_BASE_URL}
+      - CANVAS_COOKIE=${CANVAS_COOKIE}
+      - SUPABASE_URL=${SUPABASE_URL}
+      - SUPABASE_SERVICE_ROLE=${SUPABASE_SERVICE_ROLE}
+      - ARCANUM_USER_ID=${ARCANUM_USER_ID}
+      - ARCANUM_DEVICE_ID=${ARCANUM_DEVICE_ID:-n8n-canvas}
+    volumes:
+      - n8n_data:/home/node/.n8n
+
+volumes:
+  n8n_data:

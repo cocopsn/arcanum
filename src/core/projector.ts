@@ -12,6 +12,8 @@ import {
   type SleepcycleGeneratedPayload,
   type FiretestAttemptedPayload,
   type NodeMovedPayload,
+  type CanvasSyncedPayload,
+  type ObligationInput,
 } from "@/core/event";
 import { parseWikilinks } from "@/core/wikilink";
 import { wouldCreateCycle } from "@/core/roadmap";
@@ -34,6 +36,8 @@ import type {
   ReviewItem,
   NoteRM,
   SleepCycleRM,
+  ObligationRM,
+  CanvasStatusRM,
 } from "@/core/read-model";
 
 const TZ = ARCANUM_CONFIG.tz;
@@ -61,6 +65,31 @@ function reinforcementQuality(e: ArcanumEvent): number | null {
   return null;
 }
 
+/**
+ * Tolerant parse of one scraped obligation — degrade field-by-field, never throw.
+ * A row missing a usable id or title is dropped (honest: we don't show junk).
+ */
+function sanitizeObligation(o: ObligationInput, fetchedTs: number): ObligationRM | null {
+  if (!o || typeof o !== "object") return null;
+  const id = typeof o.id === "string" ? o.id.trim() : "";
+  const title = typeof o.title === "string" ? o.title.trim() : "";
+  if (!id || !title) return null;
+  // null/undefined/non-number/NaN → null (Number(null) is 0, NOT NaN — must guard
+  // explicitly or a missing due date becomes 1970 and reads as "overdue").
+  const dueTs = typeof o.due_ts === "number" && Number.isFinite(o.due_ts) ? o.due_ts : null;
+  return {
+    id,
+    title,
+    course: typeof o.course === "string" ? o.course : "",
+    dueTs,
+    status: typeof o.status === "string" && o.status ? o.status : "pending",
+    source: "canvas",
+    url: typeof o.url === "string" ? o.url : null,
+    fetchedTs,
+    promotedModuleId: null, // derived at assemble
+  };
+}
+
 interface Acc {
   goals: Map<string, Goal>;
   modules: Map<string, ModuleRM>;
@@ -69,6 +98,11 @@ interface Acc {
   notes: Map<string, NoteRM>;
   sleepCycles: SleepCycleRM[];
   totalXp: number;
+  /** Canvas obligations from the last OK snapshot (Fase 4) */
+  canvasObligations: ObligationRM[];
+  canvasLastSyncTs: number | null;
+  canvasLastOkTs: number | null;
+  canvasCookieStale: boolean;
 }
 
 function applyDomain(acc: Acc, e: ArcanumEvent): void {
@@ -102,6 +136,7 @@ function applyDomain(acc: Acc, e: ArcanumEvent): void {
           // Preserve the prior goal when a rename-style re-upsert omits goal_id —
           // never silently detach the module from its lane (defensive, like notes).
           goalId: e.goal_id ?? prev.goalId,
+          sourceObligationId: p.sourceObligationId ?? prev.sourceObligationId,
         });
       } else {
         const m = initialMastery(msToDays(e.ts));
@@ -120,6 +155,7 @@ function applyDomain(acc: Acc, e: ArcanumEvent): void {
           firetestRatio: null,
           x: null,
           y: null,
+          sourceObligationId: p.sourceObligationId ?? null,
         });
       }
       return;
@@ -239,6 +275,23 @@ function applyDomain(acc: Acc, e: ArcanumEvent): void {
       acc.modules.set(p.ref, { ...prev, x: p.x, y: p.y });
       return;
     }
+    case "canvas.synced": {
+      // Full snapshot. Events fold in ts order → the LAST canvas.synced wins for
+      // attempt status; the last OK one wins for the obligation set + data age.
+      // A failed scrape (cookie expired) keeps the last good data and flags stale.
+      const p = e.payload as unknown as CanvasSyncedPayload;
+      const fetchedTs = Number(p.fetched_ts);
+      if (!Number.isFinite(fetchedTs)) return;
+      acc.canvasLastSyncTs = fetchedTs;
+      acc.canvasCookieStale = !p.ok;
+      if (p.ok && Array.isArray(p.obligations)) {
+        acc.canvasObligations = p.obligations
+          .map((o) => sanitizeObligation(o, fetchedTs))
+          .filter((o): o is ObligationRM => o !== null);
+        acc.canvasLastOkTs = fetchedTs;
+      }
+      return;
+    }
     case "sleepcycle.generated": {
       const p = e.payload as unknown as SleepcycleGeneratedPayload;
       acc.sleepCycles.push({ id: e.id, day: p.day, ts: e.ts, digest: p.digest, ai: p.ai });
@@ -280,6 +333,10 @@ function emptyAcc(): Acc {
     notes: new Map(),
     sleepCycles: [],
     totalXp: 0,
+    canvasObligations: [],
+    canvasLastSyncTs: null,
+    canvasLastOkTs: null,
+    canvasCookieStale: false,
   };
 }
 
@@ -292,6 +349,11 @@ function accFromModel(prev: ReadModel): Acc {
     notes: new Map(prev.notes.map((n) => [n.id, n])),
     sleepCycles: [...prev.sleepCycles],
     totalXp: prev.stats.totalXp,
+    // promotedModuleId is DERIVED at assemble → carry the raw set forward.
+    canvasObligations: prev.obligations.map((o) => ({ ...o, promotedModuleId: null })),
+    canvasLastSyncTs: prev.canvas.lastSyncTs,
+    canvasLastOkTs: prev.canvas.lastOkTs,
+    canvasCookieStale: prev.canvas.cookieStale,
   };
 }
 
@@ -306,12 +368,28 @@ function assemble(
   const reviewDue: ReviewItem[] = modules
     .filter((m) => m.status === "completed" && !m.archived)
     .map((m) => ({ moduleId: m.id, dueDays: m.dueDays }));
+  // Promotion is DERIVED: an obligation is "ascended" iff a live module links to it.
+  const promotedByObligation = new Map<string, string>();
+  for (const m of modules) {
+    if (m.sourceObligationId && !m.archived) promotedByObligation.set(m.sourceObligationId, m.id);
+  }
+  const obligations: ObligationRM[] = acc.canvasObligations.map((o) => ({
+    ...o,
+    promotedModuleId: promotedByObligation.get(o.id) ?? null,
+  }));
+  const canvas: CanvasStatusRM = {
+    lastSyncTs: acc.canvasLastSyncTs,
+    lastOkTs: acc.canvasLastOkTs,
+    cookieStale: acc.canvasCookieStale,
+  };
   return {
     goals: [...acc.goals.values()],
     modules,
     edges: [...acc.edges],
     notes: finalizeNotes([...acc.notes.values()]),
     sleepCycles: [...acc.sleepCycles],
+    obligations,
+    canvas,
     qualifiedDays,
     stats: {
       totalXp: acc.totalXp,
