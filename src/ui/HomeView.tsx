@@ -14,6 +14,7 @@ import { SyncStatus } from "@/ui/SyncStatus";
 import { AuthSheet } from "@/ui/AuthSheet";
 import { CodiceSheet } from "@/ui/CodiceSheet";
 import { NotesSheet } from "@/ui/NotesSheet";
+import { VigiliaSheet } from "@/ui/VigiliaSheet";
 import { AscensionCeremony } from "@/ui/AscensionCeremony";
 import { InstallCoachMark } from "@/ui/InstallCoachMark";
 import type { ReadModel, Stats } from "@/core/read-model";
@@ -31,6 +32,7 @@ export function HomeView() {
     open: false,
     moduleId: null,
   });
+  const [vigiliaOpen, setVigiliaOpen] = useState(false);
 
   if (status === "loading") {
     return (
@@ -64,11 +66,13 @@ export function HomeView() {
         <Footer
           onCodice={() => setCodiceOpen(true)}
           onNotes={() => setNotes({ open: true, moduleId: null })}
+          onVigilia={() => setVigiliaOpen(true)}
         />
       </main>
 
       <AuthSheet open={authOpen} onClose={() => setAuthOpen(false)} />
       <CodiceSheet open={codiceOpen} onClose={() => setCodiceOpen(false)} />
+      <VigiliaSheet open={vigiliaOpen} onClose={() => setVigiliaOpen(false)} />
       <NotesSheet
         open={notes.open}
         moduleId={notes.moduleId}
@@ -170,19 +174,36 @@ function Goals({
   );
 }
 
-function Footer({ onCodice, onNotes }: { onCodice: () => void; onNotes: () => void }) {
+function Footer({
+  onCodice,
+  onNotes,
+  onVigilia,
+}: {
+  onCodice: () => void;
+  onNotes: () => void;
+  onVigilia: () => void;
+}) {
   const { rebuild } = useActions();
   const item = "min-h-11 text-[11px] uppercase tracking-[0.2em] text-text-faint transition";
+  const sep = (
+    <span className="text-text-faint" aria-hidden>
+      ·
+    </span>
+  );
   return (
     <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1">
       <button onClick={onNotes} className={`${item} hover:text-topic`}>
         Notas
       </button>
-      <span className="text-text-faint" aria-hidden>·</span>
+      {sep}
+      <button onClick={onVigilia} className={`${item} hover:text-gold`}>
+        Vigilia
+      </button>
+      {sep}
       <button onClick={onCodice} className={`${item} hover:text-rank`}>
         Códice
       </button>
-      <span className="text-text-faint" aria-hidden>·</span>
+      {sep}
       <button onClick={() => void rebuild()} className={`${item} hover:text-text-muted`}>
         Reconstruir índice
       </button>

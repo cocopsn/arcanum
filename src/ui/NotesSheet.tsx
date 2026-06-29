@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useArcanum } from "@/app/providers";
 import { useActions } from "@/ui/use-actions";
 import { NoteEditor } from "@/ui/NoteEditor";
+import { ocrImage } from "@/sync/ai";
 
 export function NotesSheet({
   open,
@@ -20,6 +21,10 @@ export function NotesSheet({
   const { createNote } = useActions();
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+  const [ocr, setOcr] = useState<{ status: "idle" | "processing" | "error"; message?: string }>({
+    status: "idle",
+  });
+  const fileRef = useRef<HTMLInputElement>(null);
 
   if (!open) return null;
 
@@ -49,6 +54,29 @@ export function NotesSheet({
     setSelectedId(id);
   }
 
+  async function handleFile(file: File | undefined) {
+    if (!file) return;
+    setOcr({ status: "processing" });
+    try {
+      const dataUrl = await new Promise<string>((resolve, reject) => {
+        const r = new FileReader();
+        r.onload = () => resolve(String(r.result));
+        r.onerror = () => reject(new Error("No se pudo leer la imagen."));
+        r.readAsDataURL(file);
+      });
+      const { markdown } = await ocrImage(dataUrl);
+      const id = await createNote(
+        { moduleId: moduleId ?? null, goalId: goalId ?? null },
+        "Página manuscrita",
+        markdown,
+      );
+      setOcr({ status: "idle" });
+      setSelectedId(id);
+    } catch (e) {
+      setOcr({ status: "error", message: e instanceof Error ? e.message : "El OCR falló." });
+    }
+  }
+
   return (
     <div
       className="fixed inset-0 z-50 flex items-end justify-center sm:items-center"
@@ -64,18 +92,40 @@ export function NotesSheet({
           <NoteEditor note={selected} allNotes={notes} onNavigate={navigate} onBack={() => setSelectedId(null)} />
         ) : (
           <>
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between gap-2">
               <h2 className="font-display text-lg tracking-[0.14em] text-rank">NOTAS</h2>
-              <button
-                onClick={newNote}
-                disabled={busy}
-                className="min-h-11 rounded-[var(--r-sm)] border border-rank px-3 text-sm text-rank transition hover:bg-rank-soft disabled:opacity-40"
-              >
-                Nueva nota
-              </button>
+              <div className="flex gap-2">
+                <button
+                  onClick={() => fileRef.current?.click()}
+                  disabled={ocr.status === "processing"}
+                  className="min-h-11 rounded-[var(--r-sm)] border border-line px-3 text-sm text-text-muted transition hover:border-topic hover:text-topic disabled:opacity-40"
+                >
+                  {ocr.status === "processing" ? "Leyendo…" : "OCR"}
+                </button>
+                <button
+                  onClick={newNote}
+                  disabled={busy}
+                  className="min-h-11 rounded-[var(--r-sm)] border border-rank px-3 text-sm text-rank transition hover:bg-rank-soft disabled:opacity-40"
+                >
+                  Nueva nota
+                </button>
+              </div>
             </div>
+            <input
+              ref={fileRef}
+              type="file"
+              accept="image/*"
+              capture="environment"
+              className="hidden"
+              onChange={(e) => {
+                const f = e.target.files?.[0];
+                e.target.value = "";
+                void handleFile(f);
+              }}
+            />
+            {ocr.status === "error" && <p className="mt-2 text-sm text-amber">{ocr.message}</p>}
             <p className="mb-3 mt-1 text-sm text-text-muted">
-              {scoped.length} nota{scoped.length === 1 ? "" : "s"} · markdown crudo, [[wikilinks]] navegables.
+              {scoped.length} nota{scoped.length === 1 ? "" : "s"} · markdown crudo, [[wikilinks]] navegables. OCR vía Edge Function.
             </p>
             <div className="space-y-2">
               {scoped.length === 0 && (

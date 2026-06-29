@@ -1,4 +1,5 @@
 import type { GradeName } from "@/core/config";
+import type { Json } from "@/core/event";
 
 export interface Goal {
   id: string;
@@ -66,6 +67,17 @@ export interface NoteRM {
   updatedTs: number;
 }
 
+export interface SleepCycleRM {
+  /** event id of the sleepcycle.generated event */
+  id: string;
+  day: string;
+  ts: number;
+  /** local 24h fold (DayDigest) */
+  digest: Json;
+  /** AI enrichment, or null when no provider was available */
+  ai: { provider: string; patterns: string; axioms: string } | null;
+}
+
 export interface ReadModel {
   goals: Goal[];
   modules: ModuleRM[];
@@ -77,5 +89,7 @@ export interface ReadModel {
   reviewDue: ReviewItem[];
   /** Obsidian notes graph, content reconstructed from the log */
   notes: NoteRM[];
+  /** Sleep Cycle digests, newest last (from sleepcycle.generated events) */
+  sleepCycles: SleepCycleRM[];
   cursor: { ts: number; id: string } | null;
 }

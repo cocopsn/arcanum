@@ -9,6 +9,7 @@ import {
   type CheckpointPassedPayload,
   type NoteCreatedPayload,
   type NoteUpdatedPayload,
+  type SleepcycleGeneratedPayload,
 } from "@/core/event";
 import { parseWikilinks } from "@/core/wikilink";
 import { ARCANUM_CONFIG } from "@/core/config";
@@ -22,7 +23,15 @@ import {
   type StreakResult,
 } from "@/core/streak";
 import { initialMastery, reinforce } from "@/core/mastery";
-import type { ReadModel, Goal, ModuleRM, Edge, ReviewItem, NoteRM } from "@/core/read-model";
+import type {
+  ReadModel,
+  Goal,
+  ModuleRM,
+  Edge,
+  ReviewItem,
+  NoteRM,
+  SleepCycleRM,
+} from "@/core/read-model";
 
 const TZ = ARCANUM_CONFIG.tz;
 const M = ARCANUM_CONFIG.mastery;
@@ -55,6 +64,7 @@ interface Acc {
   edges: Edge[];
   edgeSet: Set<string>;
   notes: Map<string, NoteRM>;
+  sleepCycles: SleepCycleRM[];
   totalXp: number;
 }
 
@@ -198,6 +208,11 @@ function applyDomain(acc: Acc, e: ArcanumEvent): void {
       });
       return;
     }
+    case "sleepcycle.generated": {
+      const p = e.payload as unknown as SleepcycleGeneratedPayload;
+      acc.sleepCycles.push({ id: e.id, day: p.day, ts: e.ts, digest: p.digest, ai: p.ai });
+      return;
+    }
     default:
       return;
   }
@@ -232,6 +247,7 @@ function emptyAcc(): Acc {
     edges: [],
     edgeSet: new Set(),
     notes: new Map(),
+    sleepCycles: [],
     totalXp: 0,
   };
 }
@@ -243,6 +259,7 @@ function accFromModel(prev: ReadModel): Acc {
     edges: [...prev.edges],
     edgeSet: new Set(prev.edges.map((e) => `${e.from}|${e.to}`)),
     notes: new Map(prev.notes.map((n) => [n.id, n])),
+    sleepCycles: [...prev.sleepCycles],
     totalXp: prev.stats.totalXp,
   };
 }
@@ -263,6 +280,7 @@ function assemble(
     modules,
     edges: [...acc.edges],
     notes: finalizeNotes([...acc.notes.values()]),
+    sleepCycles: [...acc.sleepCycles],
     qualifiedDays,
     stats: {
       totalXp: acc.totalXp,
