@@ -20,6 +20,8 @@ export interface TutorContext {
   topicTitle: string;
   /** authored topic summary, or null if none curated */
   topicSummary: string | null;
+  /** canonical source URLs of the cell — anchors the answer to the real material */
+  sources: string[];
   status: string;
   masteryPct: number;
   prereqTitles: string[];
@@ -46,10 +48,12 @@ export function buildTutorContext(rm: ReadModel, moduleId: string, question: str
       excerpt: n.markdown.replace(/\s+/g, " ").trim().slice(0, EXCERPT),
     }));
 
+  const content = contentForModule(moduleId);
   return {
     question: question.trim(),
     topicTitle: m.title,
-    topicSummary: contentForModule(moduleId)?.summary ?? null,
+    topicSummary: content?.summary ?? null,
+    sources: content?.sourceUrls ?? [],
     status: m.status,
     masteryPct: Math.round(retrievability(m.S, m.lastReinforcedDays, nowDays) * 100),
     prereqTitles,

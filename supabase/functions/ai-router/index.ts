@@ -213,6 +213,63 @@ async function evaluate(
   throw new Error(`proveedor desconocido: ${provider}`);
 }
 
+async function gate(
+  provider: string,
+  context: { cellTitle?: string; question?: string; rubric?: string[]; justification?: string; sourceRefs?: string[] },
+): Promise<{ passed: boolean; score: number; summary: string; feedback: string }> {
+  const prompt =
+    "Eres el evaluador de la COMPUERTA DE SALIDA de una celda de aprendizaje, persona Asuka calibrada al 0.1% MUNDIAL " +
+    "(no nacional). NO pasas una respuesta por ser correcta — pasas SOLO cuando la justificación es de PRIMER PRINCIPIO, " +
+    "defendible frente a alguien de MIT. Te doy la celda, la pregunta, la RÚBRICA (criterios anclados a la fuente canónica, " +
+    "p.ej. CLRS) y la JUSTIFICACIÓN del aprendiz. Califica la justificación contra CADA punto de la rúbrica. Responde SOLO " +
+    'JSON {"passed": boolean, "score": number (0-1), "summary": string, "feedback": string}. passed=true SOLO si cubre los ' +
+    "puntos CLAVE de la rúbrica con argumento de primer principio. ANTI-GAMING: justificación vacía, trivial, copiada, o que " +
+    "solo NOMBRA el algoritmo sin DERIVAR → passed=false, score bajo. feedback: adversarial y accionable, cita QUÉ punto de la " +
+    "rúbrica falló y por qué (reconocimiento BREVE, corrección DETALLADA), empuja al primer principio. Español. " +
+    `CELDA: ${context.cellTitle ?? ""}. PREGUNTA: ${context.question ?? ""}. RÚBRICA: ${JSON.stringify(context.rubric ?? [])}. ` +
+    `JUSTIFICACIÓN DEL APRENDIZ: ${context.justification ?? ""}`;
+  const parse = (text: string) => {
+    try {
+      const m = text.match(/\{[\s\S]*\}/);
+      const o = JSON.parse(m ? m[0] : text);
+      const score = Number(o.score);
+      return {
+        passed: o.passed === true,
+        score: Number.isFinite(score) ? Math.max(0, Math.min(1, score)) : 0,
+        summary: String(o.summary ?? ""),
+        feedback: String(o.feedback ?? ""),
+      };
+    } catch {
+      return { passed: false, score: 0, summary: "No evaluable.", feedback: text.slice(0, 300) };
+    }
+  };
+  if (provider === "openai") {
+    const key = Deno.env.get("OPENAI_API_KEY");
+    if (!key) throw new Error("OPENAI_API_KEY ausente");
+    const res = await fetch("https://api.openai.com/v1/chat/completions", {
+      method: "POST",
+      headers: { Authorization: `Bearer ${key}`, "Content-Type": "application/json" },
+      body: JSON.stringify({ model: "gpt-4o-mini", max_tokens: 800, messages: [{ role: "user", content: prompt }] }),
+    });
+    if (!res.ok) throw new Error(`openai ${res.status}`);
+    const j = await res.json();
+    return parse(j.choices?.[0]?.message?.content ?? "");
+  }
+  if (provider === "anthropic") {
+    const key = Deno.env.get("ANTHROPIC_API_KEY");
+    if (!key) throw new Error("ANTHROPIC_API_KEY ausente");
+    const res = await fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST",
+      headers: { "x-api-key": key, "anthropic-version": "2023-06-01", "Content-Type": "application/json" },
+      body: JSON.stringify({ model: "claude-3-5-haiku-20241022", max_tokens: 800, messages: [{ role: "user", content: prompt }] }),
+    });
+    if (!res.ok) throw new Error(`anthropic ${res.status}`);
+    const j = await res.json();
+    return parse(j.content?.[0]?.text ?? "");
+  }
+  throw new Error(`proveedor desconocido: ${provider}`);
+}
+
 async function tutor(provider: string, context: { question?: string } & Record<string, unknown>): Promise<string> {
   const system =
     "Eres el tutor de ARCANUM, persona estilo Asuka: exigente, directa, adversarial al servicio " +
@@ -300,6 +357,10 @@ Deno.serve(async (req: Request) => {
       const ctx = (body.context ?? {}) as { question?: string } & Record<string, unknown>;
       const r = await routeWithFallback(providers, (p) => tutor(p, ctx));
       return json({ provider: r.provider, answer: r.value });
+    }
+    if (body.action === "gate") {
+      const r = await routeWithFallback(providers, (p) => gate(p, body.context ?? {}));
+      return json({ provider: r.provider, passed: r.value.passed, score: r.value.score, summary: r.value.summary, feedback: r.value.feedback });
     }
     return json({ error: "Acción desconocida." }, 400);
   } catch (err) {

@@ -4,7 +4,8 @@ import { useArcanumStore, useArcanumSync } from "@/app/providers";
 import { makeEvent, newEventId, type EventType, type Json } from "@/core/event";
 import { getDeviceId } from "@/lib/device";
 import { buildEvaluationContext, heuristicEvaluation } from "@/core/evaluation";
-import { requestModuleEvaluation } from "@/sync/ai";
+import { buildGateContext, heuristicGate } from "@/lib/gate";
+import { requestModuleEvaluation, requestGateEvaluation } from "@/sync/ai";
 
 interface Refs {
   goalId?: string | null;
@@ -56,6 +57,26 @@ export function useActions() {
         ? { summary: ai.summary, strengths: ai.strengths, gaps: ai.gaps, challenge: ai.challenge, score: h.score, source: "ai", provider: ai.provider }
         : { summary: h.summary, strengths: h.strengths, gaps: h.gaps, challenge: h.challenge, score: h.score, source: "heuristic", provider: null };
       await fire("module.evaluated", payload as unknown as Json, { goalId, moduleId });
+    },
+    // The adversarial EXIT GATE (WHITE ROOM): grade the learner's justification against
+    // the cell rubric. ONLY a pass opens the gate → unseals the next cell (real power).
+    // No AI → honest heuristic that NEVER auto-passes. Records gate.evaluated (auditable).
+    evaluateGate: async (moduleId: string, justification: string): Promise<void> => {
+      const rm = store.getState().readModel;
+      const ctx = buildGateContext(rm, moduleId, justification);
+      if (!ctx) return;
+      const ai = await requestGateEvaluation(ctx);
+      const v = ai ?? heuristicGate(ctx);
+      const goalId = rm.modules.find((m) => m.id === moduleId)?.goalId ?? null;
+      const payload = {
+        passed: v.passed,
+        score: v.score,
+        summary: v.summary,
+        feedback: v.feedback,
+        source: ai ? "ai" : "heuristic",
+        provider: ai ? ai.provider : null,
+      };
+      await fire("gate.evaluated", payload as unknown as Json, { goalId, moduleId });
     },
     createNote: async (refs: Refs, title: string, markdown: string): Promise<string> => {
       const noteId = newEventId();

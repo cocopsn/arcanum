@@ -297,6 +297,38 @@ describe("project — Phase 4 Canvas obligations", () => {
     expect(project(events)).toEqual(rm); // idempotent under re-fold
   });
 
+  it("gate.evaluated: a PASS opens the cell's gate (monotonic) and reveals the next cell", () => {
+    const base = [
+      makeEvent("module.upserted", { title: "Cell A", prereqs: [], kind: "cell" }, { ...dev(DAY1_A), goalId: "g", moduleId: "a" }),
+      makeEvent("module.upserted", { title: "Cell B", prereqs: [], kind: "cell" }, { ...dev(DAY1_A), goalId: "g", moduleId: "b" }),
+      makeEvent("roadmap.edge.upserted", { from: "a", to: "b" }, dev(DAY1_A)),
+    ];
+    // before: B is sealed (A not mastered)
+    const before = project(base);
+    const byId0 = new Map(before.modules.map((m) => [m.id, m]));
+    expect(byId0.get("a")!.gatePassed).toBe(false);
+
+    const passed = [
+      ...base,
+      makeEvent("gate.evaluated", { passed: true, score: 0.9, summary: "ok", feedback: "defendible", source: "ai", provider: "openai" }, { ...dev(DAY2), moduleId: "a" }),
+    ];
+    const rm = project(passed);
+    const a = rm.modules.find((m) => m.id === "a")!;
+    expect(a.gatePassed).toBe(true);
+    expect(rm.gates).toHaveLength(1);
+    expect(rm.gates[0]!.passed).toBe(true);
+
+    // a later FAIL does NOT re-seal what was demonstrated (monotonic)
+    const thenFail = [
+      ...passed,
+      makeEvent("gate.evaluated", { passed: false, score: 0.2, summary: "x", feedback: "y", source: "heuristic", provider: null }, { ...dev(DAY2 + 1000), moduleId: "a" }),
+    ];
+    const rm2 = project(thenFail);
+    expect(rm2.modules.find((m) => m.id === "a")!.gatePassed).toBe(true); // still open
+    expect(rm2.gates[0]!.passed).toBe(false); // but the latest verdict is the fail
+    expect(project(thenFail)).toEqual(rm2); // idempotent
+  });
+
   it("celebratedGrade derives the max acknowledged grade from the log; null when none", () => {
     expect(project([]).celebratedGrade).toBeNull();
     const rm = project([

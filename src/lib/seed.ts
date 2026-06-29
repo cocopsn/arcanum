@@ -1,64 +1,54 @@
 import { makeEvent, type ArcanumEvent } from "@/core/event";
-import { ARCANUM_CONFIG } from "@/core/config";
+import { SPINES } from "@/lib/spines";
 
-// Day-0 seed: 3 goals (ITC / FrED / Alemán), their modules, and prereq edges —
-// a real DAG with sealed downstream nodes. As EVENTS (not state). Fixed UUIDs
-// (valid uuid, exempt from uuidv7) → re-running the seed `put`s by id without
-// duplicating (spec §12). Nothing is pre-completed.
+// Day-0 seed: the THREE CURRICULAR SPINES (WHITE ROOM) as the roadmap DAG. Each goal
+// is a spine; each cell is a module; course order is the dependency (a linear chain →
+// fog-of-war seals later cells until the prior is mastered/gate-passed). Structure +
+// canonical source URLs are REAL (extracted, see lib/spines.ts) — bodies fill on demand.
+// As EVENTS, fixed UUIDs (exempt from uuidv7) → idempotent re-seed (spec §12).
 
 const DEVICE = "seed";
 const TS = Date.UTC(2026, 5, 20, 18, 0, 0);
 
-const G = {
-  itc: "a0000000-0000-4000-8000-000000000001",
-  fred: "a0000000-0000-4000-8000-000000000002",
-  aleman: "a0000000-0000-4000-8000-000000000003",
-} as const;
-
-const M = {
-  edd: "a0000000-0000-4000-8000-000000000101",
-  arboles: "a0000000-0000-4000-8000-000000000102",
-  grafos: "a0000000-0000-4000-8000-000000000103",
-  proto: "a0000000-0000-4000-8000-000000000201",
-  aditiva: "a0000000-0000-4000-8000-000000000202",
-  a1: "a0000000-0000-4000-8000-000000000301",
-  a2: "a0000000-0000-4000-8000-000000000302",
-} as const;
-
-export const SEED_GOAL_ID = G.itc;
-export const SEED_MODULE_ID = M.edd;
-/** Stable seed module ids — let the subject-content layer (Bloque 4) key topics. */
-export const SEED_MODULE_IDS = M;
-/** Stable seed goal ids. */
-export const SEED_GOAL_IDS = G;
-
 let seq = 0;
 let ts = TS;
 const fixedId = () => `b0000000-0000-4000-8000-${String(++seq).padStart(12, "0")}`;
-const mkGoal = (goalId: string, title: string, color: string, sigil: string) =>
-  makeEvent("goal.upserted", { title, priority: 1, color, sigil }, { ts: ts++, deviceId: DEVICE, goalId, id: fixedId() });
-const mkModule = (moduleId: string, goalId: string, title: string) =>
-  makeEvent("module.upserted", { title, prereqs: [], kind: "core" }, { ts: ts++, deviceId: DEVICE, goalId, moduleId, id: fixedId() });
-const mkEdge = (from: string, to: string) =>
-  makeEvent("roadmap.edge.upserted", { from, to }, { ts: ts++, deviceId: DEVICE, id: fixedId() });
 
-const T = ARCANUM_CONFIG.topicDefaults;
+function buildSeed(): ArcanumEvent[] {
+  const events: ArcanumEvent[] = [];
+  for (const sp of SPINES) {
+    events.push(
+      makeEvent(
+        "goal.upserted",
+        { title: sp.goalTitle, priority: 1, color: sp.color, sigil: sp.sigil },
+        { ts: ts++, deviceId: DEVICE, goalId: sp.goalId, id: fixedId() },
+      ),
+    );
+    for (const cell of sp.cells) {
+      events.push(
+        makeEvent(
+          "module.upserted",
+          { title: cell.title, prereqs: [], kind: "cell" },
+          { ts: ts++, deviceId: DEVICE, goalId: sp.goalId, moduleId: cell.id, id: fixedId() },
+        ),
+      );
+    }
+    // course order = dependency: cell[i] → cell[i+1] (linear chain DAG)
+    for (let i = 0; i + 1 < sp.cells.length; i++) {
+      events.push(
+        makeEvent(
+          "roadmap.edge.upserted",
+          { from: sp.cells[i]!.id, to: sp.cells[i + 1]!.id },
+          { ts: ts++, deviceId: DEVICE, id: fixedId() },
+        ),
+      );
+    }
+  }
+  return events;
+}
 
-export const SEED_EVENTS: ArcanumEvent[] = [
-  mkGoal(G.itc, "ITC", T.ITC, "itc"),
-  mkGoal(G.fred, "FrED Factory", T["FrED Factory"], "fred"),
-  mkGoal(G.aleman, "Alemán", T.Alemán, "aleman"),
+export const SEED_EVENTS: ArcanumEvent[] = buildSeed();
 
-  mkModule(M.edd, G.itc, "Estructuras de datos: fundamentos"),
-  mkModule(M.arboles, G.itc, "Árboles balanceados"),
-  mkModule(M.grafos, G.itc, "Grafos y rutas"),
-  mkModule(M.proto, G.fred, "Prototipado rápido"),
-  mkModule(M.aditiva, G.fred, "Manufactura aditiva"),
-  mkModule(M.a1, G.aleman, "A1 — fundamentos"),
-  mkModule(M.a2, G.aleman, "A2 — conversación"),
-
-  mkEdge(M.edd, M.arboles),
-  mkEdge(M.arboles, M.grafos),
-  mkEdge(M.proto, M.aditiva),
-  mkEdge(M.a1, M.a2),
-];
+/** ITC spine + its first cell (CS50 ramp) — stable refs for tests/dispatch. */
+export const SEED_GOAL_ID = SPINES[0]!.goalId;
+export const SEED_MODULE_ID = SPINES[0]!.cells[0]!.id;

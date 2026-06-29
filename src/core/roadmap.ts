@@ -9,12 +9,13 @@ export function prereqsOf(moduleId: string, edges: Edge[]): string[] {
 }
 
 /**
- * A module counts as mastered (for fog-of-war reveal) when it is completed OR a
- * fire test cleared the bar — the firetest infers level and can reveal nodes,
- * skipping the path (spec Fase 3). Derived; idempotent under re-fold.
+ * A module counts as mastered (for fog-of-war reveal) when it is completed, a fire
+ * test cleared the bar, OR its adversarial EXIT GATE was passed (WHITE ROOM — the
+ * gate has real power: passing it demonstrates first-principle mastery and unseals
+ * the next cell). Derived; idempotent under re-fold.
  */
 export function isMastered(m: ModuleRM): boolean {
-  if (m.status === "completed") return true;
+  if (m.status === "completed" || m.gatePassed) return true;
   return (m.firetestRatio ?? 0) >= ARCANUM_CONFIG.roadmap.firetestRevealThreshold;
 }
 

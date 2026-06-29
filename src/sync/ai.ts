@@ -60,6 +60,41 @@ export async function requestModuleEvaluation(context: unknown): Promise<AiVerdi
   }
 }
 
+export interface GateReply {
+  passed: boolean;
+  score: number;
+  summary: string;
+  feedback: string;
+  provider: string;
+}
+
+/** Adversarial EXIT-GATE evaluation (WHITE ROOM). The evaluator grades the learner's
+ *  justification against the cell rubric and decides pass/fail. null on ANY failure
+ *  (no session/keys/error) → caller falls back to the honest heuristic (which never
+ *  auto-passes). */
+export async function requestGateEvaluation(context: unknown): Promise<GateReply | null> {
+  try {
+    const sb = getSupabase();
+    const {
+      data: { session },
+    } = await sb.auth.getSession();
+    if (!session) return null;
+    const { data, error } = await sb.functions.invoke("ai-router", {
+      body: { action: "gate", context },
+    });
+    if (error || data?.error || typeof data?.passed !== "boolean") return null;
+    return {
+      passed: data.passed === true,
+      score: typeof data.score === "number" ? data.score : 0,
+      summary: String(data.summary ?? ""),
+      feedback: String(data.feedback ?? ""),
+      provider: String(data.provider ?? "ai"),
+    };
+  } catch {
+    return null;
+  }
+}
+
 export interface TutorReply {
   answer: string;
   provider: string;

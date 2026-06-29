@@ -58,6 +58,7 @@ const mod = (id: string, over: Partial<ModuleRM> = {}): ModuleRM => ({
   x: null,
   y: null,
   sourceObligationId: null,
+  gatePassed: false,
   ...over,
 });
 

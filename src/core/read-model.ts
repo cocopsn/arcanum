@@ -35,6 +35,9 @@ export interface ModuleRM {
   y: number | null;
   /** Canvas obligation this module was ascended from (Fase 4), or null */
   sourceObligationId: string | null;
+  /** the adversarial EXIT GATE has been passed (WHITE ROOM) — monotonic; once true
+   *  the cell counts as mastered and unseals the next cell (fog-of-war) */
+  gatePassed: boolean;
 }
 
 export interface Edge {
@@ -107,6 +110,18 @@ export interface ObligationRM {
   promotedModuleId: string | null;
 }
 
+/** Latest EXIT GATE verdict for a cell (WHITE ROOM), folded from the log. */
+export interface GateRM {
+  moduleId: string;
+  passed: boolean;
+  score: number | null;
+  summary: string;
+  feedback: string;
+  source: "ai" | "heuristic";
+  provider: string | null;
+  ts: number;
+}
+
 /** Latest adversarial evaluation of a module (Bloque 5), folded from the log. */
 export interface EvaluationRM {
   moduleId: string;
@@ -152,5 +167,7 @@ export interface ReadModel {
   celebratedGrade: number | null;
   /** latest evaluation per module (Bloque 5), folded from module.evaluated events */
   evaluations: EvaluationRM[];
+  /** latest EXIT GATE verdict per cell (WHITE ROOM), folded from gate.evaluated */
+  gates: GateRM[];
   cursor: { ts: number; id: string } | null;
 }

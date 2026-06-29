@@ -20,6 +20,7 @@ const mod = (id: string, over: Partial<ModuleRM> = {}): ModuleRM => ({
   x: null,
   y: null,
   sourceObligationId: null,
+  gatePassed: false,
   ...over,
 });
 
@@ -82,6 +83,18 @@ describe("roadmap derivation", () => {
     const edges: Edge[] = [{ from: "root", to: "child" }];
     expect(isRevealed("child", edges, byId)).toBe(true);
     expect(nodeStatus(child, edges, byId)).toBe("available");
+  });
+
+  it("passing the adversarial exit gate (gatePassed) masters a cell and reveals the next", () => {
+    const a = mod("a", { gatePassed: true }); // exit gate passed
+    const b = mod("b");
+    const byId = new Map([
+      ["a", a],
+      ["b", b],
+    ]);
+    const edges: Edge[] = [{ from: "a", to: "b" }];
+    expect(isMastered(a)).toBe(true);
+    expect(nodeStatus(b, edges, byId)).toBe("available"); // gate gave real power over progression
   });
 
   it("a firetest-mastered node surfaces itself even with an unmet prereq (not buried)", () => {
