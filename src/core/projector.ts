@@ -10,8 +10,11 @@ import {
   type NoteCreatedPayload,
   type NoteUpdatedPayload,
   type SleepcycleGeneratedPayload,
+  type FiretestAttemptedPayload,
+  type NodeMovedPayload,
 } from "@/core/event";
 import { parseWikilinks } from "@/core/wikilink";
+import { wouldCreateCycle } from "@/core/roadmap";
 import { ARCANUM_CONFIG } from "@/core/config";
 import { civilDayOrdinal, msToDays } from "@/core/time";
 import { xpBase, streakMultiplier } from "@/core/xp";
@@ -96,7 +99,9 @@ function applyDomain(acc: Acc, e: ArcanumEvent): void {
           title: p.title,
           kind: p.kind,
           prereqs: p.prereqs ?? [],
-          goalId: e.goal_id,
+          // Preserve the prior goal when a rename-style re-upsert omits goal_id —
+          // never silently detach the module from its lane (defensive, like notes).
+          goalId: e.goal_id ?? prev.goalId,
         });
       } else {
         const m = initialMastery(msToDays(e.ts));
@@ -112,6 +117,9 @@ function applyDomain(acc: Acc, e: ArcanumEvent): void {
           dueDays: m.dueDays,
           startedDays: null,
           archived: false,
+          firetestRatio: null,
+          x: null,
+          y: null,
         });
       }
       return;
@@ -161,7 +169,10 @@ function applyDomain(acc: Acc, e: ArcanumEvent): void {
     case "roadmap.edge.upserted": {
       const p = e.payload as unknown as EdgeUpsertedPayload;
       const key = `${p.from}|${p.to}`;
-      if (!acc.edgeSet.has(key)) {
+      // Defense-in-depth: the DAG invariant is enforced on EVERY fold, not just by
+      // the UI's onConnect guard — a cycle-creating edge (incl. self-loop) never
+      // materializes in the read-model regardless of how it reached the log.
+      if (!acc.edgeSet.has(key) && !wouldCreateCycle(acc.edges, p.from, p.to)) {
         acc.edgeSet.add(key);
         acc.edges.push({ from: p.from, to: p.to });
       }
@@ -206,6 +217,26 @@ function applyDomain(acc: Acc, e: ArcanumEvent): void {
         markdown: p.markdown ?? prev.markdown,
         updatedTs: e.ts,
       });
+      return;
+    }
+    case "firetest.attempted": {
+      const id = e.module_id;
+      const prev = id ? acc.modules.get(id) : undefined;
+      if (!id || !prev) return;
+      const p = e.payload as unknown as FiretestAttemptedPayload;
+      const ceiling = Number(p.ceiling);
+      const reached = Number(p.reached);
+      if (!Number.isFinite(ceiling) || ceiling <= 0 || !Number.isFinite(reached)) return;
+      const ratio = Math.min(1, Math.max(0, reached / ceiling));
+      acc.modules.set(id, { ...prev, firetestRatio: Math.max(prev.firetestRatio ?? 0, ratio) });
+      return;
+    }
+    case "roadmap.node.moved": {
+      const p = e.payload as unknown as NodeMovedPayload;
+      const prev = acc.modules.get(p.ref);
+      if (!prev) return;
+      if (!Number.isFinite(p.x) || !Number.isFinite(p.y)) return;
+      acc.modules.set(p.ref, { ...prev, x: p.x, y: p.y });
       return;
     }
     case "sleepcycle.generated": {

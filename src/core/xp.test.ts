@@ -33,6 +33,8 @@ describe("xpBase (unrounded)", () => {
     expect(xpBase(makeEvent("firetest.attempted", { reached: 5, ceiling: 0 }, opts))).toBe(0);
     // clamps reached to ceiling
     expect(xpBase(makeEvent("firetest.attempted", { reached: 20, ceiling: 10 }, opts))).toBe(300);
+    // floors negative reached at 0 — malformed jsonb must NOT subtract XP
+    expect(xpBase(makeEvent("firetest.attempted", { reached: -5, ceiling: 10 }, opts))).toBe(0);
   });
 
   it("note.created pays only when substantive (markdown length ≥ 140)", () => {

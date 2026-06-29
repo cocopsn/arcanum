@@ -34,7 +34,9 @@ export function xpBase(event: ArcanumEvent): number {
       if (!Number.isFinite(ceiling) || ceiling <= 0 || !Number.isFinite(reached)) {
         return 0;
       }
-      return (Math.min(reached, ceiling) / ceiling) * X.firetestMax;
+      // Clamp to [0, ceiling] — matches the projector's ratio clamp so malformed/
+      // adversarial jsonb (negative reached) can never subtract XP.
+      return (Math.max(0, Math.min(reached, ceiling)) / ceiling) * X.firetestMax;
     }
     case "note.created": {
       const p = event.payload as unknown as NoteCreatedPayload;

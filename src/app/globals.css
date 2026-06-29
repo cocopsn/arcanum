@@ -55,3 +55,105 @@
     transition-duration: 0.001ms !important;
   }
 }
+
+/* ── Roadmap canvas — grimorio-arcano, not corporate diagram (Phase 3) ──
+   Reveal is a state change (sealed→available) eased by transition; the global
+   prefers-reduced-motion block above collapses it, so the revealed state still
+   shows, just without the fade. */
+.react-flow {
+  background-color: transparent;
+}
+.react-flow__pane {
+  cursor: grab;
+}
+.rf-node {
+  border-radius: var(--r-md);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
+  cursor: grab;
+  transition: opacity 0.6s ease, border-color 0.4s ease, box-shadow 0.4s ease, filter 0.6s ease;
+}
+.rf-node:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--goal) 60%, transparent);
+  outline-offset: 2px;
+}
+.rf-node:hover {
+  border-color: color-mix(in srgb, var(--goal) 55%, var(--line));
+}
+.rf-node[data-status="sealed"] {
+  border-style: dashed;
+  opacity: 0.72;
+  filter: grayscale(0.5);
+  background: color-mix(in srgb, var(--surface) 92%, var(--goal));
+}
+.rf-node[data-status="available"] {
+  border-color: color-mix(in srgb, var(--goal) 38%, var(--line));
+}
+.rf-node[data-status="started"] {
+  border-color: color-mix(in srgb, var(--goal) 60%, var(--line));
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--goal) 28%, transparent), 0 0 26px -8px var(--goal);
+}
+.rf-node[data-status="completed"] {
+  border-color: color-mix(in srgb, var(--gold) 45%, var(--line));
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--gold) 22%, transparent);
+}
+.rf-node[data-selected] {
+  border-color: color-mix(in srgb, var(--goal) 70%, var(--line));
+}
+.rf-pulse {
+  width: 7px;
+  height: 7px;
+  border-radius: var(--r-pill);
+  box-shadow: 0 0 8px currentColor;
+  animation: rf-breathe 2.2s ease-in-out infinite;
+}
+@keyframes rf-breathe {
+  0%,
+  100% {
+    opacity: 0.5;
+    transform: scale(0.85);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.1);
+  }
+}
+.react-flow__handle.rf-port {
+  width: 9px;
+  height: 9px;
+  background: var(--surface-raised);
+  border: 1.5px solid color-mix(in srgb, var(--goal) 65%, var(--line));
+}
+.react-flow__handle.rf-port:hover {
+  background: var(--goal);
+}
+.react-flow__edge-path {
+  stroke-linecap: round;
+}
+/* Higher specificity than React Flow's own .react-flow__controls-button so the
+   ≥44px touch-target override actually wins the cascade (its sheet loads last). */
+.react-flow__controls .react-flow__controls-button {
+  width: 44px;
+  height: 44px;
+  max-width: 44px;
+  max-height: 44px;
+  background: var(--surface-raised);
+  border-bottom: 1px solid var(--line);
+  color: var(--text-muted);
+}
+.react-flow__controls .react-flow__controls-button:hover {
+  background: var(--surface);
+}
+.react-flow__controls .react-flow__controls-button svg {
+  fill: currentColor;
+  max-width: 16px;
+  max-height: 16px;
+}
+.react-flow__attribution {
+  background: transparent;
+  font-size: 9px;
+}
+.react-flow__attribution a {
+  color: var(--text-faint);
+}

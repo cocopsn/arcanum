@@ -160,4 +160,48 @@ describe("applyEvents — incremental vs rebuild", () => {
     expect(res.rebuilt).toBe(false);
     expect(res.model).toBe(prev);
   });
+
+  it("strictly-newer day with firetest + node.moved: incremental == rebuild", () => {
+    const base = [
+      makeEvent("module.upserted", { title: "EDD", prereqs: [], kind: "core" }, { ...dev(DAY1_A), goalId: "g1", moduleId: "m1" }),
+      makeEvent("firetest.attempted", { reached: 8, ceiling: 10 }, { ...dev(DAY1_A), moduleId: "m1" }),
+    ];
+    const prev = project(base);
+    const next = [
+      makeEvent("firetest.attempted", { reached: 3, ceiling: 10 }, { ...dev(DAY2), moduleId: "m1" }), // lower ratio
+      makeEvent("roadmap.node.moved", { ref: "m1", x: 42, y: 99 }, dev(DAY2)),
+    ];
+    const all = [...base, ...next];
+    const spy = vi.fn(project);
+    const res = applyEvents(prev, next, all, { fullProject: spy });
+    expect(res.rebuilt).toBe(false);
+    expect(spy).toHaveBeenCalledTimes(0);
+    expect(res.model).toEqual(project(all));
+    const m = res.model.modules.find((x) => x.id === "m1")!;
+    expect(m.firetestRatio).toBe(0.8); // best ratio wins incrementally, not overwritten by 0.3
+    expect([m.x, m.y]).toEqual([42, 99]);
+  });
+});
+
+describe("project — Phase 3 roadmap invariants", () => {
+  it("re-upsert without goal_id preserves the prior goal association", () => {
+    const events = [
+      makeEvent("module.upserted", { title: "EDD", prereqs: [], kind: "core" }, { ...dev(DAY1_A), goalId: "g1", moduleId: "m1" }),
+      makeEvent("module.upserted", { title: "EDD v2", prereqs: [], kind: "core" }, { ...dev(DAY2), moduleId: "m1" }), // goal_id omitted
+    ];
+    const m = project(events).modules.find((x) => x.id === "m1")!;
+    expect(m.title).toBe("EDD v2");
+    expect(m.goalId).toBe("g1");
+  });
+
+  it("a cycle-creating edge (incl. self-loop) never materializes — DAG enforced on every fold", () => {
+    const events = [
+      makeEvent("module.upserted", { title: "A", prereqs: [], kind: "core" }, { ...dev(DAY1_A), moduleId: "a" }),
+      makeEvent("module.upserted", { title: "B", prereqs: [], kind: "core" }, { ...dev(DAY1_A), moduleId: "b" }),
+      makeEvent("roadmap.edge.upserted", { from: "a", to: "b" }, dev(DAY1_A)),
+      makeEvent("roadmap.edge.upserted", { from: "b", to: "a" }, dev(DAY2)), // would close a→b→a
+      makeEvent("roadmap.edge.upserted", { from: "a", to: "a" }, dev(DAY2)), // self-loop
+    ];
+    expect(project(events).edges).toEqual([{ from: "a", to: "b" }]);
+  });
 });
