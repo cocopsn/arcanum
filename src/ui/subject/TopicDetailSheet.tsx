@@ -7,6 +7,7 @@ import { FireTest } from "@/ui/FireTest";
 import { BlankChallenge } from "@/ui/BlankChallenge";
 import { NotesSheet } from "@/ui/NotesSheet";
 import { Quiz } from "@/ui/subject/Quiz";
+import { EvaluationPanel } from "@/ui/subject/EvaluationPanel";
 import { nodeStatus } from "@/core/roadmap";
 import { contentForModule } from "@/lib/subject-content";
 
@@ -144,6 +145,11 @@ export function TopicDetailSheet({
             <Quiz goalId={goalId} moduleId={mod.id} questions={content.quiz} accent={accent} />
           </div>
         )}
+
+        {/* ADVERSARIAL EVALUATION (Bloque 5) — AI or local heuristic fallback. */}
+        <div className="mt-5 border-t border-line pt-4">
+          <EvaluationPanel moduleId={mod.id} accent={accent} />
+        </div>
 
         <button onClick={() => setNotesOpen(true)} className="-mx-2 mt-4 inline-flex min-h-11 items-center px-2 text-[11px] uppercase tracking-[0.16em] text-text-muted transition hover:text-topic">
           Notas · {noteCount}

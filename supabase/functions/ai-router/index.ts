@@ -158,6 +158,61 @@ async function sleep(provider: string, context: unknown): Promise<{ patterns: st
   throw new Error(`proveedor desconocido: ${provider}`);
 }
 
+async function evaluate(
+  provider: string,
+  context: unknown,
+): Promise<{ summary: string; strengths: string[]; gaps: string[]; challenge: string }> {
+  const prompt =
+    "Eres un evaluador ADVERSARIAL-pero-justo de un laboratorio de aprendizaje, persona estilo Asuka: " +
+    "exigente, directa, no regalas elogios ni respuestas, empujas al primer principio. Te doy el desempeño de " +
+    "un módulo (JSON: título, status, retrievability 0-1, checkpoints y su media, errores resueltos, mejor " +
+    "prueba de fuego, días activo). Responde SOLO con JSON " +
+    '{"summary": string, "strengths": string[], "gaps": string[], "challenge": string}. ' +
+    "summary: 1-2 frases directas de dónde está. strengths: SOLO lo que los datos respaldan (no inventes mérito). " +
+    "gaps: lo que NO domina, sin suavizar. challenge: un reto concreto desde el primer principio sobre su punto " +
+    "más débil — empújalo, NO le des la respuesta. Cero relleno, cero felicitaciones vacías. " +
+    `Contexto: ${JSON.stringify(context)}`;
+  const parse = (text: string) => {
+    try {
+      const m = text.match(/\{[\s\S]*\}/);
+      const o = JSON.parse(m ? m[0] : text);
+      return {
+        summary: String(o.summary ?? ""),
+        strengths: Array.isArray(o.strengths) ? o.strengths.map(String) : [],
+        gaps: Array.isArray(o.gaps) ? o.gaps.map(String) : [],
+        challenge: String(o.challenge ?? ""),
+      };
+    } catch {
+      return { summary: text.slice(0, 300), strengths: [], gaps: [], challenge: "" };
+    }
+  };
+  if (provider === "openai") {
+    const key = Deno.env.get("OPENAI_API_KEY");
+    if (!key) throw new Error("OPENAI_API_KEY ausente");
+    const res = await fetch("https://api.openai.com/v1/chat/completions", {
+      method: "POST",
+      headers: { Authorization: `Bearer ${key}`, "Content-Type": "application/json" },
+      body: JSON.stringify({ model: "gpt-4o-mini", max_tokens: 700, messages: [{ role: "user", content: prompt }] }),
+    });
+    if (!res.ok) throw new Error(`openai ${res.status}`);
+    const j = await res.json();
+    return parse(j.choices?.[0]?.message?.content ?? "");
+  }
+  if (provider === "anthropic") {
+    const key = Deno.env.get("ANTHROPIC_API_KEY");
+    if (!key) throw new Error("ANTHROPIC_API_KEY ausente");
+    const res = await fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST",
+      headers: { "x-api-key": key, "anthropic-version": "2023-06-01", "Content-Type": "application/json" },
+      body: JSON.stringify({ model: "claude-3-5-haiku-20241022", max_tokens: 700, messages: [{ role: "user", content: prompt }] }),
+    });
+    if (!res.ok) throw new Error(`anthropic ${res.status}`);
+    const j = await res.json();
+    return parse(j.content?.[0]?.text ?? "");
+  }
+  throw new Error(`proveedor desconocido: ${provider}`);
+}
+
 Deno.serve(async (req: Request) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: CORS });
   try {
@@ -184,6 +239,10 @@ Deno.serve(async (req: Request) => {
       const ctx = body.context ?? body.digest; // back-compat: older clients sent `digest`
       const r = await routeWithFallback(providers, (p) => sleep(p, ctx));
       return json({ provider: r.provider, patterns: r.value.patterns, axioms: r.value.axioms });
+    }
+    if (body.action === "evaluate") {
+      const r = await routeWithFallback(providers, (p) => evaluate(p, body.context));
+      return json({ provider: r.provider, summary: r.value.summary, strengths: r.value.strengths, gaps: r.value.gaps, challenge: r.value.challenge });
     }
     return json({ error: "Acción desconocida." }, 400);
   } catch (err) {

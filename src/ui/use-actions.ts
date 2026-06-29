@@ -3,6 +3,8 @@
 import { useArcanumStore, useArcanumSync } from "@/app/providers";
 import { makeEvent, newEventId, type EventType, type Json } from "@/core/event";
 import { getDeviceId } from "@/lib/device";
+import { buildEvaluationContext, heuristicEvaluation } from "@/core/evaluation";
+import { requestModuleEvaluation } from "@/sync/ai";
 
 interface Refs {
   goalId?: string | null;
@@ -38,6 +40,23 @@ export function useActions() {
     // existing checkpoint.passed path. No new event type — the quiz IS a checkpoint.
     submitQuiz: (refs: Refs, score: number) =>
       fire("checkpoint.passed", { score, kind: "checkpoint" }, refs),
+    // Adversarial per-module evaluation (Bloque 5): build the context from the log,
+    // try the AI router, fall back to the local heuristic, record as module.evaluated
+    // (auditable). The numeric score is always the real heuristic read of mastery.
+    evaluateModule: async (moduleId: string): Promise<void> => {
+      const now = Date.now();
+      const rm = store.getState().readModel;
+      const events = await store.getState().getEvents();
+      const ctx = buildEvaluationContext(rm, events, moduleId, now);
+      if (!ctx) return;
+      const h = heuristicEvaluation(ctx);
+      const ai = await requestModuleEvaluation(ctx);
+      const goalId = rm.modules.find((m) => m.id === moduleId)?.goalId ?? null;
+      const payload = ai
+        ? { summary: ai.summary, strengths: ai.strengths, gaps: ai.gaps, challenge: ai.challenge, score: h.score, source: "ai", provider: ai.provider }
+        : { summary: h.summary, strengths: h.strengths, gaps: h.gaps, challenge: h.challenge, score: h.score, source: "heuristic", provider: null };
+      await fire("module.evaluated", payload as unknown as Json, { goalId, moduleId });
+    },
     createNote: async (refs: Refs, title: string, markdown: string): Promise<string> => {
       const noteId = newEventId();
       await fire("note.created", { note_id: noteId, title, markdown }, refs);
