@@ -283,4 +283,14 @@ describe("project — Phase 4 Canvas obligations", () => {
     expect(res.model).toEqual(project(all));
     expect(res.model.obligations.map((o) => o.id).sort()).toEqual(["a", "b"]);
   });
+
+  it("celebratedGrade derives the max acknowledged grade from the log; null when none", () => {
+    expect(project([]).celebratedGrade).toBeNull();
+    const rm = project([
+      makeEvent("grade.celebrated", { index: 1 }, dev(DAY1_A)),
+      makeEvent("grade.celebrated", { index: 3 }, dev(DAY2)),
+      makeEvent("grade.celebrated", { index: 2 }, dev(DAY2)), // out-of-order index → max still wins
+    ]);
+    expect(rm.celebratedGrade).toBe(3);
+  });
 });

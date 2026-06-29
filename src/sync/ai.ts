@@ -27,9 +27,11 @@ export interface SleepEnrichment {
   provider: string;
 }
 
-/** AI digest enrichment. Returns null on ANY failure (no session/keys/error) —
- *  the Sleep Cycle still produces its local fold. Honest degradation, no placebo. */
-export async function enrichSleepCycle(digest: unknown): Promise<SleepEnrichment | null> {
+/** AI digest enrichment. `context` is the rich SleepContext (24h fold + review
+ *  queue + stalled + at-risk prereqs) so the model can be SPECIFIC and actionable.
+ *  Returns null on ANY failure (no session/keys/error) — the Sleep Cycle still
+ *  produces its local fold. Honest degradation, no placebo. */
+export async function enrichSleepCycle(context: unknown): Promise<SleepEnrichment | null> {
   try {
     const sb = getSupabase();
     const {
@@ -37,7 +39,7 @@ export async function enrichSleepCycle(digest: unknown): Promise<SleepEnrichment
     } = await sb.auth.getSession();
     if (!session) return null;
     const { data, error } = await sb.functions.invoke("ai-router", {
-      body: { action: "sleep", digest },
+      body: { action: "sleep", context },
     });
     if (error || data?.error || !data?.patterns) return null;
     return {

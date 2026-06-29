@@ -24,9 +24,17 @@ export function NoteEditor({
   const [tab, setTab] = useState<"edit" | "preview">("edit");
   const [saveState, setSaveState] = useState<SaveState>("saved");
   const timer = useRef<number | undefined>(undefined);
+  const openNoteId = useRef(note.id);
 
-  // re-sync editor when a different note is opened (e.g. via wikilink)
+  // Concurrency policy (generalized from the canvas drag fix): in-flight local edits
+  // own the active interaction — re-seed the editor ONLY when a DIFFERENT note is
+  // opened (note.id changes), never when the SAME note's content changes underneath
+  // us (a remote note.updated arriving mid-edit). Otherwise a sync would clobber
+  // what the user is typing and drop the pending save. The log stays the source of
+  // truth; last-write-wins on the next save.
   useEffect(() => {
+    if (openNoteId.current === note.id) return;
+    openNoteId.current = note.id;
     setTitle(note.title);
     setMarkdown(note.markdown);
     setSaveState("saved");

@@ -14,6 +14,7 @@ import {
   type NodeMovedPayload,
   type CanvasSyncedPayload,
   type ObligationInput,
+  type GradeCelebratedPayload,
 } from "@/core/event";
 import { parseWikilinks } from "@/core/wikilink";
 import { wouldCreateCycle } from "@/core/roadmap";
@@ -103,6 +104,8 @@ interface Acc {
   canvasLastSyncTs: number | null;
   canvasLastOkTs: number | null;
   canvasCookieStale: boolean;
+  /** highest acknowledged grade index from grade.celebrated events, or null (Fase 4) */
+  celebratedGrade: number | null;
 }
 
 function applyDomain(acc: Acc, e: ArcanumEvent): void {
@@ -294,7 +297,13 @@ function applyDomain(acc: Acc, e: ArcanumEvent): void {
     }
     case "sleepcycle.generated": {
       const p = e.payload as unknown as SleepcycleGeneratedPayload;
-      acc.sleepCycles.push({ id: e.id, day: p.day, ts: e.ts, digest: p.digest, ai: p.ai });
+      acc.sleepCycles.push({ id: e.id, day: p.day, ts: e.ts, digest: p.digest, context: p.context ?? null, ai: p.ai });
+      return;
+    }
+    case "grade.celebrated": {
+      const idx = Number((e.payload as unknown as GradeCelebratedPayload).index);
+      if (!Number.isFinite(idx)) return;
+      acc.celebratedGrade = Math.max(acc.celebratedGrade ?? -1, idx);
       return;
     }
     default:
@@ -337,6 +346,7 @@ function emptyAcc(): Acc {
     canvasLastSyncTs: null,
     canvasLastOkTs: null,
     canvasCookieStale: false,
+    celebratedGrade: null,
   };
 }
 
@@ -354,6 +364,7 @@ function accFromModel(prev: ReadModel): Acc {
     canvasLastSyncTs: prev.canvas.lastSyncTs,
     canvasLastOkTs: prev.canvas.lastOkTs,
     canvasCookieStale: prev.canvas.cookieStale,
+    celebratedGrade: prev.celebratedGrade,
   };
 }
 
@@ -390,6 +401,7 @@ function assemble(
     sleepCycles: [...acc.sleepCycles],
     obligations,
     canvas,
+    celebratedGrade: acc.celebratedGrade,
     qualifiedDays,
     stats: {
       totalXp: acc.totalXp,

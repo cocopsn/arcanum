@@ -26,6 +26,7 @@ export const EVENT_TYPES = [
   "sleepcycle.generated",
   "roadmap.node.moved",
   "canvas.synced",
+  "grade.celebrated",
 ] as const;
 
 export type EventType = (typeof EVENT_TYPES)[number];
@@ -110,8 +111,21 @@ export interface SleepcycleGeneratedPayload {
   day: string;
   /** local 24h fold summary (clock-free derivation) */
   digest: Json;
+  /** actionable context handed to the model (review queue, stalled, at-risk) —
+   *  Fase 4; optional for backward-compat with older sleepcycle events */
+  context?: Json;
   /** AI enrichment, or null when no provider was available (honest degradation) */
   ai: { provider: string; patterns: string; axioms: string } | null;
+}
+
+/**
+ * The ascension ceremony for a grade was acknowledged (Fase 4). In the LOG (not
+ * device-local meta) so a grade is celebrated exactly ONCE across the whole
+ * universe — once a device records it, every synced device sees it and never
+ * re-fires. Idempotent under re-fold (celebratedGrade = max index).
+ */
+export interface GradeCelebratedPayload {
+  index: number;
 }
 
 /** One scraped Canvas obligation (compliance, NOT a mastery module). Fase 4. */

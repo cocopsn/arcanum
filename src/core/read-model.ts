@@ -81,6 +81,8 @@ export interface SleepCycleRM {
   ts: number;
   /** local 24h fold (DayDigest) */
   digest: Json;
+  /** actionable context handed to the model (Fase 4), or null for old events */
+  context: Json | null;
   /** AI enrichment, or null when no provider was available */
   ai: { provider: string; patterns: string; axioms: string } | null;
 }
@@ -132,5 +134,8 @@ export interface ReadModel {
   obligations: ObligationRM[];
   /** Canvas connection health (Fase 4) */
   canvas: CanvasStatusRM;
+  /** highest grade index whose ceremony was acknowledged in the LOG, or null if
+   *  none yet — universe-wide (synced), so a grade celebrates exactly once (Fase 4) */
+  celebratedGrade: number | null;
   cursor: { ts: number; id: string } | null;
 }

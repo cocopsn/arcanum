@@ -3,16 +3,17 @@
 import { useState } from "react";
 import { useArcanum, useArcanumStore } from "@/app/providers";
 import { useActions } from "@/ui/use-actions";
-import { foldLast24h, type DayDigest } from "@/core/sleep-cycle";
+import { buildSleepContext, deriveSleepSignals, type DayDigest } from "@/core/sleep-cycle";
 import { enrichSleepCycle } from "@/sync/ai";
 import { civilDay } from "@/core/time";
 import { ARCANUM_CONFIG } from "@/core/config";
 import type { Json } from "@/core/event";
 
 export function VigiliaSheet({ open, onClose }: { open: boolean; onClose: () => void }) {
-  const sleepCycles = useArcanum((s) => s.readModel.sleepCycles);
+  const readModel = useArcanum((s) => s.readModel);
+  const sleepCycles = readModel.sleepCycles;
   const reviewQueue = useArcanum((s) => s.viewModel.reviewQueue);
-  const modules = useArcanum((s) => s.readModel.modules);
+  const modules = readModel.modules;
   const store = useArcanumStore();
   const { fire } = useActions();
   const [running, setRunning] = useState(false);
@@ -22,16 +23,19 @@ export function VigiliaSheet({ open, onClose }: { open: boolean; onClose: () => 
   const latest = sleepCycles[sleepCycles.length - 1] ?? null;
   const digest = (latest?.digest as DayDigest | undefined) ?? undefined;
   const moduleTitle = (id: string) => modules.find((m) => m.id === id)?.title ?? "(módulo)";
+  // Live decay/risk signals — actionable even without AI, always current.
+  const signals = deriveSleepSignals(readModel, Date.now());
 
   async function runRite() {
     setRunning(true);
     const now = Date.now();
     const events = await store.getState().getEvents();
-    const d = foldLast24h(events, now);
-    const ai = await enrichSleepCycle(d);
+    const ctx = buildSleepContext(events, readModel, now);
+    const ai = await enrichSleepCycle(ctx);
     await fire("sleepcycle.generated", {
       day: civilDay(now, ARCANUM_CONFIG.tz),
-      digest: d as unknown as Json,
+      digest: ctx.digest as unknown as Json,
+      context: { reviewQueue: ctx.reviewQueue, stalled: ctx.stalled, atRisk: ctx.atRisk } as unknown as Json,
       ai: ai ? { provider: ai.provider, patterns: ai.patterns, axioms: ai.axioms } : null,
     } as unknown as Json);
     setRunning(false);
@@ -84,6 +88,34 @@ export function VigiliaSheet({ open, onClose }: { open: boolean; onClose: () => 
             </div>
           )}
         </section>
+
+        {signals.atRisk.length > 0 && (
+          <section className="border-t border-line pt-4">
+            <h3 className="text-[11px] uppercase tracking-[0.18em] text-text-faint">En riesgo · prerrequisitos</h3>
+            <div className="mt-2 space-y-1.5">
+              {signals.atRisk.map((r) => (
+                <p key={r.moduleId} className="text-[13px] leading-snug text-text-muted">
+                  <span className="text-amber">{r.title}</span>{" "}
+                  {r.daysToThreshold <= 0 ? "ya cruzó el umbral de repaso" : `cruza el umbral en ${r.daysToThreshold} d`} — bloquea{" "}
+                  <span className="text-text">{r.blocks.join(", ")}</span>.
+                </p>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {signals.stalled.length > 0 && (
+          <section className="border-t border-line pt-4">
+            <h3 className="text-[11px] uppercase tracking-[0.18em] text-text-faint">Estancados · en curso sin avance</h3>
+            <div className="mt-2 flex flex-wrap gap-2">
+              {signals.stalled.map((s) => (
+                <span key={s.moduleId} className="rounded-[var(--r-sm)] border border-line px-2.5 py-1 text-xs text-text-muted">
+                  {s.title} · <span className="tnum text-text-faint">{s.daysSinceReinforce} d</span>
+                </span>
+              ))}
+            </div>
+          </section>
+        )}
 
         {digest && (
           <section className="border-t border-line pt-4">

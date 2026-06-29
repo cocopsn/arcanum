@@ -47,7 +47,7 @@ describe("makeEvent", () => {
     expect(e.id).toBe("fixed-id");
   });
 
-  it("EVENT_TYPES has the 17 taxonomy types", () => {
-    expect(EVENT_TYPES).toHaveLength(17);
+  it("EVENT_TYPES has the 18 taxonomy types", () => {
+    expect(EVENT_TYPES).toHaveLength(18);
   });
 });
