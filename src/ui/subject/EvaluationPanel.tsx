@@ -33,8 +33,10 @@ export function EvaluationPanel({ moduleId, accent }: { moduleId: string; accent
         </button>
       </div>
 
+      {/* live region mounted UNCONDITIONALLY so the verdict is announced on arrival */}
+      <div role="status" aria-live="polite">
       {evalRM ? (
-        <div role="status" aria-live="polite" className="mt-3 space-y-3">
+        <div className="mt-3 space-y-3">
           <div className="flex items-center gap-2">
             {evalRM.score !== null && (
               <span className="tnum font-display text-2xl" style={{ color: accent }}>
@@ -84,6 +86,7 @@ export function EvaluationPanel({ moduleId, accent }: { moduleId: string; accent
           Aún sin evaluar. Es dura y específica: te dice qué dominas, qué no, y te reta en lo débil.
         </p>
       )}
+      </div>
     </div>
   );
 }

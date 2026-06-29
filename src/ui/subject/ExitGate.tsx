@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useArcanum } from "@/app/providers";
 import { useActions } from "@/ui/use-actions";
 import { readableAccent } from "@/lib/accent";
@@ -12,13 +12,17 @@ export function ExitGate({ moduleId, gate, accent }: { moduleId: string; gate: T
   const { evaluateGate } = useActions();
   const [justification, setJustification] = useState("");
   const [busy, setBusy] = useState(false);
+  const submitting = useRef(false);
 
   async function submit() {
-    if (!justification.trim() || busy) return;
+    // synchronous guard against a rapid double-tap firing two gate.evaluated events
+    if (!justification.trim() || submitting.current) return;
+    submitting.current = true;
     setBusy(true);
     try {
       await evaluateGate(moduleId, justification);
     } finally {
+      submitting.current = false;
       setBusy(false);
     }
   }
@@ -60,20 +64,24 @@ export function ExitGate({ moduleId, gate, accent }: { moduleId: string; gate: T
       <button
         onClick={() => void submit()}
         disabled={!justification.trim() || busy}
+        aria-busy={busy}
         className="mt-2 min-h-11 w-full rounded-[var(--r-sm)] border px-4 text-sm transition hover:brightness-125 disabled:opacity-40"
         style={{ borderColor: accent, color: readableAccent(accent) }}
       >
         {busy ? "Evaluando…" : gatePassed ? "Re-someter" : "Someter al evaluador"}
       </button>
+      <span className="sr-only" role="status" aria-live="polite">
+        {busy ? "Evaluando tu justificación…" : ""}
+      </span>
 
-      {verdict && (
-        <div
-          role="status"
-          aria-live="polite"
-          className="mt-3 rounded-[var(--r-md)] border p-3"
-          style={{ borderColor: verdict.passed ? accent : "var(--amber)" }}
-        >
-          <div className="flex items-center gap-2">
+      {/* live region is mounted UNCONDITIONALLY so the verdict is announced when it lands */}
+      <div role="status" aria-live="polite" aria-atomic="true">
+        {verdict && (
+          <div
+            className="mt-3 rounded-[var(--r-md)] border p-3"
+            style={{ borderColor: verdict.passed ? accent : "var(--amber)" }}
+          >
+            <div className="flex items-center gap-2">
             <span
               className="text-[11px] uppercase tracking-[0.16em]"
               style={{ color: verdict.passed ? readableAccent(accent) : "var(--amber)" }}
@@ -82,12 +90,13 @@ export function ExitGate({ moduleId, gate, accent }: { moduleId: string; gate: T
             </span>
             {verdict.score !== null && <span className="tnum text-[11px] text-text-faint">{Math.round(verdict.score * 100)}%</span>}
           </div>
-          <p className="mt-1.5 text-[13px] leading-snug text-text-muted">{verdict.feedback}</p>
-          <div className="mt-1 text-[10px] uppercase tracking-wider text-text-faint">
-            {verdict.source === "ai" ? `vía IA · ${verdict.provider ?? ""}` : "heurística local — la compuerta requiere el evaluador (IA)"}
+            <p className="mt-1.5 text-[13px] leading-snug text-text-muted">{verdict.feedback}</p>
+            <div className="mt-1 text-[10px] uppercase tracking-wider text-text-faint">
+              {verdict.source === "ai" ? `vía IA · ${verdict.provider ?? ""}` : "heurística local — la compuerta requiere el evaluador (IA)"}
+            </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
       {verdict?.passed && (
         <p className="mt-2 text-[12px]" style={{ color: readableAccent(accent) }}>
           La siguiente celda se desbloqueó.

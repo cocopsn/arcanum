@@ -88,7 +88,7 @@ export const SPINES: Spine[] = [
         "title": "6.006 L2 — Data Structures (arrays, linked lists, dynamic arrays) + CS61B Lists/ADTs depth",
         "sourceUrls": [
           "https://ocw.mit.edu/courses/6-006-introduction-to-algorithms-spring-2020/pages/lecture-notes/",
-          "https://cs61b-2.gitbook.io/cs61b-textbook/3.-introduction-to-lists",
+          "https://cs61b-2.gitbook.io/cs61b-textbook/3.-references-recursion-and-lists",
           "https://cs61b-2.gitbook.io/cs61b-textbook/4.-sllists"
         ]
       },
@@ -97,7 +97,7 @@ export const SPINES: Spine[] = [
         "title": "6.006 L4 — Hashing (hash functions, chaining, the comparison/decision-tree model) + CS61B Hashing I/II",
         "sourceUrls": [
           "https://ocw.mit.edu/courses/6-006-introduction-to-algorithms-spring-2020/resources/lecture-4-hashing/",
-          "https://cs61b-2.gitbook.io/cs61b-textbook/19.-hashing",
+          "https://cs61b-2.gitbook.io/cs61b-textbook/19.-hashing-i",
           "https://cs61b-2.gitbook.io/cs61b-textbook/20.-hashing-ii"
         ]
       },
@@ -107,7 +107,7 @@ export const SPINES: Spine[] = [
         "sourceUrls": [
           "https://ocw.mit.edu/courses/6-006-introduction-to-algorithms-spring-2020/pages/lecture-notes/",
           "https://cs61b-2.gitbook.io/cs61b-textbook/29.-basic-sorts",
-          "https://cs61b-2.gitbook.io/cs61b-textbook/32.-quicksort"
+          "https://cs61b-2.gitbook.io/cs61b-textbook/32.-more-quick-sort-sorting-summary"
         ]
       },
       {
@@ -115,7 +115,7 @@ export const SPINES: Spine[] = [
         "title": "6.006 L6 — Binary Trees Part 1 (BST invariant, traversal, set/sequence ops) + CS61B BSTs",
         "sourceUrls": [
           "https://ocw.mit.edu/courses/6-006-introduction-to-algorithms-spring-2020/pages/lecture-notes/",
-          "https://cs61b-2.gitbook.io/cs61b-textbook/16.-adts-bsts"
+          "https://cs61b-2.gitbook.io/cs61b-textbook/16.-adts-and-bsts"
         ]
       },
       {
@@ -123,7 +123,7 @@ export const SPINES: Spine[] = [
         "title": "6.006 L7 — Binary Trees Part 2: AVL (balanced search trees) + CS61B B-trees & Red-Black trees",
         "sourceUrls": [
           "https://ocw.mit.edu/courses/6-006-introduction-to-algorithms-spring-2020/resources/lecture-7-binary-trees-part-2-avl/",
-          "https://cs61b-2.gitbook.io/cs61b-textbook/17.-b-trees-2-3-2-3-4-trees",
+          "https://cs61b-2.gitbook.io/cs61b-textbook/17.-b-trees",
           "https://cs61b-2.gitbook.io/cs61b-textbook/18.-red-black-trees"
         ],
         "videoUrls": [
@@ -154,8 +154,8 @@ export const SPINES: Spine[] = [
         "title": "6.006 L9–L10 — Graph Search: BFS & DFS (reachability, topological sort) + CS61B Graph Traversals",
         "sourceUrls": [
           "https://ocw.mit.edu/courses/6-006-introduction-to-algorithms-spring-2020/pages/lecture-notes/",
-          "https://cs61b-2.gitbook.io/cs61b-textbook/22.-tree-and-graph-traversals",
-          "https://cs61b-2.gitbook.io/cs61b-textbook/23.-graph-traversals-implementations"
+          "https://cs61b-2.gitbook.io/cs61b-textbook/22.-tree-traversals-and-graphs",
+          "https://cs61b-2.gitbook.io/cs61b-textbook/23.-graph-traversals-and-implementations"
         ]
       },
       {
@@ -179,7 +179,7 @@ export const SPINES: Spine[] = [
         "title": "6.006 L19 — Complexity (P, NP, NP-completeness, reductions) + CS61B Complexity & P=NP",
         "sourceUrls": [
           "https://ocw.mit.edu/courses/6-006-introduction-to-algorithms-spring-2020/pages/lecture-notes/",
-          "https://cs61b-2.gitbook.io/cs61b-textbook/39.-compression-complexity-and-p-np"
+          "https://cs61b-2.gitbook.io/cs61b-textbook/39.-compression-complexity-p-np"
         ]
       },
       {
