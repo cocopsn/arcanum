@@ -1,0 +1,32 @@
+/* ARCANUM — 3-layer color system (spec §9). Structural layer is constant;
+   --topic-* is set per active goal; --rank-* is swapped per hermetic grade
+   (RankAura sets them inline). */
+
+:root {
+  /* Layer 1 — structure (constant, grimoire dark). Legibility anchor. */
+  --ink: #0c0b12;
+  --ink-deep: #07060c;
+  --surface: #15131f;
+  --surface-raised: #1e1b2b;
+  --line: #2c2840;
+  --line-soft: #221f30;
+  --text: #ece7da;
+  --text-muted: #9a93ae;
+  --text-faint: #635d74;
+  --overlay-scrim: rgba(7, 6, 12, 0.72);
+
+  /* Layer 2 — topic accent (default ITC cyan; overridable per goal). */
+  --topic: #25b0c9;
+  --topic-deep: #11202a;
+
+  /* Layer 3 — rank aura (default Neophyte pewter; RankAura overrides inline). */
+  --rank: #8c90a0;
+  --rank-soft: rgba(140, 144, 160, 0.14);
+  --rank-glow: rgba(140, 144, 160, 0.4);
+
+  /* shape */
+  --r-sm: 8px;
+  --r-md: 12px;
+  --r-lg: 18px;
+  --r-pill: 999px;
+}
