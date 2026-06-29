@@ -110,12 +110,18 @@ async function ocr(provider: string, imageDataUrl: string): Promise<string> {
   throw new Error(`proveedor desconocido: ${provider}`);
 }
 
-async function sleep(provider: string, digest: unknown): Promise<{ patterns: string; axioms: string }> {
+async function sleep(provider: string, context: unknown): Promise<{ patterns: string; axioms: string }> {
   const prompt =
     "Eres el rito nocturno de un laboratorio de aprendizaje hermético, tono sobrio y ritual. " +
-    "Dado este resumen del día (JSON), responde SOLO con JSON {\"patterns\": string, \"axioms\": string}: " +
-    "'patterns' = 2-3 frases sobre los patrones del día; 'axioms' = 1-2 axiomas o conexiones a partir de las notas. " +
-    `Resumen: ${JSON.stringify(digest)}`;
+    "Te doy el contexto del aprendiz (JSON): digest = últimas 24h; reviewQueue = repasos vencidos (daysOverdue); " +
+    "stalled = módulos EN CURSO sin avance (daysSinceReinforce); atRisk = prerrequisitos cuya retención cruza el umbral " +
+    "de repaso pronto (daysToThreshold; negativo = ya por debajo) y que BLOQUEAN otros módulos (blocks[]). " +
+    "Responde SOLO con JSON {\"patterns\": string, \"axioms\": string}. " +
+    "'patterns' = 2-3 frases sobre los patrones del día. " +
+    "'axioms' = 1-2 recomendaciones ESPECÍFICAS Y ACCIONABLES que citen módulos por nombre cuando el contexto lo permita " +
+    "(p. ej. 'X cruza el umbral de repaso en 2 días y es prereq de Y — repásalo antes de seguir'). " +
+    "Si no hay riesgos ni estancamientos, propón una conexión concreta entre las notas del día. " +
+    `Contexto: ${JSON.stringify(context)}`;
   const parse = (text: string) => {
     try {
       const m = text.match(/\{[\s\S]*\}/);
@@ -175,7 +181,8 @@ Deno.serve(async (req: Request) => {
       return json({ provider: r.provider, markdown: r.value });
     }
     if (body.action === "sleep") {
-      const r = await routeWithFallback(providers, (p) => sleep(p, body.digest));
+      const ctx = body.context ?? body.digest; // back-compat: older clients sent `digest`
+      const r = await routeWithFallback(providers, (p) => sleep(p, ctx));
       return json({ provider: r.provider, patterns: r.value.patterns, axioms: r.value.axioms });
     }
     return json({ error: "Acción desconocida." }, 400);

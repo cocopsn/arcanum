@@ -17,6 +17,7 @@ import { NotesSheet } from "@/ui/NotesSheet";
 import { VigiliaSheet } from "@/ui/VigiliaSheet";
 import { AscensionCeremony } from "@/ui/AscensionCeremony";
 import { RoadmapCanvas } from "@/ui/roadmap/RoadmapCanvas";
+import { AgendaSheet } from "@/ui/AgendaSheet";
 import { InstallCoachMark } from "@/ui/InstallCoachMark";
 import type { ReadModel, Stats } from "@/core/read-model";
 import type { ViewModel } from "@/core/present";
@@ -35,6 +36,7 @@ export function HomeView() {
   });
   const [vigiliaOpen, setVigiliaOpen] = useState(false);
   const [mapOpen, setMapOpen] = useState(false);
+  const [agendaOpen, setAgendaOpen] = useState(false);
 
   if (status === "loading") {
     return (
@@ -67,6 +69,7 @@ export function HomeView() {
         <InstallCoachMark />
         <Footer
           onMapa={() => setMapOpen(true)}
+          onAgenda={() => setAgendaOpen(true)}
           onCodice={() => setCodiceOpen(true)}
           onNotes={() => setNotes({ open: true, moduleId: null })}
           onVigilia={() => setVigiliaOpen(true)}
@@ -74,6 +77,7 @@ export function HomeView() {
       </main>
 
       <RoadmapCanvas open={mapOpen} onClose={() => setMapOpen(false)} />
+      <AgendaSheet open={agendaOpen} onClose={() => setAgendaOpen(false)} />
 
       <AuthSheet open={authOpen} onClose={() => setAuthOpen(false)} />
       <CodiceSheet open={codiceOpen} onClose={() => setCodiceOpen(false)} />
@@ -181,11 +185,13 @@ function Goals({
 
 function Footer({
   onMapa,
+  onAgenda,
   onCodice,
   onNotes,
   onVigilia,
 }: {
   onMapa: () => void;
+  onAgenda: () => void;
   onCodice: () => void;
   onNotes: () => void;
   onVigilia: () => void;
@@ -201,6 +207,10 @@ function Footer({
     <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1">
       <button onClick={onMapa} className={`${item} hover:text-topic`}>
         Mapa
+      </button>
+      {sep}
+      <button onClick={onAgenda} className={`${item} hover:text-topic`}>
+        Agenda
       </button>
       {sep}
       <button onClick={onNotes} className={`${item} hover:text-topic`}>

@@ -54,12 +54,12 @@ export async function setPullCursor(db: ArcanumDB, cursor: number): Promise<void
   await db.sync_meta.put({ key: "sync", pullCursor: cursor });
 }
 
-/** Highest grade index already celebrated; null if never set (first run baseline). */
+/**
+ * Legacy device-local grade ack (sync_meta) — READ ONLY now, for the one-time
+ * migration into the event log (grade.celebrated). Nothing writes it anymore:
+ * the LOG is the source of truth for what's been celebrated (Fase 4).
+ */
 export async function getAckGrade(db: ArcanumDB): Promise<number | null> {
   const row = await db.sync_meta.get("grade_ack");
   return row?.ackGrade ?? null;
-}
-
-export async function setAckGrade(db: ArcanumDB, ackGrade: number): Promise<void> {
-  await db.sync_meta.put({ key: "grade_ack", ackGrade });
 }

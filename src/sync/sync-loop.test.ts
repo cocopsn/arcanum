@@ -4,7 +4,7 @@ import { createArcanumStore } from "@/store/arcanum-store";
 import type { SyncClient } from "@/sync/sync";
 import type { EventRow } from "@/sync/mapping";
 import { makeEvent } from "@/core/event";
-import { SEED_EVENTS } from "@/lib/seed";
+import { SEED_EVENTS, SEED_MODULE_ID } from "@/lib/seed";
 
 /** One in-memory server shared by two devices' sync clients. */
 class FakeServer {
@@ -85,6 +85,35 @@ describe("sync loop — two devices", () => {
     await A.getState().sync(server.client(), NOW);
     expect(A.getState().readModel).toEqual(before);
     expect(server.rows).toHaveLength(SEED_EVENTS.length); // only the seed events
+  });
+
+  it("a grade is celebrated exactly ONCE in the universe — the other device never re-fires", async () => {
+    const server = new FakeServer();
+    const A = createArcanumStore(dbA);
+    const B = createArcanumStore(dbB);
+    await A.getState().hydrate(NOW);
+    await B.getState().hydrate(NOW);
+    await A.getState().setAuth("me@arcanum.test");
+    await B.getState().setAuth("me@arcanum.test");
+    await A.getState().sync(server.client(), NOW);
+    await B.getState().sync(server.client(), NOW);
+
+    // A crosses 500 XP → Faber, celebrates locally (and records grade.celebrated)
+    const ft = (ts: number) => makeEvent("firetest.attempted", { reached: 10, ceiling: 10 }, { ts, deviceId: "A", moduleId: SEED_MODULE_ID });
+    await A.getState().dispatch(ft(NOW), NOW);
+    await A.getState().dispatch(ft(NOW + 1), NOW + 1);
+    expect(A.getState().readModel.stats.grade).toBe("Faber");
+    expect(A.getState().ceremonyQueue.map((g) => g.name)).toEqual(["Faber"]);
+
+    await A.getState().sync(server.client(), NOW); // push XP + grade.celebrated
+    await B.getState().sync(server.client(), NOW); // B pulls them
+
+    // B reaches Faber by XP too, but the synced grade.celebrated means it does NOT
+    // re-fire the ceremony — celebrated once across the whole universe.
+    expect(B.getState().readModel.stats.grade).toBe("Faber");
+    expect(B.getState().readModel.celebratedGrade).toBe(1);
+    expect(B.getState().ceremonyQueue).toHaveLength(0);
+    expect(B.getState().readModel).toEqual(A.getState().readModel);
   });
 
   it("sync is a no-op without a session (stays local)", async () => {

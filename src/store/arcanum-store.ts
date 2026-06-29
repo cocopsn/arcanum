@@ -3,7 +3,8 @@ import { project, applyEvents } from "@/core/projector";
 import { present, type ViewModel } from "@/core/present";
 import { gradesBetween, type GradeInfo } from "@/core/grade";
 import type { ReadModel } from "@/core/read-model";
-import type { ArcanumEvent } from "@/core/event";
+import { makeEvent, type ArcanumEvent } from "@/core/event";
+import { getDeviceId } from "@/lib/device";
 import type { ArcanumDB } from "@/db/schema";
 import {
   appendEvent,
@@ -12,7 +13,6 @@ import {
   getUnsynced,
   saveReadModel,
   getAckGrade,
-  setAckGrade,
 } from "@/db/repo";
 import { SEED_EVENTS } from "@/lib/seed";
 import { syncWithRetry, type SyncClient } from "@/sync/sync";
@@ -30,8 +30,6 @@ export interface ArcanumState {
   authEmail: string | null;
   /** grades awaiting their ascension ceremony (front first) */
   ceremonyQueue: GradeInfo[];
-  /** highest grade index already celebrated (mirrors persisted ack) */
-  ackGrade: number;
 
   hydrate: (now: number) => Promise<void>;
   dispatch: (event: ArcanumEvent, now: number) => Promise<void>;
@@ -49,18 +47,32 @@ export type ArcanumStore = StoreApi<ArcanumState>;
 
 export function createArcanumStore(db: ArcanumDB): ArcanumStore {
   return createStore<ArcanumState>((set, get) => {
-    // Detect threshold crossings and enqueue ceremonies. Idempotent under
-    // re-fold: ackGrade only advances, persisted, so the same grade is never
-    // celebrated twice even when the read-model is rebuilt.
-    async function detect(): Promise<void> {
-      const current = get().readModel.stats.gradeIndex;
-      const ack = get().ackGrade;
-      if (current > ack) {
-        await setAckGrade(db, current);
-        set({
-          ackGrade: current,
-          ceremonyQueue: [...get().ceremonyQueue, ...gradesBetween(ack, current)],
-        });
+    // Record a grade's ceremony as ACKNOWLEDGED in the log (grade.celebrated). The
+    // event syncs, so every device sees the grade as celebrated — exactly once in
+    // the universe. xpBase is 0, so it never shifts the grade (no loop). Folds in
+    // immediately so celebratedGrade advances.
+    async function emitCelebrated(now: number, index: number): Promise<void> {
+      const ev = makeEvent("grade.celebrated", { index }, { ts: now, deviceId: getDeviceId() });
+      await appendEvent(db, ev, 0);
+      const all = await getAllEvents(db);
+      const { model } = applyEvents(get().readModel, [ev], all);
+      await saveReadModel(db, model);
+      const pendingCount = (await getUnsynced(db)).length;
+      set({ readModel: model, viewModel: present(model, now), pendingCount });
+    }
+
+    // Enqueue ceremonies for any genuine grade crossing, then record it. Idempotent
+    // under re-fold: celebratedGrade (derived from the log, null → baseline 0) only
+    // advances, so the same grade is never celebrated twice — across rebuilds OR
+    // devices. The grade ladder is monotonic, so current never goes backwards.
+    async function reconcileCeremonies(now: number): Promise<void> {
+      const rm = get().readModel;
+      const current = rm.stats.gradeIndex;
+      const celebrated = rm.celebratedGrade ?? 0; // null (none yet) → starting grade 0
+      if (current > celebrated) {
+        const queue = gradesBetween(celebrated, current);
+        await emitCelebrated(now, current);
+        set({ ceremonyQueue: [...get().ceremonyQueue, ...queue] });
       }
     }
 
@@ -72,7 +84,6 @@ export function createArcanumStore(db: ArcanumDB): ArcanumStore {
       pendingCount: 0,
       authEmail: null,
       ceremonyQueue: [],
-      ackGrade: 0,
 
       async hydrate(now) {
         let events = await getAllEvents(db);
@@ -83,31 +94,18 @@ export function createArcanumStore(db: ArcanumDB): ArcanumStore {
         const readModel = project(events);
         await saveReadModel(db, readModel);
         const pendingCount = (await getUnsynced(db)).length;
-        const current = readModel.stats.gradeIndex;
+        set({ status: "ready", readModel, viewModel: present(readModel, now), pendingCount });
 
-        // Baseline on first ever load: acknowledge the starting grade (no backlog
-        // ceremonies for grades earned before this device knew the log).
-        const stored = await getAckGrade(db);
-        let ackGrade = current;
-        let ceremonyQueue: GradeInfo[] = [];
-        if (stored === null) {
-          await setAckGrade(db, current);
-        } else if (current > stored) {
-          ceremonyQueue = gradesBetween(stored, current);
-          ackGrade = current;
-          await setAckGrade(db, current);
-        } else {
-          ackGrade = stored;
+        // One-time migration: an OLD universe used a device-local ackGrade (sync_meta).
+        // If the log has no grade.celebrated yet but a prior ack exists, seed the
+        // baseline into the log so we don't re-celebrate grades earned long ago.
+        if (readModel.celebratedGrade === null) {
+          const oldAck = await getAckGrade(db);
+          if (oldAck !== null && oldAck > 0) await emitCelebrated(now, oldAck);
         }
-
-        set({
-          status: "ready",
-          readModel,
-          viewModel: present(readModel, now),
-          pendingCount,
-          ceremonyQueue,
-          ackGrade,
-        });
+        // Show ceremonies for any genuine crossing the log records (none on a fresh
+        // universe at grade 0 → no baseline event is written, log stays clean).
+        await reconcileCeremonies(now);
       },
 
       async dispatch(event, now) {
@@ -117,7 +115,7 @@ export function createArcanumStore(db: ArcanumDB): ArcanumStore {
         await saveReadModel(db, model);
         const pendingCount = (await getUnsynced(db)).length;
         set({ readModel: model, viewModel: present(model, now), pendingCount });
-        await detect();
+        await reconcileCeremonies(now);
       },
 
       async rebuild(now) {
@@ -125,7 +123,7 @@ export function createArcanumStore(db: ArcanumDB): ArcanumStore {
         await saveReadModel(db, readModel);
         const pendingCount = (await getUnsynced(db)).length;
         set({ readModel, viewModel: present(readModel, now), pendingCount });
-        await detect();
+        await reconcileCeremonies(now);
       },
 
       refreshPresent(now) {
@@ -156,7 +154,7 @@ export function createArcanumStore(db: ArcanumDB): ArcanumStore {
             pendingCount,
             syncState: "synced",
           });
-          await detect();
+          await reconcileCeremonies(now);
         } catch {
           const pendingCount = (await getUnsynced(db)).length;
           set({ syncState: "error", pendingCount });

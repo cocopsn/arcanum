@@ -71,6 +71,15 @@ export const ARCANUM_CONFIG = {
     firetestRevealThreshold: 0.7,
   },
 
+  // Sleep Cycle context (Fase 4) — thresholds for the actionable digest the rite
+  // hands the model: a started module with no reinforcement in `stallDays` is
+  // "stalled"; a prereq whose retrievability crosses the review threshold within
+  // `riskWindowDays` and gates other work is "at risk".
+  sleepCycle: {
+    stallDays: 4,
+    riskWindowDays: 3,
+  },
+
   // Per-topic default accents (spec §9.2). Editable per goal.
   topicDefaults: {
     ITC: "#25B0C9",

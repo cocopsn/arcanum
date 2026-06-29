@@ -49,6 +49,18 @@ export function useActions() {
     },
     connectPrereq: (from: string, to: string) => fire("roadmap.edge.upserted", { from, to }),
     archiveNode: (ref: string) => fire("node.archived", { ref }),
+    // ── Ascend a Canvas obligation into a real learning module (Fase 4). The
+    // mastery graph is only ever touched by THIS deliberate gesture — never by the
+    // scraper. The link (sourceObligationId) makes the agenda mark it promoted. ──
+    ascendObligation: async (obligationId: string, title: string, goalId: string): Promise<string> => {
+      const moduleId = newEventId();
+      await fire(
+        "module.upserted",
+        { title, prereqs: [], kind: "core", sourceObligationId: obligationId },
+        { goalId, moduleId },
+      );
+      return moduleId;
+    },
     moveNode: (ref: string, x: number, y: number) =>
       fire("roadmap.node.moved", { ref, x: Math.round(x), y: Math.round(y) }),
     getEvents: () => store.getState().getEvents(),
