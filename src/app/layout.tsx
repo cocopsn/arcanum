@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Cinzel, EB_Garamond, IBM_Plex_Mono } from "next/font/google";
+import { Cinzel, EB_Garamond, Inter } from "next/font/google";
 import "./globals.css";
 
 const display = Cinzel({
@@ -14,10 +14,10 @@ const serif = EB_Garamond({
   variable: "--font-serif",
   display: "swap",
 });
-const mono = IBM_Plex_Mono({
+const sans = Inter({
   subsets: ["latin"],
-  weight: ["400", "500"],
-  variable: "--font-mono",
+  weight: ["400", "500", "600"],
+  variable: "--font-sans",
   display: "swap",
 });
 
@@ -53,7 +53,7 @@ export default function RootLayout({
   return (
     <html
       lang="es"
-      className={`${display.variable} ${serif.variable} ${mono.variable}`}
+      className={`${display.variable} ${serif.variable} ${sans.variable}`}
     >
       <body>{children}</body>
     </html>

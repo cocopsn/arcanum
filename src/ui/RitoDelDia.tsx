@@ -10,11 +10,11 @@ export function RitoDelDia({ pending }: { pending: boolean }) {
         Rito del día
       </div>
       {pending ? (
-        <p className="mt-1.5 font-display text-[15px] leading-snug text-text">
+        <p className="mt-1.5 font-serif text-[15px] leading-snug text-text">
           Aún no dejas marca hoy. Topa un muro, supéralo, sella el insight.
         </p>
       ) : (
-        <p className="mt-1.5 font-display text-[15px] leading-snug text-rank">
+        <p className="mt-1.5 font-serif text-[15px] leading-snug text-rank">
           Rito cumplido. La llama sigue viva.
         </p>
       )}
