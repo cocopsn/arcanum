@@ -95,6 +95,19 @@ describe("project — mastery", () => {
     expect(m.dueDays).toBeCloseTo(lastDays + -1.9 * Math.log(0.8), 6);
   });
 
+  it("malformed reinforcing payload does not poison mastery/XP with NaN", () => {
+    const events = [
+      makeEvent("module.upserted", { title: "EDD", prereqs: [], kind: "core" }, { ...dev(DAY1_A), moduleId: "m1" }),
+      makeEvent("module.started", {}, { ...dev(DAY1_A), moduleId: "m1" }),
+      makeEvent("checkpoint.passed", {}, { ...dev(DAY2), moduleId: "m1" }), // missing score
+    ];
+    const rm = project(events);
+    expect(Number.isFinite(rm.modules[0]!.S)).toBe(true);
+    expect(Number.isFinite(rm.stats.totalXp)).toBe(true);
+    // falls back to defaultQuality 0.7 → bonus 0.85 → S = 1.85
+    expect(rm.modules[0]!.S).toBeCloseTo(1.85, 10);
+  });
+
   it("completed modules populate reviewDue", () => {
     const events = [
       makeEvent("module.upserted", { title: "EDD", prereqs: [], kind: "core" }, { ...dev(DAY1_A), moduleId: "m1" }),

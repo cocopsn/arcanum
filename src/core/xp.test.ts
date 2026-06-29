@@ -44,6 +44,12 @@ describe("xpBase (unrounded)", () => {
     expect(xpBase(makeEvent("error.logged", { description: "wall" }, opts))).toBe(0);
     expect(xpBase(makeEvent("module.started", {}, opts))).toBe(0);
   });
+
+  it("tolerates malformed payloads without producing NaN (jsonb robustness)", () => {
+    expect(xpBase(makeEvent("firetest.attempted", {}, opts))).toBe(0);
+    expect(xpBase(makeEvent("note.created", {}, opts))).toBe(0);
+    expect(Number.isFinite(xpBase(makeEvent("session.ended", {}, opts)))).toBe(true);
+  });
 });
 
 describe("streakMultiplier", () => {

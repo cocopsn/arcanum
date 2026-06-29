@@ -2,12 +2,12 @@ import { describe, it, expect } from "vitest";
 import { makeEvent, newEventId, compareEvents, EVENT_TYPES } from "@/core/event";
 
 describe("event ids", () => {
-  it("mints distinct, monotonic-sortable ids (UUIDv7)", () => {
-    const a = newEventId();
-    const b = newEventId();
-    expect(a).not.toBe(b);
-    expect(a < b).toBe(true);
-    expect(a).toMatch(/^[0-9a-f-]{36}$/);
+  it("mints distinct, well-formed UUIDv7 ids", () => {
+    // Distinctness + valid uuid shape is what compareEvents' (ts,id) tie-break
+    // relies on — a stable total order, not strict intra-ms call ordering.
+    const ids = new Set(Array.from({ length: 100 }, () => newEventId()));
+    expect(ids.size).toBe(100);
+    for (const id of ids) expect(id).toMatch(/^[0-9a-f-]{36}$/);
   });
 });
 

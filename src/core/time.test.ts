@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { civilDay, dayOrdinal, civilDayOrdinal, daysBetween, msToDays } from "@/core/time";
+import { civilDay, dayOrdinal, civilDayOrdinal, msToDays } from "@/core/time";
 
 const TZ = "America/Monterrey"; // UTC-6, no DST
 
@@ -18,10 +18,7 @@ describe("civilDay", () => {
 describe("dayOrdinal", () => {
   it("consecutive civil days differ by 1", () => {
     expect(dayOrdinal("2026-06-28") - dayOrdinal("2026-06-27")).toBe(1);
-  });
-
-  it("daysBetween is the signed ordinal gap", () => {
-    expect(daysBetween("2026-06-27", "2026-06-30")).toBe(3);
+    expect(dayOrdinal("2026-06-30") - dayOrdinal("2026-06-27")).toBe(3);
   });
 
   it("civilDayOrdinal composes civilDay + dayOrdinal", () => {

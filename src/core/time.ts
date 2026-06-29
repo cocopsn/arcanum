@@ -37,11 +37,6 @@ export function civilDayOrdinal(ts: number, tz: string): number {
   return dayOrdinal(civilDay(ts, tz));
 }
 
-/** Signed difference in whole days between two civil-day keys (b - a). */
-export function daysBetween(aKey: string, bKey: string): number {
-  return dayOrdinal(bKey) - dayOrdinal(aKey);
-}
-
 export function msToDays(ms: number): number {
   return ms / 86_400_000;
 }

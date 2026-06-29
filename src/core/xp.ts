@@ -22,19 +22,23 @@ export function xpBase(event: ArcanumEvent): number {
       return X.moduleCompleted;
     case "session.ended": {
       const p = event.payload as unknown as SessionEndedPayload;
-      return p.duration_ms >= X.sessionMinMs && p.kind !== "review"
+      // Number(undefined)=NaN; NaN >= x is false → 0. Tolerates malformed jsonb.
+      return Number(p.duration_ms) >= X.sessionMinMs && p.kind !== "review"
         ? X.sessionMin
         : 0;
     }
     case "firetest.attempted": {
       const p = event.payload as unknown as FiretestAttemptedPayload;
-      if (p.ceiling <= 0) return 0;
-      const reached = Math.min(p.reached, p.ceiling);
-      return (reached / p.ceiling) * X.firetestMax;
+      const ceiling = Number(p.ceiling);
+      const reached = Number(p.reached);
+      if (!Number.isFinite(ceiling) || ceiling <= 0 || !Number.isFinite(reached)) {
+        return 0;
+      }
+      return (Math.min(reached, ceiling) / ceiling) * X.firetestMax;
     }
     case "note.created": {
       const p = event.payload as unknown as NoteCreatedPayload;
-      return p.length >= X.noteMinLen ? X.note : 0;
+      return Number(p.length) >= X.noteMinLen ? X.note : 0;
     }
     default:
       return 0;

@@ -89,8 +89,8 @@ export function streakAsOfDay(result: StreakResult, day: number): number {
     else break;
   }
   if (q === null) return 0;
+  // q is drawn from sortedDays, so both maps are guaranteed to hold it.
   if (q === day) return closedStreakByDay.get(q)!;
   const missed = day - q;
-  const shieldsAtQ = shieldsByDay.get(q) ?? 0;
-  return missed <= shieldsAtQ ? closedStreakByDay.get(q)! : 0;
+  return missed <= shieldsByDay.get(q)! ? closedStreakByDay.get(q)! : 0;
 }

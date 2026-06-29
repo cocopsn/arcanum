@@ -16,6 +16,7 @@ import {
   streakTimeline,
   streakAsOfDay,
   type StreakState,
+  type StreakResult,
 } from "@/core/streak";
 import { initialMastery, reinforce } from "@/core/mastery";
 import type { ReadModel, Goal, ModuleRM, Edge, ReviewItem } from "@/core/read-model";
@@ -37,7 +38,9 @@ function isQualifying(e: ArcanumEvent): boolean {
 function reinforcementQuality(e: ArcanumEvent): number | null {
   if (e.type === "checkpoint.passed") {
     const p = e.payload as unknown as CheckpointPassedPayload;
-    return p.kind === "project" ? p.quality ?? M.defaultQuality : p.score;
+    const raw = p.kind === "project" ? p.quality ?? M.defaultQuality : p.score;
+    // Malformed jsonb (missing/NaN score) must NOT poison S with sticky NaN.
+    return Number.isFinite(raw) ? Number(raw) : M.defaultQuality;
   }
   if (e.type === "error.resolved") return M.defaultQuality;
   return null;
@@ -216,17 +219,9 @@ function assemble(
   };
 }
 
-/** Full pure two-phase fold of the entire log into a ReadModel (spec §5, §6.1). */
-export function project(events: ArcanumEvent[]): ReadModel {
-  const sorted = [...events].sort(compareEvents);
-  const qDays: number[] = [];
-  for (const e of sorted) {
-    if (isQualifying(e)) qDays.push(civilDayOrdinal(e.ts, TZ));
-  }
-  const tl = streakTimeline(qDays);
-
-  const acc = emptyAcc();
-  for (const e of sorted) {
+/** Phase 2: fold events for domain + XP (each event uses its day's closed streak). */
+function foldInto(acc: Acc, sortedEvents: ArcanumEvent[], tl: StreakResult): void {
+  for (const e of sortedEvents) {
     applyDomain(acc, e);
     const base = xpBase(e);
     if (base !== 0) {
@@ -234,28 +229,37 @@ export function project(events: ArcanumEvent[]): ReadModel {
       acc.totalXp += Math.round(base * streakMultiplier(streak));
     }
   }
+}
 
+function qualifiedDaysOf(events: ArcanumEvent[]): number[] {
+  const out: number[] = [];
+  for (const e of events) {
+    if (isQualifying(e)) out.push(civilDayOrdinal(e.ts, TZ));
+  }
+  return out;
+}
+
+/** Full pure two-phase fold of the entire log into a ReadModel (spec §5, §6.1). */
+export function project(events: ArcanumEvent[]): ReadModel {
+  const sorted = [...events].sort(compareEvents);
+  const tl = streakTimeline(qualifiedDaysOf(sorted));
+  const acc = emptyAcc();
+  foldInto(acc, sorted, tl);
   const last = sorted.length ? sorted[sorted.length - 1]! : null;
   return assemble(acc, tl.state, tl.sortedDays, last ? { ts: last.ts, id: last.id } : null);
 }
 
+/**
+ * Incremental continuation. PRECONDITION (guaranteed by applyEvents): every event
+ * in `sortedNew` lands on a civil day strictly newer than `prev`'s cursor day and
+ * in order, so no already-closed day's streak/XP can shift. We recompute the
+ * whole streak timeline (cheap — over qualified-day ordinals) so streak/shield
+ * correctness can never drift, and carry totalXp/domain forward from `prev`.
+ */
 function incrementalProject(prev: ReadModel, sortedNew: ArcanumEvent[]): ReadModel {
-  const qDays = [...prev.qualifiedDays];
-  for (const e of sortedNew) {
-    if (isQualifying(e)) qDays.push(civilDayOrdinal(e.ts, TZ));
-  }
-  const tl = streakTimeline(qDays);
-
+  const tl = streakTimeline([...prev.qualifiedDays, ...qualifiedDaysOf(sortedNew)]);
   const acc = accFromModel(prev);
-  for (const e of sortedNew) {
-    applyDomain(acc, e);
-    const base = xpBase(e);
-    if (base !== 0) {
-      const streak = streakAsOfDay(tl, civilDayOrdinal(e.ts, TZ));
-      acc.totalXp += Math.round(base * streakMultiplier(streak));
-    }
-  }
-
+  foldInto(acc, sortedNew, tl);
   const last = sortedNew[sortedNew.length - 1]!;
   return assemble(acc, tl.state, tl.sortedDays, { ts: last.ts, id: last.id });
 }
