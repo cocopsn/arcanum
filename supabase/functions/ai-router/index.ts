@@ -213,6 +213,58 @@ async function evaluate(
   throw new Error(`proveedor desconocido: ${provider}`);
 }
 
+async function tutor(provider: string, context: { question?: string } & Record<string, unknown>): Promise<string> {
+  const system =
+    "Eres el tutor de ARCANUM, persona estilo Asuka: exigente, directa, adversarial al servicio " +
+    "del aprendizaje. Tienes DOS modos SIMULTÁNEOS: (1) cuando el aprendiz de verdad necesita el " +
+    "contenido, lo das rico, explicado a fondo y con el primer principio; (2) encima, FRICCIÓN — " +
+    "'ahora dime por qué', no regalas la solución de un ejercicio, empujas a que la derive. " +
+    "NUNCA des la respuesta final de un problema/tarea: guía con la pregunta correcta hasta que la " +
+    "saque. Usa el CONTEXTO (tópico, su mastery %, prerrequisitos, y SUS PROPIAS NOTAS): sé " +
+    "específico a dónde está; si una nota suya tiene un error, corrígelo sin suavizar. Responde en " +
+    "markdown conciso, en español. CONTEXTO: " +
+    JSON.stringify(context);
+  const question = typeof context.question === "string" && context.question ? context.question : "(sin pregunta)";
+
+  if (provider === "openai") {
+    const key = Deno.env.get("OPENAI_API_KEY");
+    if (!key) throw new Error("OPENAI_API_KEY ausente");
+    const res = await fetch("https://api.openai.com/v1/chat/completions", {
+      method: "POST",
+      headers: { Authorization: `Bearer ${key}`, "Content-Type": "application/json" },
+      body: JSON.stringify({
+        model: "gpt-4o-mini",
+        max_tokens: 900,
+        messages: [
+          { role: "system", content: system },
+          { role: "user", content: question },
+        ],
+      }),
+    });
+    if (!res.ok) throw new Error(`openai ${res.status}`);
+    const j = await res.json();
+    return j.choices?.[0]?.message?.content ?? "";
+  }
+  if (provider === "anthropic") {
+    const key = Deno.env.get("ANTHROPIC_API_KEY");
+    if (!key) throw new Error("ANTHROPIC_API_KEY ausente");
+    const res = await fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST",
+      headers: { "x-api-key": key, "anthropic-version": "2023-06-01", "Content-Type": "application/json" },
+      body: JSON.stringify({
+        model: "claude-3-5-haiku-20241022",
+        max_tokens: 900,
+        system,
+        messages: [{ role: "user", content: question }],
+      }),
+    });
+    if (!res.ok) throw new Error(`anthropic ${res.status}`);
+    const j = await res.json();
+    return j.content?.[0]?.text ?? "";
+  }
+  throw new Error(`proveedor desconocido: ${provider}`);
+}
+
 Deno.serve(async (req: Request) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: CORS });
   try {
@@ -243,6 +295,11 @@ Deno.serve(async (req: Request) => {
     if (body.action === "evaluate") {
       const r = await routeWithFallback(providers, (p) => evaluate(p, body.context));
       return json({ provider: r.provider, summary: r.value.summary, strengths: r.value.strengths, gaps: r.value.gaps, challenge: r.value.challenge });
+    }
+    if (body.action === "tutor") {
+      const ctx = (body.context ?? {}) as { question?: string } & Record<string, unknown>;
+      const r = await routeWithFallback(providers, (p) => tutor(p, ctx));
+      return json({ provider: r.provider, answer: r.value });
     }
     return json({ error: "Acción desconocida." }, 400);
   } catch (err) {

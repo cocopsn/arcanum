@@ -8,6 +8,7 @@ import { BlankChallenge } from "@/ui/BlankChallenge";
 import { NotesSheet } from "@/ui/NotesSheet";
 import { Quiz } from "@/ui/subject/Quiz";
 import { EvaluationPanel } from "@/ui/subject/EvaluationPanel";
+import { TutorSheet } from "@/ui/subject/TutorSheet";
 import { nodeStatus } from "@/core/roadmap";
 import { contentForModule } from "@/lib/subject-content";
 
@@ -26,6 +27,7 @@ export function TopicDetailSheet({
   const retrievability = useArcanum((s) => s.viewModel.modules.find((m) => m.id === moduleId)?.retrievability ?? 0);
   const { startModule, completeModule } = useActions();
   const [notesOpen, setNotesOpen] = useState(false);
+  const [tutorOpen, setTutorOpen] = useState(false);
   const panelRef = useRef<HTMLDivElement>(null);
 
   const mod = readModel.modules.find((m) => m.id === moduleId) ?? null;
@@ -151,12 +153,18 @@ export function TopicDetailSheet({
           <EvaluationPanel moduleId={mod.id} accent={accent} />
         </div>
 
-        <button onClick={() => setNotesOpen(true)} className="-mx-2 mt-4 inline-flex min-h-11 items-center px-2 text-[11px] uppercase tracking-[0.16em] text-text-muted transition hover:text-topic">
-          Notas · {noteCount}
-        </button>
+        <div className="mt-4 flex flex-wrap items-center gap-x-5">
+          <button onClick={() => setTutorOpen(true)} className="-mx-2 inline-flex min-h-11 items-center px-2 text-[11px] uppercase tracking-[0.16em] text-text-muted transition" style={{ color: accent }}>
+            Preguntar al tutor
+          </button>
+          <button onClick={() => setNotesOpen(true)} className="inline-flex min-h-11 items-center text-[11px] uppercase tracking-[0.16em] text-text-muted transition hover:text-topic">
+            Notas · {noteCount}
+          </button>
+        </div>
       </div>
 
       <NotesSheet open={notesOpen} moduleId={moduleId} onClose={() => setNotesOpen(false)} />
+      {tutorOpen && <TutorSheet moduleId={moduleId} accent={accent} onClose={() => setTutorOpen(false)} />}
     </div>
   );
 }
