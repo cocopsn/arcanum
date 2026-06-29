@@ -34,6 +34,10 @@ export function useActions() {
     completeModule: (refs: Refs) => fire("module.completed", {}, refs),
     submitFiretest: (refs: Refs, reached: number, ceiling: number) =>
       fire("firetest.attempted", { reached, ceiling }, refs),
+    // Built-in topic quiz (Bloque 4): score ∈ [0,1] reinforces mastery + XP via the
+    // existing checkpoint.passed path. No new event type — the quiz IS a checkpoint.
+    submitQuiz: (refs: Refs, score: number) =>
+      fire("checkpoint.passed", { score, kind: "checkpoint" }, refs),
     createNote: async (refs: Refs, title: string, markdown: string): Promise<string> => {
       const noteId = newEventId();
       await fire("note.created", { note_id: noteId, title, markdown }, refs);

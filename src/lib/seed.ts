@@ -27,6 +27,10 @@ const M = {
 
 export const SEED_GOAL_ID = G.itc;
 export const SEED_MODULE_ID = M.edd;
+/** Stable seed module ids — let the subject-content layer (Bloque 4) key topics. */
+export const SEED_MODULE_IDS = M;
+/** Stable seed goal ids. */
+export const SEED_GOAL_IDS = G;
 
 let seq = 0;
 let ts = TS;

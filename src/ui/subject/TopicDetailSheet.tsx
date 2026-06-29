@@ -1,0 +1,156 @@
+"use client";
+
+import { useEffect, useMemo, useRef, useState } from "react";
+import { useArcanum } from "@/app/providers";
+import { useActions } from "@/ui/use-actions";
+import { FireTest } from "@/ui/FireTest";
+import { BlankChallenge } from "@/ui/BlankChallenge";
+import { NotesSheet } from "@/ui/NotesSheet";
+import { Quiz } from "@/ui/subject/Quiz";
+import { nodeStatus } from "@/core/roadmap";
+import { contentForModule } from "@/lib/subject-content";
+
+const STATUS_LABEL = { sealed: "Sellado", available: "Disponible", started: "En curso", completed: "Completado" } as const;
+
+export function TopicDetailSheet({
+  moduleId,
+  accent,
+  onClose,
+}: {
+  moduleId: string;
+  accent: string;
+  onClose: () => void;
+}) {
+  const readModel = useArcanum((s) => s.readModel);
+  const retrievability = useArcanum((s) => s.viewModel.modules.find((m) => m.id === moduleId)?.retrievability ?? 0);
+  const { startModule, completeModule } = useActions();
+  const [notesOpen, setNotesOpen] = useState(false);
+  const panelRef = useRef<HTMLDivElement>(null);
+
+  const mod = readModel.modules.find((m) => m.id === moduleId) ?? null;
+  const byId = useMemo(() => new Map(readModel.modules.map((m) => [m.id, m])), [readModel.modules]);
+  const status = mod ? nodeStatus(mod, readModel.edges, byId) : "sealed";
+  const content = contentForModule(moduleId);
+  const noteCount = readModel.notes.filter((n) => n.moduleId === moduleId).length;
+
+  useEffect(() => {
+    panelRef.current?.focus();
+  }, []);
+
+  if (!mod || mod.archived) return null;
+  const goalId = mod.goalId ?? "";
+
+  return (
+    <div
+      className="fixed inset-0 z-[60] flex items-end justify-center sm:items-center"
+      style={{ background: "var(--overlay-scrim)" }}
+      onClick={onClose}
+      onKeyDown={(e) => {
+        if (e.key === "Escape") onClose();
+      }}
+    >
+      <div
+        ref={panelRef}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="topic-title"
+        tabIndex={-1}
+        className="scroll-touch flex max-h-[90vh] w-full max-w-md flex-col overflow-y-auto rounded-t-[var(--r-lg)] border border-line bg-surface-raised p-6 outline-none sm:rounded-[var(--r-lg)]"
+        style={{ paddingBottom: "max(1.5rem, env(safe-area-inset-bottom))" }}
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="flex items-start justify-between gap-3">
+          <div className="min-w-0">
+            <h2 id="topic-title" className="font-serif text-xl leading-tight text-text">
+              {mod.title}
+            </h2>
+            <div className="mt-1 text-[11px] uppercase tracking-[0.16em] text-text-muted">
+              {STATUS_LABEL[status]} · maestría <span className="tnum" style={{ color: accent }}>{Math.round(retrievability * 100)}%</span>
+            </div>
+          </div>
+          <button onClick={onClose} aria-label="Cerrar" className="-mr-2 -mt-1 min-h-11 px-2 text-2xl leading-none text-text-faint transition hover:text-text">
+            ×
+          </button>
+        </div>
+
+        {/* RETO FIRST — the wall before any resource (methodology intact). */}
+        <div className="mt-5 border-t border-line pt-5">
+          {mod.status === "idle" ? (
+            <div className="space-y-4">
+              <FireTest goalId={goalId} moduleId={mod.id} title={mod.title} />
+              <button
+                onClick={() => startModule({ goalId, moduleId: mod.id })}
+                className="min-h-11 w-full rounded-[var(--r-sm)] border border-line px-4 py-2 text-sm text-text-muted transition hover:text-text"
+                style={{ borderColor: "color-mix(in srgb, " + accent + " 40%, var(--line))" }}
+              >
+                Iniciar tópico
+              </button>
+            </div>
+          ) : (
+            <div className="space-y-4">
+              <BlankChallenge goalId={goalId} moduleId={mod.id} title={mod.title} />
+              {mod.status === "started" && (
+                <button onClick={() => completeModule({ goalId, moduleId: mod.id })} className="min-h-11 text-sm text-text-faint transition hover:text-text">
+                  Cerrar tópico · +150 XP
+                </button>
+              )}
+            </div>
+          )}
+        </div>
+
+        {/* RICH CONTENT — on demand, collapsed. The resource comes AFTER the wall. */}
+        {content && (
+          <details className="group mt-5 border-t border-line pt-4">
+            <summary className="min-h-11 cursor-pointer list-none text-[11px] uppercase tracking-[0.18em] text-text-faint transition hover:text-text-muted">
+              ⌄ Contenido del tópico
+            </summary>
+            <div className="mt-3 space-y-4">
+              <p className="font-serif text-[15px] leading-relaxed text-text-muted">{content.summary}</p>
+
+              <div>
+                <h3 className="text-[10px] uppercase tracking-[0.2em] text-text-faint">Videos</h3>
+                {content.videos.length === 0 ? (
+                  <p className="mt-1 text-[13px] text-text-faint">Por curar — genera o pega un enlace con el tutor.</p>
+                ) : (
+                  <div className="mt-1 space-y-1">
+                    {content.videos.map((v) => (
+                      <a key={v.url} href={v.url} target="_blank" rel="noreferrer noopener" className="block min-h-11 py-2 text-[13px] text-topic transition hover:underline">
+                        {v.title} ↗
+                      </a>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {content.tools.length > 0 && (
+                <div>
+                  <h3 className="text-[10px] uppercase tracking-[0.2em] text-text-faint">Herramientas</h3>
+                  <div className="mt-1.5 flex flex-wrap gap-2">
+                    {content.tools.map((tool) => (
+                      <span key={tool} className="rounded-[var(--r-sm)] border border-line px-2.5 py-1 text-xs text-text-muted">
+                        {tool}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          </details>
+        )}
+
+        {/* BUILT-IN QUIZ — immediate feedback, emits checkpoint.passed → mastery. */}
+        {content && content.quiz.length > 0 && (
+          <div className="mt-5 border-t border-line pt-4">
+            <Quiz goalId={goalId} moduleId={mod.id} questions={content.quiz} accent={accent} />
+          </div>
+        )}
+
+        <button onClick={() => setNotesOpen(true)} className="-mx-2 mt-4 inline-flex min-h-11 items-center px-2 text-[11px] uppercase tracking-[0.16em] text-text-muted transition hover:text-topic">
+          Notas · {noteCount}
+        </button>
+      </div>
+
+      <NotesSheet open={notesOpen} moduleId={moduleId} onClose={() => setNotesOpen(false)} />
+    </div>
+  );
+}

@@ -17,6 +17,7 @@ import { NotesSheet } from "@/ui/NotesSheet";
 import { VigiliaSheet } from "@/ui/VigiliaSheet";
 import { AscensionCeremony } from "@/ui/AscensionCeremony";
 import { RoadmapCanvas } from "@/ui/roadmap/RoadmapCanvas";
+import { SubjectMap } from "@/ui/subject/SubjectMap";
 import { AgendaSheet } from "@/ui/AgendaSheet";
 import { InstallCoachMark } from "@/ui/InstallCoachMark";
 import type { ReadModel, Stats } from "@/core/read-model";
@@ -37,6 +38,7 @@ export function HomeView() {
   const [vigiliaOpen, setVigiliaOpen] = useState(false);
   const [mapOpen, setMapOpen] = useState(false);
   const [agendaOpen, setAgendaOpen] = useState(false);
+  const [subjectGoal, setSubjectGoal] = useState<string | null>(null);
 
   if (status === "loading") {
     return (
@@ -65,6 +67,7 @@ export function HomeView() {
           readModel={readModel}
           viewModel={viewModel}
           onNotes={(moduleId) => setNotes({ open: true, moduleId })}
+          onOpenSubject={(goalId) => setSubjectGoal(goalId)}
         />
         <InstallCoachMark />
         <Footer
@@ -78,6 +81,7 @@ export function HomeView() {
 
       <RoadmapCanvas open={mapOpen} onClose={() => setMapOpen(false)} />
       <AgendaSheet open={agendaOpen} onClose={() => setAgendaOpen(false)} />
+      {subjectGoal && <SubjectMap goalId={subjectGoal} onClose={() => setSubjectGoal(null)} />}
 
       <AuthSheet open={authOpen} onClose={() => setAuthOpen(false)} />
       <CodiceSheet open={codiceOpen} onClose={() => setCodiceOpen(false)} />
@@ -135,10 +139,12 @@ function Goals({
   readModel,
   viewModel,
   onNotes,
+  onOpenSubject,
 }: {
   readModel: ReadModel;
   viewModel: ViewModel;
   onNotes: (moduleId: string) => void;
+  onOpenSubject: (goalId: string) => void;
 }) {
   const rByModule = new Map(viewModel.modules.map((m) => [m.id, m.retrievability]));
   const noteCount = (moduleId: string) =>
@@ -156,14 +162,18 @@ function Goals({
               key={goal.id}
               style={{ ["--topic"]: goal.color } as CSSProperties}
             >
-              <h2 className="mb-2 flex items-center gap-2 font-display text-lg text-topic">
-                <span
-                  aria-hidden
-                  className="inline-block h-2 w-2 rounded-full"
-                  style={{ background: "var(--topic)" }}
-                />
-                {goal.title}
-              </h2>
+              <div className="mb-2 flex items-center justify-between gap-2">
+                <h2 className="flex items-center gap-2 font-display text-lg text-topic">
+                  <span aria-hidden className="inline-block h-2 w-2 rounded-full" style={{ background: "var(--topic)" }} />
+                  {goal.title}
+                </h2>
+                <button
+                  onClick={() => onOpenSubject(goal.id)}
+                  className="inline-flex min-h-11 items-center px-1 text-[11px] uppercase tracking-[0.18em] text-text-faint transition hover:text-topic"
+                >
+                  Ruta →
+                </button>
+              </div>
               <div className="space-y-2">
                 {mods.map((m) => (
                   <ModuleCard
