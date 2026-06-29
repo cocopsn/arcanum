@@ -1,14 +1,39 @@
 // ARCANUM AI router — Supabase Edge Function (Deno).
 // ALL AI calls go through here. Keys live ONLY in the function secrets
-// (OPENAI_API_KEY / ANTHROPIC_API_KEY via Deno.env.get) — never in the client,
-// never hardcoded. The client invokes this authenticated with its Supabase JWT.
+// (OPENAI_API_KEY / KEE_* / ANTHROPIC_API_KEY via Deno.env.get) — never in the
+// client, never hardcoded. The client invokes this authenticated with its JWT.
 //
-// Provider priority is CONFIG (the array), not hardcode — invert PROVIDER_PRIORITY
-// to flip the primary. The fallback logic mirrors src/core/ai-router.ts (tested).
+// Provider priority is CONFIG (the array), not hardcode. DEFAULT = OpenAI
+// gpt-4o-mini PRIMARY, Kee (the learner's own RAG agent) as FALLBACK. We do NOT
+// depend on Kee: if it is unconfigured it simply throws and the router has
+// already answered via OpenAI. `anthropic` stays implemented but OFF the default
+// chain — reachable only via an explicit `providers` override. Fallback logic
+// mirrors src/core/ai-router.ts (tested).
 
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
-const PROVIDER_PRIORITY = ["openai", "anthropic"] as const;
+const PROVIDER_PRIORITY = ["openai", "kee"] as const;
+
+// ── Kee as a FALLBACK provider ─────────────────────────────────────────────
+// Inert until KEE_ENDPOINT is set as a function secret. It then receives the
+// SAME action envelope the client sends ({action, ...payload}) and must return
+// the canonical shape for that action (contract documented in AGENT.md). Throws
+// when unconfigured so the router degrades honestly — never a placebo answer.
+async function keeCall(
+  action: string,
+  payload: Record<string, unknown>,
+): Promise<Record<string, unknown>> {
+  const endpoint = Deno.env.get("KEE_ENDPOINT");
+  if (!endpoint) throw new Error("KEE_ENDPOINT ausente (fallback Kee no configurado)");
+  const key = Deno.env.get("KEE_API_KEY");
+  const res = await fetch(endpoint, {
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...(key ? { Authorization: `Bearer ${key}` } : {}) },
+    body: JSON.stringify({ action, ...payload }),
+  });
+  if (!res.ok) throw new Error(`kee ${res.status}`);
+  return (await res.json()) as Record<string, unknown>;
+}
 
 const CORS = {
   "Access-Control-Allow-Origin": "*",
@@ -107,6 +132,10 @@ async function ocr(provider: string, imageDataUrl: string): Promise<string> {
     const j = await res.json();
     return j.content?.[0]?.text ?? "";
   }
+  if (provider === "kee") {
+    const j = await keeCall("ocr", { image: imageDataUrl });
+    return String(j.markdown ?? "");
+  }
   throw new Error(`proveedor desconocido: ${provider}`);
 }
 
@@ -154,6 +183,10 @@ async function sleep(provider: string, context: unknown): Promise<{ patterns: st
     if (!res.ok) throw new Error(`anthropic ${res.status}`);
     const j = await res.json();
     return parse(j.content?.[0]?.text ?? "");
+  }
+  if (provider === "kee") {
+    const j = await keeCall("sleep", { context });
+    return { patterns: String(j.patterns ?? ""), axioms: String(j.axioms ?? "") };
   }
   throw new Error(`proveedor desconocido: ${provider}`);
 }
@@ -209,6 +242,15 @@ async function evaluate(
     if (!res.ok) throw new Error(`anthropic ${res.status}`);
     const j = await res.json();
     return parse(j.content?.[0]?.text ?? "");
+  }
+  if (provider === "kee") {
+    const j = await keeCall("evaluate", { context });
+    return {
+      summary: String(j.summary ?? ""),
+      strengths: Array.isArray(j.strengths) ? j.strengths.map(String) : [],
+      gaps: Array.isArray(j.gaps) ? j.gaps.map(String) : [],
+      challenge: String(j.challenge ?? ""),
+    };
   }
   throw new Error(`proveedor desconocido: ${provider}`);
 }
@@ -267,6 +309,16 @@ async function gate(
     const j = await res.json();
     return parse(j.content?.[0]?.text ?? "");
   }
+  if (provider === "kee") {
+    const j = await keeCall("gate", { context });
+    const score = Number(j.score);
+    return {
+      passed: j.passed === true,
+      score: Number.isFinite(score) ? Math.max(0, Math.min(1, score)) : 0,
+      summary: String(j.summary ?? ""),
+      feedback: String(j.feedback ?? ""),
+    };
+  }
   throw new Error(`proveedor desconocido: ${provider}`);
 }
 
@@ -318,6 +370,10 @@ async function tutor(provider: string, context: { question?: string } & Record<s
     if (!res.ok) throw new Error(`anthropic ${res.status}`);
     const j = await res.json();
     return j.content?.[0]?.text ?? "";
+  }
+  if (provider === "kee") {
+    const j = await keeCall("tutor", { context });
+    return String(j.answer ?? "");
   }
   throw new Error(`proveedor desconocido: ${provider}`);
 }

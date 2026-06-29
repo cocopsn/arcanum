@@ -29,7 +29,8 @@ Por eso el **retrieval ocurre en el cliente** y el **arming + generación** en l
 cliente (local)                         Edge Function (ai-router, action:"tutor")
 ─────────────────                       ─────────────────────────────────────────
 buildTutorContext(readModel, ...)  ──▶  arma el system prompt Asuka con el contexto
-  · tópico + summary autorado            + llama al modelo (router [openai, anthropic])
+  · tópico + summary autorado            + llama al modelo (router [openai, kee] —
+                                            gpt-4o-mini PRIMARIO, Kee FALLBACK)
   · mastery % + status                   + devuelve la respuesta (markdown)
   · prerrequisitos (títulos)
   · LAS NOTAS del usuario del módulo  ◀──  respuesta = BORRADOR EDITABLE
@@ -61,17 +62,34 @@ Kee es el agente local del usuario (corre en su hardware). De Kee se reutiliza e
 - **Enfoque RAG**: recuperar el contexto relevante del usuario ANTES de generar, para que
   la respuesta sea específica a dónde está — no genérica.
 
-**Decisión (tomada, no a consultar): se copia el PATRÓN ahora.** NO se integra Kee
-corriendo en hardware local de forma directa, porque eso requeriría **exponer Kee a la
-red** (un endpoint accesible desde la Edge Function / el cliente), con su superficie de
-seguridad. Queda como **puerta futura documentada**:
+**Decisión (vigente): GPT-4o-mini PRIMARIO, Kee FALLBACK — no dependemos de Kee.**
+Se copia el PATRÓN de Kee (arriba) y se hace el trabajo con OpenAI `gpt-4o-mini` AHORA;
+Kee queda enchufado como **proveedor de respaldo real** (no como dependencia). La cadena
+por defecto del router es `["openai", "kee"]` (en `PROVIDER_PRIORITY`, edge + `src/core/
+ai-router.ts`): si OpenAI responde, Kee ni se toca; si OpenAI cae, el router intenta Kee.
+`anthropic` sigue **implementado pero FUERA de la cadena por defecto** — sólo alcanzable
+pasando un override explícito `providers:["anthropic", …]` (no es subprocesador activo).
 
-> **Kee-directo (futuro).** Para enrutar el tutor a la instancia real de Kee: exponer Kee
-> tras un endpoint autenticado (túnel + token, nunca abierto), y en `ai-router` añadir un
-> proveedor `"kee"` al router `[openai, anthropic, kee]` que apunte a ese endpoint. El
-> contrato (TutorContext → respuesta markdown) ya está; solo cambia el transporte. Mientras
-> tanto, el system prompt aquí debe reconciliarse con el system prompt real de Kee del
-> usuario (este archivo documenta el patrón; los detalles exactos de Kee los aporta el dueño).
+El proveedor `"kee"` ya está implementado en `ai-router` para las 5 acciones (`ocr`,
+`sleep`, `evaluate`, `gate`, `tutor`) vía el helper `keeCall(action, payload)`. Es
+**inerte hasta** que se fije el secreto `KEE_ENDPOINT` (y opcional `KEE_API_KEY`): sin él
+`keeCall` lanza y el router degrada honestamente (jamás un placebo). Contrato del endpoint
+de Kee — recibe el MISMO sobre que manda el cliente y devuelve la forma canónica de la
+acción:
+
+```
+POST $KEE_ENDPOINT   (Authorization: Bearer $KEE_API_KEY  — opcional)
+  { action: "ocr",      image }                    → { markdown }
+  { action: "sleep",    context }                  → { patterns, axioms }
+  { action: "evaluate", context }                  → { summary, strengths[], gaps[], challenge }
+  { action: "gate",     context }                  → { passed, score, summary, feedback }
+  { action: "tutor",    context }                  → { answer }
+```
+
+> **Exponer Kee con seguridad.** El endpoint debe ir tras un túnel + token (nunca abierto);
+> el system prompt real de Kee debe reconciliarse con las personas Asuka de aquí (el dueño
+> aporta los detalles exactos de Kee). Mientras `KEE_ENDPOINT` no exista, Kee es respaldo
+> nominal y gpt-4o-mini hace todo el trabajo — exactamente lo pedido.
 
 ## Resumen de archivos
 

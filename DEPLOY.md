@@ -60,13 +60,19 @@ supabase login                                   # o: export SUPABASE_ACCESS_TOK
 supabase functions deploy ai-router --project-ref tssmjabfszndxwlpzngv
 ```
 
-Secrets de la función (ya los pusiste en Fase 2; confírmalo):
+Secrets de la función. La cadena por defecto es **`["openai", "kee"]`** — gpt-4o-mini
+PRIMARIO, Kee FALLBACK. Lo ÚNICO obligatorio para que la IA funcione es `OPENAI_API_KEY`:
 
 ```bash
 supabase secrets list --project-ref tssmjabfszndxwlpzngv      # debe incluir OPENAI_API_KEY
-# si falta alguno:
-supabase secrets set OPENAI_API_KEY=<...> --project-ref tssmjabfszndxwlpzngv
-# (ANTHROPIC_API_KEY es opcional — el router cae a él si está)
+# si falta (sin esto el evaluador/gate/tutor caen a la heurística honesta):
+supabase secrets set OPENAI_API_KEY=sk-... --project-ref tssmjabfszndxwlpzngv
+
+# OPCIONAL — Kee como respaldo real (inerte hasta fijarlo; contrato en AGENT.md):
+supabase secrets set KEE_ENDPOINT=https://<tu-tunel>/kee --project-ref tssmjabfszndxwlpzngv
+supabase secrets set KEE_API_KEY=<token> --project-ref tssmjabfszndxwlpzngv
+# (ANTHROPIC_API_KEY ya NO está en la cadena por defecto — sólo si pasas
+#  providers:["anthropic", …] explícito en el body)
 ```
 
 Las claves de IA viven SOLO en los secrets de la función (`Deno.env.get`), nunca en

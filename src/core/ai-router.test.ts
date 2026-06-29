@@ -24,6 +24,23 @@ describe("routeWithFallback", () => {
     expect((await routeWithFallback(["anthropic", "openai"], call)).provider).toBe("anthropic");
   });
 
+  it("default chain openai → kee: gpt-4o-mini primary, Kee only as fallback", async () => {
+    const tried: string[] = [];
+    const ok = vi.fn(async (p: string) => {
+      tried.push(p);
+      return `ok:${p}`;
+    });
+    // OpenAI up → Kee is never touched (we do NOT depend on Kee).
+    expect((await routeWithFallback(["openai", "kee"], ok)).provider).toBe("openai");
+    expect(tried).toEqual(["openai"]);
+    // OpenAI down → falls back to Kee.
+    const down = async (p: string) => {
+      if (p === "openai") throw new Error("openai down");
+      return `ok:${p}`;
+    };
+    expect((await routeWithFallback(["openai", "kee"], down)).provider).toBe("kee");
+  });
+
   it("throws when every provider fails (caller degrades honestly)", async () => {
     const call = async () => {
       throw new Error("no key");
