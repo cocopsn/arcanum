@@ -1,3 +1,10 @@
+import { ArcanumProvider } from "@/app/providers";
+import { HomeView } from "@/ui/HomeView";
+
 export default function Page() {
-  return <main>ARCANUM</main>;
+  return (
+    <ArcanumProvider>
+      <HomeView />
+    </ArcanumProvider>
+  );
 }
