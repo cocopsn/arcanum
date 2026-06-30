@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { buildLessonContext, buildLessonGradeContext } from "@/lib/lesson";
+import { buildLessonContext, buildLessonGradeContext, normalizeLessonCourse } from "@/lib/lesson";
 import { project } from "@/core/projector";
 import { makeEvent } from "@/core/event";
 import { SEED_EVENTS } from "@/lib/seed";
@@ -23,10 +23,44 @@ describe("buildLessonContext (Capa B — on-demand light lesson)", () => {
   });
 });
 
+describe("buildLessonContext (step-by-step) carries the config step bounds", () => {
+  it("includes stepsMin/stepsMax so the count lives in config, not the prompt", () => {
+    const ctx = buildLessonContext(rm, s2.id)!;
+    expect(ctx.stepsMin).toBeGreaterThan(0);
+    expect(ctx.stepsMax).toBeGreaterThanOrEqual(ctx.stepsMin);
+  });
+});
+
 describe("buildLessonGradeContext", () => {
   it("trims the learner's answer", () => {
     const c = buildLessonGradeContext("S2", "reto", ["r1"], "  mi respuesta  ");
     expect(c.answer).toBe("mi respuesta");
     expect(c.rubric).toEqual(["r1"]);
+  });
+});
+
+describe("normalizeLessonCourse (the single trusted wire-shape point)", () => {
+  it("accepts a concept + well-formed steps, dropping malformed ones", () => {
+    const c = normalizeLessonCourse({
+      concept: "  El concepto  ",
+      steps: [
+        { prompt: " reto 1 ", rubric: ["a", 2] },
+        { prompt: "", rubric: [] }, // dropped — empty prompt
+        { prompt: "reto 2" }, // rubric defaults to []
+        { nope: true }, // dropped
+      ],
+    })!;
+    expect(c.concept).toBe("El concepto");
+    expect(c.steps.map((s) => s.prompt)).toEqual(["reto 1", "reto 2"]);
+    expect(c.steps[0]!.rubric).toEqual(["a", "2"]);
+    expect(c.steps[1]!.rubric).toEqual([]);
+  });
+
+  it("returns null when there is no concept or no usable step (degrade honestly, no invented lesson)", () => {
+    expect(normalizeLessonCourse({ concept: "", steps: [{ prompt: "x", rubric: [] }] })).toBeNull();
+    expect(normalizeLessonCourse({ concept: "hay concepto", steps: [] })).toBeNull();
+    expect(normalizeLessonCourse({ concept: "c", steps: [{ prompt: "" }] })).toBeNull();
+    expect(normalizeLessonCourse(null)).toBeNull();
+    expect(normalizeLessonCourse("nope")).toBeNull();
   });
 });

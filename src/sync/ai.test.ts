@@ -6,7 +6,7 @@ vi.mock("@/sync/client", () => ({
   getSupabase: () => ({ auth: { getSession }, functions: { invoke } }),
 }));
 
-import { ocrImage, enrichSleepCycle, requestInterrogation, requestLessonDraft, requestLessonGrade } from "@/sync/ai";
+import { ocrImage, enrichSleepCycle, requestInterrogation, requestLessonSteps, requestLessonGrade } from "@/sync/ai";
 
 beforeEach(() => {
   getSession.mockReset();
@@ -66,17 +66,28 @@ describe("ai client — honest degradation (trunk stays alive without AI)", () =
     expect([r.passed, r.score, r.provider]).toEqual([false, 0.3, "openai"]);
   });
 
-  it("requestLessonDraft (Capa B) returns null without a session — no invented lesson", async () => {
+  it("requestLessonSteps (Capa B) returns null without a session — no invented lesson", async () => {
     getSession.mockResolvedValue({ data: { session: null } });
-    expect(await requestLessonDraft({ cellTitle: "x", sourceRefs: [] })).toBeNull();
+    expect(await requestLessonSteps({ cellTitle: "x", sourceRefs: [] })).toBeNull();
     expect(invoke).not.toHaveBeenCalled();
   });
 
-  it("requestLessonDraft maps a generated lesson on success", async () => {
+  it("requestLessonSteps maps a generated step course on success", async () => {
     getSession.mockResolvedValue({ data: { session: { access_token: "t" } } });
-    invoke.mockResolvedValue({ data: { concept: "El concepto", challenge: "el reto", rubric: ["r1"], provider: "openai" }, error: null });
-    const d = (await requestLessonDraft({ cellTitle: "x", sourceRefs: ["http://a"] }))!;
-    expect([d.concept, d.challenge, d.rubric, d.provider]).toEqual(["El concepto", "el reto", ["r1"], "openai"]);
+    invoke.mockResolvedValue({
+      data: { concept: "El concepto", steps: [{ prompt: "reto 1", rubric: ["r1"] }, { prompt: "reto 2", rubric: [] }], provider: "openai" },
+      error: null,
+    });
+    const c = (await requestLessonSteps({ cellTitle: "x", sourceRefs: ["http://a"] }))!;
+    expect(c.concept).toBe("El concepto");
+    expect(c.steps.map((s) => s.prompt)).toEqual(["reto 1", "reto 2"]);
+    expect(c.provider).toBe("openai");
+  });
+
+  it("requestLessonSteps returns null on the empty-steps sentinel (degrades honestly)", async () => {
+    getSession.mockResolvedValue({ data: { session: { access_token: "t" } } });
+    invoke.mockResolvedValue({ data: { provider: "openai", error: "steps-empty" }, error: null });
+    expect(await requestLessonSteps({ cellTitle: "x", sourceRefs: ["http://a"] })).toBeNull();
   });
 
   it("requestLessonGrade returns null when the function is down — no placebo reinforcement", async () => {

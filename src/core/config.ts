@@ -71,6 +71,15 @@ export const ARCANUM_CONFIG = {
     firetestRevealThreshold: 0.7,
   },
 
+  // Lesson mode (the step-by-step LIGHT lesson, Capa B). hearts = attempts before a run resets
+  // (amor fati: a miss costs a heart but forces the correction). steps min/max bound how many
+  // micro-challenges the tutor generates. Pure tuning — change = behaviour shifts, zero migration.
+  lesson: {
+    hearts: 3,
+    stepsMin: 5,
+    stepsMax: 7,
+  },
+
   // Sleep Cycle context (Fase 4) — thresholds for the actionable digest the rite
   // hands the model: a started module with no reinforcement in `stallDays` is
   // "stalled"; a prereq whose retrievability crosses the review threshold within

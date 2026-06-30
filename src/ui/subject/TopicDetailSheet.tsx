@@ -11,8 +11,9 @@ import { NotesSheet } from "@/ui/NotesSheet";
 import { Quiz } from "@/ui/subject/Quiz";
 import { ExitGate } from "@/ui/subject/ExitGate";
 import { MissionPanel } from "@/ui/subject/MissionPanel";
-import { LessonPanel } from "@/ui/subject/LessonPanel";
+import { LessonMode } from "@/ui/subject/LessonMode";
 import { LearningModes } from "@/ui/subject/LearningModes";
+import { audio } from "@/lib/audio";
 import { EvaluationPanel } from "@/ui/subject/EvaluationPanel";
 import { TutorSheet } from "@/ui/subject/TutorSheet";
 import { nodeStatus, prereqsOf, isMastered } from "@/core/roadmap";
@@ -36,6 +37,7 @@ export function TopicDetailSheet({
   const { startModule, completeModule } = useActions();
   const [notesOpen, setNotesOpen] = useState(false);
   const [tutorOpen, setTutorOpen] = useState(false);
+  const [lessonOpen, setLessonOpen] = useState(false);
   const panelRef = useRef<HTMLDivElement>(null);
 
   const mod = readModel.modules.find((m) => m.id === moduleId) ?? null;
@@ -51,6 +53,7 @@ export function TopicDetailSheet({
 
   if (!mod || mod.archived) return null;
   const goalId = mod.goalId ?? "";
+  const goalTitle = readModel.goals.find((g) => g.id === goalId)?.title ?? "";
   const sealed = status === "sealed";
 
   // unmet prerequisites (LIVE, not archived, not mastered) — derived from the log
@@ -87,6 +90,7 @@ export function TopicDetailSheet({
     );
 
   return (
+    <>
     <div
       className="fixed inset-0 z-[60] flex items-end justify-center sm:items-center"
       style={{ background: "var(--overlay-scrim)" }}
@@ -157,10 +161,29 @@ export function TopicDetailSheet({
 
             {mode === "light" && (
               <div className="mt-5 border-t border-line pt-5">
-                {content ? (
-                  <LessonPanel moduleId={mod.id} goalId={goalId} cellTitle={mod.title} sourceUrls={content.sourceUrls} accent={accent} />
+                {content && content.sourceUrls.length > 0 ? (
+                  <div className="rounded-[var(--r-md)] border border-line p-4">
+                    <div className="flex items-center justify-between gap-2">
+                      <h3 className="font-display text-xs uppercase tracking-[0.22em] text-text-faint">Lección paso a paso · Capa B</h3>
+                      <span className="text-[10px] uppercase tracking-wider text-text-faint">15–25 min</span>
+                    </div>
+                    <p className="mt-1 text-[12px] leading-snug text-text-muted">
+                      Una secuencia de micro-retos contra la fuente real, a pantalla completa. Tres corazones: cada error te
+                      hace entenderlo y corregirlo antes de seguir.
+                    </p>
+                    <button
+                      onClick={() => {
+                        audio.unlock();
+                        setLessonOpen(true);
+                      }}
+                      className="mt-3 min-h-11 w-full rounded-[var(--r-sm)] border px-4 text-sm transition hover:brightness-125"
+                      style={{ borderColor: accent, color: readableAccent(accent) }}
+                    >
+                      Entrar a la lección
+                    </button>
+                  </div>
                 ) : (
-                  <p className="text-[13px] text-text-muted">Esta celda no tiene fuente para una lección corta. Prueba la misión o el repaso.</p>
+                  <p className="text-[13px] text-text-muted">Esta celda no tiene fuente para una lección. Prueba la misión o el repaso.</p>
                 )}
               </div>
             )}
@@ -254,5 +277,9 @@ export function TopicDetailSheet({
       <NotesSheet open={notesOpen} moduleId={moduleId} onClose={() => setNotesOpen(false)} />
       {tutorOpen && <TutorSheet moduleId={moduleId} accent={accent} onClose={() => setTutorOpen(false)} />}
     </div>
+    {lessonOpen && (
+      <LessonMode moduleId={moduleId} goalId={goalId} goalTitle={goalTitle} cellTitle={mod.title} onClose={() => setLessonOpen(false)} />
+    )}
+    </>
   );
 }

@@ -423,28 +423,34 @@ async function interrogate(
   throw new Error(`proveedor desconocido: ${provider}`);
 }
 
-// Capa B — on-demand LIGHT lessons (the "infinite" layer). Two phases:
-//  generate → teach ONE concept against the cell's real source + pose a challenge + rubric.
-//  grade    → score the learner's answer FAIRLY (this reinforces; it is NOT the 0.1% exit gate).
+// Capa B — the step-by-step LIGHT lesson (full-screen mode). Two phases:
+//  steps → teach the concept against the cell's real source + design N escalating micro-challenges.
+//  grade → score ONE step's answer FAIRLY (reinforces; it is NOT the 0.1% exit gate). Reused per step
+//          AND for the amor-fati CORRECTION (a missed step's re-answer is graded the same way).
 // Never invents fixed academic facts: teaches the canonical concept and points at the real source.
 async function lesson(
   provider: string,
-  context: { phase?: string; cellTitle?: string; sourceRefs?: string[]; challenge?: string; rubric?: string[]; answer?: string },
+  context: { phase?: string; cellTitle?: string; sourceRefs?: string[]; challenge?: string; rubric?: string[]; answer?: string; stepsMin?: number; stepsMax?: number },
 ): Promise<Record<string, unknown>> {
   const isGrade = context.phase === "grade";
+  const lo = Number.isFinite(context.stepsMin) ? Number(context.stepsMin) : 5;
+  const hi = Number.isFinite(context.stepsMax) ? Number(context.stepsMax) : 7;
   const prompt = isGrade
-    ? "Eres el tutor Asuka calificando la respuesta a una LECCIÓN CORTA contra su rúbrica. Exigente pero JUSTO: " +
+    ? "Eres el tutor Asuka calificando la respuesta a UN PASO de una lección contra su rúbrica. Exigente pero JUSTO: " +
       "esto REFUERZA el aprendizaje, NO es la compuerta de élite del 0.1%. Da score 0-1 según cuánto demuestra " +
-      "entendimiento de PRIMER PRINCIPIO (no memorización), y feedback adversarial-pero-útil que corrija lo que " +
-      "falta y empuje al porqué. ANTI-GAMING: respuesta vacía/trivial/evasiva → score bajo. Responde SOLO JSON " +
+      "entendimiento de PRIMER PRINCIPIO (no memorización), y feedback adversarial-pero-útil que, si falló, explique " +
+      "POR QUÉ está mal (anclado al reto) y empuje al porqué. ANTI-GAMING: respuesta vacía/trivial/evasiva o que solo " +
+      "repite el reto → understood:false y score bajo. Responde SOLO JSON " +
       '{"score": number (0-1), "understood": boolean, "feedback": string}, en español. ' +
       `RETO: ${context.challenge ?? ""}. RÚBRICA: ${JSON.stringify(context.rubric ?? [])}. RESPUESTA DEL APRENDIZ: ${context.answer ?? ""}`
-    : "Eres el tutor Asuka generando una LECCIÓN CORTA (~15 min) sobre el tópico de una celda, anclada a su FUENTE " +
-      "canónica REAL (abajo). Enseña UN concepto central desde el PRIMER PRINCIPIO (el porqué, no un resumen de viñetas), " +
-      "conciso. Luego pon UN reto de justificación o implementación que exija pensar (no de reconocimiento), con una " +
-      "rúbrica de 2-4 criterios de lo que sería una buena respuesta. NO inventes hechos: si no tienes el detalle exacto " +
-      "de la fuente, enseña el concepto canónico y remite a la fuente real. Responde SOLO JSON " +
-      '{"concept": string (markdown conciso), "challenge": string, "rubric": string[]}, en español. ' +
+    : "Eres el tutor Asuka generando una LECCIÓN PASO A PASO (estilo Duolingo con alma, ~15-25 min) sobre el tópico de " +
+      "una celda, anclada a su FUENTE canónica REAL (abajo). Primero enseña el concepto central desde el PRIMER " +
+      "PRINCIPIO (markdown conciso, el porqué — no un resumen de viñetas). Luego diseña ENTRE " + lo + " Y " + hi +
+      " PASOS que ESCALAN en dificultad: cada paso es UN micro-reto que exige PENSAR (justificar, completar, " +
+      "elegir-y-explicar, implementar un fragmento, o producir), NUNCA reconocimiento trivial de opción múltiple sola. " +
+      "Cada paso trae una rúbrica de 2-4 criterios de una buena respuesta. NO inventes hechos: si no tienes el detalle " +
+      "exacto de la fuente, enseña el concepto canónico y remite a la fuente real. Responde SOLO JSON " +
+      '{"concept": string (markdown conciso), "steps": [{"prompt": string, "rubric": string[]}]}, en español. ' +
       `CELDA: ${context.cellTitle ?? ""}. FUENTE(S) REAL(ES): ${JSON.stringify(context.sourceRefs ?? [])}`;
   const parse = (text: string): Record<string, unknown> => {
     try {
@@ -452,26 +458,35 @@ async function lesson(
       const o = JSON.parse(m ? m[0] : text);
       if (isGrade) {
         const score = Number(o.score);
+        const understood = o.understood === true;
+        // An UNDERSTOOD step with no measurable score is NOT a 0 — it's a non-grade. Null it (sentinel)
+        // so the run never reinforces/advances on an un-measured pass nor drags the average down with a 0.
+        if (understood && !Number.isFinite(score)) return { error: "grade-parse-failed" };
         return {
           score: Number.isFinite(score) ? Math.max(0, Math.min(1, score)) : 0,
-          understood: o.understood === true,
+          understood,
           feedback: String(o.feedback ?? ""),
         };
       }
-      return {
-        concept: String(o.concept ?? ""),
-        challenge: String(o.challenge ?? ""),
-        rubric: Array.isArray(o.rubric) ? o.rubric.map(String) : [],
-      };
+      const steps = Array.isArray(o.steps)
+        ? o.steps
+            .map((s: { prompt?: unknown; rubric?: unknown }) => ({
+              prompt: String(s?.prompt ?? ""),
+              rubric: Array.isArray(s?.rubric) ? s.rubric.map(String) : [],
+            }))
+            .filter((s: { prompt: string }) => s.prompt.length > 0)
+        : [];
+      // No usable steps == a failed generation; signal an error so the client degrades honestly
+      // (no half-built lesson with an empty step list).
+      if (!String(o.concept ?? "").trim() || steps.length === 0) return { error: "steps-empty" };
+      return { concept: String(o.concept), steps };
     } catch {
-      // A GRADE that didn't parse is NOT a grade of 0 — returning {score:0} would reinforce
-      // mastery on garbage. Signal an error so the client nulls and reinforces NOTHING.
-      return isGrade
-        ? { error: "grade-parse-failed" }
-        : { concept: text.slice(0, 600), challenge: "", rubric: [] };
+      // A GRADE that didn't parse is NOT a grade of 0 — returning {score:0} would reinforce mastery
+      // on garbage. Signal an error so the client nulls and reinforces/advances on NOTHING.
+      return isGrade ? { error: "grade-parse-failed" } : { error: "steps-parse-failed" };
     }
   };
-  const maxTokens = isGrade ? 600 : 900;
+  const maxTokens = isGrade ? 600 : 2000;
   if (provider === "openai") {
     const key = Deno.env.get("OPENAI_API_KEY");
     if (!key) throw new Error("OPENAI_API_KEY ausente");
@@ -500,17 +515,24 @@ async function lesson(
     const j = await keeCall("lesson", { context });
     if (isGrade) {
       const score = Number(j.score);
+      const understood = j.understood === true;
+      if (understood && !Number.isFinite(score)) return { error: "grade-parse-failed" };
       return {
         score: Number.isFinite(score) ? Math.max(0, Math.min(1, score)) : 0,
-        understood: j.understood === true,
+        understood,
         feedback: String(j.feedback ?? ""),
       };
     }
-    return {
-      concept: String(j.concept ?? ""),
-      challenge: String(j.challenge ?? ""),
-      rubric: Array.isArray(j.rubric) ? j.rubric.map(String) : [],
-    };
+    const steps = Array.isArray(j.steps)
+      ? j.steps
+          .map((s: { prompt?: unknown; rubric?: unknown }) => ({
+            prompt: String(s?.prompt ?? ""),
+            rubric: Array.isArray(s?.rubric) ? s.rubric.map(String) : [],
+          }))
+          .filter((s: { prompt: string }) => s.prompt.length > 0)
+      : [];
+    if (!String(j.concept ?? "").trim() || steps.length === 0) return { error: "steps-empty" };
+    return { concept: String(j.concept), steps };
   }
   throw new Error(`proveedor desconocido: ${provider}`);
 }

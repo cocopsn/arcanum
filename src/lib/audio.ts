@@ -5,7 +5,19 @@
 // (master/sfx/music, persisted to localStorage — a preference, NOT log state). iOS blocks autoplay:
 // the context is created suspended and resumed on the first user gesture (unlock). All no-ops on SSR.
 
-export type Sfx = "click" | "reveal" | "gate" | "xp" | "error" | "ascension";
+export type Sfx =
+  | "click"
+  | "reveal"
+  | "gate"
+  | "xp"
+  | "error"
+  | "ascension"
+  // lesson-mode events: a step cleared, a heart lost (tense, not cruel), an insight resolved
+  // (a small victory), the lesson completed (liturgical).
+  | "step"
+  | "heart"
+  | "resolve"
+  | "lessonwin";
 export type WorldSlug = "itc" | "fred" | "competitiva" | "aleman";
 
 export interface AudioConfig {
@@ -140,6 +152,27 @@ class Engine {
         tone(196, t + 0.1, 1.9, 0.06, "sine", 294);
         tone(784, t + 0.5, 1.6, 0.05, "triangle");
         [1046.5, 1318.5].forEach((f, i) => tone(f, t + 0.8 + i * 0.18, 1.0, 0.04, "sine"));
+        break;
+      }
+      case "step":
+        // a clean forward blip — a short rising step (advance)
+        tone(523.25, t, 0.09, 0.09, "sine", 659.25);
+        break;
+      case "heart":
+        // a heart lost — a tense, soft descending minor third (not a harsh buzzer; the cost is felt, not punished)
+        tone(392, t, 0.16, 0.1, "triangle", 311.13);
+        tone(196, t + 0.02, 0.18, 0.05, "sine", 155.56);
+        break;
+      case "resolve": {
+        // the insight lands — a satisfying rising arpeggio (the small victory of understanding)
+        [440, 587.33, 880].forEach((f, i) => tone(f, t + i * 0.06, 0.22, 0.09, "triangle"));
+        break;
+      }
+      case "lessonwin": {
+        // lesson superada — a brief liturgical resolution (smaller than ascension): a major triad over a low root
+        tone(130.81, t, 0.9, 0.07, "sine");
+        [523.25, 659.25, 783.99].forEach((f, i) => tone(f, t + 0.05 + i * 0.08, 0.7, 0.09, "triangle"));
+        tone(1046.5, t + 0.35, 0.6, 0.05, "sine");
         break;
       }
     }

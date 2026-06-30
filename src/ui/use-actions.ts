@@ -11,9 +11,9 @@ import {
   requestModuleEvaluation,
   requestGateEvaluation,
   requestInterrogation,
-  requestLessonDraft,
+  requestLessonSteps,
   requestLessonGrade,
-  type LessonDraft,
+  type LessonCourseReply,
   type LessonGrade,
 } from "@/sync/ai";
 
@@ -114,33 +114,32 @@ export function useActions() {
       };
       await fire("gate.evaluated", payload as unknown as Json, { goalId, moduleId });
     },
-    // ── Capa B — on-demand LIGHT lessons (the "infinite" layer) ──────────────────
-    // generate: ask the tutor for a short first-principle lesson + challenge against the
-    // cell's REAL source. Returns null without AI (no invented lesson — honest).
-    generateLesson: async (moduleId: string): Promise<LessonDraft | null> => {
+    // ── Capa B — the step-by-step LIGHT lesson (full-screen mode) ────────────────
+    // generate the whole course (concept + N micro-challenges) against the cell's REAL source.
+    // Returns null without AI (no invented lesson — honest; the real source still works).
+    generateLessonCourse: async (moduleId: string): Promise<LessonCourseReply | null> => {
       const rm = store.getState().readModel;
       const ctx = buildLessonContext(rm, moduleId);
       if (!ctx) return null;
-      return requestLessonDraft(ctx);
+      return requestLessonSteps(ctx);
     },
-    // grade the learner's answer FAIRLY. Reinforce mastery (checkpoint.passed, score-weighted)
-    // ONLY when the grader judged the answer UNDERSTOOD — mirroring the gate/interrogation
-    // convention (only a real pass counts). No AI / parse-fail → null → reinforces nothing;
-    // a not-understood near-miss shows feedback but banks NO XP/streak/mastery (no placebo —
-    // the log now matches the UI's "A medias — sigue").
-    gradeLesson: async (
-      refs: Refs,
+    // grade ONE step's answer FAIRLY. Pure read — fires NO event; the RUN drives the log:
+    // a resolved correction → error.resolved (resolveError), the whole lesson cleared →
+    // checkpoint.passed (passLesson). null without AI / parse-fail → the run can't advance on
+    // garbage (no placebo reinforcement). Anti-gaming (empty/trivial → not understood) is the grader's.
+    gradeLessonStep: async (
       cellTitle: string,
       challenge: string,
       rubric: string[],
       answer: string,
     ): Promise<LessonGrade | null> => {
       const ctx = buildLessonGradeContext(cellTitle, challenge, rubric, answer);
-      const grade = await requestLessonGrade(ctx);
-      if (!grade) return null;
-      if (grade.understood) await fire("checkpoint.passed", { score: grade.score, kind: "checkpoint" }, refs);
-      return grade;
+      return requestLessonGrade(ctx);
     },
+    // the WHOLE lesson cleared → ONE checkpoint.passed. score = the run's MEASURED understanding
+    // (avg of the steps' grades), never a constant — the reinforcement matches what was shown.
+    passLesson: (refs: Refs, score: number) =>
+      fire("checkpoint.passed", { score, kind: "checkpoint" }, refs),
     createNote: async (refs: Refs, title: string, markdown: string): Promise<string> => {
       const noteId = newEventId();
       await fire("note.created", { note_id: noteId, title, markdown }, refs);

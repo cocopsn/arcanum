@@ -1,4 +1,5 @@
 import { getSupabase } from "@/sync/client";
+import { normalizeLessonCourse, type LessonCourse } from "@/lib/lesson";
 
 export interface OcrResult {
   markdown: string;
@@ -133,19 +134,15 @@ export async function requestInterrogation(context: unknown): Promise<Interrogat
   }
 }
 
-export interface LessonDraft {
-  /** a short first-principle teaching of one concept, anchored to the real source */
-  concept: string;
-  /** the justify/implement challenge */
-  challenge: string;
-  rubric: string[];
+export interface LessonCourseReply extends LessonCourse {
   provider: string;
 }
 
-/** Capa B — generate an on-demand LIGHT lesson (concept + challenge) against the cell's real
- *  source. null on ANY failure → the UI degrades honestly (no invented lesson; the real source
- *  still works). */
-export async function requestLessonDraft(context: unknown): Promise<LessonDraft | null> {
+/** Capa B — generate a step-by-step LIGHT lesson (concept + N micro-challenges) against the cell's
+ *  real source, for the full-screen lesson mode. null on ANY failure → the UI degrades honestly
+ *  (no invented lesson; the real source still works). The wire shape is trusted in ONE pure place
+ *  (normalizeLessonCourse) so it is unit-testable. */
+export async function requestLessonSteps(context: unknown): Promise<LessonCourseReply | null> {
   try {
     const sb = getSupabase();
     const {
@@ -153,15 +150,12 @@ export async function requestLessonDraft(context: unknown): Promise<LessonDraft 
     } = await sb.auth.getSession();
     if (!session) return null;
     const { data, error } = await sb.functions.invoke("ai-router", {
-      body: { action: "lesson", context: { ...(context as object), phase: "generate" } },
+      body: { action: "lesson", context: { ...(context as object), phase: "steps" } },
     });
-    if (error || data?.error || !data?.concept) return null;
-    return {
-      concept: String(data.concept),
-      challenge: String(data.challenge ?? ""),
-      rubric: Array.isArray(data.rubric) ? data.rubric.map(String) : [],
-      provider: String(data.provider ?? "ai"),
-    };
+    if (error || data?.error) return null;
+    const course = normalizeLessonCourse(data);
+    if (!course) return null;
+    return { ...course, provider: String(data.provider ?? "ai") };
   } catch {
     return null;
   }
