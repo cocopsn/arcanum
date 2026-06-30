@@ -40,6 +40,7 @@ Framework: **Next.js** (autodetectado). Build/Output: por defecto. Deploy.
 | `NEXT_PUBLIC_SUPABASE_URL` | `https://tssmjabfszndxwlpzngv.supabase.co` | pública |
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | *(anon key de Supabase → Settings → API)* | pública (RLS protege) |
 | `ARCANUM_ACCESS_PASSWORD` | *(elige una clave fuerte; ponla SOLO en Vercel, nunca en el repo)* | **SERVER-ONLY** · el candado de un solo usuario |
+| `SUPABASE_SERVICE_ROLE_KEY` | *(Supabase → Settings → API → service_role)* | **SERVER-ONLY** · habilita el login unificado (sync+IA con un solo login) |
 
 > **Login de un solo usuario (`ARCANUM_ACCESS_PASSWORD`)** — el repo es PÚBLICO, así que la clave
 > NO vive en el código: solo en esta env var de Vercel. La validan server-side los route handlers
@@ -48,7 +49,13 @@ Framework: **Next.js** (autodetectado). Build/Output: por defecto. Deploy.
 > candado queda ABIERTO. NO la marques como `NEXT_PUBLIC_` (sería pública). Cámbiala cuando quieras
 > rotando el valor en Vercel + re-deploy. Es env de SERVIDOR — NO la pongas en Build-time exposure.
 
-> NUNCA pongas la `service_role` ni claves de IA en Vercel — el cliente no las usa.
+> **Login UNIFICADO (`SUPABASE_SERVICE_ROLE_KEY`)** — con esta env var (server-only, NUNCA
+> `NEXT_PUBLIC_`), un solo login hace todo: al entrar con `ARCANUM_ACCESS_PASSWORD`, el route
+> handler `/api/login` provisiona el usuario de Supabase (idempotente, `email_confirm`, password
+> server-managed derivado del service_role — el cliente nunca lo ve) y devuelve la sesión, que el
+> cliente adopta → **sync + IA real (gpt-4o-mini) vivos sin segundo sign-in ni confirmar correo**.
+> SIN esta env var, el candado sigue funcionando pero sync/IA quedan apagados (degradación honesta).
+> Es la ÚNICA `service_role` que va a Vercel y SOLO la usa el servidor (`/api/login`), nunca el cliente.
 > Re-deploya tras añadir las env (Vercel lo ofrece). Sin estas env la app igual
 > carga, pero en modo solo-local (sin sync).
 

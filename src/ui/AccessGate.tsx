@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { getSupabase } from "@/sync/client";
 
 // Single-user ACCESS GATE. Checks /api/session (cookie validated server-side against the env
 // password). Not configured (no env var, e.g. local dev) → gate is OPEN. Offline → trusts the
@@ -69,8 +70,17 @@ function LoginScreen({ onIn }: { onIn: () => void }) {
         body: JSON.stringify({ email, password }),
       });
       const d = await r.json().catch(() => ({}));
-      if (r.ok && d.ok) onIn();
-      else setError(d.error ?? "No se pudo entrar.");
+      if (r.ok && d.ok) {
+        // ONE login: adopt the Supabase session the server minted → cloud sync + real AI, no 2nd sign-in
+        if (d.supabase?.access_token && d.supabase?.refresh_token) {
+          try {
+            await getSupabase().auth.setSession({ access_token: d.supabase.access_token, refresh_token: d.supabase.refresh_token });
+          } catch {
+            /* sync stays off; the gate still opens */
+          }
+        }
+        onIn();
+      } else setError(d.error ?? "No se pudo entrar.");
     } catch {
       setError("Sin conexión. Revisa tu red.");
     } finally {

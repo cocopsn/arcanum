@@ -23,6 +23,7 @@ import { AudioConfig } from "@/ui/AudioConfig";
 import { themeForGoal, worldVars } from "@/lib/subject-themes";
 import { readableAccent } from "@/lib/accent";
 import { audio } from "@/lib/audio";
+import { getSupabase } from "@/sync/client";
 import { isMastered, nodeStatus } from "@/core/roadmap";
 import type { ReadModel, Stats } from "@/core/read-model";
 import type { ViewModel } from "@/core/present";
@@ -261,8 +262,13 @@ function Footer({
       {sep}
       <button
         onClick={() => {
-          // tear down BOTH session halves coherently: the httpOnly cookie + the offline flag
+          // tear down ALL session state: the env-gate cookie, the offline flag, AND the Supabase session
           void fetch("/api/logout", { method: "POST" }).catch(() => {});
+          try {
+            getSupabase().auth.signOut();
+          } catch {
+            /* sync not configured */
+          }
           try {
             localStorage.removeItem("arcanum_authed");
           } catch {

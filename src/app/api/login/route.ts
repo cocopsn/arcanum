@@ -1,5 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server";
-import { GATE_COOKIE, gateToken, checkCredentials } from "@/lib/access";
+import { GATE_COOKIE, ACCESS_EMAIL, gateToken, checkCredentials } from "@/lib/access";
+import { ensureSupabaseSession } from "@/lib/supabase-admin";
 
 export const runtime = "nodejs";
 
@@ -21,7 +22,15 @@ export async function POST(req: NextRequest) {
   if (!checkCredentials(email, password)) {
     return NextResponse.json({ ok: false, error: "Correo o clave incorrectos." }, { status: 401 });
   }
-  const res = NextResponse.json({ ok: true });
+  // ONE login: also provision the Supabase session so cloud sync + the real AI work without a
+  // second sign-in. null when the service_role isn't configured (gate still works; sync/AI off).
+  let supabase = null;
+  try {
+    supabase = await ensureSupabaseSession(ACCESS_EMAIL);
+  } catch {
+    supabase = null; // never let a Supabase hiccup block the gate
+  }
+  const res = NextResponse.json({ ok: true, supabase });
   res.cookies.set(GATE_COOKIE, token, {
     httpOnly: true,
     secure: true,
