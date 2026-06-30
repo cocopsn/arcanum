@@ -257,10 +257,10 @@ export const SPINES: Spine[] = [
         "id": "cb000000-0000-4000-8000-000000000004",
         "title": "S4 · IA en el FrED + papers del Dr. Ramírez Cedillo (vocabulario del equipo) · MISIÓN",
         "sourceUrls": [
-          "https://www.researchgate.net/profile/Erick-Ramirez-Cedillo",
           "https://scholar.google.com/citations?user=dVVYljgAAAAJ",
-          "https://www.researchgate.net/publication/334556755_Structural_design_optimization_of_knee_replacement_implants_for_Additive_Manufacturing",
-          "https://fredfactory.mit.edu/research"
+          "https://fredfactory.mit.edu/research",
+          "https://www.researchgate.net/profile/Erick-Ramirez-Cedillo",
+          "https://www.researchgate.net/publication/334556755_Structural_design_optimization_of_knee_replacement_implants_for_Additive_Manufacturing"
         ],
         "mission": {
           "assignment": "Visión computacional para control de calidad en extrusión, SCADA, y DfMA desde el software. LO MÁS IMPORTANTE: lee ≥2 papers del Dr. Erick Ramírez Cedillo (ResearchGate / Google Scholar — fuente real; si pide login, ábrelos desde Scholar o el repositorio Tec). Esto te da el vocabulario EXACTO del equipo para el día 1 en el lab.",
