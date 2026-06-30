@@ -329,6 +329,52 @@ describe("project — Phase 4 Canvas obligations", () => {
     expect(project(thenFail)).toEqual(rm2); // idempotent
   });
 
+  it("mission.submitted folds the LATEST evidence per cell (last wins), auditable + idempotent", () => {
+    const events = [
+      makeEvent("module.upserted", { title: "Mission", prereqs: [], kind: "mission" }, { ...dev(DAY1_A), goalId: "g", moduleId: "m1" }),
+      makeEvent("mission.submitted", { notes: "primer intento" }, { ...dev(DAY1_A), moduleId: "m1" }),
+      makeEvent("mission.submitted", { notes: "evidencia más completa, segundo intento" }, { ...dev(DAY2), moduleId: "m1" }),
+    ];
+    const rm = project(events);
+    expect(rm.missions).toHaveLength(1);
+    expect(rm.missions[0]!.notes).toBe("evidencia más completa, segundo intento");
+    expect(project(events)).toEqual(rm); // idempotent under re-fold
+  });
+
+  it("a heavy mission cell's kind is MONOTONIC — a later upsert(kind:'cell') can't demote it (fail-closed)", () => {
+    const events = [
+      makeEvent("module.upserted", { title: "Mission", prereqs: [], kind: "mission" }, { ...dev(DAY1_A), goalId: "g", moduleId: "m1" }),
+      makeEvent("module.completed", {}, { ...dev(DAY2), moduleId: "m1" }),
+      // a stray / out-of-band / synced re-upsert tries to demote the heavy cell to a plain cell
+      makeEvent("module.upserted", { title: "Mission", prereqs: [], kind: "cell" }, { ...dev(DAY2 + 1000), goalId: "g", moduleId: "m1" }),
+    ];
+    const rm = project(events);
+    const m = rm.modules.find((x) => x.id === "m1")!;
+    expect(m.kind).toBe("mission"); // demotion refused → the gate cannot be dissolved by a non-interrogation event
+    expect(m.status).toBe("completed");
+    expect(m.gatePassed).toBe(false); // completed but never interrogated
+    expect(project(events)).toEqual(rm); // idempotent under re-fold
+  });
+
+  it("gate.evaluated carries the interrogator's generated questions into the gate read-model", () => {
+    const events = [
+      makeEvent("module.upserted", { title: "Mission", prereqs: [], kind: "mission" }, { ...dev(DAY1_A), goalId: "g", moduleId: "m1" }),
+      makeEvent(
+        "gate.evaluated",
+        { passed: true, score: 0.9, summary: "ok", feedback: "f", questions: ["¿por qué desborda un int?", "¿qué hace clang?"], source: "ai", provider: "openai" },
+        { ...dev(DAY2), moduleId: "m1" },
+      ),
+    ];
+    const rm = project(events);
+    expect(rm.gates[0]!.questions).toEqual(["¿por qué desborda un int?", "¿qué hace clang?"]);
+    // a pre-authored justify-gate (no questions field) folds to an empty array, not undefined
+    const plain = project([
+      makeEvent("module.upserted", { title: "Cell", prereqs: [], kind: "cell" }, { ...dev(DAY1_A), goalId: "g", moduleId: "c1" }),
+      makeEvent("gate.evaluated", { passed: false, score: 0.2, summary: "x", feedback: "y", source: "heuristic", provider: null }, { ...dev(DAY2), moduleId: "c1" }),
+    ]);
+    expect(plain.gates[0]!.questions).toEqual([]);
+  });
+
   it("celebratedGrade derives the max acknowledged grade from the log; null when none", () => {
     expect(project([]).celebratedGrade).toBeNull();
     const rm = project([

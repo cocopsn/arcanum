@@ -25,10 +25,13 @@ function buildSeed(): ArcanumEvent[] {
       ),
     );
     for (const cell of sp.cells) {
+      // A cell carrying a directed mission is a HEAVY cell (kind:'mission') — it is
+      // mastered ONLY by passing its interrogation (roadmap.isMastered), so its block
+      // on the next node is real. Plain cells stay kind:'cell'.
       events.push(
         makeEvent(
           "module.upserted",
-          { title: cell.title, prereqs: [], kind: "cell" },
+          { title: cell.title, prereqs: [], kind: cell.mission ? "mission" : "cell" },
           { ts: ts++, deviceId: DEVICE, goalId: sp.goalId, moduleId: cell.id, id: fixedId() },
         ),
       );

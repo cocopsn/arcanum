@@ -29,6 +29,7 @@ export const EVENT_TYPES = [
   "grade.celebrated",
   "module.evaluated",
   "gate.evaluated",
+  "mission.submitted",
 ] as const;
 
 export type EventType = (typeof EVENT_TYPES)[number];
@@ -164,6 +165,22 @@ export interface GateEvaluatedPayload {
   feedback: string;
   source: "ai" | "heuristic";
   provider: string | null;
+  /** the pointed questions the interrogator GENERATED against the mission's real
+   *  content (heavy mission cells); empty/absent for a pre-authored justify-gate */
+  questions?: string[];
+}
+
+/**
+ * The learner returned from a directed MISSION (heavy cell, kind:'mission') and
+ * submitted their EVIDENCE — their own notes + reflections proving they lived the
+ * assigned canonical source. In the LOG: durable, auditable proof of work,
+ * independent of the verdict (a later interrogation re-reads the same evidence).
+ * The interrogation verdict is a separate gate.evaluated (with the generated
+ * questions). module_id is in the envelope. Idempotent: latest submission wins.
+ */
+export interface MissionSubmittedPayload {
+  /** the learner's own notes + reflections (real text, never fabricated) */
+  notes: string;
 }
 
 /** One scraped Canvas obligation (compliance, NOT a mastery module). Fase 4. */

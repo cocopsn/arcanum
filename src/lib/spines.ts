@@ -15,6 +15,11 @@ export interface SpineCell {
   videoUrls?: string[];
   /** the adversarial EXIT GATE: a justify-not-recognize question + first-principle rubric */
   gate?: { question: string; rubric: string[] };
+  /** HEAVY MISSION cell: a directed order anchored to the real source (assignment +
+   *  deliverable). The seed marks such a cell kind:'mission'; the interrogator GENERATES
+   *  pointed questions against the real lecture and judges the learner's returned evidence
+   *  (no pre-authored question — the source IS the anchor). */
+  mission?: { assignment: string; deliverable: string };
 }
 
 export interface Spine {
@@ -42,10 +47,14 @@ export const SPINES: Spine[] = [
       },
       {
         "id": "ca000000-0000-4000-8000-000000000002",
-        "title": "CS50 Week 1 — C (variables, types, conditionals, loops)",
+        "title": "CS50 Lecture 1 — C (variables, types, conditionals, loops) · MISIÓN DIRIGIDA",
         "sourceUrls": [
           "https://cs50.harvard.edu/x/weeks/1/"
-        ]
+        ],
+        "mission": {
+          "assignment": "Trabaja CS50 Lecture 1 (C) COMPLETA en cs50.harvard.edu/x/weeks/1/: mira la lecture entera y lee las notas. Luego ESCRIBE y COMPILA en C al menos un programa propio que use una variable tipada, una condicional y un bucle — por ejemplo resuelve 'Mario (less)' o 'Cash' del Problem Set 1. No la veas en diagonal: el interrogatorio asume que la viviste y que compilaste código real.",
+          "deliverable": "Tus PROPIAS notas de la lecture (no el subtitulado copiado) + una reflexión corta que responda: ¿qué hace clang cuando compilas tu .c y cuáles son las fases?, ¿por qué un int de 32 bits puede desbordarse y qué viste si lo provocaste?, y ¿qué error de compilación encontraste al escribir tu programa y cómo lo resolviste? Pega un fragmento del código que compilaste."
+        }
       },
       {
         "id": "ca000000-0000-4000-8000-000000000003",

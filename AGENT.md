@@ -70,8 +70,8 @@ ai-router.ts`): si OpenAI responde, Kee ni se toca; si OpenAI cae, el router int
 `anthropic` sigue **implementado pero FUERA de la cadena por defecto** — sólo alcanzable
 pasando un override explícito `providers:["anthropic", …]` (no es subprocesador activo).
 
-El proveedor `"kee"` ya está implementado en `ai-router` para las 5 acciones (`ocr`,
-`sleep`, `evaluate`, `gate`, `tutor`) vía el helper `keeCall(action, payload)`. Es
+El proveedor `"kee"` ya está implementado en `ai-router` para las 6 acciones (`ocr`,
+`sleep`, `evaluate`, `gate`, `interrogate`, `tutor`) vía el helper `keeCall(action, payload)`. Es
 **inerte hasta** que se fije el secreto `KEE_ENDPOINT` (y opcional `KEE_API_KEY`): sin él
 `keeCall` lanza y el router degrada honestamente (jamás un placebo). Contrato del endpoint
 de Kee — recibe el MISMO sobre que manda el cliente y devuelve la forma canónica de la
@@ -82,8 +82,9 @@ POST $KEE_ENDPOINT   (Authorization: Bearer $KEE_API_KEY  — opcional)
   { action: "ocr",      image }                    → { markdown }
   { action: "sleep",    context }                  → { patterns, axioms }
   { action: "evaluate", context }                  → { summary, strengths[], gaps[], challenge }
-  { action: "gate",     context }                  → { passed, score, summary, feedback }
-  { action: "tutor",    context }                  → { answer }
+  { action: "gate",        context }               → { passed, score, summary, feedback }
+  { action: "interrogate", context }               → { questions[], passed, score, summary, feedback }
+  { action: "tutor",       context }               → { answer }
 ```
 
 > **Exponer Kee con seguridad.** El endpoint debe ir tras un túnel + token (nunca abierto);

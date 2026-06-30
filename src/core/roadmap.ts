@@ -15,6 +15,11 @@ export function prereqsOf(moduleId: string, edges: Edge[]): string[] {
  * the next cell). Derived; idempotent under re-fold.
  */
 export function isMastered(m: ModuleRM): boolean {
+  // A heavy MISSION cell is mastered ONLY by passing its adversarial interrogation
+  // (gate.evaluated → gatePassed). Completing it or clearing a firetest must NOT
+  // bypass the directed loop — the block on the next node is real, derived from the
+  // log, and only the interrogator can lift it.
+  if (m.kind === "mission") return m.gatePassed;
   if (m.status === "completed" || m.gatePassed) return true;
   return (m.firetestRatio ?? 0) >= ARCANUM_CONFIG.roadmap.firetestRevealThreshold;
 }
@@ -34,7 +39,10 @@ export function isRevealed(moduleId: string, edges: Edge[], byId: Map<string, Mo
 
 /** Derived node status from prereqs + events. */
 export function nodeStatus(m: ModuleRM, edges: Edge[], byId: Map<string, ModuleRM>): NodeStatus {
-  if (m.status === "completed") return "completed";
+  // A mission cell reads "completed" (✓) ONLY when its interrogation actually passed — a bare
+  // module.completed must never paint a ✓ on a mission whose gate is still closed (it doesn't
+  // lift the block, so showing it as done would be a placebo). Non-mission cells unchanged.
+  if (m.status === "completed" && (m.kind !== "mission" || m.gatePassed)) return "completed";
   if (m.status === "started") return "started";
   // A node you've proven (firetest cleared the bar) surfaces itself, not just its
   // descendants — never bury a mastered node behind its own unmet prereqs.

@@ -23,6 +23,12 @@ export interface TopicGate {
   rubric: string[];
 }
 
+/** A directed MISSION (heavy cell): the order anchored to the real source. */
+export interface TopicMission {
+  assignment: string;
+  deliverable: string;
+}
+
 export interface TopicContent {
   /** authored orientation, or null = fills on demand (no invented body) */
   summary: string | null;
@@ -34,6 +40,8 @@ export interface TopicContent {
   quiz: QuizQuestion[];
   /** the WHITE ROOM exit gate, or null if this cell has no gate authored yet */
   gate: TopicGate | null;
+  /** the directed mission (heavy cell), or null if this is not a mission cell */
+  mission: TopicMission | null;
 }
 
 function videoLabel(url: string): string {
@@ -54,5 +62,6 @@ export function contentForModule(moduleId: string): TopicContent | null {
     tools: [],
     quiz: [],
     gate: cell.gate ?? null,
+    mission: cell.mission ?? null,
   };
 }

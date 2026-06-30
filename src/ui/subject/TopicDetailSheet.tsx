@@ -10,6 +10,7 @@ import { BlankChallenge } from "@/ui/BlankChallenge";
 import { NotesSheet } from "@/ui/NotesSheet";
 import { Quiz } from "@/ui/subject/Quiz";
 import { ExitGate } from "@/ui/subject/ExitGate";
+import { MissionPanel } from "@/ui/subject/MissionPanel";
 import { EvaluationPanel } from "@/ui/subject/EvaluationPanel";
 import { TutorSheet } from "@/ui/subject/TutorSheet";
 import { nodeStatus } from "@/core/roadmap";
@@ -93,7 +94,10 @@ export function TopicDetailSheet({
           ) : (
             <div className="space-y-4">
               <BlankChallenge goalId={goalId} moduleId={mod.id} title={mod.title} />
-              {mod.status === "started" && (
+              {/* A mission cell closes ONLY via its interrogation (kind:'mission' →
+                  isMastered requires gatePassed). Hide the manual "complete" button there
+                  so it can't read as a way out — that would be a placebo. */}
+              {mod.status === "started" && mod.kind !== "mission" && (
                 <button onClick={() => completeModule({ goalId, moduleId: mod.id })} className="min-h-11 text-sm text-text-faint transition hover:text-text">
                   Cerrar tópico · +150 XP
                 </button>
@@ -141,6 +145,14 @@ export function TopicDetailSheet({
               )}
             </div>
           </details>
+        )}
+
+        {/* DIRECTED MISSION (heavy cell) — assign → block → submit evidence → interrogation.
+            Passing the interrogation unseals the next cell. Mutually exclusive with the gate. */}
+        {content?.mission && (
+          <div className="mt-5 border-t border-line pt-4">
+            <MissionPanel moduleId={mod.id} mission={content.mission} sourceUrls={content.sourceUrls} accent={accent} />
+          </div>
         )}
 
         {/* EXIT GATE (WHITE ROOM) — adversarial; passing it unseals the next cell. */}

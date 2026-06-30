@@ -6,7 +6,7 @@ vi.mock("@/sync/client", () => ({
   getSupabase: () => ({ auth: { getSession }, functions: { invoke } }),
 }));
 
-import { ocrImage, enrichSleepCycle } from "@/sync/ai";
+import { ocrImage, enrichSleepCycle, requestInterrogation } from "@/sync/ai";
 
 beforeEach(() => {
   getSession.mockReset();
@@ -41,5 +41,28 @@ describe("ai client — honest degradation (trunk stays alive without AI)", () =
   it("enrichSleepCycle returns null without a session", async () => {
     getSession.mockResolvedValue({ data: { session: null } });
     expect(await enrichSleepCycle({ x: 1 })).toBeNull();
+  });
+
+  it("requestInterrogation returns null without a session (caller falls to heuristic)", async () => {
+    getSession.mockResolvedValue({ data: { session: null } });
+    expect(await requestInterrogation({ notes: "x" })).toBeNull();
+    expect(invoke).not.toHaveBeenCalled();
+  });
+
+  it("requestInterrogation returns null when the function is down (no placebo pass)", async () => {
+    getSession.mockResolvedValue({ data: { session: { access_token: "t" } } });
+    invoke.mockResolvedValue({ data: { error: "IA no disponible" }, error: null });
+    expect(await requestInterrogation({ notes: "x" })).toBeNull();
+  });
+
+  it("requestInterrogation maps the interrogator's questions + verdict on success", async () => {
+    getSession.mockResolvedValue({ data: { session: { access_token: "t" } } });
+    invoke.mockResolvedValue({
+      data: { questions: ["¿por qué desborda un int?"], passed: false, score: 0.3, summary: "flojo", feedback: "deriva el complemento a dos", provider: "openai" },
+      error: null,
+    });
+    const r = (await requestInterrogation({ notes: "x" }))!;
+    expect(r.questions).toEqual(["¿por qué desborda un int?"]);
+    expect([r.passed, r.score, r.provider]).toEqual([false, 0.3, "openai"]);
   });
 });

@@ -322,6 +322,85 @@ async function gate(
   throw new Error(`proveedor desconocido: ${provider}`);
 }
 
+async function interrogate(
+  provider: string,
+  context: { cellTitle?: string; assignment?: string; deliverable?: string; sourceRefs?: string[]; notes?: string },
+): Promise<{ questions: string[]; passed: boolean; score: number; summary: string; feedback: string }> {
+  const prompt =
+    "Eres el INTERROGADOR de una MISIÓN DIRIGIDA de aprendizaje, persona Asuka calibrada al 0.1% MUNDIAL " +
+    "(no nacional). Al aprendiz se le ordenó vivir una fuente canónica REAL y específica (abajo) y volver con " +
+    "evidencia: SUS notas y reflexiones. Tu trabajo: (1) GENERA de 3 a 5 preguntas PUNTUALES y ESPECÍFICAS al " +
+    "contenido REAL de ESA lecture/fuente concreta — no genéricas, JAMÁS '¿qué aprendiste?'; preguntas que solo " +
+    "alguien que de verdad la trabajó podría responder desde el primer principio (mecanismos, porqués, casos límite " +
+    "de ESE material). Las preguntas son la SONDA que se le muestra al aprendiz. (2) JUZGA la EVIDENCIA: ¿demuestra " +
+    "comprensión de PRIMER PRINCIPIO del NÚCLEO de esa lecture, defendible ante un examinador de MIT? passed=true si " +
+    "el aprendiz DERIVA correctamente los mecanismos centrales (no solo los nombra) y razona desde el porqué — AUNQUE " +
+    "no haya cubierto preventivamente cada pregunta que generaste. El veredicto es sobre la PROFUNDIDAD y CORRECCIÓN " +
+    "del razonamiento sobre el núcleo, NO sobre haber respondido las 5 preguntas. NO repruebes evidencia genuinamente " +
+    "fuerte y de primer principio solo porque no tocó un detalle tangencial. El estándar 0.1% es exigente pero " +
+    "ALCANZABLE para trabajo excelente de primer principio. ANTI-GAMING: repruebas (passed=false, score bajo) lo " +
+    "genérico, vago, memorizado-sin-derivar, evasivo, vacío o trivial/copiado. Responde SOLO JSON " +
+    '{"questions": string[], "passed": boolean, "score": number (0-1), "summary": string, "feedback": string}. ' +
+    "feedback: adversarial y accionable, en español (reconocimiento BREVE si hubo mérito real, corrección DETALLADA); " +
+    "si reprobó, di QUÉ le falta al razonamiento del núcleo; si pasó, nombra la siguiente profundización. Empuja al " +
+    "primer principio. " +
+    `MISIÓN (celda): ${context.cellTitle ?? ""}. ASIGNACIÓN: ${context.assignment ?? ""}. ENTREGABLE PEDIDO: ` +
+    `${context.deliverable ?? ""}. FUENTE(S) CANÓNICA(S): ${JSON.stringify(context.sourceRefs ?? [])}. ` +
+    `EVIDENCIA ENTREGADA POR EL APRENDIZ: ${context.notes ?? ""}`;
+  const parse = (text: string) => {
+    try {
+      const m = text.match(/\{[\s\S]*\}/);
+      const o = JSON.parse(m ? m[0] : text);
+      const score = Number(o.score);
+      return {
+        questions: Array.isArray(o.questions) ? o.questions.map(String) : [],
+        passed: o.passed === true,
+        score: Number.isFinite(score) ? Math.max(0, Math.min(1, score)) : 0,
+        summary: String(o.summary ?? ""),
+        feedback: String(o.feedback ?? ""),
+      };
+    } catch {
+      return { questions: [], passed: false, score: 0, summary: "No evaluable.", feedback: text.slice(0, 300) };
+    }
+  };
+  if (provider === "openai") {
+    const key = Deno.env.get("OPENAI_API_KEY");
+    if (!key) throw new Error("OPENAI_API_KEY ausente");
+    const res = await fetch("https://api.openai.com/v1/chat/completions", {
+      method: "POST",
+      headers: { Authorization: `Bearer ${key}`, "Content-Type": "application/json" },
+      body: JSON.stringify({ model: "gpt-4o-mini", max_tokens: 900, messages: [{ role: "user", content: prompt }] }),
+    });
+    if (!res.ok) throw new Error(`openai ${res.status}`);
+    const j = await res.json();
+    return parse(j.choices?.[0]?.message?.content ?? "");
+  }
+  if (provider === "anthropic") {
+    const key = Deno.env.get("ANTHROPIC_API_KEY");
+    if (!key) throw new Error("ANTHROPIC_API_KEY ausente");
+    const res = await fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST",
+      headers: { "x-api-key": key, "anthropic-version": "2023-06-01", "Content-Type": "application/json" },
+      body: JSON.stringify({ model: "claude-3-5-haiku-20241022", max_tokens: 900, messages: [{ role: "user", content: prompt }] }),
+    });
+    if (!res.ok) throw new Error(`anthropic ${res.status}`);
+    const j = await res.json();
+    return parse(j.content?.[0]?.text ?? "");
+  }
+  if (provider === "kee") {
+    const j = await keeCall("interrogate", { context });
+    const score = Number(j.score);
+    return {
+      questions: Array.isArray(j.questions) ? j.questions.map(String) : [],
+      passed: j.passed === true,
+      score: Number.isFinite(score) ? Math.max(0, Math.min(1, score)) : 0,
+      summary: String(j.summary ?? ""),
+      feedback: String(j.feedback ?? ""),
+    };
+  }
+  throw new Error(`proveedor desconocido: ${provider}`);
+}
+
 async function tutor(provider: string, context: { question?: string } & Record<string, unknown>): Promise<string> {
   const system =
     "Eres el tutor de ARCANUM, persona estilo Asuka: exigente, directa, adversarial al servicio " +
@@ -417,6 +496,17 @@ Deno.serve(async (req: Request) => {
     if (body.action === "gate") {
       const r = await routeWithFallback(providers, (p) => gate(p, body.context ?? {}));
       return json({ provider: r.provider, passed: r.value.passed, score: r.value.score, summary: r.value.summary, feedback: r.value.feedback });
+    }
+    if (body.action === "interrogate") {
+      const r = await routeWithFallback(providers, (p) => interrogate(p, body.context ?? {}));
+      return json({
+        provider: r.provider,
+        questions: r.value.questions,
+        passed: r.value.passed,
+        score: r.value.score,
+        summary: r.value.summary,
+        feedback: r.value.feedback,
+      });
     }
     return json({ error: "Acción desconocida." }, 400);
   } catch (err) {

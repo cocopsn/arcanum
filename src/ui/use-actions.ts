@@ -5,7 +5,8 @@ import { makeEvent, newEventId, type EventType, type Json } from "@/core/event";
 import { getDeviceId } from "@/lib/device";
 import { buildEvaluationContext, heuristicEvaluation } from "@/core/evaluation";
 import { buildGateContext, heuristicGate } from "@/lib/gate";
-import { requestModuleEvaluation, requestGateEvaluation } from "@/sync/ai";
+import { buildInterrogationContext, heuristicInterrogation } from "@/lib/mission";
+import { requestModuleEvaluation, requestGateEvaluation, requestInterrogation } from "@/sync/ai";
 
 interface Refs {
   goalId?: string | null;
@@ -73,6 +74,32 @@ export function useActions() {
         score: v.score,
         summary: v.summary,
         feedback: v.feedback,
+        source: ai ? "ai" : "heuristic",
+        provider: ai ? ai.provider : null,
+      };
+      await fire("gate.evaluated", payload as unknown as Json, { goalId, moduleId });
+    },
+    // ── DIRECTED MISSION loop (heavy cells) ──────────────────────────────────────
+    // The learner returns from the assigned source and submits EVIDENCE (their notes).
+    // mission.submitted is durable proof of work in the log, independent of any verdict.
+    submitMission: (refs: Refs, notes: string) => fire("mission.submitted", { notes }, refs),
+    // The INTERROGATION (the mission's gate): the Asuka interrogator generates pointed
+    // questions against the mission's REAL content and judges the submitted evidence.
+    // ONLY a pass opens the next node (gate.evaluated → gatePassed → isMastered). No AI →
+    // honest heuristic that NEVER auto-passes. The generated questions ride on the event.
+    interrogateMission: async (moduleId: string, notes: string): Promise<void> => {
+      const rm = store.getState().readModel;
+      const ctx = buildInterrogationContext(rm, moduleId, notes);
+      if (!ctx) return;
+      const ai = await requestInterrogation(ctx);
+      const v = ai ?? heuristicInterrogation(ctx);
+      const goalId = rm.modules.find((m) => m.id === moduleId)?.goalId ?? null;
+      const payload = {
+        passed: v.passed,
+        score: v.score,
+        summary: v.summary,
+        feedback: v.feedback,
+        questions: v.questions,
         source: ai ? "ai" : "heuristic",
         provider: ai ? ai.provider : null,
       };

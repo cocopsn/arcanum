@@ -92,7 +92,11 @@ export function ModuleCard({
           ) : (
             <div className="space-y-4">
               <BlankChallenge goalId={goalId} moduleId={module.id} title={module.title} />
-              {module.status === "started" && (
+              {/* A mission cell is mastered ONLY by passing its interrogation (kind:'mission'
+                  → isMastered requires gatePassed). Hide the manual-complete button here too —
+                  on the home card it would grant XP + read "Cerrado" yet NOT unseal the next
+                  node, a placebo "way out" of the directed loop. (Mirror TopicDetailSheet.) */}
+              {module.status === "started" && module.kind !== "mission" && (
                 <button
                   onClick={() => completeModule({ goalId, moduleId: module.id })}
                   className="text-sm text-text-faint transition hover:text-text"

@@ -42,6 +42,24 @@ describe("roadmap derivation", () => {
     expect(isMastered(mod("x"))).toBe(false);
   });
 
+  it("a MISSION cell is mastered ONLY by passing its interrogation gate (block is real)", () => {
+    // completion and firetest must NOT bypass the directed loop for a mission cell
+    expect(isMastered(mod("x", { kind: "mission", status: "completed" }))).toBe(false);
+    expect(isMastered(mod("x", { kind: "mission", firetestRatio: 0.95 }))).toBe(false);
+    expect(isMastered(mod("x", { kind: "mission" }))).toBe(false);
+    expect(isMastered(mod("x", { kind: "mission", gatePassed: true }))).toBe(true);
+  });
+
+  it("nodeStatus: a COMPLETED-but-not-passed mission is NOT painted ✓ completed (display honesty)", () => {
+    const byId = new Map<string, ModuleRM>();
+    // a bare module.completed on a mission whose interrogation never passed
+    expect(nodeStatus(mod("m", { kind: "mission", status: "completed", gatePassed: false }), [], byId)).not.toBe("completed");
+    // once the interrogation passes it IS mastered → may read completed
+    expect(nodeStatus(mod("m", { kind: "mission", status: "completed", gatePassed: true }), [], byId)).toBe("completed");
+    // a plain cell's completed display is unchanged
+    expect(nodeStatus(mod("c", { kind: "cell", status: "completed" }), [], byId)).toBe("completed");
+  });
+
   it("nodeStatus derives sealed/available/started/completed from prereqs + events", () => {
     const root = mod("root");
     const child = mod("child");

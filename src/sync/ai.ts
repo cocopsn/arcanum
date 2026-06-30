@@ -95,6 +95,44 @@ export async function requestGateEvaluation(context: unknown): Promise<GateReply
   }
 }
 
+export interface InterrogationReply {
+  /** the pointed questions the interrogator generated against the mission's real content */
+  questions: string[];
+  passed: boolean;
+  score: number;
+  summary: string;
+  feedback: string;
+  provider: string;
+}
+
+/** Adversarial MISSION INTERROGATION (directed loop). The Asuka interrogator generates
+ *  pointed questions against the mission's real lecture content and judges the learner's
+ *  submitted evidence (pass/fail). null on ANY failure (no session/keys/error) → caller
+ *  falls back to the honest heuristic, which NEVER auto-passes. */
+export async function requestInterrogation(context: unknown): Promise<InterrogationReply | null> {
+  try {
+    const sb = getSupabase();
+    const {
+      data: { session },
+    } = await sb.auth.getSession();
+    if (!session) return null;
+    const { data, error } = await sb.functions.invoke("ai-router", {
+      body: { action: "interrogate", context },
+    });
+    if (error || data?.error || typeof data?.passed !== "boolean") return null;
+    return {
+      questions: Array.isArray(data.questions) ? data.questions.map(String) : [],
+      passed: data.passed === true,
+      score: typeof data.score === "number" ? data.score : 0,
+      summary: String(data.summary ?? ""),
+      feedback: String(data.feedback ?? ""),
+      provider: String(data.provider ?? "ai"),
+    };
+  } catch {
+    return null;
+  }
+}
+
 export interface TutorReply {
   answer: string;
   provider: string;

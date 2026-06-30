@@ -17,6 +17,7 @@ import {
   type GradeCelebratedPayload,
   type ModuleEvaluatedPayload,
   type GateEvaluatedPayload,
+  type MissionSubmittedPayload,
 } from "@/core/event";
 import { parseWikilinks } from "@/core/wikilink";
 import { wouldCreateCycle } from "@/core/roadmap";
@@ -43,6 +44,7 @@ import type {
   CanvasStatusRM,
   EvaluationRM,
   GateRM,
+  MissionRM,
 } from "@/core/read-model";
 
 const TZ = ARCANUM_CONFIG.tz;
@@ -114,6 +116,8 @@ interface Acc {
   evaluations: Map<string, EvaluationRM>;
   /** latest exit-gate verdict per cell (WHITE ROOM) */
   gates: Map<string, GateRM>;
+  /** latest mission evidence per heavy cell (kind:'mission') */
+  missions: Map<string, MissionRM>;
 }
 
 function applyDomain(acc: Acc, e: ArcanumEvent): void {
@@ -142,7 +146,10 @@ function applyDomain(acc: Acc, e: ArcanumEvent): void {
         acc.modules.set(id, {
           ...prev,
           title: p.title,
-          kind: p.kind,
+          // A heavy MISSION cell can never be silently DEMOTED to a plain cell by a
+          // later/stray/synced upsert — its block on the next node depends on kind, so
+          // the designation is monotonic (fail-closed on EVERY fold, like the DAG guard).
+          kind: prev.kind === "mission" && p.kind !== "mission" ? prev.kind : p.kind,
           prereqs: p.prereqs ?? [],
           // Preserve the prior goal when a rename-style re-upsert omits goal_id —
           // never silently detach the module from its lane (defensive, like notes).
@@ -328,12 +335,25 @@ function applyDomain(acc: Acc, e: ArcanumEvent): void {
         feedback: typeof p.feedback === "string" ? p.feedback : "",
         source: p.source === "ai" ? "ai" : "heuristic",
         provider: typeof p.provider === "string" ? p.provider : null,
+        questions: Array.isArray(p.questions) ? p.questions.map(String) : [],
         ts: e.ts,
       });
       // gatePassed is MONOTONIC — once the cell's gate is passed it stays open
       // (a later re-evaluation can't re-seal what was already demonstrated).
       const mod = acc.modules.get(id);
       if (mod && passed && !mod.gatePassed) acc.modules.set(id, { ...mod, gatePassed: true });
+      return;
+    }
+    case "mission.submitted": {
+      const id = e.module_id;
+      if (!id) return;
+      const p = e.payload as unknown as MissionSubmittedPayload;
+      // latest evidence per cell wins (fold order = ts order) — durable proof of work
+      acc.missions.set(id, {
+        moduleId: id,
+        notes: typeof p.notes === "string" ? p.notes : "",
+        ts: e.ts,
+      });
       return;
     }
     case "module.evaluated": {
@@ -397,6 +417,7 @@ function emptyAcc(): Acc {
     celebratedGrade: null,
     evaluations: new Map(),
     gates: new Map(),
+    missions: new Map(),
   };
 }
 
@@ -417,6 +438,7 @@ function accFromModel(prev: ReadModel): Acc {
     celebratedGrade: prev.celebratedGrade,
     evaluations: new Map(prev.evaluations.map((ev) => [ev.moduleId, ev])),
     gates: new Map(prev.gates.map((g) => [g.moduleId, g])),
+    missions: new Map(prev.missions.map((m) => [m.moduleId, m])),
   };
 }
 
@@ -456,6 +478,7 @@ function assemble(
     celebratedGrade: acc.celebratedGrade,
     evaluations: [...acc.evaluations.values()],
     gates: [...acc.gates.values()],
+    missions: [...acc.missions.values()],
     qualifiedDays,
     stats: {
       totalXp: acc.totalXp,

@@ -119,6 +119,17 @@ export interface GateRM {
   feedback: string;
   source: "ai" | "heuristic";
   provider: string | null;
+  /** pointed questions the interrogator generated against the mission's real content
+   *  (mission cells); empty for a pre-authored justify-gate */
+  questions: string[];
+  ts: number;
+}
+
+/** Latest MISSION evidence submission for a heavy cell (kind:'mission'), folded from
+ *  mission.submitted — the learner's own notes proving they lived the assigned source. */
+export interface MissionRM {
+  moduleId: string;
+  notes: string;
   ts: number;
 }
 
@@ -169,5 +180,7 @@ export interface ReadModel {
   evaluations: EvaluationRM[];
   /** latest EXIT GATE verdict per cell (WHITE ROOM), folded from gate.evaluated */
   gates: GateRM[];
+  /** latest MISSION evidence per heavy cell, folded from mission.submitted */
+  missions: MissionRM[];
   cursor: { ts: number; id: string } | null;
 }
