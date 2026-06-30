@@ -6,7 +6,7 @@ vi.mock("@/sync/client", () => ({
   getSupabase: () => ({ auth: { getSession }, functions: { invoke } }),
 }));
 
-import { ocrImage, enrichSleepCycle, requestInterrogation } from "@/sync/ai";
+import { ocrImage, enrichSleepCycle, requestInterrogation, requestLessonDraft, requestLessonGrade } from "@/sync/ai";
 
 beforeEach(() => {
   getSession.mockReset();
@@ -64,5 +64,37 @@ describe("ai client — honest degradation (trunk stays alive without AI)", () =
     const r = (await requestInterrogation({ notes: "x" }))!;
     expect(r.questions).toEqual(["¿por qué desborda un int?"]);
     expect([r.passed, r.score, r.provider]).toEqual([false, 0.3, "openai"]);
+  });
+
+  it("requestLessonDraft (Capa B) returns null without a session — no invented lesson", async () => {
+    getSession.mockResolvedValue({ data: { session: null } });
+    expect(await requestLessonDraft({ cellTitle: "x", sourceRefs: [] })).toBeNull();
+    expect(invoke).not.toHaveBeenCalled();
+  });
+
+  it("requestLessonDraft maps a generated lesson on success", async () => {
+    getSession.mockResolvedValue({ data: { session: { access_token: "t" } } });
+    invoke.mockResolvedValue({ data: { concept: "El concepto", challenge: "el reto", rubric: ["r1"], provider: "openai" }, error: null });
+    const d = (await requestLessonDraft({ cellTitle: "x", sourceRefs: ["http://a"] }))!;
+    expect([d.concept, d.challenge, d.rubric, d.provider]).toEqual(["El concepto", "el reto", ["r1"], "openai"]);
+  });
+
+  it("requestLessonGrade returns null when the function is down — no placebo reinforcement", async () => {
+    getSession.mockResolvedValue({ data: { session: { access_token: "t" } } });
+    invoke.mockResolvedValue({ data: { error: "IA no disponible" }, error: null });
+    expect(await requestLessonGrade({ challenge: "x", rubric: [], answer: "y" })).toBeNull();
+  });
+
+  it("requestLessonGrade returns null on the parse-fail sentinel (a non-grade must reinforce nothing)", async () => {
+    getSession.mockResolvedValue({ data: { session: { access_token: "t" } } });
+    invoke.mockResolvedValue({ data: { provider: "openai", error: "grade-parse-failed" }, error: null });
+    expect(await requestLessonGrade({ challenge: "x", rubric: [], answer: "y" })).toBeNull();
+  });
+
+  it("requestLessonGrade maps a real grade (understood gates reinforcement downstream)", async () => {
+    getSession.mockResolvedValue({ data: { session: { access_token: "t" } } });
+    invoke.mockResolvedValue({ data: { score: 0.8, understood: true, feedback: "bien", provider: "openai" }, error: null });
+    const g = (await requestLessonGrade({ challenge: "x", rubric: [], answer: "y" }))!;
+    expect([g.score, g.understood, g.feedback]).toEqual([0.8, true, "bien"]);
   });
 });

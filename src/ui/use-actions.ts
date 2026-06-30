@@ -6,7 +6,16 @@ import { getDeviceId } from "@/lib/device";
 import { buildEvaluationContext, heuristicEvaluation } from "@/core/evaluation";
 import { buildGateContext, heuristicGate } from "@/lib/gate";
 import { buildInterrogationContext, heuristicInterrogation } from "@/lib/mission";
-import { requestModuleEvaluation, requestGateEvaluation, requestInterrogation } from "@/sync/ai";
+import { buildLessonContext, buildLessonGradeContext } from "@/lib/lesson";
+import {
+  requestModuleEvaluation,
+  requestGateEvaluation,
+  requestInterrogation,
+  requestLessonDraft,
+  requestLessonGrade,
+  type LessonDraft,
+  type LessonGrade,
+} from "@/sync/ai";
 
 interface Refs {
   goalId?: string | null;
@@ -104,6 +113,33 @@ export function useActions() {
         provider: ai ? ai.provider : null,
       };
       await fire("gate.evaluated", payload as unknown as Json, { goalId, moduleId });
+    },
+    // ── Capa B — on-demand LIGHT lessons (the "infinite" layer) ──────────────────
+    // generate: ask the tutor for a short first-principle lesson + challenge against the
+    // cell's REAL source. Returns null without AI (no invented lesson — honest).
+    generateLesson: async (moduleId: string): Promise<LessonDraft | null> => {
+      const rm = store.getState().readModel;
+      const ctx = buildLessonContext(rm, moduleId);
+      if (!ctx) return null;
+      return requestLessonDraft(ctx);
+    },
+    // grade the learner's answer FAIRLY. Reinforce mastery (checkpoint.passed, score-weighted)
+    // ONLY when the grader judged the answer UNDERSTOOD — mirroring the gate/interrogation
+    // convention (only a real pass counts). No AI / parse-fail → null → reinforces nothing;
+    // a not-understood near-miss shows feedback but banks NO XP/streak/mastery (no placebo —
+    // the log now matches the UI's "A medias — sigue").
+    gradeLesson: async (
+      refs: Refs,
+      cellTitle: string,
+      challenge: string,
+      rubric: string[],
+      answer: string,
+    ): Promise<LessonGrade | null> => {
+      const ctx = buildLessonGradeContext(cellTitle, challenge, rubric, answer);
+      const grade = await requestLessonGrade(ctx);
+      if (!grade) return null;
+      if (grade.understood) await fire("checkpoint.passed", { score: grade.score, kind: "checkpoint" }, refs);
+      return grade;
     },
     createNote: async (refs: Refs, title: string, markdown: string): Promise<string> => {
       const noteId = newEventId();

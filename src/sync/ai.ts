@@ -133,6 +133,71 @@ export async function requestInterrogation(context: unknown): Promise<Interrogat
   }
 }
 
+export interface LessonDraft {
+  /** a short first-principle teaching of one concept, anchored to the real source */
+  concept: string;
+  /** the justify/implement challenge */
+  challenge: string;
+  rubric: string[];
+  provider: string;
+}
+
+/** Capa B — generate an on-demand LIGHT lesson (concept + challenge) against the cell's real
+ *  source. null on ANY failure → the UI degrades honestly (no invented lesson; the real source
+ *  still works). */
+export async function requestLessonDraft(context: unknown): Promise<LessonDraft | null> {
+  try {
+    const sb = getSupabase();
+    const {
+      data: { session },
+    } = await sb.auth.getSession();
+    if (!session) return null;
+    const { data, error } = await sb.functions.invoke("ai-router", {
+      body: { action: "lesson", context: { ...(context as object), phase: "generate" } },
+    });
+    if (error || data?.error || !data?.concept) return null;
+    return {
+      concept: String(data.concept),
+      challenge: String(data.challenge ?? ""),
+      rubric: Array.isArray(data.rubric) ? data.rubric.map(String) : [],
+      provider: String(data.provider ?? "ai"),
+    };
+  } catch {
+    return null;
+  }
+}
+
+export interface LessonGrade {
+  score: number;
+  understood: boolean;
+  feedback: string;
+  provider: string;
+}
+
+/** Capa B — grade a light-lesson answer FAIRLY (reinforces; not the 0.1% exit gate). null on
+ *  ANY failure → caller does NOT reinforce (no placebo XP). */
+export async function requestLessonGrade(context: unknown): Promise<LessonGrade | null> {
+  try {
+    const sb = getSupabase();
+    const {
+      data: { session },
+    } = await sb.auth.getSession();
+    if (!session) return null;
+    const { data, error } = await sb.functions.invoke("ai-router", {
+      body: { action: "lesson", context: { ...(context as object), phase: "grade" } },
+    });
+    if (error || data?.error || typeof data?.score !== "number") return null;
+    return {
+      score: typeof data.score === "number" ? data.score : 0,
+      understood: data.understood === true,
+      feedback: String(data.feedback ?? ""),
+      provider: String(data.provider ?? "ai"),
+    };
+  } catch {
+    return null;
+  }
+}
+
 export interface TutorReply {
   answer: string;
   provider: string;

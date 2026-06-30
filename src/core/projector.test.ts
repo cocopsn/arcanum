@@ -341,6 +341,15 @@ describe("project — Phase 4 Canvas obligations", () => {
     expect(project(events)).toEqual(rm); // idempotent under re-fold
   });
 
+  it("reviewDue (Capa C) is fed by a gate-passed mission, not only by completed modules", () => {
+    const events = [
+      makeEvent("module.upserted", { title: "Mission", prereqs: [], kind: "mission" }, { ...dev(DAY1_A), goalId: "g", moduleId: "m1" }),
+      makeEvent("gate.evaluated", { passed: true, score: 0.9, summary: "ok", feedback: "f", source: "ai", provider: "openai" }, { ...dev(DAY2), moduleId: "m1" }),
+    ];
+    const rm = project(events);
+    expect(rm.reviewDue.map((r) => r.moduleId)).toContain("m1"); // resurfaces for review as it decays
+  });
+
   it("a heavy mission cell's kind is MONOTONIC — a later upsert(kind:'cell') can't demote it (fail-closed)", () => {
     const events = [
       makeEvent("module.upserted", { title: "Mission", prereqs: [], kind: "mission" }, { ...dev(DAY1_A), goalId: "g", moduleId: "m1" }),

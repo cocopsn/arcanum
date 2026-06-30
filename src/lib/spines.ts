@@ -212,144 +212,111 @@ export const SPINES: Spine[] = [
     "cells": [
       {
         "id": "cb000000-0000-4000-8000-000000000001",
-        "title": "Environment setup: Python, NumPy, Jupyter/Colab",
+        "title": "S1 · Datos industriales — del sensor a la decisión (OPC-UA / MQTT / Modbus, PLC) · MISIÓN",
         "sourceUrls": [
-          "https://cs231n.github.io/setup-instructions/",
-          "https://cs231n.github.io/python-numpy-tutorial/"
-        ]
-      },
-      {
-        "id": "cb000000-0000-4000-8000-000000000002",
-        "title": "Classical vision I — image filtering & smoothing (OpenCV)",
-        "sourceUrls": [
-          "https://docs.opencv.org/4.13.0/d4/d13/tutorial_py_filtering.html"
-        ]
-      },
-      {
-        "id": "cb000000-0000-4000-8000-000000000003",
-        "title": "Classical vision II — image gradients (Sobel / Laplacian / Scharr)",
-        "sourceUrls": [
-          "https://docs.opencv.org/4.13.0/d5/d0f/tutorial_py_gradients.html"
-        ]
-      },
-      {
-        "id": "cb000000-0000-4000-8000-000000000004",
-        "title": "Classical vision III — Canny edge detection",
-        "sourceUrls": [
-          "https://docs.opencv.org/4.13.0/da/d22/tutorial_py_canny.html"
-        ]
-      },
-      {
-        "id": "cb000000-0000-4000-8000-000000000005",
-        "title": "Classical vision IV — contours (detection & analysis)",
-        "sourceUrls": [
-          "https://docs.opencv.org/4.13.0/d3/d05/tutorial_py_table_of_contents_contours.html",
-          "https://docs.opencv.org/4.13.0/d4/d73/tutorial_py_contours_begin.html"
-        ]
-      },
-      {
-        "id": "cb000000-0000-4000-8000-000000000006",
-        "title": "Image classification: data-driven approach, kNN, train/val/test",
-        "sourceUrls": [
-          "https://cs231n.github.io/classification/"
-        ]
-      },
-      {
-        "id": "cb000000-0000-4000-8000-000000000007",
-        "title": "Linear classification: SVM & Softmax",
-        "sourceUrls": [
-          "https://cs231n.github.io/linear-classify/",
-          "https://cs231n.stanford.edu/slides/2026/lecture_2.pdf"
-        ]
-      },
-      {
-        "id": "cb000000-0000-4000-8000-000000000008",
-        "title": "Optimization: loss landscapes & stochastic gradient descent",
-        "sourceUrls": [
-          "https://cs231n.github.io/optimization-1/",
-          "https://cs231n.stanford.edu/slides/2026/lecture_3.pdf"
-        ]
-      },
-      {
-        "id": "cb000000-0000-4000-8000-000000000009",
-        "title": "Backpropagation from scratch (NumPy)",
-        "sourceUrls": [
-          "https://cs231n.github.io/optimization-2/",
-          "https://cs231n.stanford.edu/slides/2026/lecture_4.pdf"
+          "https://mqtt.org/",
+          "https://opcfoundation.org/about/opc-technologies/opc-ua/",
+          "https://www.modbus.org/",
+          "https://nodered.org/docs/",
+          "https://web.mit.edu/2.810/www/"
         ],
-        "videoUrls": [
-          "https://cs231n.stanford.edu/slides/2026/lecture_4.pdf",
-          "https://www.youtube.com/playlist?list=PLoROMvodv4rOmsNzYBMe0gJY2XS8AQg16"
-        ],
-        "gate": {
-          "question": "You train the network and the loss curve goes DOWN smoothly, then suddenly spikes to NaN at epoch 40. Don't just name a cause — justify from first principles why each of (a) the learning rate, (b) the weight initialization, and (c) the gradient computation could each independently produce this exact NaN spike, and describe the single experiment that would let you discriminate which one it actually was.",
-          "rubric": [
-            "Derives the gradient of the loss via the chain rule on a small computational graph (the local-gradient x upstream-gradient pattern from the optimization-2 note), not from a memorized formula.",
-            "Explains WHY the loss decreases: gradient descent steps the parameters along -grad(L), the direction of steepest local decrease; a small enough step is guaranteed to lower L (first-order Taylor argument).",
-            "Articulates the effect of LEARNING RATE: too small -> slow convergence / stuck; too large -> overshoot, oscillation, or divergence (loss goes up / NaN). Connects this to the step-size in the update rule.",
-            "Articulates the effect of WEIGHT INITIALIZATION: all-zeros -> symmetry, every neuron gets identical gradients and never differentiates; too-large -> saturated activations and vanishing/exploding gradients. Justifies a calibrated scheme (e.g. small random / variance-preserving).",
-            "Distinguishes the FORWARD pass (compute activations + cache intermediates) from the BACKWARD pass (reuse cached values to propagate gradients), and explains why caching is necessary rather than recomputing.",
-            "Demonstrates empirically: shows the loss curve actually descending on a real run and ties at least one observed behavior (plateau, oscillation, divergence) back to a specific hyperparameter choice."
-          ]
+        "mission": {
+          "assignment": "Aún no programes: entiende la ARQUITECTURA del dato industrial de punta a punta (sensor → PLC → broker → consumidor → decisión). Estudia MQTT (mqtt.org), OPC-UA (opcfoundation.org) y Modbus (modbus.org), qué es un PLC y cómo se comunica, y el patrón productor/broker/consumidor (Node-RED docs). Vives en el FrED real: piensa termopar de extrusión → protocolo → pipeline.",
+          "deliverable": "Un diagrama propio del flujo completo del dato (en notas), + una defensa razonada: ¿cuándo MQTT, cuándo OPC-UA, cuándo Modbus, y por qué? (latencia, modelo de datos, pub/sub vs request/response, determinismo). No 'MQTT es mejor': el trade-off por contexto."
         }
       },
       {
-        "id": "cb000000-0000-4000-8000-000000000010",
-        "title": "Neural networks I — architecture (neurons, layers, activations)",
+        "id": "cb000000-0000-4000-8000-000000000002",
+        "title": "S2 · ML en procesos físicos — pipeline de detección de anomalías (ENTREGABLE real) · MISIÓN",
         "sourceUrls": [
-          "https://cs231n.github.io/neural-networks-1/"
-        ]
+          "https://scikit-learn.org/stable/modules/outlier_detection.html",
+          "https://www.kaggle.com/datasets/stephanmatzka/predictive-maintenance-dataset-ai4i-2020",
+          "https://archive.ics.uci.edu/dataset/601/ai4i+2020+predictive+maintenance+dataset",
+          "https://docs.opencv.org/4.x/"
+        ],
+        "mission": {
+          "assignment": "Toma un dataset REAL de sensores industriales (AI4I 2020 Predictive Maintenance en Kaggle/UCI, o uno equivalente de 'manufacturing sensor data') y CORRE en Python un pipeline de detección de anomalías en series de tiempo que FUNCIONE — no sofisticado, funcional (IsolationForest / LocalOutlierFactor de scikit-learn, o un umbral sobre residuales). Roza visión: revisa OpenCV para defectos/medición dimensional como segundo caso.",
+          "deliverable": "Describe tu pipeline que corre: qué dataset, qué método elegiste y POR QUÉ, qué anomalías detecta y — clave — QUÉ se le escapa (falsos negativos, drift, estacionalidad). Pega el fragmento de Python y un resultado concreto (cuántas anomalías marcó, una que sea real vs una falsa)."
+        }
       },
       {
-        "id": "cb000000-0000-4000-8000-000000000011",
-        "title": "Neural networks II — data preprocessing, init, loss functions",
+        "id": "cb000000-0000-4000-8000-000000000003",
+        "title": "S3 · Pipelines de datos industriales — stack MQTT→InfluxDB→Grafana (ENTREGABLE real) · MISIÓN",
         "sourceUrls": [
-          "https://cs231n.github.io/neural-networks-2/"
-        ]
+          "https://mosquitto.org/",
+          "https://docs.influxdata.com/influxdb/",
+          "https://grafana.com/docs/grafana/latest/",
+          "https://docs.docker.com/get-started/"
+        ],
+        "mission": {
+          "assignment": "Monta LOCALMENTE el stack mínimo que existe de verdad en el FrED: un script que genera datos simulados de sensores → publica por MQTT (Mosquitto) → los persiste en InfluxDB/TimescaleDB (serie de tiempo) → los grafica en Grafana. Usa Docker para los servicios. Entiende el edge computing: por qué procesar cerca del sensor.",
+          "deliverable": "Describe tu stack corriendo (qué contenedores, cómo fluye el dato) + defiende la arquitectura: ¿por qué una base de series de tiempo y no SQL normal?, ¿qué hace el broker?, ¿qué procesarías en el edge y qué en la nube? Pega el docker-compose o el script generador."
+        }
       },
       {
-        "id": "cb000000-0000-4000-8000-000000000012",
-        "title": "Neural networks III — learning dynamics, LR schedules, evaluation",
+        "id": "cb000000-0000-4000-8000-000000000004",
+        "title": "S4 · IA en el FrED + papers del Dr. Ramírez Cedillo (vocabulario del equipo) · MISIÓN",
         "sourceUrls": [
-          "https://cs231n.github.io/neural-networks-3/"
-        ]
+          "https://www.researchgate.net/profile/Erick-Ramirez-Cedillo",
+          "https://scholar.google.com/citations?user=dVVYljgAAAAJ",
+          "https://www.researchgate.net/publication/334556755_Structural_design_optimization_of_knee_replacement_implants_for_Additive_Manufacturing",
+          "https://fredfactory.mit.edu/research"
+        ],
+        "mission": {
+          "assignment": "Visión computacional para control de calidad en extrusión, SCADA, y DfMA desde el software. LO MÁS IMPORTANTE: lee ≥2 papers del Dr. Erick Ramírez Cedillo (ResearchGate / Google Scholar — fuente real; si pide login, ábrelos desde Scholar o el repositorio Tec). Esto te da el vocabulario EXACTO del equipo para el día 1 en el lab.",
+          "deliverable": "Explica el MÉTODO de UNO de los papers del Dr. Ramírez (no lo resumas): qué problema ataca, qué técnica usa, por qué funciona y dónde tiene límites. Cita el paper. Anclar el dominio es tu ventaja diferenciadora."
+        }
       },
       {
-        "id": "cb000000-0000-4000-8000-000000000013",
-        "title": "Putting it together — minimal 2-layer net case study",
+        "id": "cb000000-0000-4000-8000-000000000005",
+        "title": "H1 · Electrónica y embebidos básicos (entender, no competir) · MISIÓN",
         "sourceUrls": [
-          "https://cs231n.github.io/neural-networks-case-study/"
-        ]
+          "https://docs.arduino.cc/",
+          "https://docs.espressif.com/projects/esp-idf/en/latest/esp32/",
+          "https://www.tinkercad.com/circuits"
+        ],
+        "mission": {
+          "assignment": "Microcontrolador vs microprocesador; Arduino / ESP32 / Raspberry Pi y cuándo cada uno; sensores de manufactura (termopar/PT100, presión, encoder, posición); PWM para control de motores; leer un esquemático. Foco: entender lo suficiente para hablar con un mecatrónico, no para competir.",
+          "deliverable": "Lee un sensor y manda el dato por serial — Arduino/ESP32 real o Tinkercad Circuits simulado. Describe qué sensor, cómo lo conectaste, y qué viste en el monitor serial. Explica qué hace el PWM si controlaras un motor."
+        }
       },
       {
-        "id": "cb000000-0000-4000-8000-000000000014",
-        "title": "Convolutional neural networks: conv & pooling layers",
+        "id": "cb000000-0000-4000-8000-000000000006",
+        "title": "H2 · Control y automatización — lazo cerrado, PID, SCADA (anclado al FrED) · MISIÓN",
         "sourceUrls": [
-          "https://cs231n.github.io/convolutional-networks/",
-          "https://cs231n.stanford.edu/slides/2026/lecture_5.pdf"
-        ]
+          "https://en.wikipedia.org/wiki/PID_controller",
+          "https://www.tinkercad.com/circuits"
+        ],
+        "mission": {
+          "assignment": "Lazo cerrado, PID (qué hace cada término P/I/D y POR QUÉ, no la matemática profunda), actuadores, robótica industrial (tipos, coordenadas, end-effectors), SCADA a nivel hardware. Ancla al FrED real: motores paso a paso, sensores de temperatura para la extrusión, encoders, bobinado.",
+          "deliverable": "Explica desde el primer principio cómo un PID mantiene la temperatura de extrusión del FrED en un setpoint: qué mide, qué corrige cada término, qué pasa si la ganancia es muy alta (oscila) o muy baja (lento). No la fórmula — el porqué del lazo."
+        }
       },
       {
-        "id": "cb000000-0000-4000-8000-000000000015",
-        "title": "Understanding & visualizing CNNs",
+        "id": "cb000000-0000-4000-8000-000000000007",
+        "title": "H3 · Manufactura y el proceso FrED — extrusión, aditiva, métricas de línea · MISIÓN",
         "sourceUrls": [
-          "https://cs231n.github.io/understanding-cnn/"
-        ]
+          "https://fredfactory.mit.edu/",
+          "https://news.mit.edu/2025/tabletop-factory-box-makes-hands-on-manufacturing-education-more-accessible-0403",
+          "https://meche.mit.edu/news-media/tabletop-factory-box-makes-hands-manufacturing-education-more-accessible"
+        ],
+        "mission": {
+          "assignment": "La extrusión como proceso industrial; manufactura aditiva (FDM/SLA/SLS conceptual); Design for Manufacturing; el FrED Factory de MIT (lee el artículo de MIT News de abril 2025 + fredfactory.mit.edu); métricas de línea (takt time, OEE, throughput).",
+          "deliverable": "Explica el proceso del FrED (qué hace, de fibra a producto) y define UNA métrica de línea (takt time u OEE) con un ejemplo numérico de cómo la calcularías en esa línea. ¿Qué cuello de botella buscarías primero?"
+        }
       },
       {
-        "id": "cb000000-0000-4000-8000-000000000016",
-        "title": "CNN architectures (AlexNet -> ResNet) & transfer learning",
+        "id": "cb000000-0000-4000-8000-000000000008",
+        "title": "H4 · Integración SW↔HW — sistemas ciberfísicos, gemelo digital, seguridad IoT (síntesis) · MISIÓN",
         "sourceUrls": [
-          "https://cs231n.github.io/transfer-learning/",
-          "https://cs231n.stanford.edu/slides/2026/lecture_6.pdf"
-        ]
-      },
-      {
-        "id": "cb000000-0000-4000-8000-000000000017",
-        "title": "Domain capstone — FrED Factory closed-loop vision (Dr. Erick Ramirez-Cedillo)",
-        "sourceUrls": [
-          "https://www.researchgate.net/profile/Erick-Ramirez-Cedillo"
-        ]
+          "https://en.wikipedia.org/wiki/Cyber-physical_system",
+          "https://mqtt.org/",
+          "https://opcfoundation.org/about/opc-technologies/opc-ua/"
+        ],
+        "mission": {
+          "assignment": "Síntesis: sistemas ciberfísicos (CPS), gemelo digital básico, MQTT vs OPC-UA vs Modbus EN CONTEXTO, y seguridad en IoT industrial — aquí tu background de NAHUAL es un ángulo diferenciador que pocos en el lab tienen.",
+          "deliverable": "Traza el dato naciendo en un sensor del FrED → protocolo → pipeline → modelo ML → acción de control/alerta en dashboard, nombrando la tecnología en cada salto. Luego: nombra UN vector de ataque realista en ese flujo IoT industrial y cómo lo mitigarías (tu ángulo de seguridad)."
+        }
       }
     ]
   },
@@ -455,6 +422,68 @@ export const SPINES: Spine[] = [
         "title": "B2.2 — Fließende Interaktion & Standpunkt: detaillierter Text, Pro/Contra, Konnektoren-Vielfalt",
         "sourceUrls": [
           "https://www.goethe.de/en/spr/kup/prf/prf/gb2.html"
+        ]
+      }
+    ]
+  },
+  {
+    "goalId": "a0000000-0000-4000-8000-000000000004",
+    "goalTitle": "Competitiva (ICPC)",
+    "color": "#C9952F",
+    "sigil": "icpc",
+    "cells": [
+      {
+        "id": "cd000000-0000-4000-8000-000000000001",
+        "title": "Fundamentos competitivos — complejidad, I/O rápido, el CP-Handbook",
+        "sourceUrls": [
+          "https://cses.fi/book/book.pdf",
+          "https://usaco.guide/general/resources-cp"
+        ]
+      },
+      {
+        "id": "cd000000-0000-4000-8000-000000000002",
+        "title": "Two pointers & sliding window — reconocer el patrón",
+        "sourceUrls": [
+          "https://usaco.guide/silver/two-pointers",
+          "https://cp-algorithms.com/"
+        ]
+      },
+      {
+        "id": "cd000000-0000-4000-8000-000000000003",
+        "title": "Binary search on the answer",
+        "sourceUrls": [
+          "https://usaco.guide/silver/binary-search"
+        ]
+      },
+      {
+        "id": "cd000000-0000-4000-8000-000000000004",
+        "title": "DSU / Union-Find",
+        "sourceUrls": [
+          "https://cp-algorithms.com/data_structures/disjoint_set_union.html",
+          "https://usaco.guide/gold/dsu"
+        ]
+      },
+      {
+        "id": "cd000000-0000-4000-8000-000000000005",
+        "title": "Grafos competitivos — BFS/DFS, componentes, orden topológico",
+        "sourceUrls": [
+          "https://usaco.guide/silver/graph-traversal",
+          "https://cp-algorithms.com/graph/breadth-first-search.html"
+        ]
+      },
+      {
+        "id": "cd000000-0000-4000-8000-000000000006",
+        "title": "Programación dinámica — patrones competitivos",
+        "sourceUrls": [
+          "https://usaco.guide/gold/intro-dp"
+        ]
+      },
+      {
+        "id": "cd000000-0000-4000-8000-000000000007",
+        "title": "Sprints cronometrados — Codeforces problemset por rating",
+        "sourceUrls": [
+          "https://codeforces.com/problemset",
+          "https://atcoder.jp/"
         ]
       }
     ]

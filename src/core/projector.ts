@@ -450,8 +450,11 @@ function assemble(
 ): ReadModel {
   const modules = [...acc.modules.values()];
   const grade = gradeForXp(acc.totalXp);
+  // The decay/review queue (Capa C) is fed by anything the learner has DEMONSTRATED — a
+  // completed module OR a mission whose interrogation passed (gatePassed) — so heavy mission
+  // cells resurface for review as their retrievability decays, not only plain completions.
   const reviewDue: ReviewItem[] = modules
-    .filter((m) => m.status === "completed" && !m.archived)
+    .filter((m) => (m.status === "completed" || m.gatePassed) && !m.archived)
     .map((m) => ({ moduleId: m.id, dueDays: m.dueDays }));
   // Promotion is DERIVED: an obligation is "ascended" iff a live module links to it.
   const promotedByObligation = new Map<string, string>();

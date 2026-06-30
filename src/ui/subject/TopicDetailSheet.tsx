@@ -11,10 +11,13 @@ import { NotesSheet } from "@/ui/NotesSheet";
 import { Quiz } from "@/ui/subject/Quiz";
 import { ExitGate } from "@/ui/subject/ExitGate";
 import { MissionPanel } from "@/ui/subject/MissionPanel";
+import { LessonPanel } from "@/ui/subject/LessonPanel";
+import { LearningModes } from "@/ui/subject/LearningModes";
 import { EvaluationPanel } from "@/ui/subject/EvaluationPanel";
 import { TutorSheet } from "@/ui/subject/TutorSheet";
 import { nodeStatus } from "@/core/roadmap";
 import { contentForModule } from "@/lib/subject-content";
+import { modesFor } from "@/lib/learning-modes";
 
 const STATUS_LABEL = { sealed: "Sellado", available: "Disponible", started: "En curso", completed: "Completado" } as const;
 
@@ -28,6 +31,7 @@ export function TopicDetailSheet({
   onClose: () => void;
 }) {
   const readModel = useArcanum((s) => s.readModel);
+  const viewModel = useArcanum((s) => s.viewModel);
   const retrievability = useArcanum((s) => s.viewModel.modules.find((m) => m.id === moduleId)?.retrievability ?? 0);
   const { startModule, completeModule } = useActions();
   const [notesOpen, setNotesOpen] = useState(false);
@@ -44,6 +48,7 @@ export function TopicDetailSheet({
 
   if (!mod || mod.archived) return null;
   const goalId = mod.goalId ?? "";
+  const modes = modesFor(mod, viewModel);
 
   return (
     <div
@@ -76,6 +81,11 @@ export function TopicDetailSheet({
           <button onClick={onClose} aria-label="Cerrar" className="-mr-2 -mt-1 min-h-11 px-2 text-2xl leading-none text-text-faint transition hover:text-text">
             ×
           </button>
+        </div>
+
+        {/* NATURE-BY-DURATION — the 3 entry modes are always declared (never an empty screen). */}
+        <div className="mt-4">
+          <LearningModes modes={modes} accent={accent} />
         </div>
 
         {/* RETO FIRST — the wall before any resource (methodology intact). */}
@@ -159,6 +169,13 @@ export function TopicDetailSheet({
         {content?.gate && (
           <div className="mt-5 border-t border-line pt-4">
             <ExitGate moduleId={mod.id} gate={content.gate} accent={accent} />
+          </div>
+        )}
+
+        {/* LIGHT LESSON (Capa B) — on-demand, against the real source; reinforces mastery. */}
+        {modes.light && content && (
+          <div className="mt-5 border-t border-line pt-4">
+            <LessonPanel moduleId={mod.id} goalId={goalId} cellTitle={mod.title} sourceUrls={content.sourceUrls} accent={accent} />
           </div>
         )}
 

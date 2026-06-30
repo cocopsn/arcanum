@@ -401,6 +401,98 @@ async function interrogate(
   throw new Error(`proveedor desconocido: ${provider}`);
 }
 
+// Capa B — on-demand LIGHT lessons (the "infinite" layer). Two phases:
+//  generate → teach ONE concept against the cell's real source + pose a challenge + rubric.
+//  grade    → score the learner's answer FAIRLY (this reinforces; it is NOT the 0.1% exit gate).
+// Never invents fixed academic facts: teaches the canonical concept and points at the real source.
+async function lesson(
+  provider: string,
+  context: { phase?: string; cellTitle?: string; sourceRefs?: string[]; challenge?: string; rubric?: string[]; answer?: string },
+): Promise<Record<string, unknown>> {
+  const isGrade = context.phase === "grade";
+  const prompt = isGrade
+    ? "Eres el tutor Asuka calificando la respuesta a una LECCIÓN CORTA contra su rúbrica. Exigente pero JUSTO: " +
+      "esto REFUERZA el aprendizaje, NO es la compuerta de élite del 0.1%. Da score 0-1 según cuánto demuestra " +
+      "entendimiento de PRIMER PRINCIPIO (no memorización), y feedback adversarial-pero-útil que corrija lo que " +
+      "falta y empuje al porqué. ANTI-GAMING: respuesta vacía/trivial/evasiva → score bajo. Responde SOLO JSON " +
+      '{"score": number (0-1), "understood": boolean, "feedback": string}, en español. ' +
+      `RETO: ${context.challenge ?? ""}. RÚBRICA: ${JSON.stringify(context.rubric ?? [])}. RESPUESTA DEL APRENDIZ: ${context.answer ?? ""}`
+    : "Eres el tutor Asuka generando una LECCIÓN CORTA (~15 min) sobre el tópico de una celda, anclada a su FUENTE " +
+      "canónica REAL (abajo). Enseña UN concepto central desde el PRIMER PRINCIPIO (el porqué, no un resumen de viñetas), " +
+      "conciso. Luego pon UN reto de justificación o implementación que exija pensar (no de reconocimiento), con una " +
+      "rúbrica de 2-4 criterios de lo que sería una buena respuesta. NO inventes hechos: si no tienes el detalle exacto " +
+      "de la fuente, enseña el concepto canónico y remite a la fuente real. Responde SOLO JSON " +
+      '{"concept": string (markdown conciso), "challenge": string, "rubric": string[]}, en español. ' +
+      `CELDA: ${context.cellTitle ?? ""}. FUENTE(S) REAL(ES): ${JSON.stringify(context.sourceRefs ?? [])}`;
+  const parse = (text: string): Record<string, unknown> => {
+    try {
+      const m = text.match(/\{[\s\S]*\}/);
+      const o = JSON.parse(m ? m[0] : text);
+      if (isGrade) {
+        const score = Number(o.score);
+        return {
+          score: Number.isFinite(score) ? Math.max(0, Math.min(1, score)) : 0,
+          understood: o.understood === true,
+          feedback: String(o.feedback ?? ""),
+        };
+      }
+      return {
+        concept: String(o.concept ?? ""),
+        challenge: String(o.challenge ?? ""),
+        rubric: Array.isArray(o.rubric) ? o.rubric.map(String) : [],
+      };
+    } catch {
+      // A GRADE that didn't parse is NOT a grade of 0 — returning {score:0} would reinforce
+      // mastery on garbage. Signal an error so the client nulls and reinforces NOTHING.
+      return isGrade
+        ? { error: "grade-parse-failed" }
+        : { concept: text.slice(0, 600), challenge: "", rubric: [] };
+    }
+  };
+  const maxTokens = isGrade ? 600 : 900;
+  if (provider === "openai") {
+    const key = Deno.env.get("OPENAI_API_KEY");
+    if (!key) throw new Error("OPENAI_API_KEY ausente");
+    const res = await fetch("https://api.openai.com/v1/chat/completions", {
+      method: "POST",
+      headers: { Authorization: `Bearer ${key}`, "Content-Type": "application/json" },
+      body: JSON.stringify({ model: "gpt-4o-mini", max_tokens: maxTokens, messages: [{ role: "user", content: prompt }] }),
+    });
+    if (!res.ok) throw new Error(`openai ${res.status}`);
+    const j = await res.json();
+    return parse(j.choices?.[0]?.message?.content ?? "");
+  }
+  if (provider === "anthropic") {
+    const key = Deno.env.get("ANTHROPIC_API_KEY");
+    if (!key) throw new Error("ANTHROPIC_API_KEY ausente");
+    const res = await fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST",
+      headers: { "x-api-key": key, "anthropic-version": "2023-06-01", "Content-Type": "application/json" },
+      body: JSON.stringify({ model: "claude-3-5-haiku-20241022", max_tokens: maxTokens, messages: [{ role: "user", content: prompt }] }),
+    });
+    if (!res.ok) throw new Error(`anthropic ${res.status}`);
+    const j = await res.json();
+    return parse(j.content?.[0]?.text ?? "");
+  }
+  if (provider === "kee") {
+    const j = await keeCall("lesson", { context });
+    if (isGrade) {
+      const score = Number(j.score);
+      return {
+        score: Number.isFinite(score) ? Math.max(0, Math.min(1, score)) : 0,
+        understood: j.understood === true,
+        feedback: String(j.feedback ?? ""),
+      };
+    }
+    return {
+      concept: String(j.concept ?? ""),
+      challenge: String(j.challenge ?? ""),
+      rubric: Array.isArray(j.rubric) ? j.rubric.map(String) : [],
+    };
+  }
+  throw new Error(`proveedor desconocido: ${provider}`);
+}
+
 async function tutor(provider: string, context: { question?: string } & Record<string, unknown>): Promise<string> {
   const system =
     "Eres el tutor de ARCANUM, persona estilo Asuka: exigente, directa, adversarial al servicio " +
@@ -492,6 +584,10 @@ Deno.serve(async (req: Request) => {
       const ctx = (body.context ?? {}) as { question?: string } & Record<string, unknown>;
       const r = await routeWithFallback(providers, (p) => tutor(p, ctx));
       return json({ provider: r.provider, answer: r.value });
+    }
+    if (body.action === "lesson") {
+      const r = await routeWithFallback(providers, (p) => lesson(p, body.context ?? {}));
+      return json({ provider: r.provider, ...r.value });
     }
     if (body.action === "gate") {
       const r = await routeWithFallback(providers, (p) => gate(p, body.context ?? {}));
