@@ -36,16 +36,14 @@ function buildSeed(): ArcanumEvent[] {
         ),
       );
     }
-    // course order = dependency: cell[i] → cell[i+1] (linear chain DAG)
-    for (let i = 0; i + 1 < sp.cells.length; i++) {
-      events.push(
-        makeEvent(
-          "roadmap.edge.upserted",
-          { from: sp.cells[i]!.id, to: sp.cells[i + 1]!.id },
-          { ts: ts++, deviceId: DEVICE, id: fixedId() },
-        ),
-      );
-    }
+    const edge = (from: string, to: string) =>
+      events.push(makeEvent("roadmap.edge.upserted", { from, to }, { ts: ts++, deviceId: DEVICE, id: fixedId() }));
+    // course order = dependency over the MAIN line (cells without an explicit branchFrom):
+    // cell[i] → cell[i+1] (linear chain DAG, fog-of-war).
+    const linear = sp.cells.filter((c) => !c.branchFrom);
+    for (let i = 0; i + 1 < linear.length; i++) edge(linear[i]!.id, linear[i + 1]!.id);
+    // branch cells (e.g. the IoT track) hang off an explicit point in the line, not the tail.
+    for (const cell of sp.cells) if (cell.branchFrom) edge(cell.branchFrom, cell.id);
   }
   return events;
 }

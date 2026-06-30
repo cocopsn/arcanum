@@ -42,6 +42,8 @@ export interface TopicContent {
   gate: TopicGate | null;
   /** the directed mission (heavy cell), or null if this is not a mission cell */
   mission: TopicMission | null;
+  /** cross-spine foundation this cell builds on (lives once elsewhere — non-duplication) */
+  references: { id: string; title: string }[];
 }
 
 function videoLabel(url: string): string {
@@ -63,5 +65,11 @@ export function contentForModule(moduleId: string): TopicContent | null {
     quiz: [],
     gate: cell.gate ?? null,
     mission: cell.mission ?? null,
+    references: (cell.references ?? [])
+      .map((id) => {
+        const ref = cellById(id);
+        return ref ? { id, title: ref.title } : null;
+      })
+      .filter((r): r is { id: string; title: string } => r !== null),
   };
 }

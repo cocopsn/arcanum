@@ -157,6 +157,18 @@ export function TopicDetailSheet({
           </details>
         )}
 
+        {/* CROSS-SPINE FOUNDATION — what this cell builds on that lives once elsewhere (no dup). */}
+        {content && content.references.length > 0 && (
+          <div className="mt-4 rounded-[var(--r-sm)] border border-line bg-surface p-3">
+            <h3 className="text-[10px] uppercase tracking-[0.2em] text-text-faint">Se apoya en · ya vive en otra espina (no se duplica)</h3>
+            <ul className="mt-1 space-y-1">
+              {content.references.map((r) => (
+                <li key={r.id} className="text-[12px] leading-snug text-text-muted">· {r.title}</li>
+              ))}
+            </ul>
+          </div>
+        )}
+
         {/* DIRECTED MISSION (heavy cell) — assign → block → submit evidence → interrogation.
             Passing the interrogation unseals the next cell. Mutually exclusive with the gate. */}
         {content?.mission && (

@@ -7,8 +7,8 @@ import { SPINES } from "@/lib/spines";
 import { nodeStatus } from "@/core/roadmap";
 
 const rm = project(SEED_EVENTS);
-const cs = SPINES[0]!;
-const missionCell = cs.cells.find((c) => c.mission)!; // CS50 Lecture 1 (C)
+const cs = SPINES[0]!; // ITC
+const missionCell = cs.cells.find((c) => c.mission)!; // first ITC mission (C1)
 const missionIdx = cs.cells.indexOf(missionCell);
 const nextCell = cs.cells[missionIdx + 1]!; // the node blocked behind the mission
 
@@ -21,7 +21,7 @@ describe("missionForModule / buildInterrogationContext", () => {
     expect(mission.deliverable.length).toBeGreaterThan(0);
 
     const ctx = buildInterrogationContext(rm, missionCell.id, "  mis notas  ")!;
-    expect(ctx.cellTitle).toContain("CS50");
+    expect(ctx.cellTitle).toBe(missionCell.title);
     expect(ctx.assignment.length).toBeGreaterThan(0);
     expect(ctx.sourceRefs.some((u) => u.startsWith("http"))).toBe(true);
     expect(ctx.notes).toBe("mis notas"); // trimmed
@@ -53,7 +53,7 @@ describe("heuristicInterrogation — honest, NEVER auto-passes", () => {
 });
 
 describe("the directed-mission loop — block is derived from the log; only a PASS opens it", () => {
-  it("seeds CS50 Lecture 1 as a heavy mission cell (kind:'mission')", () => {
+  it("seeds the first ITC mission as a heavy mission cell (kind:'mission')", () => {
     const m = rm.modules.find((x) => x.id === missionCell.id)!;
     expect(m.kind).toBe("mission");
   });

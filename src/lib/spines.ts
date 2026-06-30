@@ -20,6 +20,12 @@ export interface SpineCell {
    *  pointed questions against the real lecture and judges the learner's returned evidence
    *  (no pre-authored question — the source IS the anchor). */
   mission?: { assignment: string; deliverable: string };
+  /** BRANCH point: this cell depends on `branchFrom` (a cell id) instead of the linear
+   *  predecessor — used for side-tracks (e.g. IoT enters mid-spine as a branch, not the tail). */
+  branchFrom?: string;
+  /** cross-spine NON-DUPLICATION: ids of cells in OTHER spines this cell builds on (shared
+   *  foundation lives once in the log; this cell references it instead of recreating it). */
+  references?: string[];
 }
 
 export interface Spine {
@@ -40,167 +46,138 @@ export const SPINES: Spine[] = [
     "cells": [
       {
         "id": "ca000000-0000-4000-8000-000000000001",
-        "title": "CS50 Week 0 — Scratch (computational thinking, the zero/ramp node)",
+        "title": "ITC-0 · CS50 — rampa mínima (pensamiento computacional, C, memoria) · nodo cero",
         "sourceUrls": [
-          "https://cs50.harvard.edu/x/weeks/0/"
-        ]
-      },
-      {
-        "id": "ca000000-0000-4000-8000-000000000002",
-        "title": "CS50 Lecture 1 — C (variables, types, conditionals, loops) · MISIÓN DIRIGIDA",
-        "sourceUrls": [
-          "https://cs50.harvard.edu/x/weeks/1/"
-        ],
-        "mission": {
-          "assignment": "Trabaja CS50 Lecture 1 (C) COMPLETA en cs50.harvard.edu/x/weeks/1/: mira la lecture entera y lee las notas. Luego ESCRIBE y COMPILA en C al menos un programa propio que use una variable tipada, una condicional y un bucle — por ejemplo resuelve 'Mario (less)' o 'Cash' del Problem Set 1. No la veas en diagonal: el interrogatorio asume que la viviste y que compilaste código real.",
-          "deliverable": "Tus PROPIAS notas de la lecture (no el subtitulado copiado) + una reflexión corta que responda: ¿qué hace clang cuando compilas tu .c y cuáles son las fases?, ¿por qué un int de 32 bits puede desbordarse y qué viste si lo provocaste?, y ¿qué error de compilación encontraste al escribir tu programa y cómo lo resolviste? Pega un fragmento del código que compilaste."
-        }
-      },
-      {
-        "id": "ca000000-0000-4000-8000-000000000003",
-        "title": "CS50 Week 2 — Arrays (compilation, debugging, strings)",
-        "sourceUrls": [
-          "https://cs50.harvard.edu/x/weeks/2/"
-        ]
-      },
-      {
-        "id": "ca000000-0000-4000-8000-000000000004",
-        "title": "CS50 Week 3 — Algorithms (linear/binary search, selection/bubble sort, big-O first exposure)",
-        "sourceUrls": [
-          "https://cs50.harvard.edu/x/weeks/3/"
-        ]
-      },
-      {
-        "id": "ca000000-0000-4000-8000-000000000005",
-        "title": "CS50 Week 4 — Memory (pointers, dynamic allocation, the heap/stack)",
-        "sourceUrls": [
-          "https://cs50.harvard.edu/x/weeks/4/"
-        ]
-      },
-      {
-        "id": "ca000000-0000-4000-8000-000000000006",
-        "title": "CS50 Week 5 — Data Structures (linked lists, hash tables, tries, stacks/queues — first pass)",
-        "sourceUrls": [
+          "https://cs50.harvard.edu/x/",
+          "https://cs50.harvard.edu/x/weeks/1/",
+          "https://cs50.harvard.edu/x/weeks/4/",
           "https://cs50.harvard.edu/x/weeks/5/"
         ]
       },
       {
-        "id": "ca000000-0000-4000-8000-000000000007",
-        "title": "6.006 L1 — Introduction (computation, asymptotic notation, model of computation)",
+        "id": "ca000000-0000-4000-8000-000000000002",
+        "title": "C1 · Análisis asintótico y correctitud — Big-O, invariantes de lazo, demostrar cotas · MISIÓN",
         "sourceUrls": [
-          "https://ocw.mit.edu/courses/6-006-introduction-to-algorithms-spring-2020/pages/lecture-notes/",
-          "https://ocw.mit.edu/courses/6-006-introduction-to-algorithms-spring-2020/pages/calendar/"
-        ]
-      },
-      {
-        "id": "ca000000-0000-4000-8000-000000000008",
-        "title": "6.006 L2 — Data Structures (arrays, linked lists, dynamic arrays) + CS61B Lists/ADTs depth",
-        "sourceUrls": [
-          "https://ocw.mit.edu/courses/6-006-introduction-to-algorithms-spring-2020/pages/lecture-notes/",
-          "https://cs61b-2.gitbook.io/cs61b-textbook/3.-references-recursion-and-lists",
-          "https://cs61b-2.gitbook.io/cs61b-textbook/4.-sllists"
-        ]
-      },
-      {
-        "id": "ca000000-0000-4000-8000-000000000009",
-        "title": "6.006 L4 — Hashing (hash functions, chaining, the comparison/decision-tree model) + CS61B Hashing I/II",
-        "sourceUrls": [
-          "https://ocw.mit.edu/courses/6-006-introduction-to-algorithms-spring-2020/resources/lecture-4-hashing/",
-          "https://cs61b-2.gitbook.io/cs61b-textbook/19.-hashing-i",
-          "https://cs61b-2.gitbook.io/cs61b-textbook/20.-hashing-ii"
-        ]
-      },
-      {
-        "id": "ca000000-0000-4000-8000-000000000010",
-        "title": "6.006 L3 + L5 — Sorting & Linear Sorting (merge/insertion sort, counting/radix) + CS61B Sorting suite",
-        "sourceUrls": [
-          "https://ocw.mit.edu/courses/6-006-introduction-to-algorithms-spring-2020/pages/lecture-notes/",
-          "https://cs61b-2.gitbook.io/cs61b-textbook/29.-basic-sorts",
-          "https://cs61b-2.gitbook.io/cs61b-textbook/32.-more-quick-sort-sorting-summary"
-        ]
-      },
-      {
-        "id": "ca000000-0000-4000-8000-000000000011",
-        "title": "6.006 L6 — Binary Trees Part 1 (BST invariant, traversal, set/sequence ops) + CS61B BSTs",
-        "sourceUrls": [
-          "https://ocw.mit.edu/courses/6-006-introduction-to-algorithms-spring-2020/pages/lecture-notes/",
-          "https://cs61b-2.gitbook.io/cs61b-textbook/16.-adts-and-bsts"
-        ]
-      },
-      {
-        "id": "ca000000-0000-4000-8000-000000000012",
-        "title": "6.006 L7 — Binary Trees Part 2: AVL (balanced search trees) + CS61B B-trees & Red-Black trees",
-        "sourceUrls": [
-          "https://ocw.mit.edu/courses/6-006-introduction-to-algorithms-spring-2020/resources/lecture-7-binary-trees-part-2-avl/",
-          "https://cs61b-2.gitbook.io/cs61b-textbook/17.-b-trees",
-          "https://cs61b-2.gitbook.io/cs61b-textbook/18.-red-black-trees"
+          "https://ocw.mit.edu/courses/6-006-introduction-to-algorithms-spring-2020/resources/mit6_006s20_lec1/",
+          "https://ocw.mit.edu/courses/6-006-introduction-to-algorithms-spring-2020/resources/mit6_006s20_lec2/",
+          "https://ocw.mit.edu/courses/6-006-introduction-to-algorithms-spring-2020/pages/lecture-notes/"
         ],
-        "videoUrls": [
-          "https://www.youtube.com/watch?v=U1JYwHcFfso",
-          "https://archive.org/download/MIT6.006S20/MIT6_006S20_02_27_Lecture_7_300k.mp4"
-        ],
-        "gate": {
-          "question": "Suppose a colleague proposes dropping AVL's height-balance invariant and instead rebalancing a BST only when its height exceeds 3*log2(n), claiming this is 'good enough' and saves rotations. Justify from first principles whether this scheme still guarantees O(log n) worst-case search, and identify exactly which property of the AVL invariant their relaxed rule would and would not preserve — do not appeal to 'AVL is the standard' or recognition of a named algorithm; argue from the height recurrence and the cost of rebalancing.",
-          "rubric": [
-            "Must DERIVE why an AVL tree's height is O(log n) from the height-balance invariant (|height(left) - height(right)| <= 1 at every node), not merely assert it: set up the recurrence N(h) = 1 + N(h-1) + N(h-2) for the minimum number of nodes in a height-h AVL tree, show it is bounded below by Fibonacci growth (N(h) >= F(h+...)) and therefore h = O(log n). Reference: CLRS treatment of balanced-tree height bounds (do not quote CLRS text).",
-            "Must explain WHY a single rotation restores the invariant after an insertion/deletion in the left-left (or right-right) case but FAILS in the left-right (or right-left) case, requiring a double rotation — argued from how each rotation changes subtree heights, not from a memorized case table.",
-            "Must justify that rebalancing costs O(log n) per operation because at most O(height) ancestors can become unbalanced and each rotation is O(1) — connecting the rotation count to the path length back to the root, rather than stating 'rotations are cheap'.",
-            "Must show rotations preserve the BST in-order ordering invariant (the reason a rotation is a legal transformation at all), e.g. by demonstrating the in-order traversal is unchanged before and after rotation.",
-            "Must contrast AVL with at least one alternative balanced scheme (red-black / 2-3 / B-tree, per CS61B) and state the concrete tradeoff (AVL's tighter height bound and more rotations on update vs red-black's looser balance and fewer rotations), reasoning from the invariants of each rather than reciting 'red-black is faster'."
-          ]
+        "mission": {
+          "assignment": "Trabaja 6.006 Lecture 1-2 (modelo de cómputo, notación asintótica) y el aparato de CLRS cap. 2-3 (la vara del rigor). El objetivo NO es 'qué es Big-O' sino el ARGUMENTO: invariante de lazo (inicialización/mantenimiento/terminación) y demostrar una cota superior/inferior formalmente, no 'es más rápido'.",
+          "deliverable": "Elige un algoritmo simple (insertion sort o búsqueda binaria) y entrega: (1) su invariante de lazo y la prueba de correctitud por inducción, (2) la demostración formal de su cota Θ (no solo el resultado: el argumento de por qué). Apóyate en CLRS para el formalismo."
         }
       },
       {
-        "id": "ca000000-0000-4000-8000-000000000013",
-        "title": "6.006 L8 — Binary Heaps & Priority Queues (heapsort, heapify) + CS61B Heaps and Priority Queues",
+        "id": "ca000000-0000-4000-8000-000000000003",
+        "title": "C2 · Estructuras lineales — arrays dinámicos, listas, pilas, colas, deques; amortización · MISIÓN",
         "sourceUrls": [
-          "https://ocw.mit.edu/courses/6-006-introduction-to-algorithms-spring-2020/pages/lecture-notes/",
-          "https://cs61b-2.gitbook.io/cs61b-textbook/21.-heaps-and-priority-queues"
-        ]
+          "https://ocw.mit.edu/courses/6-006-introduction-to-algorithms-spring-2020/resources/mit6_006s20_lec2/",
+          "https://cs61b-2.gitbook.io/cs61b-textbook/3.-references-recursion-and-lists",
+          "https://cs61b-2.gitbook.io/cs61b-textbook/4.-sllists"
+        ],
+        "mission": {
+          "assignment": "Trabaja CS61B (listas, ADTs) + 6.006 L2 (arrays dinámicos). Construye desde cero, no uses la librería: una lista enlazada y un array dinámico (con duplicado de capacidad). Entiende la AMORTIZACIÓN: por qué el append es O(1) amortizado aunque el resize sea O(n).",
+          "deliverable": "Implementa un array dinámico desde cero y entrega: el código + la prueba del análisis amortizado (argumento del agregado o del potencial) de por qué N appends cuestan O(N) total. Cubre los edge cases: vacío, un elemento, el resize exacto en la frontera de capacidad."
+        }
       },
       {
-        "id": "ca000000-0000-4000-8000-000000000014",
-        "title": "6.006 L9–L10 — Graph Search: BFS & DFS (reachability, topological sort) + CS61B Graph Traversals",
+        "id": "ca000000-0000-4000-8000-000000000004",
+        "title": "C3 · Hashing — tablas hash, colisiones, costo amortizado, cuándo degrada · MISIÓN",
         "sourceUrls": [
-          "https://ocw.mit.edu/courses/6-006-introduction-to-algorithms-spring-2020/pages/lecture-notes/",
+          "https://ocw.mit.edu/courses/6-006-introduction-to-algorithms-spring-2020/resources/mit6_006s20_lec4/",
+          "https://cs61b-2.gitbook.io/cs61b-textbook/19.-hashing-i",
+          "https://cs61b-2.gitbook.io/cs61b-textbook/20.-hashing-ii"
+        ],
+        "mission": {
+          "assignment": "Trabaja 6.006 L4 (hashing, encadenamiento, el modelo de árbol de decisión) + CS61B Hashing I/II + CLRS cap. 11. Implementa una tabla hash con encadenamiento desde cero. Entiende POR QUÉ es O(1) esperado bajo hashing uniforme simple (SUHA) y EXACTAMENTE cuándo degenera a O(n).",
+          "deliverable": "Tu tabla hash con encadenamiento + la justificación: por qué el costo esperado de búsqueda es O(1+α) (factor de carga), el argumento del valor esperado, y un caso concreto donde degenera a O(n) (todas las llaves colisionan / función hash adversarial). Edge cases: tabla vacía, colisión, rehash."
+        }
+      },
+      {
+        "id": "ca000000-0000-4000-8000-000000000005",
+        "title": "C4 · Árboles de búsqueda balanceados — BST, AVL, rotaciones; derivar O(log n) · MISIÓN",
+        "sourceUrls": [
+          "https://ocw.mit.edu/courses/6-006-introduction-to-algorithms-spring-2020/resources/mit6_006s20_lec6/",
+          "https://ocw.mit.edu/courses/6-006-introduction-to-algorithms-spring-2020/resources/mit6_006s20_lec7/",
+          "https://cs61b-2.gitbook.io/cs61b-textbook/16.-adts-and-bsts",
+          "https://cs61b-2.gitbook.io/cs61b-textbook/17.-b-trees",
+          "https://cs61b-2.gitbook.io/cs61b-textbook/18.-red-black-trees"
+        ],
+        "mission": {
+          "assignment": "Trabaja 6.006 L6-L7 (BST, invariante; AVL, rotaciones) + CS61B (B-trees, red-black) + CLRS como vara. El corazón: DERIVAR que la altura de un AVL es O(log n) desde la recurrencia del número MÍNIMO de nodos N(h)=1+N(h-1)+N(h-2) (crecimiento tipo Fibonacci), no asumirlo. Entiende cuándo basta una rotación simple y cuándo se necesita doble (left-right).",
+          "deliverable": "Entrega la DERIVACIÓN de primer principio de la altura O(log n) del AVL: plantea N(h)=1+N(h-1)+N(h-2), muestra la cota inferior tipo Fibonacci y concluye h=O(log n). Además: por qué una rotación simple restaura la invariante en el caso left-left pero FALLA en left-right (requiere doble), y por qué una rotación preserva el orden in-order del BST. Prepárate para defenderlo contra una entrada degenerada (10M inserciones ordenadas)."
+        }
+      },
+      {
+        "id": "ca000000-0000-4000-8000-000000000006",
+        "title": "C5 · Heaps y colas de prioridad — heapify, heapsort, costo · MISIÓN",
+        "sourceUrls": [
+          "https://ocw.mit.edu/courses/6-006-introduction-to-algorithms-spring-2020/resources/mit6_006s20_lec8/",
+          "https://cs61b-2.gitbook.io/cs61b-textbook/21.-heaps-and-priority-queues"
+        ],
+        "mission": {
+          "assignment": "Trabaja 6.006 L8 (heaps binarios, heapify, heapsort) + CS61B Heaps. Implementa un heap binario desde cero (sift-up/sift-down). El argumento clave: por qué build-heap es O(n) y NO O(n log n).",
+          "deliverable": "Tu heap binario + la demostración de por qué construir el heap desde abajo es O(n): la suma Σ h·(n/2^h) converge a O(n) (argumento de la suma de alturas), contrastado con insertar n veces que sí es O(n log n). Edge cases: heap vacío, un elemento, extracción del último."
+        }
+      },
+      {
+        "id": "ca000000-0000-4000-8000-000000000007",
+        "title": "C6 · Grafos I — representación, BFS/DFS, conectividad, orden topológico · MISIÓN",
+        "sourceUrls": [
+          "https://ocw.mit.edu/courses/6-006-introduction-to-algorithms-spring-2020/resources/mit6_006s20_lec9/",
+          "https://ocw.mit.edu/courses/6-006-introduction-to-algorithms-spring-2020/resources/mit6_006s20_lec10/",
           "https://cs61b-2.gitbook.io/cs61b-textbook/22.-tree-traversals-and-graphs",
           "https://cs61b-2.gitbook.io/cs61b-textbook/23.-graph-traversals-and-implementations"
-        ]
+        ],
+        "mission": {
+          "assignment": "Trabaja 6.006 L9-L10 (BFS, DFS) + CS61B Graph Traversals. Implementa BFS y DFS desde cero sobre lista de adyacencia. Entiende por qué ambos son O(V+E) y cómo DFS da el orden topológico de un DAG.",
+          "deliverable": "Tu BFS y DFS + el argumento de O(V+E) (cada vértice y arista se visita O(1) veces). Produce un orden topológico de un DAG vía DFS y JUSTIFICA su correctitud (por qué el orden inverso de finalización funciona). Edge cases: grafo vacío, desconectado, con ciclo (detección)."
+        }
       },
       {
-        "id": "ca000000-0000-4000-8000-000000000015",
-        "title": "6.006 L11–L14 — Shortest Paths (weighted, Bellman-Ford, Dijkstra, Johnson) + CS61B Shortest Paths & MST",
+        "id": "ca000000-0000-4000-8000-000000000008",
+        "title": "C7 · Grafos II — caminos mínimos (Dijkstra, Bellman-Ford), MST · MISIÓN",
         "sourceUrls": [
-          "https://ocw.mit.edu/courses/6-006-introduction-to-algorithms-spring-2020/pages/lecture-notes/",
+          "https://ocw.mit.edu/courses/6-006-introduction-to-algorithms-spring-2020/resources/mit6_006s20_lec11/",
+          "https://ocw.mit.edu/courses/6-006-introduction-to-algorithms-spring-2020/resources/mit6_006s20_lec12/",
+          "https://ocw.mit.edu/courses/6-006-introduction-to-algorithms-spring-2020/resources/mit6_006s20_lec13/",
           "https://cs61b-2.gitbook.io/cs61b-textbook/24.-shortest-paths",
           "https://cs61b-2.gitbook.io/cs61b-textbook/25.-minimum-spanning-trees"
-        ]
+        ],
+        "mission": {
+          "assignment": "Trabaja 6.006 L11-L13 (caminos mínimos: Bellman-Ford, Dijkstra) + CS61B (shortest paths, MST) + CLRS cap. 22-24. El corazón: POR QUÉ Dijkstra (greedy) falla con aristas negativas y cuándo se necesita Bellman-Ford; la propiedad del corte que justifica el MST greedy.",
+          "deliverable": "Entrega: (1) un contraejemplo concreto donde Dijkstra da un camino mínimo INCORRECTO con una arista negativa, y por qué su invariante greedy se rompe; (2) el argumento de la propiedad del corte (cut property) que prueba la correctitud de Prim/Kruskal para el MST."
+        }
       },
       {
-        "id": "ca000000-0000-4000-8000-000000000016",
-        "title": "6.006 L15–L18 — Dynamic Programming (subproblems, SRBOT, LCS/LIS, pseudopolynomial)",
+        "id": "ca000000-0000-4000-8000-000000000009",
+        "title": "C8 · Programación dinámica — subestructura óptima, memoización vs tabulación · MISIÓN",
         "sourceUrls": [
+          "https://ocw.mit.edu/courses/6-006-introduction-to-algorithms-spring-2020/resources/mit6_006s20_lec15/",
+          "https://ocw.mit.edu/courses/6-006-introduction-to-algorithms-spring-2020/resources/mit6_006s20_lec16/",
           "https://ocw.mit.edu/courses/6-006-introduction-to-algorithms-spring-2020/pages/lecture-notes/"
-        ]
+        ],
+        "mission": {
+          "assignment": "Trabaja 6.006 L15-L18 (DP: subproblemas, SRTBOT, memoización vs tabulación). Resuelve desde cero un problema DP (LCS, LIS o edit distance): identifica los SUBPROBLEMAS y la relación de recurrencia antes de codificar.",
+          "deliverable": "Tu solución DP + la justificación: cuál es el subproblema y por qué tiene subestructura óptima, la recurrencia, y el trade-off memoización (top-down) vs tabulación (bottom-up) en tiempo/espacio. Nombra el caveat pseudopolinomial si aplica (p. ej. knapsack)."
+        }
       },
       {
-        "id": "ca000000-0000-4000-8000-000000000017",
-        "title": "6.006 L19 — Complexity (P, NP, NP-completeness, reductions) + CS61B Complexity & P=NP",
+        "id": "ca000000-0000-4000-8000-000000000010",
+        "title": "IoT · TC1004B — implementación end-to-end (sensor→ESP32→MQTT→dashboard) · rama, se apoya en FrED",
         "sourceUrls": [
-          "https://ocw.mit.edu/courses/6-006-introduction-to-algorithms-spring-2020/pages/lecture-notes/",
-          "https://cs61b-2.gitbook.io/cs61b-textbook/39.-compression-complexity-p-np"
-        ]
-      },
-      {
-        "id": "ca000000-0000-4000-8000-000000000018",
-        "title": "CS50 Week 6–10 — Python, SQL, Web (HTML/CSS/JS, Flask) — applied capstone track",
-        "sourceUrls": [
-          "https://cs50.harvard.edu/x/weeks/6/",
-          "https://cs50.harvard.edu/x/weeks/7/",
-          "https://cs50.harvard.edu/x/weeks/8/",
-          "https://cs50.harvard.edu/x/weeks/9/",
-          "https://cs50.harvard.edu/x/weeks/10/"
-        ]
+          "https://docs.espressif.com/projects/esp-idf/en/latest/esp32/api-reference/protocols/mqtt.html"
+        ],
+        "branchFrom": "ca000000-0000-4000-8000-000000000005",
+        "references": [
+          "cb000000-0000-4000-8000-000000000001",
+          "cb000000-0000-4000-8000-000000000003",
+          "cb000000-0000-4000-8000-000000000005"
+        ],
+        "mission": {
+          "assignment": "TC1004B (Implementación de IoT). El FUNDAMENTO de datos — MQTT, sensores, pipelines — YA lo trabajas en FrED (S1 datos industriales, S3 pipelines, H1 embebidos): NO lo repetimos, esas celdas viven una sola vez (ver 'se apoya en'). Aquí construyes lo PROPIO de TC1004B: implementar el camino completo en hardware real, un sensor publicando por MQTT desde un ESP32 hasta un dashboard, con el cliente MQTT de ESP-IDF.",
+          "deliverable": "Un ESP32 leyendo un sensor real y publicando por MQTT (cliente esp-mqtt), + cómo ese flujo se conecta al pipeline que ya montaste en FrED S3. Entrega el código del publisher + el tópico/payload y qué harías para que el dashboard de FrED lo consuma. (Si no tienes hardware, simúlalo y dilo honestamente.)"
+        }
       }
     ]
   },

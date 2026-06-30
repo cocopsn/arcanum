@@ -18,8 +18,8 @@ describe("HomeView", () => {
     // hydration is async (useEffect → seed → project)
     await waitFor(() => expect(screen.getByText("ITC")).toBeInTheDocument());
 
-    // first ITC cell = the CS50 ramp (real extracted curriculum spine)
-    expect(screen.getByText(/CS50 Week 0/)).toBeInTheDocument();
+    // first ITC cell = the CS50 ramp node (real extracted curriculum spine)
+    expect(screen.getByText(/CS50 — rampa/)).toBeInTheDocument();
     // grade is DERIVED (0 XP → Scintilla), not hardcoded
     expect(screen.getByLabelText("Sello Scintilla")).toBeInTheDocument();
     expect(screen.getByText("SCINTILLA")).toBeInTheDocument();
