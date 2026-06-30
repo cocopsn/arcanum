@@ -2,30 +2,45 @@
 
 import { useState } from "react";
 import { useArcanum, useArcanumSync } from "@/app/providers";
+import { getSupabase } from "@/sync/client";
 
+// Cloud-backup sheet. There is NO manual Supabase login anymore (the password is a server secret):
+// ONE login — the env-gate — IS the identity. If sync didn't auto-heal on load, this is the manual
+// one-tap fallback: the server mints the session from the gate cookie and the client adopts it.
 export function AuthSheet({ open, onClose }: { open: boolean; onClose: () => void }) {
-  const { signIn, signUp, signOut, syncNow } = useArcanumSync();
+  const { signOut, syncNow } = useArcanumSync();
   const email = useArcanum((s) => s.authEmail);
   const pending = useArcanum((s) => s.pendingCount);
-  const [emailInput, setEmailInput] = useState("");
-  const [password, setPassword] = useState("");
   const [busy, setBusy] = useState(false);
-  const [msg, setMsg] = useState<{ kind: "error" | "info"; text: string } | null>(null);
+  const [msg, setMsg] = useState<string | null>(null);
 
   if (!open) return null;
 
-  async function submit(mode: "in" | "up") {
-    if (!emailInput.trim() || !password) return;
+  async function activate() {
     setBusy(true);
     setMsg(null);
-    const res =
-      mode === "in"
-        ? await signIn(emailInput.trim(), password)
-        : await signUp(emailInput.trim(), password);
-    setBusy(false);
-    if (res.error) setMsg({ kind: "error", text: res.error });
-    else if (res.info) setMsg({ kind: "info", text: res.info });
-    else onClose(); // session established → provider syncs on auth change
+    try {
+      const s = await fetch("/api/session", { cache: "no-store" }).then((r) => r.json());
+      if (!s?.configured) {
+        setMsg("El respaldo necesita el acceso configurado (ARCANUM_ACCESS_PASSWORD) en el servidor.");
+        return;
+      }
+      if (!s?.authed) {
+        setMsg("Primero entra con tu acceso (recarga la app).");
+        return;
+      }
+      const r = await fetch("/api/session/refresh", { method: "POST" }).then((res) => res.json());
+      if (r?.ok && r.supabase?.access_token && r.supabase?.refresh_token) {
+        await getSupabase().auth.setSession({ access_token: r.supabase.access_token, refresh_token: r.supabase.refresh_token });
+        onClose(); // onAuthChange in the provider sets authEmail + syncs
+      } else {
+        setMsg("El servidor no pudo activar el respaldo (falta SUPABASE_SERVICE_ROLE_KEY en Vercel).");
+      }
+    } catch {
+      setMsg("Sin conexión. Reintenta.");
+    } finally {
+      setBusy(false);
+    }
   }
 
   return (
@@ -74,47 +89,24 @@ export function AuthSheet({ open, onClose }: { open: boolean; onClose: () => voi
             <div>
               <h2 className="font-serif text-lg text-rank">Respaldar en la nube</h2>
               <p className="mt-1 text-sm text-text-muted">
-                Un solo titular. La app funciona 100% sin esto; entrar solo activa el
-                espejo cifrado para que tu log sobreviva a este dispositivo.
+                Un solo titular. La app funciona 100% sin esto; activarlo enciende el espejo cifrado
+                para que tu bitácora sobreviva a este dispositivo. No hay segunda contraseña — usa el
+                mismo acceso con el que entraste.
               </p>
             </div>
-            <input
-              type="email"
-              autoComplete="email"
-              placeholder="tu@correo.com"
-              value={emailInput}
-              onChange={(e) => setEmailInput(e.target.value)}
-              className="min-h-11 w-full rounded-[var(--r-sm)] border border-line bg-ink px-3 text-text placeholder:text-text-faint focus:border-rank focus:outline-none"
-            />
-            <input
-              type="password"
-              autoComplete="current-password"
-              placeholder="contraseña"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="min-h-11 w-full rounded-[var(--r-sm)] border border-line bg-ink px-3 text-text placeholder:text-text-faint focus:border-rank focus:outline-none"
-            />
             {msg && (
-              <p className={`text-sm ${msg.kind === "error" ? "text-amber" : "text-topic"}`}>
-                {msg.text}
+              <p className="text-sm text-amber" role="status" aria-live="polite">
+                {msg}
               </p>
             )}
-            <div className="flex flex-wrap gap-2">
-              <button
-                disabled={busy || !emailInput.trim() || !password}
-                onClick={() => submit("in")}
-                className="min-h-11 flex-1 rounded-[var(--r-sm)] border border-rank bg-rank-soft px-4 text-sm text-rank transition hover:brightness-125 disabled:opacity-40"
-              >
-                Entrar
-              </button>
-              <button
-                disabled={busy || !emailInput.trim() || !password}
-                onClick={() => submit("up")}
-                className="min-h-11 rounded-[var(--r-sm)] border border-line px-4 text-sm text-text-muted transition hover:text-text disabled:opacity-40"
-              >
-                Crear cuenta
-              </button>
-            </div>
+            <button
+              disabled={busy}
+              onClick={() => void activate()}
+              aria-busy={busy}
+              className="min-h-11 w-full rounded-[var(--r-sm)] border border-rank bg-rank-soft px-4 text-sm text-rank transition hover:brightness-125 disabled:opacity-40"
+            >
+              {busy ? "Activando…" : "Activar respaldo en la nube"}
+            </button>
             <button onClick={onClose} className="min-h-11 w-full text-xs uppercase tracking-[0.2em] text-text-faint transition hover:text-text-muted">
               Ahora no
             </button>

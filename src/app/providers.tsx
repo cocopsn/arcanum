@@ -17,18 +17,11 @@ import {
 } from "@/store/arcanum-store";
 import { createDb, type ArcanumDB } from "@/db/schema";
 import { getSupabase, makeSyncClient } from "@/sync/client";
-import { signIn, signUp, signOut, currentUser, onAuthChange } from "@/sync/auth";
-
-export interface AuthResult {
-  error?: string;
-  info?: string;
-}
+import { signOut, currentUser, onAuthChange } from "@/sync/auth";
 
 interface ArcanumContext {
   store: ArcanumStore;
   syncAvailable: boolean;
-  signIn: (email: string, password: string) => Promise<AuthResult>;
-  signUp: (email: string, password: string) => Promise<AuthResult>;
   signOut: () => Promise<void>;
   syncNow: () => void;
 }
@@ -69,9 +62,24 @@ export function ArcanumProvider({
 
     let unsub: (() => void) | undefined;
     if (sb) {
-      void currentUser(sb).then((user) => {
+      void currentUser(sb).then(async (user) => {
         if (user?.email) {
           void store.getState().setAuth(user.email).then(syncNow);
+          return;
+        }
+        // ONE login: past the env-gate but with no Supabase session yet (e.g. the gate login
+        // predated the service_role being set) → SELF-HEAL. Mint the session server-side from the
+        // gate cookie and adopt it; onAuthChange then sets authEmail + syncs. No password, no sheet.
+        // Stays local (honest) if the gate isn't configured or the service_role isn't set.
+        try {
+          const s = await fetch("/api/session", { cache: "no-store" }).then((r) => r.json());
+          if (!s?.authed) return;
+          const r = await fetch("/api/session/refresh", { method: "POST" }).then((r) => r.json());
+          if (r?.ok && r.supabase?.access_token && r.supabase?.refresh_token) {
+            await sb.auth.setSession({ access_token: r.supabase.access_token, refresh_token: r.supabase.refresh_token });
+          }
+        } catch {
+          /* offline / not configured → stays local, no error */
         }
       });
       unsub = onAuthChange(sb, (user) => {
@@ -103,20 +111,6 @@ export function ArcanumProvider({
     store,
     syncAvailable: sb !== null,
     syncNow,
-    signIn: async (email, password) => {
-      if (!sb) return { error: "Sync no disponible (sin configuración)." };
-      const { error } = await signIn(sb, email, password);
-      return error ? { error: error.message } : {};
-    },
-    signUp: async (email, password) => {
-      if (!sb) return { error: "Sync no disponible (sin configuración)." };
-      const { data, error } = await signUp(sb, email, password);
-      if (error) return { error: error.message };
-      if (!data.session) {
-        return { info: "Cuenta creada. Revisa tu correo para confirmar, luego entra." };
-      }
-      return {};
-    },
     signOut: async () => {
       if (sb) await signOut(sb);
     },
@@ -140,6 +134,6 @@ export function useArcanum<T>(selector: (s: ArcanumState) => T): T {
 }
 
 export function useArcanumSync() {
-  const { signIn, signUp, signOut, syncNow, syncAvailable } = useCtx();
-  return { signIn, signUp, signOut, syncNow, syncAvailable };
+  const { signOut, syncNow, syncAvailable } = useCtx();
+  return { signOut, syncNow, syncAvailable };
 }
