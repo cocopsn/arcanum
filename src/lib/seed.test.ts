@@ -53,9 +53,12 @@ describe("seed — the curricular spines (WHITE ROOM)", () => {
     const fred = SPINES.find((s) => s.goalTitle === "FrED Factory")!;
     expect(fred.cells).toHaveLength(8);
     expect(fred.cells.every((c) => c.mission)).toBe(true);
-    // traced spines (Competitiva) are NOT built to depth: no missions/gates yet
+  });
+
+  it("all three deep spines are built — every Competitiva cell is a heavy pattern mission", () => {
     const comp = SPINES.find((s) => s.goalTitle.startsWith("Competitiva"))!;
-    expect(comp.cells.every((c) => !c.mission && !c.gate)).toBe(true);
+    expect(comp.cells.length).toBeGreaterThanOrEqual(7);
+    expect(comp.cells.every((c) => c.mission && c.interrogationMode === "pattern")).toBe(true);
     expect(comp.cells.every((c) => c.sourceUrls.some((u) => u.startsWith("http")))).toBe(true);
   });
 

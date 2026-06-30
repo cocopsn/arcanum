@@ -169,6 +169,18 @@ export function TopicDetailSheet({
           </div>
         )}
 
+        {/* CONCEPTUAL SEE-ALSO — a separate cell of another nature (NOT a dedup; e.g. reflex-vs-depth). */}
+        {content && content.related.length > 0 && (
+          <div className="mt-4 rounded-[var(--r-sm)] border border-dashed border-line bg-surface p-3">
+            <h3 className="text-[10px] uppercase tracking-[0.2em] text-text-faint">Relacionado · otra naturaleza (celda aparte)</h3>
+            <ul className="mt-1 space-y-1">
+              {content.related.map((r) => (
+                <li key={r.id} className="text-[12px] leading-snug text-text-muted">· {r.title}</li>
+              ))}
+            </ul>
+          </div>
+        )}
+
         {/* DIRECTED MISSION (heavy cell) — assign → block → submit evidence → interrogation.
             Passing the interrogation unseals the next cell. Mutually exclusive with the gate. */}
         {content?.mission && (

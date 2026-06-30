@@ -26,6 +26,12 @@ export interface SpineCell {
   /** cross-spine NON-DUPLICATION: ids of cells in OTHER spines this cell builds on (shared
    *  foundation lives once in the log; this cell references it instead of recreating it). */
   references?: string[];
+  /** interrogation calibration: 'pattern' = competitive (ICPC) pattern-recognition + efficiency
+   *  (the real judge is Codeforces/AtCoder); default/absent = first-principle (FrED/ITC). */
+  interrogationMode?: "pattern";
+  /** conceptual SEE-ALSO across spines (a genuinely SEPARATE cell of another nature, NOT a
+   *  dedup) — e.g. competitive graphs relates to ITC's graphs but is reflex-under-clock, not depth. */
+  related?: string[];
 }
 
 export interface Spine {
@@ -411,57 +417,122 @@ export const SPINES: Spine[] = [
     "cells": [
       {
         "id": "cd000000-0000-4000-8000-000000000001",
-        "title": "Fundamentos competitivos — complejidad, I/O rápido, el CP-Handbook",
+        "title": "CP1 · Two pointers / sliding window — el patrón de la ventana · MISIÓN (reloj)",
         "sourceUrls": [
-          "https://cses.fi/book/book.pdf",
-          "https://usaco.guide/general/resources-cp"
-        ]
+          "https://usaco.guide/silver/two-pointers",
+          "https://cses.fi/problemset/",
+          "https://cses.fi/book/book.pdf"
+        ],
+        "interrogationMode": "pattern",
+        "mission": {
+          "assignment": "Patrón: two pointers / sliding window. Lee la sección de USACO Guide, reconoce LA SEÑAL (subarreglo/par con una condición monótona) y resuelve 2-3 problemas representativos de la sección. El juez REAL es la plataforma (Codeforces/AtCoder/CSES), NO Arcanum: resuélvelo ALLÁ y trae tu VEREDICTO real (accepted/TLE/WA) + tu solución + el tiempo que tardaste.",
+          "deliverable": "Trae: el patrón y QUÉ señal del enunciado lo delató, tu veredicto real + tiempo, y por qué tu solución es O(n) y no O(n²) (por qué los punteros no retroceden). El interrogatorio NO pide primer principio: prueba si RECONOCISTE el patrón y entiendes la EFICIENCIA (un accepted copiado sin explicar el patrón NO pasa)."
+        }
       },
       {
         "id": "cd000000-0000-4000-8000-000000000002",
-        "title": "Two pointers & sliding window — reconocer el patrón",
+        "title": "CP2 · Binary search (incl. binary search on answer) — buscar en el espacio de respuestas · MISIÓN (reloj)",
         "sourceUrls": [
-          "https://usaco.guide/silver/two-pointers",
-          "https://cp-algorithms.com/"
-        ]
+          "https://usaco.guide/silver/binary-search",
+          "https://codeforces.com/problemset?tags=binary+search",
+          "https://cses.fi/book/book.pdf"
+        ],
+        "interrogationMode": "pattern",
+        "mission": {
+          "assignment": "Patrón: binary search — sobre arreglo ordenado Y 'binary search on answer' (buscar el mínimo/máximo factible cuando feasible(x) es monótona). Resuelve un problema de cada tipo en la plataforma. El juez REAL es la plataforma (Codeforces/AtCoder/CSES), NO Arcanum: resuélvelo ALLÁ y trae tu VEREDICTO real (accepted/TLE/WA) + tu solución + el tiempo que tardaste.",
+          "deliverable": "Trae: por qué el problema ERA binary-search-on-answer (qué predicado monótono feasible(x) lo permite) y no two pointers/greedy, tu veredicto + tiempo, y la complejidad O(n log(rango)) con el porqué del log. El interrogatorio NO pide primer principio: prueba si RECONOCISTE el patrón y entiendes la EFICIENCIA (un accepted copiado sin explicar el patrón NO pasa)."
+        }
       },
       {
         "id": "cd000000-0000-4000-8000-000000000003",
-        "title": "Binary search on the answer",
+        "title": "CP3 · Prefix sums / difference arrays — precomputar para responder en O(1) · MISIÓN (reloj)",
         "sourceUrls": [
-          "https://usaco.guide/silver/binary-search"
-        ]
+          "https://usaco.guide/silver/prefix-sums",
+          "https://usaco.guide/silver/more-prefix-sums",
+          "https://cses.fi/problemset/"
+        ],
+        "interrogationMode": "pattern",
+        "mission": {
+          "assignment": "Patrón: prefix sums y difference arrays (consultas de rango O(1) tras O(n) de precómputo; updates de rango con diferencias). Resuelve 2 problemas de la sección. El juez REAL es la plataforma (Codeforces/AtCoder/CSES), NO Arcanum: resuélvelo ALLÁ y trae tu VEREDICTO real (accepted/TLE/WA) + tu solución + el tiempo que tardaste.",
+          "deliverable": "Trae: qué señal pedía precómputo (muchas consultas de suma de rango), tu veredicto + tiempo, y por qué el difference array convierte un update de rango O(n) en O(1). El interrogatorio NO pide primer principio: prueba si RECONOCISTE el patrón y entiendes la EFICIENCIA (un accepted copiado sin explicar el patrón NO pasa)."
+        }
       },
       {
         "id": "cd000000-0000-4000-8000-000000000004",
-        "title": "DSU / Union-Find",
+        "title": "CP4 · Sorting + greedy — ordenar y tomar la decisión local correcta · MISIÓN (reloj)",
         "sourceUrls": [
-          "https://cp-algorithms.com/data_structures/disjoint_set_union.html",
-          "https://usaco.guide/gold/dsu"
-        ]
+          "https://usaco.guide/bronze/intro-sorting",
+          "https://usaco.guide/silver/sorting-custom",
+          "https://usaco.guide/bronze/intro-greedy",
+          "https://usaco.guide/silver/greedy-sorting"
+        ],
+        "interrogationMode": "pattern",
+        "mission": {
+          "assignment": "Patrón: ordenar (comparador custom) + greedy (exchange argument). Resuelve un problema greedy donde el orden correcto es la clave. El juez REAL es la plataforma (Codeforces/AtCoder/CSES), NO Arcanum: resuélvelo ALLÁ y trae tu VEREDICTO real (accepted/TLE/WA) + tu solución + el tiempo que tardaste.",
+          "deliverable": "Trae: por qué el greedy es ÓPTIMO aquí (el argumento de intercambio / por qué la elección local no se arrepiente), tu veredicto + tiempo, y un caso donde un greedy ingenuo FALLARÍA. El interrogatorio NO pide primer principio: prueba si RECONOCISTE el patrón y entiendes la EFICIENCIA (un accepted copiado sin explicar el patrón NO pasa)."
+        }
       },
       {
         "id": "cd000000-0000-4000-8000-000000000005",
-        "title": "Grafos competitivos — BFS/DFS, componentes, orden topológico",
+        "title": "CP5 · DSU (union-find) — componentes y conectividad casi-O(1) · MISIÓN (reloj)",
         "sourceUrls": [
-          "https://usaco.guide/silver/graph-traversal",
-          "https://cp-algorithms.com/graph/breadth-first-search.html"
-        ]
+          "https://usaco.guide/gold/dsu",
+          "https://cses.fi/problemset/",
+          "https://cses.fi/book/book.pdf"
+        ],
+        "interrogationMode": "pattern",
+        "mission": {
+          "assignment": "Patrón: DSU / union-find (con path compression + union by rank/size). Resuelve un problema de conectividad/componentes. El juez REAL es la plataforma (Codeforces/AtCoder/CSES), NO Arcanum: resuélvelo ALLÁ y trae tu VEREDICTO real (accepted/TLE/WA) + tu solución + el tiempo que tardaste.",
+          "deliverable": "Trae: qué señal del enunciado gritaba DSU (uniones + consultas '¿están conectados?'), tu veredicto + tiempo, y por qué con las dos optimizaciones el costo amortizado es casi constante (α inversa de Ackermann). El interrogatorio NO pide primer principio: prueba si RECONOCISTE el patrón y entiendes la EFICIENCIA (un accepted copiado sin explicar el patrón NO pasa)."
+        }
       },
       {
         "id": "cd000000-0000-4000-8000-000000000006",
-        "title": "Programación dinámica — patrones competitivos",
+        "title": "CP6 · Grafos competitivos — BFS/DFS/shortest-path APLICADOS bajo reloj · MISIÓN (reloj)",
         "sourceUrls": [
-          "https://usaco.guide/gold/intro-dp"
-        ]
+          "https://usaco.guide/silver/graph-traversal",
+          "https://usaco.guide/silver/dfs",
+          "https://cses.fi/problemset/"
+        ],
+        "interrogationMode": "pattern",
+        "related": [
+          "ca000000-0000-4000-8000-000000000007"
+        ],
+        "mission": {
+          "assignment": "Patrón: modelar el problema COMO un grafo y aplicar BFS/DFS/shortest-path. (Relacionado con ITC C6, pero OTRA naturaleza: aquí es reconocer-y-aplicar bajo reloj, no derivar la teoría.) Resuelve un problema donde lo difícil es VER el grafo. El juez REAL es la plataforma (Codeforces/AtCoder/CSES), NO Arcanum: resuélvelo ALLÁ y trae tu VEREDICTO real (accepted/TLE/WA) + tu solución + el tiempo que tardaste.",
+          "deliverable": "Trae: cómo modelaste el problema como grafo (qué son los nodos/aristas), por qué BFS vs DFS vs Dijkstra, tu veredicto + tiempo, y la complejidad O(V+E) o O(E log V). El interrogatorio NO pide primer principio: prueba si RECONOCISTE el patrón y entiendes la EFICIENCIA (un accepted copiado sin explicar el patrón NO pasa)."
+        }
       },
       {
         "id": "cd000000-0000-4000-8000-000000000007",
-        "title": "Sprints cronometrados — Codeforces problemset por rating",
+        "title": "CP7 · DP competitivo — reconocer el estado y la transición clásicos · MISIÓN (reloj)",
         "sourceUrls": [
-          "https://codeforces.com/problemset",
-          "https://atcoder.jp/"
-        ]
+          "https://usaco.guide/gold/intro-dp",
+          "https://cses.fi/book/book.pdf",
+          "https://cses.fi/problemset/"
+        ],
+        "interrogationMode": "pattern",
+        "related": [
+          "ca000000-0000-4000-8000-000000000009"
+        ],
+        "mission": {
+          "assignment": "Patrón: DP competitiva (knapsack, LIS, DP en grids, bitmask). (Relacionado con ITC C8, pero OTRA naturaleza: reconocer el PATRÓN de estado/transición rápido, no derivar la teoría.) Resuelve un problema DP clásico. El juez REAL es la plataforma (Codeforces/AtCoder/CSES), NO Arcanum: resuélvelo ALLÁ y trae tu VEREDICTO real (accepted/TLE/WA) + tu solución + el tiempo que tardaste.",
+          "deliverable": "Trae: cuál era el ESTADO y la TRANSICIÓN (la recurrencia), qué señal del enunciado lo delató como DP, tu veredicto + tiempo, y la complejidad (estados × transición). El interrogatorio NO pide primer principio: prueba si RECONOCISTE el patrón y entiendes la EFICIENCIA (un accepted copiado sin explicar el patrón NO pasa)."
+        }
+      },
+      {
+        "id": "cd000000-0000-4000-8000-000000000008",
+        "title": "CP8 · Segment tree / sweep line — la cima (estructuras de rango) · MISIÓN (reloj)",
+        "sourceUrls": [
+          "https://usaco.guide/gold/PURS",
+          "https://usaco.guide/plat/sweep-line",
+          "https://cses.fi/book/book.pdf"
+        ],
+        "interrogationMode": "pattern",
+        "mission": {
+          "assignment": "Patrón cima: segment tree (point update / range query) y sweep line. Resuelve un problema que necesite consultas/updates de rango en O(log n). El juez REAL es la plataforma (Codeforces/AtCoder/CSES), NO Arcanum: resuélvelo ALLÁ y trae tu VEREDICTO real (accepted/TLE/WA) + tu solución + el tiempo que tardaste.",
+          "deliverable": "Trae: por qué un prefix sum NO bastaba (updates + queries intercalados), tu veredicto + tiempo, y por qué el segment tree da O(log n) por operación. El interrogatorio NO pide primer principio: prueba si RECONOCISTE el patrón y entiendes la EFICIENCIA (un accepted copiado sin explicar el patrón NO pasa)."
+        }
       }
     ]
   }

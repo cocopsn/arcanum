@@ -24,6 +24,8 @@ export interface InterrogationContext {
   sourceRefs: string[];
   /** the learner's submitted evidence (their own notes + reflections) */
   notes: string;
+  /** interrogation calibration: 'pattern' (competitive ICPC) vs first-principle (absent) */
+  mode?: "pattern";
 }
 
 export interface InterrogationVerdict {
@@ -61,6 +63,7 @@ export function buildInterrogationContext(
     deliverable: mission.deliverable,
     sourceRefs: cell?.sourceUrls ?? [],
     notes: notes.trim(),
+    ...(cell?.interrogationMode ? { mode: cell.interrogationMode } : {}),
   };
 }
 

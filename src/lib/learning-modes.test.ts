@@ -11,7 +11,8 @@ const rm = project(SEED_EVENTS);
 const vm = present(rm, NOW);
 const fred = SPINES.find((s) => s.goalTitle === "FrED Factory")!;
 const s2 = fred.cells.find((c) => c.title.startsWith("S2"))!; // heavy mission cell
-const comp = SPINES.find((s) => s.goalTitle.startsWith("Competitiva"))!.cells[0]!; // traced, no mission
+// the ITC CS50 ramp is a plain (non-mission) cell with a real source — light/review, not heavy
+const ramp = SPINES.find((s) => s.goalTitle === "ITC")!.cells[0]!;
 
 describe("modesFor — nature-by-duration (always something to do)", () => {
   it("a mission cell offers heavy + light; review mirrors the global decay queue", () => {
@@ -22,8 +23,8 @@ describe("modesFor — nature-by-duration (always something to do)", () => {
     expect(modes.review).toBe(vm.reviewQueue.length);
   });
 
-  it("a traced (non-mission) cell offers light but NOT heavy — still never an empty screen", () => {
-    const m = rm.modules.find((x) => x.id === comp.id)!;
+  it("a plain (non-mission) cell offers light but NOT heavy — still never an empty screen", () => {
+    const m = rm.modules.find((x) => x.id === ramp.id)!;
     const modes = modesFor(m, vm);
     expect(modes.heavy).toBe(false);
     expect(modes.light).toBe(true); // it has a real source → a light lesson can be generated

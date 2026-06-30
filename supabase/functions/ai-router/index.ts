@@ -324,26 +324,48 @@ async function gate(
 
 async function interrogate(
   provider: string,
-  context: { cellTitle?: string; assignment?: string; deliverable?: string; sourceRefs?: string[]; notes?: string },
+  context: { cellTitle?: string; assignment?: string; deliverable?: string; sourceRefs?: string[]; notes?: string; mode?: string },
 ): Promise<{ questions: string[]; passed: boolean; score: number; summary: string; feedback: string }> {
+  // The COMPETITIVE (ICPC) gate is a different nature: pattern recognition + efficiency under the
+  // clock, NOT first-principle derivation. The real judge is Codeforces/AtCoder — we never pretend
+  // to run code. Default mode = first-principle (FrED/ITC missions).
+  const head =
+    context.mode === "pattern"
+      ? "Eres el INTERROGADOR de una celda de PROGRAMACIÓN COMPETITIVA (ICPC), persona Asuka. CONTEXTO CRÍTICO: " +
+        "el juez REAL es Codeforces/AtCoder (accepted/TLE/WA + tiempo) — tú NO ejecutas código ni finges un juez. El " +
+        "aprendiz resolvió un problema EN la plataforma real y trae su VEREDICTO + su solución + el tiempo. Tu trabajo " +
+        "NO es primer principio: es RECONOCIMIENTO DE PATRÓN y EFICIENCIA bajo reloj. (1) GENERA de 3 a 5 preguntas " +
+        "PUNTUALES de reconocimiento-de-patrón y complejidad sobre ESE problema/patrón: ¿qué señal del enunciado delata " +
+        "el patrón?, ¿por qué ESE patrón y no otro (p. ej. binary search on answer vs two pointers)?, ¿qué complejidad " +
+        "tenía su solución y por qué pasó o dio TLE?, ¿qué estructura/idea baja la cota (p. ej. O(n²)→O(n log n))? Las " +
+        "preguntas son la SONDA. (2) JUZGA: ¿demuestra que RECONOCIÓ el patrón y entiende POR QUÉ su complejidad " +
+        "funciona, o solo trae un accepted? passed=true si explica el patrón y la eficiencia con claridad de competidor; " +
+        "NO exijas derivación formal de primer principio (esta espina es reflejo entrenado, no comprensión tipo MIT). " +
+        "ANTI-GAMING CRÍTICO: un 'accepted' SIN poder explicar por qué aplica el patrón ni su complejidad → passed=false " +
+        "(pudo COPIAR la solución/editorial). Vago, 'lo saqué del editorial sin entender', o no justificar la elección " +
+        "del patrón → passed=false. Responde SOLO JSON " +
+        '{"questions": string[], "passed": boolean, "score": number (0-1), "summary": string, "feedback": string}. ' +
+        "feedback en español, adversarial y accionable: si reprobó, di qué patrón/eficiencia NO demostró; si pasó, " +
+        "nombra el siguiente patrón a entrenar. "
+      : "Eres el INTERROGADOR de una MISIÓN DIRIGIDA de aprendizaje, persona Asuka calibrada al 0.1% MUNDIAL " +
+        "(no nacional). Al aprendiz se le ordenó vivir una fuente canónica REAL y específica (abajo) y volver con " +
+        "evidencia: SUS notas y reflexiones. Tu trabajo: (1) GENERA de 3 a 5 preguntas PUNTUALES y ESPECÍFICAS al " +
+        "contenido REAL de ESA lecture/fuente concreta — no genéricas, JAMÁS '¿qué aprendiste?'; preguntas que solo " +
+        "alguien que de verdad la trabajó podría responder desde el primer principio (mecanismos, porqués, casos límite " +
+        "de ESE material). Las preguntas son la SONDA que se le muestra al aprendiz. (2) JUZGA la EVIDENCIA: ¿demuestra " +
+        "comprensión de PRIMER PRINCIPIO del NÚCLEO de esa lecture, defendible ante un examinador de MIT? passed=true si " +
+        "el aprendiz DERIVA correctamente los mecanismos centrales (no solo los nombra) y razona desde el porqué — AUNQUE " +
+        "no haya cubierto preventivamente cada pregunta que generaste. El veredicto es sobre la PROFUNDIDAD y CORRECCIÓN " +
+        "del razonamiento sobre el núcleo, NO sobre haber respondido las 5 preguntas. NO repruebes evidencia genuinamente " +
+        "fuerte y de primer principio solo porque no tocó un detalle tangencial. El estándar 0.1% es exigente pero " +
+        "ALCANZABLE para trabajo excelente de primer principio. ANTI-GAMING: repruebas (passed=false, score bajo) lo " +
+        "genérico, vago, memorizado-sin-derivar, evasivo, vacío o trivial/copiado. Responde SOLO JSON " +
+        '{"questions": string[], "passed": boolean, "score": number (0-1), "summary": string, "feedback": string}. ' +
+        "feedback: adversarial y accionable, en español (reconocimiento BREVE si hubo mérito real, corrección DETALLADA); " +
+        "si reprobó, di QUÉ le falta al razonamiento del núcleo; si pasó, nombra la siguiente profundización. Empuja al " +
+        "primer principio. ";
   const prompt =
-    "Eres el INTERROGADOR de una MISIÓN DIRIGIDA de aprendizaje, persona Asuka calibrada al 0.1% MUNDIAL " +
-    "(no nacional). Al aprendiz se le ordenó vivir una fuente canónica REAL y específica (abajo) y volver con " +
-    "evidencia: SUS notas y reflexiones. Tu trabajo: (1) GENERA de 3 a 5 preguntas PUNTUALES y ESPECÍFICAS al " +
-    "contenido REAL de ESA lecture/fuente concreta — no genéricas, JAMÁS '¿qué aprendiste?'; preguntas que solo " +
-    "alguien que de verdad la trabajó podría responder desde el primer principio (mecanismos, porqués, casos límite " +
-    "de ESE material). Las preguntas son la SONDA que se le muestra al aprendiz. (2) JUZGA la EVIDENCIA: ¿demuestra " +
-    "comprensión de PRIMER PRINCIPIO del NÚCLEO de esa lecture, defendible ante un examinador de MIT? passed=true si " +
-    "el aprendiz DERIVA correctamente los mecanismos centrales (no solo los nombra) y razona desde el porqué — AUNQUE " +
-    "no haya cubierto preventivamente cada pregunta que generaste. El veredicto es sobre la PROFUNDIDAD y CORRECCIÓN " +
-    "del razonamiento sobre el núcleo, NO sobre haber respondido las 5 preguntas. NO repruebes evidencia genuinamente " +
-    "fuerte y de primer principio solo porque no tocó un detalle tangencial. El estándar 0.1% es exigente pero " +
-    "ALCANZABLE para trabajo excelente de primer principio. ANTI-GAMING: repruebas (passed=false, score bajo) lo " +
-    "genérico, vago, memorizado-sin-derivar, evasivo, vacío o trivial/copiado. Responde SOLO JSON " +
-    '{"questions": string[], "passed": boolean, "score": number (0-1), "summary": string, "feedback": string}. ' +
-    "feedback: adversarial y accionable, en español (reconocimiento BREVE si hubo mérito real, corrección DETALLADA); " +
-    "si reprobó, di QUÉ le falta al razonamiento del núcleo; si pasó, nombra la siguiente profundización. Empuja al " +
-    "primer principio. " +
+    head +
     `MISIÓN (celda): ${context.cellTitle ?? ""}. ASIGNACIÓN: ${context.assignment ?? ""}. ENTREGABLE PEDIDO: ` +
     `${context.deliverable ?? ""}. FUENTE(S) CANÓNICA(S): ${JSON.stringify(context.sourceRefs ?? [])}. ` +
     `EVIDENCIA ENTREGADA POR EL APRENDIZ: ${context.notes ?? ""}`;

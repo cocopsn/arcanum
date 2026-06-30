@@ -44,6 +44,9 @@ export interface TopicContent {
   mission: TopicMission | null;
   /** cross-spine foundation this cell builds on (lives once elsewhere — non-duplication) */
   references: { id: string; title: string }[];
+  /** conceptual see-also: a SEPARATE cell of another nature (not a dedup) — e.g. competitive
+   *  graphs relates to ITC's graphs but is reflex-under-clock, not first-principle depth */
+  related: { id: string; title: string }[];
 }
 
 function videoLabel(url: string): string {
@@ -66,6 +69,12 @@ export function contentForModule(moduleId: string): TopicContent | null {
     gate: cell.gate ?? null,
     mission: cell.mission ?? null,
     references: (cell.references ?? [])
+      .map((id) => {
+        const ref = cellById(id);
+        return ref ? { id, title: ref.title } : null;
+      })
+      .filter((r): r is { id: string; title: string } => r !== null),
+    related: (cell.related ?? [])
       .map((id) => {
         const ref = cellById(id);
         return ref ? { id, title: ref.title } : null;
