@@ -1,9 +1,10 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useArcanum } from "@/app/providers";
 import { useActions } from "@/ui/use-actions";
 import { readableAccent } from "@/lib/accent";
+import { audio } from "@/lib/audio";
 import type { TopicGate } from "@/lib/subject-content";
 
 export function ExitGate({ moduleId, gate, accent }: { moduleId: string; gate: TopicGate; accent: string }) {
@@ -13,6 +14,13 @@ export function ExitGate({ moduleId, gate, accent }: { moduleId: string; gate: T
   const [justification, setJustification] = useState("");
   const [busy, setBusy] = useState(false);
   const submitting = useRef(false);
+
+  const lastTs = useRef<number | null>(null);
+  useEffect(() => {
+    if (!verdict) return;
+    if (lastTs.current !== null && verdict.ts !== lastTs.current) audio.sfx(verdict.passed ? "gate" : "error");
+    lastTs.current = verdict.ts;
+  }, [verdict?.ts, verdict?.passed, verdict]);
 
   async function submit() {
     // synchronous guard against a rapid double-tap firing two gate.evaluated events

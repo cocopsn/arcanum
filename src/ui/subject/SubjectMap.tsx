@@ -6,6 +6,7 @@ import { orderTopics } from "@/lib/subject-path";
 import { nodeStatus, type NodeStatus } from "@/core/roadmap";
 import { themeForGoal, worldVars, type MotifId } from "@/lib/subject-themes";
 import { readableAccent } from "@/lib/accent";
+import { audio } from "@/lib/audio";
 import { TopicDetailSheet } from "@/ui/subject/TopicDetailSheet";
 import type { ModuleRM } from "@/core/read-model";
 
@@ -180,6 +181,12 @@ export function SubjectMap({ goalId, onClose }: { goalId: string; onClose: () =>
   const accent = theme.accent;
   const metal = theme.accent2;
 
+  // the realm's ambient drone follows the open world (silent unless the user enables music)
+  useEffect(() => {
+    audio.setWorld(theme.slug);
+    return () => audio.setWorld(null);
+  }, [theme.slug]);
+
   const topics = useMemo(() => {
     const mods = readModel.modules.filter((m) => m.goalId === goalId);
     return orderTopics(mods, readModel.edges);
@@ -220,7 +227,11 @@ export function SubjectMap({ goalId, onClose }: { goalId: string; onClose: () =>
               retr={retrOf.get(t.id) ?? 0}
               accent={accent}
               metal={metal}
-              onOpen={() => setDetailId(t.id)}
+              onOpen={() => {
+                audio.unlock();
+                audio.sfx("click");
+                setDetailId(t.id);
+              }}
             />
           ))}
         </div>
@@ -247,7 +258,7 @@ export function SubjectMap({ goalId, onClose }: { goalId: string; onClose: () =>
         </span>
       </header>
 
-      {detailId && <TopicDetailSheet moduleId={detailId} accent={accent} onClose={() => setDetailId(null)} />}
+      {detailId && <TopicDetailSheet key={detailId} moduleId={detailId} accent={accent} onClose={() => setDetailId(null)} />}
     </div>
   );
 }

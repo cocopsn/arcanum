@@ -19,8 +19,10 @@ import { RoadmapCanvas } from "@/ui/roadmap/RoadmapCanvas";
 import { SubjectMap } from "@/ui/subject/SubjectMap";
 import { AgendaSheet } from "@/ui/AgendaSheet";
 import { InstallCoachMark } from "@/ui/InstallCoachMark";
+import { AudioConfig } from "@/ui/AudioConfig";
 import { themeForGoal, worldVars } from "@/lib/subject-themes";
 import { readableAccent } from "@/lib/accent";
+import { audio } from "@/lib/audio";
 import { isMastered, nodeStatus } from "@/core/roadmap";
 import type { ReadModel, Stats } from "@/core/read-model";
 import type { ViewModel } from "@/core/present";
@@ -40,6 +42,7 @@ export function HomeView() {
   const [vigiliaOpen, setVigiliaOpen] = useState(false);
   const [mapOpen, setMapOpen] = useState(false);
   const [agendaOpen, setAgendaOpen] = useState(false);
+  const [audioOpen, setAudioOpen] = useState(false);
   const [subjectGoal, setSubjectGoal] = useState<string | null>(null);
 
   if (status === "loading") {
@@ -65,7 +68,13 @@ export function HomeView() {
 
         <Hero stats={readModel.stats} viewModel={viewModel} />
         <RitoDelDia pending={viewModel.ritoPending} />
-        <WorldPortals readModel={readModel} onOpen={(goalId) => setSubjectGoal(goalId)} />
+        <WorldPortals
+          readModel={readModel}
+          onOpen={(goalId) => {
+            audio.unlock();
+            setSubjectGoal(goalId);
+          }}
+        />
         <InstallCoachMark />
         <Footer
           onMapa={() => setMapOpen(true)}
@@ -73,11 +82,13 @@ export function HomeView() {
           onCodice={() => setCodiceOpen(true)}
           onNotes={() => setNotes({ open: true, moduleId: null })}
           onVigilia={() => setVigiliaOpen(true)}
+          onAudio={() => setAudioOpen(true)}
         />
       </main>
 
       <RoadmapCanvas open={mapOpen} onClose={() => setMapOpen(false)} />
       <AgendaSheet open={agendaOpen} onClose={() => setAgendaOpen(false)} />
+      <AudioConfig open={audioOpen} onClose={() => setAudioOpen(false)} />
       {subjectGoal && <SubjectMap goalId={subjectGoal} onClose={() => setSubjectGoal(null)} />}
 
       <AuthSheet open={authOpen} onClose={() => setAuthOpen(false)} />
@@ -202,12 +213,14 @@ function Footer({
   onCodice,
   onNotes,
   onVigilia,
+  onAudio,
 }: {
   onMapa: () => void;
   onAgenda: () => void;
   onCodice: () => void;
   onNotes: () => void;
   onVigilia: () => void;
+  onAudio: () => void;
 }) {
   const { rebuild } = useActions();
   const item = "min-h-11 text-[11px] uppercase tracking-[0.2em] text-text-faint transition";
@@ -234,12 +247,32 @@ function Footer({
         Vigilia
       </button>
       {sep}
+      <button onClick={onAudio} className={`${item} hover:text-rank`}>
+        Audio
+      </button>
+      {sep}
       <button onClick={onCodice} className={`${item} hover:text-rank`}>
         Códice
       </button>
       {sep}
       <button onClick={() => void rebuild()} className={`${item} hover:text-text-muted`}>
         Reconstruir índice
+      </button>
+      {sep}
+      <button
+        onClick={() => {
+          // tear down BOTH session halves coherently: the httpOnly cookie + the offline flag
+          void fetch("/api/logout", { method: "POST" }).catch(() => {});
+          try {
+            localStorage.removeItem("arcanum_authed");
+          } catch {
+            /* private mode */
+          }
+          window.location.reload();
+        }}
+        className={`${item} hover:text-amber`}
+      >
+        Salir
       </button>
     </div>
   );

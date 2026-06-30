@@ -1,9 +1,10 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useArcanum } from "@/app/providers";
 import { useActions } from "@/ui/use-actions";
 import { readableAccent } from "@/lib/accent";
+import { audio } from "@/lib/audio";
 import type { TopicMission } from "@/lib/subject-content";
 
 // The DIRECTED MISSION panel (heavy cell). It gives the ORDER (assignment anchored to the
@@ -33,6 +34,14 @@ export function MissionPanel({
   const [notes, setNotes] = useState("");
   const [busy, setBusy] = useState(false);
   const submitting = useRef(false);
+
+  // a fresh verdict rings the gate (passed) or the fail tone — never replays an old one on open
+  const lastTs = useRef<number | null>(null);
+  useEffect(() => {
+    if (!verdict) return;
+    if (lastTs.current !== null && verdict.ts !== lastTs.current) audio.sfx(verdict.passed ? "gate" : "error");
+    lastTs.current = verdict.ts;
+  }, [verdict?.ts, verdict?.passed, verdict]);
 
   async function submit() {
     // synchronous guard against a rapid double-tap firing duplicate events

@@ -142,25 +142,26 @@ export function NodeDetailSheet({ moduleId, onClose }: { moduleId: string; onClo
           </button>
         </div>
 
-        {status === "sealed" && (
+        {status === "sealed" ? (
+          /* FAIL-CLOSED, uniform with the world-map: a sealed node shows its locked state but NOT
+             its work flow (no FireTest/BlankChallenge) — no shortcut past the fog-of-war. */
           <div className="mt-4 rounded-[var(--r-md)] border border-dashed border-line bg-surface p-3.5">
             <p className="text-[13px] leading-relaxed text-text-muted">
-              Nodo sellado. Se revela al dominar{" "}
-              <span className="text-text">{prereqTitles.join(", ") || "su prerrequisito"}</span> — o
-              registrando una prueba de fuego que demuestre el nivel y salte el camino.
+              Nodo sellado por fog-of-war. Se revela al dominar{" "}
+              <span className="text-text">{prereqTitles.join(", ") || "su prerrequisito"}</span> — no hay atajo.
             </p>
           </div>
+        ) : (
+          <div className="mt-5 border-t border-line pt-5">
+            {mod.status === "idle" ? (
+              <FireTest goalId={mod.goalId ?? ""} moduleId={mod.id} title={mod.title} />
+            ) : (
+              <div className="space-y-4">
+                <BlankChallenge goalId={mod.goalId ?? ""} moduleId={mod.id} title={mod.title} />
+              </div>
+            )}
+          </div>
         )}
-
-        <div className="mt-5 border-t border-line pt-5">
-          {mod.status === "idle" ? (
-            <FireTest goalId={mod.goalId ?? ""} moduleId={mod.id} title={mod.title} />
-          ) : (
-            <div className="space-y-4">
-              <BlankChallenge goalId={mod.goalId ?? ""} moduleId={mod.id} title={mod.title} />
-            </div>
-          )}
-        </div>
 
         <button
           onClick={() => setNotesOpen(true)}

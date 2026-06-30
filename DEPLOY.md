@@ -39,6 +39,14 @@ Framework: **Next.js** (autodetectado). Build/Output: por defecto. Deploy.
 |---|---|---|
 | `NEXT_PUBLIC_SUPABASE_URL` | `https://tssmjabfszndxwlpzngv.supabase.co` | pública |
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | *(anon key de Supabase → Settings → API)* | pública (RLS protege) |
+| `ARCANUM_ACCESS_PASSWORD` | *(elige una clave fuerte; ponla SOLO en Vercel, nunca en el repo)* | **SERVER-ONLY** · el candado de un solo usuario |
+
+> **Login de un solo usuario (`ARCANUM_ACCESS_PASSWORD`)** — el repo es PÚBLICO, así que la clave
+> NO vive en el código: solo en esta env var de Vercel. La validan server-side los route handlers
+> `/api/login` + `/api/session` (runtime nodejs) contra el correo fijo `armandofloressal@gmail.com`;
+> la cookie de sesión es httpOnly y nunca lleva la clave. Sin esta env var (p.ej. dev local) el
+> candado queda ABIERTO. NO la marques como `NEXT_PUBLIC_` (sería pública). Cámbiala cuando quieras
+> rotando el valor en Vercel + re-deploy. Es env de SERVIDOR — NO la pongas en Build-time exposure.
 
 > NUNCA pongas la `service_role` ni claves de IA en Vercel — el cliente no las usa.
 > Re-deploya tras añadir las env (Vercel lo ofrece). Sin estas env la app igual

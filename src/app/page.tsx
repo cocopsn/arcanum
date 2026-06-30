@@ -1,10 +1,13 @@
 import { ArcanumProvider } from "@/app/providers";
+import { AccessGate } from "@/ui/AccessGate";
 import { HomeView } from "@/ui/HomeView";
 
 export default function Page() {
   return (
-    <ArcanumProvider>
-      <HomeView />
-    </ArcanumProvider>
+    <AccessGate>
+      <ArcanumProvider>
+        <HomeView />
+      </ArcanumProvider>
+    </AccessGate>
   );
 }

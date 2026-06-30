@@ -23,10 +23,19 @@ export interface ModeAvailability {
 export function modesFor(m: ModuleRM, vm: ViewModel): ModeAvailability {
   const cell = cellById(m.id);
   return {
-    heavy: m.kind === "mission" && !!cell?.mission,
+    // heavy = a directed mission OR an authored exit gate (both are the full challenge loop)
+    heavy: (m.kind === "mission" && !!cell?.mission) || !!cell?.gate,
     light: (cell?.sourceUrls?.length ?? 0) > 0,
     review: vm.reviewQueue.length,
   };
+}
+
+/** The mode the cell opens in by default: the heavy loop when it has one, else the light lesson,
+ *  else review. So the selector lands on the cell's natural primary activity. Pure. */
+export function defaultMode(modes: ModeAvailability): DurationMode {
+  if (modes.heavy) return "heavy";
+  if (modes.light) return "light";
+  return "review";
 }
 
 /** The most-overdue review target (Capa C), or null when caught up (honest — not a fake item). Pure. */

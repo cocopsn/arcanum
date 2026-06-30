@@ -4,6 +4,7 @@ import { motion, useReducedMotion } from "framer-motion";
 import { useEffect, useState } from "react";
 import type { GradeInfo } from "@/core/grade";
 import { gradeSigil } from "@/lib/grade-sigil";
+import { audio } from "@/lib/audio";
 
 /**
  * Ritual ascension: fade to near-black → the new grade's sigil is DRAWN
@@ -22,6 +23,11 @@ export function AscensionCeremony({
   const sigil = gradeSigil(grade.index);
   // phase 2 = phrase/seal revealed (after draw + beat). Reduced-motion starts revealed.
   const [revealed, setRevealed] = useState(reduce);
+
+  // the liturgical swell accompanies the visual ascension
+  useEffect(() => {
+    audio.sfx("ascension");
+  }, []);
 
   useEffect(() => {
     if (reduce) return;

@@ -1,10 +1,15 @@
 "use client";
 
+import { useEffect } from "react";
 import { motion, useReducedMotion } from "framer-motion";
+import { audio } from "@/lib/audio";
 
 /** A single rising +XP mote, tinted by the current rank aura. */
 export function XpBurst({ amount }: { amount: number }) {
   const reduce = useReducedMotion();
+  useEffect(() => {
+    if (amount > 0) audio.sfx("xp");
+  }, [amount]);
   if (amount <= 0) return null;
   return (
     <motion.div
