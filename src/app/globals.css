@@ -17,14 +17,16 @@
     text-rendering: optimizeLegibility;
     overscroll-behavior: none;
   }
-  /* constant faint base atmosphere; the rank-driven glow lives in RankAura */
+  /* constant faint base atmosphere — the throne hall; the rank-driven glow lives in RankAura */
   body::before {
     content: "";
     position: fixed;
     inset: 0;
     pointer-events: none;
     z-index: 0;
-    background: radial-gradient(75% 45% at 100% 0%, rgba(37, 176, 201, 0.045), transparent 60%);
+    background:
+      radial-gradient(80% 50% at 50% -10%, rgba(154, 147, 200, 0.06), transparent 60%),
+      radial-gradient(60% 40% at 100% 100%, rgba(236, 203, 126, 0.03), transparent 55%);
   }
   ::selection {
     background: var(--rank-glow);
@@ -158,55 +160,56 @@
   color: var(--text-faint);
 }
 
-/* ── Subject map · Duolingo-style topic path (Bloque 4) ── */
+/* ── The world-map · serpentine path of material sigils (visual redesign) ── */
 .topic-badge {
-  animation: topic-fade 460ms ease both;
+  animation: topic-fade 520ms ease both;
 }
 @keyframes topic-fade {
   from {
     opacity: 0;
+    transform: translate(-50%, 10px) scale(0.94);
   }
   to {
     opacity: 1;
+    transform: translate(-50%, 0) scale(1);
   }
 }
+/* the sigil draws its own facets/ring/arc in SVG; the disc carries the realm GLOW per state */
 .topic-disc {
-  background: var(--surface);
-  border: 1px solid var(--line);
-  box-shadow: 0 2px 10px -4px rgba(0, 0, 0, 0.5);
-  transition: box-shadow 0.4s ease, border-color 0.4s ease, opacity 0.4s ease, filter 0.4s ease;
+  transition: filter 0.45s ease, transform 0.3s ease;
 }
-.topic-badge[data-status="available"] .topic-disc {
-  border-color: color-mix(in srgb, var(--accent) 50%, var(--line));
-  box-shadow: 0 0 22px -6px var(--accent);
-}
+.topic-badge[data-status="available"] .topic-disc,
 .topic-badge[data-status="started"] .topic-disc {
-  border-color: color-mix(in srgb, var(--accent) 62%, var(--line));
-  box-shadow: 0 0 26px -5px var(--accent);
+  filter: drop-shadow(0 0 16px var(--world-glow));
 }
 .topic-badge[data-status="completed"] .topic-disc {
-  border-color: color-mix(in srgb, var(--accent) 55%, var(--line));
-  background: color-mix(in srgb, var(--surface) 80%, var(--accent));
+  filter: drop-shadow(0 0 12px color-mix(in srgb, var(--accent-2, #e8c36a) 65%, transparent));
 }
 .topic-badge[data-status="sealed"] .topic-disc {
-  border-style: dashed;
-  opacity: 0.6;
-  filter: grayscale(0.4);
+  opacity: 0.6; /* fog-of-war: territory yet to conquer (atmospheric, not a gray lock) */
+}
+.topic-badge:hover .topic-disc,
+.topic-badge[data-status="available"] .topic-disc {
+  transform: translateY(-1px);
+}
+.topic-badge:active .topic-disc {
+  transform: translateY(1px) scale(0.97);
 }
 .topic-badge:focus-visible {
   outline: none;
 }
 .topic-badge:focus-visible .topic-disc {
-  outline: 2px solid color-mix(in srgb, var(--accent) 60%, transparent);
-  outline-offset: 3px;
+  outline: 2px solid color-mix(in srgb, var(--accent) 65%, transparent);
+  outline-offset: 5px;
+  border-radius: var(--r-md);
 }
 .topic-pulse {
   position: absolute;
-  top: -2px;
-  right: -2px;
-  width: 7px;
-  height: 7px;
+  top: 2px;
+  right: 2px;
+  width: 8px;
+  height: 8px;
   border-radius: var(--r-pill);
-  box-shadow: 0 0 8px currentColor;
+  box-shadow: 0 0 10px currentColor;
   animation: rf-breathe 2.2s ease-in-out infinite;
 }

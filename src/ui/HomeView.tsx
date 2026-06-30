@@ -9,7 +9,6 @@ import { GradeSigil } from "@/ui/GradeSigil";
 import { StreakFlame } from "@/ui/StreakFlame";
 import { XpBurst } from "@/ui/XpBurst";
 import { RitoDelDia } from "@/ui/RitoDelDia";
-import { ModuleCard } from "@/ui/ModuleCard";
 import { SyncStatus } from "@/ui/SyncStatus";
 import { AuthSheet } from "@/ui/AuthSheet";
 import { CodiceSheet } from "@/ui/CodiceSheet";
@@ -20,6 +19,9 @@ import { RoadmapCanvas } from "@/ui/roadmap/RoadmapCanvas";
 import { SubjectMap } from "@/ui/subject/SubjectMap";
 import { AgendaSheet } from "@/ui/AgendaSheet";
 import { InstallCoachMark } from "@/ui/InstallCoachMark";
+import { themeForGoal, worldVars } from "@/lib/subject-themes";
+import { readableAccent } from "@/lib/accent";
+import { isMastered, nodeStatus } from "@/core/roadmap";
 import type { ReadModel, Stats } from "@/core/read-model";
 import type { ViewModel } from "@/core/present";
 
@@ -63,12 +65,7 @@ export function HomeView() {
 
         <Hero stats={readModel.stats} viewModel={viewModel} />
         <RitoDelDia pending={viewModel.ritoPending} />
-        <Goals
-          readModel={readModel}
-          viewModel={viewModel}
-          onNotes={(moduleId) => setNotes({ open: true, moduleId })}
-          onOpenSubject={(goalId) => setSubjectGoal(goalId)}
-        />
+        <WorldPortals readModel={readModel} onOpen={(goalId) => setSubjectGoal(goalId)} />
         <InstallCoachMark />
         <Footer
           onMapa={() => setMapOpen(true)}
@@ -117,14 +114,20 @@ function Hero({ stats, viewModel }: { stats: Stats; viewModel: ViewModel }) {
   }, [stats.totalXp]);
 
   return (
-    <section className="relative flex items-center justify-between rounded-[var(--r-lg)] border border-line bg-surface p-5 shadow-aura">
-      <GradeSigil stats={stats} />
-      <StreakFlame
-        streak={stats.currentStreak}
-        shields={stats.shields}
-        alive={viewModel.streakAlive}
-      />
-      <div className="pointer-events-none absolute right-6 top-4">
+    <section
+      className="relative overflow-hidden rounded-[var(--r-lg)] border border-line px-6 pb-7 pt-6 shadow-aura"
+      style={{ background: "linear-gradient(168deg, var(--surface-raised) 0%, var(--surface) 100%)" }}
+    >
+      {/* imperial bloom + gold hairline — the throne hall */}
+      <div aria-hidden className="pointer-events-none absolute inset-0" style={{ background: "radial-gradient(125% 75% at 50% -12%, var(--rank-soft), transparent 62%)" }} />
+      <div aria-hidden className="absolute inset-x-6 top-0 h-px" style={{ background: "linear-gradient(90deg, transparent, color-mix(in srgb, var(--gold) 55%, transparent), transparent)" }} />
+      <div className="absolute right-4 top-4 z-10">
+        <StreakFlame streak={stats.currentStreak} shields={stats.shields} alive={viewModel.streakAlive} />
+      </div>
+      <div className="relative z-[1]">
+        <GradeSigil stats={stats} />
+      </div>
+      <div className="pointer-events-none absolute left-1/2 top-8 -translate-x-1/2">
         <AnimatePresence>
           {bursts.map((b) => (
             <XpBurst key={b.id} amount={b.amount} />
@@ -135,58 +138,58 @@ function Hero({ stats, viewModel }: { stats: Stats; viewModel: ViewModel }) {
   );
 }
 
-function Goals({
-  readModel,
-  viewModel,
-  onNotes,
-  onOpenSubject,
-}: {
-  readModel: ReadModel;
-  viewModel: ViewModel;
-  onNotes: (moduleId: string) => void;
-  onOpenSubject: (goalId: string) => void;
-}) {
-  const rByModule = new Map(viewModel.modules.map((m) => [m.id, m.retrievability]));
-  const noteCount = (moduleId: string) =>
-    readModel.notes.filter((n) => n.moduleId === moduleId).length;
+function WorldPortals({ readModel, onOpen }: { readModel: ReadModel; onOpen: (goalId: string) => void }) {
+  const byId = new Map(readModel.modules.map((m) => [m.id, m]));
   return (
-    <div className="space-y-5">
+    <div className="space-y-3">
+      <div className="text-[10px] uppercase tracking-[0.3em] text-text-faint">Los mundos · elige territorio</div>
       {readModel.goals
         .filter((g) => !g.archived)
         .map((goal) => {
-          const mods = readModel.modules.filter(
-            (m) => m.goalId === goal.id && !m.archived,
-          );
+          const theme = themeForGoal(goal.title);
+          const mods = readModel.modules.filter((m) => m.goalId === goal.id && !m.archived);
+          const mastered = mods.filter((m) => isMastered(m)).length;
+          const available = mods.filter((m) => nodeStatus(m, readModel.edges, byId) === "available").length;
+          const frac = mods.length ? mastered / mods.length : 0;
           return (
-            <section
+            <button
               key={goal.id}
-              style={{ ["--topic"]: goal.color } as CSSProperties}
+              onClick={() => onOpen(goal.id)}
+              className="group relative block w-full overflow-hidden rounded-[var(--r-lg)] border p-4 text-left transition hover:brightness-110"
+              style={
+                {
+                  ...worldVars(theme),
+                  borderColor: "color-mix(in srgb, var(--accent) 28%, var(--line))",
+                  background: "linear-gradient(135deg, color-mix(in srgb, var(--world-bg) 65%, var(--surface)), var(--surface))",
+                } as CSSProperties
+              }
             >
-              <div className="mb-2 flex items-center justify-between gap-2">
-                <h2 className="flex items-center gap-2 font-display text-lg text-topic">
-                  <span aria-hidden className="inline-block h-2 w-2 rounded-full" style={{ background: "var(--topic)" }} />
-                  {goal.title}
-                </h2>
-                <button
-                  onClick={() => onOpenSubject(goal.id)}
-                  className="inline-flex min-h-11 items-center px-1 text-[11px] uppercase tracking-[0.18em] text-text-faint transition hover:text-topic"
+              <div aria-hidden className="pointer-events-none absolute inset-0" style={{ background: "radial-gradient(120% 130% at 100% 0%, var(--world-glow), transparent 55%)", opacity: 0.38 }} />
+              <div className="relative flex items-center gap-3">
+                <span
+                  aria-hidden
+                  className="grid h-12 w-12 shrink-0 place-items-center rounded-[var(--r-md)] font-display text-2xl"
+                  style={{ color: "var(--accent)", border: "1px solid color-mix(in srgb, var(--accent) 35%, var(--line))", textShadow: "0 0 14px var(--world-glow)" }}
                 >
-                  Ruta →
-                </button>
+                  {theme.glyph}
+                </span>
+                <div className="min-w-0 flex-1">
+                  <div className="text-[9px] uppercase tracking-[0.28em] text-text-faint">{theme.temper}</div>
+                  <div className="font-display text-base leading-tight" style={{ color: readableAccent(theme.accent) }}>{goal.title}</div>
+                  <div className="truncate font-serif text-[11px] italic text-text-muted">{theme.tagline}</div>
+                </div>
+                <span aria-hidden className="font-display text-base" style={{ color: "var(--accent)" }}>›</span>
               </div>
-              <div className="space-y-2">
-                {mods.map((m) => (
-                  <ModuleCard
-                    key={m.id}
-                    module={m}
-                    retrievability={rByModule.get(m.id) ?? 0}
-                    goalId={goal.id}
-                    noteCount={noteCount(m.id)}
-                    onNotes={() => onNotes(m.id)}
-                  />
-                ))}
+              <div className="relative mt-3 flex items-center gap-3">
+                <div className="h-[3px] flex-1 overflow-hidden rounded-full bg-line">
+                  <div className="h-full rounded-full" style={{ width: `${Math.round(frac * 100)}%`, background: "linear-gradient(90deg, var(--accent), var(--accent-2))" }} />
+                </div>
+                <div className="tnum shrink-0 text-[10px] uppercase tracking-wider text-text-faint">
+                  {mastered}/{mods.length} dominados
+                  {available > 0 && <span style={{ color: "var(--accent)" }}> · {available} listos</span>}
+                </div>
               </div>
-            </section>
+            </button>
           );
         })}
     </div>

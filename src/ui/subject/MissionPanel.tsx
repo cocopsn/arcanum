@@ -16,12 +16,15 @@ export function MissionPanel({
   mission,
   sourceUrls,
   accent,
+  mode,
 }: {
   moduleId: string;
   mission: TopicMission;
   sourceUrls: string[];
   accent: string;
+  mode?: "pattern" | null;
 }) {
+  const pattern = mode === "pattern";
   const verdict = useArcanum((s) => s.readModel.gates.find((g) => g.moduleId === moduleId) ?? null);
   const gatePassed = useArcanum((s) => s.readModel.modules.find((m) => m.id === moduleId)?.gatePassed ?? false);
   const goalId = useArcanum((s) => s.readModel.modules.find((m) => m.id === moduleId)?.goalId ?? null);
@@ -48,11 +51,26 @@ export function MissionPanel({
 
   return (
     <div className="rounded-[var(--r-md)] border p-4" style={{ borderColor: gatePassed ? accent : "var(--line)" }}>
+      {/* ARENA HUD — competitive cells have their own face: the clock, the REAL judge. */}
+      {pattern && (
+        <div
+          className="mb-3 flex items-center gap-2 rounded-[var(--r-sm)] border px-3 py-2"
+          style={{ borderColor: "color-mix(in srgb, " + accent + " 40%, var(--line))", background: "color-mix(in srgb, " + accent + " 10%, transparent)" }}
+        >
+          <span aria-hidden className="font-display text-sm" style={{ color: readableAccent(accent) }}>⏱</span>
+          <span className="text-[10px] uppercase leading-tight tracking-[0.16em]" style={{ color: readableAccent(accent) }}>
+            La arena · el juez real es Codeforces/AtCoder
+            <span className="block text-text-faint">resuélvelo allá · trae tu veredicto + tiempo + solución</span>
+          </span>
+        </div>
+      )}
       <div className="flex items-center justify-between gap-2">
-        <h3 className="font-display text-xs uppercase tracking-[0.22em] text-text-faint">Misión dirigida · interrogatorio</h3>
+        <h3 className="font-display text-xs uppercase tracking-[0.22em] text-text-faint">
+          {pattern ? "Reto de patrón · interrogatorio" : "Misión dirigida · interrogatorio"}
+        </h3>
         {gatePassed && (
           <span className="text-[11px] uppercase tracking-wider" style={{ color: readableAccent(accent) }}>
-            ✓ superada
+            {pattern ? "✓ patrón dominado" : "✓ superada"}
           </span>
         )}
       </div>

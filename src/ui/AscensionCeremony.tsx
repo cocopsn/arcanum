@@ -32,19 +32,36 @@ export function AscensionCeremony({
   return (
     <motion.div
       className="fixed inset-0 z-[100] flex flex-col items-center justify-center px-8 text-center"
-      style={{ background: "#050507" }}
+      style={{ background: "#050407" }}
       initial={{ opacity: reduce ? 1 : 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: reduce ? 0 : 0.6 }}
       role="dialog"
       aria-label={`Ascensión a ${grade.name}`}
     >
+      {/* liturgical atmosphere — grade-colour bloom, light rays, vignette */}
+      <div aria-hidden className="pointer-events-none absolute inset-0" style={{ background: `radial-gradient(60% 45% at 50% 42%, ${grade.color}26, transparent 62%)` }} />
+      <motion.div
+        aria-hidden
+        className="pointer-events-none absolute left-1/2 top-[42%] h-[460px] w-[460px] -translate-x-1/2 -translate-y-1/2 rounded-full"
+        style={{ background: `conic-gradient(from 0deg, transparent, ${grade.color}1c, transparent 22%, transparent, ${grade.color}1c, transparent 72%)` }}
+        initial={{ opacity: 0, rotate: 0 }}
+        animate={{ opacity: revealed ? 0.7 : 0.3, rotate: reduce ? 0 : 60 }}
+        transition={{ duration: reduce ? 0 : 24, ease: "linear", repeat: reduce ? 0 : Infinity, repeatType: "loop" }}
+      />
+      <div aria-hidden className="pointer-events-none absolute inset-0" style={{ background: "radial-gradient(130% 90% at 50% 50%, transparent 40%, rgba(0,0,0,0.85))" }} />
+
+      <div className="relative z-[1] text-[10px] uppercase tracking-[0.5em] text-text-faint" style={{ marginBottom: "1.4rem" }}>
+        Ascensión
+      </div>
+
       <svg
         viewBox="0 0 120 120"
-        width={168}
-        height={168}
+        width={172}
+        height={172}
         aria-hidden
-        style={{ filter: `drop-shadow(0 0 18px ${grade.color}66)` }}
+        className="relative z-[1]"
+        style={{ filter: `drop-shadow(0 0 26px ${grade.color}80)` }}
       >
         {sigil.paths.map((d, i) => (
           <motion.path

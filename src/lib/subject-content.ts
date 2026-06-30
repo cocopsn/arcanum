@@ -42,6 +42,8 @@ export interface TopicContent {
   gate: TopicGate | null;
   /** the directed mission (heavy cell), or null if this is not a mission cell */
   mission: TopicMission | null;
+  /** 'pattern' = competitive (ICPC) cell → arena HUD + real-judge framing; null = first-principle */
+  mode: "pattern" | null;
   /** cross-spine foundation this cell builds on (lives once elsewhere — non-duplication) */
   references: { id: string; title: string }[];
   /** conceptual see-also: a SEPARATE cell of another nature (not a dedup) — e.g. competitive
@@ -68,6 +70,7 @@ export function contentForModule(moduleId: string): TopicContent | null {
     quiz: [],
     gate: cell.gate ?? null,
     mission: cell.mission ?? null,
+    mode: cell.interrogationMode ?? null,
     references: (cell.references ?? [])
       .map((id) => {
         const ref = cellById(id);

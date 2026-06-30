@@ -185,7 +185,7 @@ export function TopicDetailSheet({
             Passing the interrogation unseals the next cell. Mutually exclusive with the gate. */}
         {content?.mission && (
           <div className="mt-5 border-t border-line pt-4">
-            <MissionPanel moduleId={mod.id} mission={content.mission} sourceUrls={content.sourceUrls} accent={accent} />
+            <MissionPanel moduleId={mod.id} mission={content.mission} sourceUrls={content.sourceUrls} accent={accent} mode={content.mode} />
           </div>
         )}
 

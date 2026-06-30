@@ -1,22 +1,26 @@
 import type { Metadata, Viewport } from "next";
-import { Cinzel, EB_Garamond, Inter } from "next/font/google";
+import { Cinzel, EB_Garamond, Chakra_Petch } from "next/font/google";
 import "./globals.css";
 
+// Cinzel — Trajan imperial caps: the crown, grade names, world titles, the ceremony.
 const display = Cinzel({
   subsets: ["latin"],
   weight: ["400", "600", "700"],
   variable: "--font-display",
   display: "swap",
 });
+// EB Garamond — the grimoire reading voice: mission/lesson/feedback prose, ceremony phrases.
 const serif = EB_Garamond({
   subsets: ["latin"],
   weight: ["400", "500", "600"],
   variable: "--font-serif",
   display: "swap",
 });
-const sans = Inter({
+// Chakra Petch — squared techno/HUD sans (replaces generic Inter): labels, buttons, the
+// competitive clock + rating, tabular numerals. Carries the stylized/aggressive Persona edge.
+const sans = Chakra_Petch({
   subsets: ["latin"],
-  weight: ["400", "500", "600"],
+  weight: ["400", "500", "600", "700"],
   variable: "--font-sans",
   display: "swap",
 });

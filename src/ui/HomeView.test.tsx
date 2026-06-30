@@ -18,8 +18,8 @@ describe("HomeView", () => {
     // hydration is async (useEffect → seed → project)
     await waitFor(() => expect(screen.getByText("ITC")).toBeInTheDocument());
 
-    // first ITC cell = the CS50 ramp node (real extracted curriculum spine)
-    expect(screen.getByText(/CS50 — rampa/)).toBeInTheDocument();
+    // home is the throne hall: the ITC world portal (its temper), not a flat cell list
+    expect(screen.getByText(/La sala del trono/)).toBeInTheDocument();
     // grade is DERIVED (0 XP → Scintilla), not hardcoded
     expect(screen.getByLabelText("Sello Scintilla")).toBeInTheDocument();
     expect(screen.getByText("SCINTILLA")).toBeInTheDocument();
