@@ -147,6 +147,13 @@ export function useActions() {
     },
     updateNote: (noteId: string, title: string, markdown: string) =>
       fire("note.updated", { note_id: noteId, title, markdown }),
+    // Re-anchor a note to a cell/module (or null to detach). Carries the current title+markdown so the
+    // single note.updated event is self-contained; the projector applies the anchor (no new event type).
+    anchorNote: async (noteId: string, moduleId: string | null): Promise<void> => {
+      const n = store.getState().readModel.notes.find((x) => x.id === noteId);
+      if (!n) return;
+      await fire("note.updated", { note_id: noteId, title: n.title, markdown: n.markdown, moduleId });
+    },
     // ── Roadmap canvas edits — all expressed as EXISTING events (log is truth) ──
     createModule: async (goalId: string, title: string): Promise<string> => {
       const moduleId = newEventId();

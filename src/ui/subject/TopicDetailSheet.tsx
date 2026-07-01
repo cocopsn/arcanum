@@ -7,7 +7,7 @@ import { useFocusTrap } from "@/ui/use-focus-trap";
 import { readableAccent } from "@/lib/accent";
 import { FireTest } from "@/ui/FireTest";
 import { BlankChallenge } from "@/ui/BlankChallenge";
-import { NotesSheet } from "@/ui/NotesSheet";
+import { NotesModule } from "@/ui/notes/NotesModule";
 import { Quiz } from "@/ui/subject/Quiz";
 import { ExitGate } from "@/ui/subject/ExitGate";
 import { MissionPanel } from "@/ui/subject/MissionPanel";
@@ -274,7 +274,7 @@ export function TopicDetailSheet({
         )}
       </div>
 
-      <NotesSheet open={notesOpen} moduleId={moduleId} onClose={() => setNotesOpen(false)} />
+      <NotesModule open={notesOpen} moduleId={moduleId} onClose={() => setNotesOpen(false)} />
       {tutorOpen && <TutorSheet moduleId={moduleId} accent={accent} onClose={() => setTutorOpen(false)} />}
     </div>
     {lessonOpen && (

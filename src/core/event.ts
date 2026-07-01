@@ -108,6 +108,9 @@ export interface NoteUpdatedPayload {
   note_id: string;
   title: string;
   markdown: string;
+  /** OPTIONAL re-anchor to a cell/module (or null to detach). Absent = leave the anchor as-is. The
+   *  anchor is note metadata derived from the log — no new event type, reconstructible on re-fold. */
+  moduleId?: string | null;
 }
 export interface SleepcycleGeneratedPayload {
   /** civil day (TZ) the rite folded over */

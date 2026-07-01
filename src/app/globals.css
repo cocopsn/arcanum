@@ -213,3 +213,112 @@
   box-shadow: 0 0 10px currentColor;
   animation: rf-breathe 2.2s ease-in-out infinite;
 }
+
+/* ── Notes WYSIWYG editor (TipTap / ProseMirror) — EB Garamond reading body, Arcanum-tinted ── */
+.note-editor {
+  font-family: var(--font-serif), Georgia, serif;
+  color: var(--text);
+  font-size: 15px;
+  line-height: 1.7;
+  min-height: 180px;
+}
+.note-editor:focus {
+  outline: none;
+}
+.note-editor > * + * {
+  margin-top: 0.6em;
+}
+.note-editor h1 {
+  font-family: var(--font-display), Georgia, serif;
+  font-size: 1.5rem;
+  line-height: 1.2;
+  letter-spacing: 0.01em;
+}
+.note-editor h2 {
+  font-family: var(--font-display), Georgia, serif;
+  font-size: 1.22rem;
+  line-height: 1.25;
+}
+.note-editor h3 {
+  font-size: 1.06rem;
+  font-weight: 600;
+}
+.note-editor strong {
+  color: var(--text);
+  font-weight: 700;
+}
+.note-editor em {
+  font-style: italic;
+}
+.note-editor a {
+  color: var(--topic);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.note-editor ul,
+.note-editor ol {
+  padding-left: 1.3em;
+}
+.note-editor ul {
+  list-style: disc;
+}
+.note-editor ol {
+  list-style: decimal;
+}
+.note-editor li {
+  margin: 0.15em 0;
+}
+.note-editor blockquote {
+  border-left: 2px solid color-mix(in srgb, var(--rank) 50%, var(--line));
+  padding-left: 0.8em;
+  color: var(--text-muted);
+  font-style: italic;
+}
+.note-editor code {
+  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  font-size: 0.86em;
+  background: color-mix(in srgb, var(--line) 55%, transparent);
+  padding: 0.1em 0.35em;
+  border-radius: 4px;
+}
+.note-editor pre {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--r-sm);
+  padding: 0.7em 0.9em;
+  overflow-x: auto;
+}
+.note-editor pre code {
+  background: none;
+  padding: 0;
+  font-size: 0.85em;
+}
+.note-editor ul[data-type="taskList"] {
+  list-style: none;
+  padding-left: 0.1em;
+}
+.note-editor ul[data-type="taskList"] li {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5em;
+}
+.note-editor ul[data-type="taskList"] li > label {
+  margin-top: 0.28em;
+}
+.note-editor ul[data-type="taskList"] input[type="checkbox"] {
+  accent-color: var(--action);
+  width: 1em;
+  height: 1em;
+}
+.note-editor .wikilink {
+  color: var(--topic);
+  cursor: pointer;
+  border-bottom: 1px dotted color-mix(in srgb, var(--topic) 60%, transparent);
+}
+.note-editor p.is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  color: var(--text-faint);
+  float: left;
+  height: 0;
+  pointer-events: none;
+}

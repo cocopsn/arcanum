@@ -5,7 +5,7 @@ import { useArcanum, useArcanumStore } from "@/app/providers";
 import { useActions } from "@/ui/use-actions";
 import { FireTest } from "@/ui/FireTest";
 import { BlankChallenge } from "@/ui/BlankChallenge";
-import { NotesSheet } from "@/ui/NotesSheet";
+import { NotesModule } from "@/ui/notes/NotesModule";
 import { nodeStatus, prereqsOf } from "@/core/roadmap";
 import type { ArcanumEvent } from "@/core/event";
 import type { ModuleRM } from "@/core/read-model";
@@ -212,7 +212,7 @@ export function NodeDetailSheet({ moduleId, onClose }: { moduleId: string; onClo
         </div>
       </div>
 
-      <NotesSheet open={notesOpen} moduleId={moduleId} onClose={() => setNotesOpen(false)} />
+      <NotesModule open={notesOpen} moduleId={moduleId} onClose={() => setNotesOpen(false)} />
     </div>
   );
 }

@@ -253,12 +253,13 @@ function applyDomain(acc: Acc, e: ArcanumEvent): void {
         id,
         moduleId: prev?.moduleId ?? e.module_id,
         goalId: prev?.goalId ?? e.goal_id,
-        title: p.title ?? "",
-        markdown: p.markdown ?? "",
+        // idempotent: a duplicate/replayed note.created must NOT revert content an update already set
+        title: prev ? prev.title : (p.title ?? ""),
+        markdown: prev ? prev.markdown : (p.markdown ?? ""),
         links: [],
         backlinks: [],
         createdTs: prev?.createdTs ?? e.ts,
-        updatedTs: e.ts,
+        updatedTs: prev?.updatedTs ?? e.ts,
       });
       return;
     }
@@ -270,6 +271,8 @@ function applyDomain(acc: Acc, e: ArcanumEvent): void {
         ...prev,
         title: p.title ?? prev.title,
         markdown: p.markdown ?? prev.markdown,
+        // re-anchor only when the field is PRESENT (undefined = leave as-is; null = detach)
+        moduleId: "moduleId" in p ? (p.moduleId ?? null) : prev.moduleId,
         updatedTs: e.ts,
       });
       return;
@@ -387,11 +390,13 @@ function finalizeNotes(notes: NoteRM[]): NoteRM[] {
     backlinks: [] as string[],
   }));
   const titleToId = new Map<string, string>();
-  for (const n of withLinks) titleToId.set(n.title, n.id); // last wins on title clash
+  // case-insensitive — MATCHES the graph builder + wikilink navigation, so [[Introduction]] resolving
+  // to a note titled "introduction" is consistent everywhere (edge drawn AND backlink counted)
+  for (const n of withLinks) titleToId.set(n.title.trim().toLowerCase(), n.id); // last wins on title clash
   const byId = new Map(withLinks.map((n) => [n.id, n]));
   for (const n of withLinks) {
     for (const target of n.links) {
-      const targetId = titleToId.get(target);
+      const targetId = titleToId.get(target.trim().toLowerCase());
       if (targetId && targetId !== n.id) {
         const t = byId.get(targetId)!;
         if (!t.backlinks.includes(n.id)) t.backlinks.push(n.id);

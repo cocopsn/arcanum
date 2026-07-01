@@ -1,6 +1,6 @@
 // Pure [[wikilink]] target extraction (Obsidian syntax). Used by the projector
-// to derive the note graph (links → backlinks). The PREVIEW renders wikilinks
-// via remark-wiki-link; this regex extraction matches the same [[…]] syntax.
+// to derive the note graph (links → backlinks). The WYSIWYG editor styles the same
+// [[…]] syntax via a ProseMirror decoration (lib/note-editor.ts) — matching == storage.
 
 const WIKILINK = /\[\[\s*([^\]|#]+?)\s*(?:[#|][^\]]*)?\]\]/g;
 

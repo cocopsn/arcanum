@@ -12,7 +12,7 @@ import { RitoDelDia } from "@/ui/RitoDelDia";
 import { SyncStatus } from "@/ui/SyncStatus";
 import { AuthSheet } from "@/ui/AuthSheet";
 import { CodiceSheet } from "@/ui/CodiceSheet";
-import { NotesSheet } from "@/ui/NotesSheet";
+import { NotesModule } from "@/ui/notes/NotesModule";
 import { VigiliaSheet } from "@/ui/VigiliaSheet";
 import { AscensionCeremony } from "@/ui/AscensionCeremony";
 import { RoadmapCanvas } from "@/ui/roadmap/RoadmapCanvas";
@@ -95,7 +95,7 @@ export function HomeView() {
       <AuthSheet open={authOpen} onClose={() => setAuthOpen(false)} />
       <CodiceSheet open={codiceOpen} onClose={() => setCodiceOpen(false)} />
       <VigiliaSheet open={vigiliaOpen} onClose={() => setVigiliaOpen(false)} />
-      <NotesSheet
+      <NotesModule
         open={notes.open}
         moduleId={notes.moduleId}
         onClose={() => setNotes({ open: false, moduleId: null })}
