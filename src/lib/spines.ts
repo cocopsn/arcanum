@@ -313,7 +313,9 @@ export const SPINES: Spine[] = [
         "id": "cc000000-0000-4000-8000-000000000001",
         "title": "A1.1 — Hallo! Begrüßung, Alphabet & sein (greetings, the verb sein, W-/yes-no questions)",
         "sourceUrls": [
-          "https://learngerman.dw.com/en/beginners/c-36519789"
+          "https://learngerman.dw.com/en/beginners/c-36519789",
+          "https://en.wikipedia.org/wiki/German_grammar",
+          "https://en.wikipedia.org/wiki/German_verbs"
         ]
       },
       {
@@ -341,70 +343,90 @@ export const SPINES: Spine[] = [
         "id": "cc000000-0000-4000-8000-000000000003",
         "title": "A1.3 — Familie & Possessivartikel (mein/dein), Negation kein/nicht",
         "sourceUrls": [
-          "https://learngerman.dw.com/en/beginners/c-36519789"
+          "https://learngerman.dw.com/en/beginners/c-36519789",
+          "https://en.wikipedia.org/wiki/German_articles",
+          "https://en.wikipedia.org/wiki/German_declension"
         ]
       },
       {
         "id": "cc000000-0000-4000-8000-000000000004",
         "title": "A1.4 — Lebensmittel & Akkusativ: bestimmter/unbestimmter Artikel im Akkusativ, Plural",
         "sourceUrls": [
-          "https://learngerman.dw.com/en/beginners/c-36519789"
+          "https://learngerman.dw.com/en/beginners/c-36519789",
+          "https://en.wikipedia.org/wiki/Accusative_case",
+          "https://en.wikipedia.org/wiki/German_articles"
         ]
       },
       {
         "id": "cc000000-0000-4000-8000-000000000005",
         "title": "A1.5 — Im Büro & Alltag: regelmäßige Verben, Zahlen/Uhrzeit, Modalverben (können/müssen)",
         "sourceUrls": [
-          "https://learngerman.dw.com/en/beginners/c-36519789"
+          "https://learngerman.dw.com/en/beginners/c-36519789",
+          "https://en.wikipedia.org/wiki/German_conjugation",
+          "https://en.wikipedia.org/wiki/German_verbs"
         ]
       },
       {
         "id": "cc000000-0000-4000-8000-000000000006",
         "title": "A2.1 — Perfekt (Vergangenheit) & trennbare Verben: über Erlebnisse berichten",
         "sourceUrls": [
-          "https://learngerman.dw.com/en/intermediate/c-37328690"
+          "https://learngerman.dw.com/en/intermediate/c-37328690",
+          "https://en.wikipedia.org/wiki/Perfect_(grammar)",
+          "https://en.wikipedia.org/wiki/German_verbs"
         ]
       },
       {
         "id": "cc000000-0000-4000-8000-000000000007",
         "title": "A2.2 — Dativ: Präpositionen, indirektes Objekt, Wechselpräpositionen (Akk./Dat.)",
         "sourceUrls": [
-          "https://learngerman.dw.com/en/intermediate/c-37328690"
+          "https://learngerman.dw.com/en/intermediate/c-37328690",
+          "https://en.wikipedia.org/wiki/Dative_case",
+          "https://en.wikipedia.org/wiki/Grammatical_case"
         ]
       },
       {
         "id": "cc000000-0000-4000-8000-000000000008",
         "title": "A2.3 — Konnektoren & einfacher zusammenhängender Text: weil/dass, Komparativ/Superlativ",
         "sourceUrls": [
-          "https://learngerman.dw.com/en/intermediate/c-37328690"
+          "https://learngerman.dw.com/en/intermediate/c-37328690",
+          "https://en.wikipedia.org/wiki/German_sentence_structure",
+          "https://en.wikipedia.org/wiki/German_grammar"
         ]
       },
       {
         "id": "cc000000-0000-4000-8000-000000000009",
         "title": "B1.1 — Nebensätze & Meinung äußern: wenn/obwohl, Argumentation, Genitiv",
         "sourceUrls": [
-          "https://learngerman.dw.com/en/advanced/c-39756769"
+          "https://learngerman.dw.com/en/advanced/c-39756769",
+          "https://en.wikipedia.org/wiki/German_sentence_structure",
+          "https://en.wikipedia.org/wiki/German_grammar"
         ]
       },
       {
         "id": "cc000000-0000-4000-8000-000000000010",
         "title": "B1.2 — Konjunktiv II & Passiv: höfliche Bitten, Hypothesen, formelle Register",
         "sourceUrls": [
-          "https://learngerman.dw.com/en/advanced/c-39756769"
+          "https://learngerman.dw.com/en/advanced/c-39756769",
+          "https://en.wikipedia.org/wiki/Subjunctive_mood",
+          "https://en.wikipedia.org/wiki/German_verbs"
         ]
       },
       {
         "id": "cc000000-0000-4000-8000-000000000011",
         "title": "B2.1 — Komplexe Argumentation: Relativsätze, Nominalstil, abstrakte Themen (Goethe B2 gate)",
         "sourceUrls": [
-          "https://www.goethe.de/en/spr/kup/prf/prf/gb2.html"
+          "https://www.goethe.de/en/spr/kup/prf/prf/gb2.html",
+          "https://en.wikipedia.org/wiki/German_sentence_structure",
+          "https://en.wikipedia.org/wiki/German_declension"
         ]
       },
       {
         "id": "cc000000-0000-4000-8000-000000000012",
         "title": "B2.2 — Fließende Interaktion & Standpunkt: detaillierter Text, Pro/Contra, Konnektoren-Vielfalt",
         "sourceUrls": [
-          "https://www.goethe.de/en/spr/kup/prf/prf/gb2.html"
+          "https://www.goethe.de/en/spr/kup/prf/prf/gb2.html",
+          "https://en.wikipedia.org/wiki/German_grammar",
+          "https://en.wikipedia.org/wiki/German_sentence_structure"
         ]
       }
     ]
@@ -541,4 +563,34 @@ export const SPINES: Spine[] = [
 const CELL_BY_ID = new Map<string, SpineCell>(SPINES.flatMap((s) => s.cells.map((c) => [c.id, c] as const)));
 export function cellById(id: string): SpineCell | null {
   return CELL_BY_ID.get(id) ?? null;
+}
+
+// The ALLOWLIST for the server-side source fetcher — only the curated, verified spine URLs may be
+// fetched (never an arbitrary client-supplied URL → no SSRF). Exact-match against every source/video.
+const SOURCE_ALLOWLIST = new Set<string>(
+  SPINES.flatMap((s) => s.cells.flatMap((c) => [...(c.sourceUrls ?? []), ...(c.videoUrls ?? [])])),
+);
+export function isAllowedSource(url: string): boolean {
+  return SOURCE_ALLOWLIST.has(url);
+}
+
+// The set of allowed HOSTS (derived from the same curated URLs). The entry URL must be an exact
+// allowlist match; redirect HOPS are validated against this host set so a redirect can't escape the
+// closed set of trusted domains (no IP hosts are present → private/internal targets are refused too).
+const SOURCE_HOSTS = new Set<string>(
+  [...SOURCE_ALLOWLIST].map((u) => {
+    try {
+      return new URL(u).hostname;
+    } catch {
+      return "";
+    }
+  }).filter(Boolean),
+);
+export function isAllowedSourceHost(url: string): boolean {
+  try {
+    const u = new URL(url);
+    return u.protocol === "https:" && SOURCE_HOSTS.has(u.hostname);
+  } catch {
+    return false;
+  }
 }

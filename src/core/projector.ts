@@ -175,6 +175,7 @@ function applyDomain(acc: Acc, e: ArcanumEvent): void {
           y: null,
           sourceObligationId: p.sourceObligationId ?? null,
           gatePassed: false,
+          reinforceCount: 0,
         });
       }
       return;
@@ -218,6 +219,9 @@ function applyDomain(acc: Acc, e: ArcanumEvent): void {
         S: m.S,
         lastReinforcedDays: m.lastDays,
         dueDays: m.dueDays,
+        // only a checkpoint (a completed lesson/quiz/review) advances the angle rotation; a mid-lesson
+        // error.resolved reinforces stability but is NOT a new lesson, so it must not bump the angle.
+        reinforceCount: prev.reinforceCount + (e.type === "checkpoint.passed" ? 1 : 0),
       });
       return;
     }

@@ -13,6 +13,7 @@ import { ExitGate } from "@/ui/subject/ExitGate";
 import { MissionPanel } from "@/ui/subject/MissionPanel";
 import { LessonMode } from "@/ui/subject/LessonMode";
 import { LearningModes } from "@/ui/subject/LearningModes";
+import { SourceViewer } from "@/ui/subject/SourceViewer";
 import { audio } from "@/lib/audio";
 import { EvaluationPanel } from "@/ui/subject/EvaluationPanel";
 import { TutorSheet } from "@/ui/subject/TutorSheet";
@@ -37,7 +38,7 @@ export function TopicDetailSheet({
   const { startModule, completeModule } = useActions();
   const [notesOpen, setNotesOpen] = useState(false);
   const [tutorOpen, setTutorOpen] = useState(false);
-  const [lessonOpen, setLessonOpen] = useState(false);
+  const [lesson, setLesson] = useState<{ open: boolean; kind: "lesson" | "review" }>({ open: false, kind: "lesson" });
   const panelRef = useRef<HTMLDivElement>(null);
 
   const mod = readModel.modules.find((m) => m.id === moduleId) ?? null;
@@ -174,12 +175,12 @@ export function TopicDetailSheet({
                     <button
                       onClick={() => {
                         audio.unlock();
-                        setLessonOpen(true);
+                        setLesson({ open: true, kind: "lesson" });
                       }}
                       className="mt-3 min-h-11 w-full rounded-[var(--r-sm)] border px-4 text-sm transition hover:brightness-125"
                       style={{ borderColor: accent, color: readableAccent(accent) }}
                     >
-                      Entrar a la lección
+                      {mod.reinforceCount > 0 ? "Otra lección · ángulo nuevo" : "Entrar a la lección"}
                     </button>
                   </div>
                 ) : (
@@ -191,8 +192,26 @@ export function TopicDetailSheet({
             {mode === "review" && (
               <div className="mt-5 border-t border-line pt-5">
                 <div className="mb-3 text-[11px] uppercase tracking-[0.18em] text-text-faint">
-                  {mod.status === "idle" ? "Reto en blanco · mide tu nivel de entrada" : "Repaso rápido · prueba que aún lo sostienes"}
+                  {mod.status === "idle" ? "Reto en blanco · mide tu nivel de entrada" : "Repaso · prueba que aún lo sostienes"}
                 </div>
+                {/* Capa C — un repaso GENERADO nuevo (variación contra la misma fuente, nunca repetido) */}
+                {content && content.sourceUrls.length > 0 && mod.status !== "idle" && (
+                  <div className="mb-4 rounded-[var(--r-md)] border border-line p-4">
+                    <p className="text-[12px] leading-snug text-text-muted">
+                      Un repaso NUEVO cada vez: una variación contra la misma fuente (otro ángulo), nunca la misma lección dos veces.
+                    </p>
+                    <button
+                      onClick={() => {
+                        audio.unlock();
+                        setLesson({ open: true, kind: "review" });
+                      }}
+                      className="mt-3 min-h-11 w-full rounded-[var(--r-sm)] border px-4 text-sm transition hover:brightness-125"
+                      style={{ borderColor: accent, color: readableAccent(accent) }}
+                    >
+                      Generar repaso
+                    </button>
+                  </div>
+                )}
                 {retoWall(false)}
               </div>
             )}
@@ -201,37 +220,18 @@ export function TopicDetailSheet({
             {content && (
               <details className="group mt-5 border-t border-line pt-4">
                 <summary className="min-h-11 cursor-pointer list-none text-[11px] uppercase tracking-[0.18em] text-text-faint transition hover:text-text-muted">
-                  ⌄ Cuerpo de la celda · fuente canónica
+                  ⌄ Curso · fuentes reales y visor
                 </summary>
                 <div className="mt-3 space-y-4">
                   <p className="text-[13px] leading-relaxed text-text-muted">
                     {content.summary ??
-                      "El cuerpo se llena bajo demanda: trabaja el reto, y cuando choques, pregúntale al tutor (borrador editable). Aquí no hay contenido pre-inventado — solo la fuente real."}
+                      "La secuencia curada de fuentes REALES de este tema. El video corre aquí dentro; las páginas se traen y se leen dentro; nada inventado — solo la fuente."}
                   </p>
-                  {content.sourceUrls.length > 0 && (
-                    <div>
-                      <h3 className="text-[10px] uppercase tracking-[0.2em] text-text-faint">Fuente</h3>
-                      <div className="mt-1 space-y-1">
-                        {content.sourceUrls.map((url) => (
-                          <a key={url} href={url} target="_blank" rel="noreferrer noopener" className="block min-h-11 py-2 text-[13px] text-topic transition hover:underline">
-                            {url.replace(/^https?:\/\//, "").slice(0, 52)} ↗
-                          </a>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                  {content.videos.length > 0 && (
-                    <div>
-                      <h3 className="text-[10px] uppercase tracking-[0.2em] text-text-faint">Video</h3>
-                      <div className="mt-1 space-y-1">
-                        {content.videos.map((v) => (
-                          <a key={v.url} href={v.url} target="_blank" rel="noreferrer noopener" className="block min-h-11 py-2 text-[13px] text-topic transition hover:underline">
-                            {v.title} ↗
-                          </a>
-                        ))}
-                      </div>
-                    </div>
-                  )}
+                  <SourceViewer
+                    cellTitle={mod.title}
+                    sources={[...content.sourceUrls, ...content.videos.map((v) => v.url)]}
+                    accent={accent}
+                  />
                 </div>
               </details>
             )}
@@ -277,8 +277,16 @@ export function TopicDetailSheet({
       <NotesModule open={notesOpen} moduleId={moduleId} onClose={() => setNotesOpen(false)} />
       {tutorOpen && <TutorSheet moduleId={moduleId} accent={accent} onClose={() => setTutorOpen(false)} />}
     </div>
-    {lessonOpen && (
-      <LessonMode moduleId={moduleId} goalId={goalId} goalTitle={goalTitle} cellTitle={mod.title} onClose={() => setLessonOpen(false)} />
+    {lesson.open && (
+      <LessonMode
+        moduleId={moduleId}
+        goalId={goalId}
+        goalTitle={goalTitle}
+        cellTitle={mod.title}
+        angleIndex={mod.reinforceCount}
+        kind={lesson.kind}
+        onClose={() => setLesson({ open: false, kind: "lesson" })}
+      />
     )}
     </>
   );

@@ -117,9 +117,9 @@ export function useActions() {
     // ── Capa B — the step-by-step LIGHT lesson (full-screen mode) ────────────────
     // generate the whole course (concept + N micro-challenges) against the cell's REAL source.
     // Returns null without AI (no invented lesson — honest; the real source still works).
-    generateLessonCourse: async (moduleId: string): Promise<LessonCourseReply | null> => {
+    generateLessonCourse: async (moduleId: string, angleIndex = 0): Promise<LessonCourseReply | null> => {
       const rm = store.getState().readModel;
-      const ctx = buildLessonContext(rm, moduleId);
+      const ctx = buildLessonContext(rm, moduleId, angleIndex);
       if (!ctx) return null;
       return requestLessonSteps(ctx);
     },

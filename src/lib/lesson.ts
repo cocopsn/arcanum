@@ -1,5 +1,6 @@
 import type { ReadModel } from "@/core/read-model";
 import { ARCANUM_CONFIG } from "@/core/config";
+import { angleAt } from "@/lib/lesson-angles";
 import { cellById } from "@/lib/spines";
 import { contentForModule } from "@/lib/subject-content";
 
@@ -16,6 +17,8 @@ export interface LessonContext {
   /** how many steps the tutor should aim for (config — the single source of the count) */
   stepsMin: number;
   stepsMax: number;
+  /** the ANGLE this lesson takes (rotates by reinforceCount) so course/depth/review never repeat */
+  angle: string;
 }
 
 export interface LessonGradeContext {
@@ -27,7 +30,7 @@ export interface LessonGradeContext {
 
 /** Build the generate-context for a light lesson, or null if the cell has no real source to
  *  anchor to (then there is nothing honest to teach against). Pure. */
-export function buildLessonContext(rm: ReadModel, moduleId: string): LessonContext | null {
+export function buildLessonContext(rm: ReadModel, moduleId: string, angleIndex = 0): LessonContext | null {
   const m = rm.modules.find((x) => x.id === moduleId);
   if (!m) return null;
   const content = contentForModule(moduleId);
@@ -38,6 +41,7 @@ export function buildLessonContext(rm: ReadModel, moduleId: string): LessonConte
     sourceRefs,
     stepsMin: ARCANUM_CONFIG.lesson.stepsMin,
     stepsMax: ARCANUM_CONFIG.lesson.stepsMax,
+    angle: angleAt(angleIndex),
   };
 }
 

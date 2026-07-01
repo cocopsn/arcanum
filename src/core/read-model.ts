@@ -38,6 +38,9 @@ export interface ModuleRM {
   /** the adversarial EXIT GATE has been passed (WHITE ROOM) — monotonic; once true
    *  the cell counts as mastered and unseals the next cell (fog-of-war) */
   gatePassed: boolean;
+  /** count of checkpoint.passed reinforcements (lessons/reviews completed) — DRIVES the lesson
+   *  angle rotation so course→depth→review never repeat. Derived from the log, monotonic. */
+  reinforceCount: number;
 }
 
 export interface Edge {

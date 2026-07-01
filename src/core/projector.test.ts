@@ -394,3 +394,19 @@ describe("project — Phase 4 Canvas obligations", () => {
     expect(rm.celebratedGrade).toBe(3);
   });
 });
+
+describe("reinforceCount — advances the lesson angle so course/depth/review never repeat", () => {
+  const mk = (mid: string) => makeEvent("module.upserted", { title: "M", prereqs: [], kind: "core" }, { ...dev(DAY0), goalId: "g", moduleId: mid });
+  it("increments on checkpoint.passed but NOT on error.resolved (mid-lesson fix ≠ a new lesson)", () => {
+    const rm = project([
+      mk("m"),
+      makeEvent("error.resolved", { insight: "x" }, { ...dev(DAY1_A), moduleId: "m" }),
+      makeEvent("checkpoint.passed", { score: 0.9, kind: "checkpoint" }, { ...dev(DAY1_B), moduleId: "m" }),
+      makeEvent("checkpoint.passed", { score: 0.8, kind: "checkpoint" }, { ...dev(DAY2), moduleId: "m" }),
+    ]);
+    expect(rm.modules.find((x) => x.id === "m")!.reinforceCount).toBe(2);
+  });
+  it("a fresh module starts at 0 (the first lesson takes the first-principle angle)", () => {
+    expect(project([mk("m2")]).modules.find((x) => x.id === "m2")!.reinforceCount).toBe(0);
+  });
+});

@@ -26,12 +26,18 @@ export function LessonMode({
   goalId,
   goalTitle,
   cellTitle,
+  angleIndex = 0,
+  kind = "lesson",
   onClose,
 }: {
   moduleId: string;
   goalId: string;
   goalTitle: string;
   cellTitle: string;
+  /** rotation index → the angle this lesson takes (course/depth/review never repeat) */
+  angleIndex?: number;
+  /** framing only — "review" reuses the SAME generator with the next angle (Capa C) */
+  kind?: "lesson" | "review";
   onClose: () => void;
 }) {
   const { generateLessonCourse, gradeLessonStep, resolveError, passLesson } = useActions();
@@ -65,7 +71,7 @@ export function LessonMode({
     setLoading(true);
     audio.unlock();
     void (async () => {
-      const c = await generateLessonCourse(moduleId);
+      const c = await generateLessonCourse(moduleId, angleIndex);
       if (cancel) return;
       if (!c) {
         setNoAi(true);
@@ -210,7 +216,7 @@ export function LessonMode({
 
       {/* ── body ── */}
       <main className="scroll-touch mx-auto w-full max-w-md flex-1 overflow-y-auto px-4 pt-4">
-        {loading && <Centered glyph={theme.glyph} accent={accent}>Forjando la lección contra la fuente real…</Centered>}
+        {loading && <Centered glyph={theme.glyph} accent={accent}>{kind === "review" ? "Forjando un repaso NUEVO contra la fuente real…" : "Forjando la lección contra la fuente real…"}</Centered>}
 
         {noAi && (
           <Centered glyph="⊘" accent={accent}>

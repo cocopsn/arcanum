@@ -430,7 +430,7 @@ async function interrogate(
 // Never invents fixed academic facts: teaches the canonical concept and points at the real source.
 async function lesson(
   provider: string,
-  context: { phase?: string; cellTitle?: string; sourceRefs?: string[]; challenge?: string; rubric?: string[]; answer?: string; stepsMin?: number; stepsMax?: number },
+  context: { phase?: string; cellTitle?: string; sourceRefs?: string[]; challenge?: string; rubric?: string[]; answer?: string; stepsMin?: number; stepsMax?: number; angle?: string },
 ): Promise<Record<string, unknown>> {
   const isGrade = context.phase === "grade";
   const lo = Number.isFinite(context.stepsMin) ? Number(context.stepsMin) : 5;
@@ -444,8 +444,10 @@ async function lesson(
       '{"score": number (0-1), "understood": boolean, "feedback": string}, en español. ' +
       `RETO: ${context.challenge ?? ""}. RÚBRICA: ${JSON.stringify(context.rubric ?? [])}. RESPUESTA DEL APRENDIZ: ${context.answer ?? ""}`
     : "Eres el tutor Asuka generando una LECCIÓN PASO A PASO (estilo Duolingo con alma, ~15-25 min) sobre el tópico de " +
-      "una celda, anclada a su FUENTE canónica REAL (abajo). Primero enseña el concepto central desde el PRIMER " +
-      "PRINCIPIO (markdown conciso, el porqué — no un resumen de viñetas). Luego diseña ENTRE " + lo + " Y " + hi +
+      "una celda, anclada a su FUENTE canónica REAL (abajo). ENFOQUE OBLIGATORIO de ESTA lección: " +
+      (context.angle ?? "el primer principio: la intuición central y el porqué") +
+      ". Ese enfoque la hace DISTINTA a otras lecciones del MISMO tema — NO repitas el mismo ángulo. Enseña el concepto " +
+      "central bajo ESE enfoque (markdown conciso, el porqué — no un resumen de viñetas). Luego diseña ENTRE " + lo + " Y " + hi +
       " PASOS que ESCALAN en dificultad: cada paso es UN micro-reto que exige PENSAR (justificar, completar, " +
       "elegir-y-explicar, implementar un fragmento, o producir), NUNCA reconocimiento trivial de opción múltiple sola. " +
       "Cada paso trae una rúbrica de 2-4 criterios de una buena respuesta. NO inventes hechos: si no tienes el detalle " +
