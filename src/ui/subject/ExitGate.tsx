@@ -10,6 +10,7 @@ import type { TopicGate } from "@/lib/subject-content";
 export function ExitGate({ moduleId, gate, accent }: { moduleId: string; gate: TopicGate; accent: string }) {
   const verdict = useArcanum((s) => s.readModel.gates.find((g) => g.moduleId === moduleId) ?? null);
   const gatePassed = useArcanum((s) => s.readModel.modules.find((m) => m.id === moduleId)?.gatePassed ?? false);
+  const pending = useArcanum((s) => s.readModel.pendingAi.some((p) => p.moduleId === moduleId && p.kind === "gate"));
   const { evaluateGate } = useActions();
   const [justification, setJustification] = useState("");
   const [busy, setBusy] = useState(false);
@@ -81,6 +82,16 @@ export function ExitGate({ moduleId, gate, accent }: { moduleId: string; gate: T
       <span className="sr-only" role="status" aria-live="polite">
         {busy ? "Evaluando tu justificación…" : ""}
       </span>
+
+      {/* OFFLINE: the submission was ENQUEUED — honest, and the gate does NOT open by queuing */}
+      {pending && (
+        <div role="status" aria-live="polite" className="mt-3 rounded-[var(--r-md)] border p-3" style={{ borderColor: "var(--amber)" }}>
+          <div className="text-[11px] uppercase tracking-[0.16em]" style={{ color: "var(--amber)" }}>En cola · sin evaluar</div>
+          <p className="mt-1.5 text-[13px] leading-snug text-text-muted">
+            Guardado sin conexión — tu justificación está a salvo. El evaluador adversarial la juzgará al reconectar; la compuerta NO se abre por estar en la cola.
+          </p>
+        </div>
+      )}
 
       {/* live region is mounted UNCONDITIONALLY so the verdict is announced when it lands */}
       <div role="status" aria-live="polite" aria-atomic="true">

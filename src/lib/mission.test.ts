@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { buildInterrogationContext, heuristicInterrogation, missionForModule } from "@/lib/mission";
+import { buildInterrogationContext, missionForModule } from "@/lib/mission";
 import { project } from "@/core/projector";
 import { makeEvent } from "@/core/event";
 import { SEED_EVENTS } from "@/lib/seed";
@@ -31,24 +31,6 @@ describe("missionForModule / buildInterrogationContext", () => {
     const plain = cs.cells.find((c) => !c.mission)!;
     expect(missionForModule(plain.id)).toBeNull();
     expect(buildInterrogationContext(rm, plain.id, "x")).toBeNull();
-  });
-});
-
-describe("heuristicInterrogation — honest, NEVER auto-passes", () => {
-  const base = { cellTitle: "CS50 L1", assignment: "a", deliverable: "d", sourceRefs: [] as string[] };
-
-  it("rejects trivial/short evidence outright (anti-gaming)", () => {
-    const v = heuristicInterrogation({ ...base, notes: "vi el video, estuvo bien" });
-    expect(v.passed).toBe(false);
-    expect(v.summary).toMatch(/insuficiente/i);
-    expect(v.questions).toEqual([]);
-  });
-
-  it("substantial evidence STILL does not open the gate — it requires the interrogator", () => {
-    const long = Array.from({ length: 40 }, (_, i) => `palabra${i}`).join(" ");
-    const v = heuristicInterrogation({ ...base, notes: long });
-    expect(v.passed).toBe(false); // local heuristic can NEVER open a mission gate (no placebo)
-    expect(v.feedback).toMatch(/interrogador|evaluador/i);
   });
 });
 

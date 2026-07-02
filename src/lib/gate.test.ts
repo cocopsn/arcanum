@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { buildGateContext, heuristicGate } from "@/lib/gate";
+import { buildGateContext } from "@/lib/gate";
 import { project } from "@/core/projector";
 import { SEED_EVENTS } from "@/lib/seed";
 import { SPINES } from "@/lib/spines";
@@ -22,22 +22,5 @@ describe("buildGateContext", () => {
   it("returns null for a cell without a gate", () => {
     const noGate = SPINES.flatMap((s) => s.cells).find((c) => !c.gate)!;
     expect(buildGateContext(rm, noGate.id, "x")).toBeNull();
-  });
-});
-
-describe("heuristicGate — honest, NEVER auto-passes", () => {
-  const ctx = { cellTitle: "AVL", question: "q", rubric: ["r"], justification: "", sourceRefs: [] };
-
-  it("rejects a trivially short justification (anti-gaming)", () => {
-    const v = heuristicGate({ ...ctx, justification: "porque sí" });
-    expect(v.passed).toBe(false);
-    expect(v.summary).toMatch(/insuficiente/i);
-  });
-
-  it("a substantive answer still does NOT open the gate — it requires the evaluator", () => {
-    const long = Array.from({ length: 20 }, (_, i) => `palabra${i}`).join(" ");
-    const v = heuristicGate({ ...ctx, justification: long });
-    expect(v.passed).toBe(false); // local heuristic can NEVER open the gate (no placebo)
-    expect(v.feedback).toMatch(/evaluador/i);
   });
 });

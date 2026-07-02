@@ -18,6 +18,7 @@ import {
   type ModuleEvaluatedPayload,
   type GateEvaluatedPayload,
   type MissionSubmittedPayload,
+  type AiQueuedPayload,
 } from "@/core/event";
 import { parseWikilinks } from "@/core/wikilink";
 import { wouldCreateCycle } from "@/core/roadmap";
@@ -45,6 +46,7 @@ import type {
   EvaluationRM,
   GateRM,
   MissionRM,
+  PendingAiRM,
 } from "@/core/read-model";
 
 const TZ = ARCANUM_CONFIG.tz;
@@ -118,6 +120,8 @@ interface Acc {
   gates: Map<string, GateRM>;
   /** latest mission evidence per heavy cell (kind:'mission') */
   missions: Map<string, MissionRM>;
+  /** offline AI queue: queueId → pending (+ resolved flag); assemble drops the resolved */
+  aiQueue: Map<string, PendingAiRM & { resolved: boolean }>;
 }
 
 function applyDomain(acc: Acc, e: ArcanumEvent): void {
@@ -349,6 +353,22 @@ function applyDomain(acc: Acc, e: ArcanumEvent): void {
       // (a later re-evaluation can't re-seal what was already demonstrated).
       const mod = acc.modules.get(id);
       if (mod && passed && !mod.gatePassed) acc.modules.set(id, { ...mod, gatePassed: true });
+      // if this verdict RESOLVES a queued offline submission, drop it from the pending queue.
+      if (typeof p.queueId === "string") {
+        const q = acc.aiQueue.get(p.queueId);
+        if (q) acc.aiQueue.set(p.queueId, { ...q, resolved: true });
+      }
+      return;
+    }
+    case "ai.queued": {
+      const id = e.module_id;
+      const p = e.payload as unknown as AiQueuedPayload;
+      if (!id || typeof p.queueId !== "string" || !p.queueId) return;
+      const kind = p.kind === "mission" ? "mission" : "gate";
+      // idempotent: a replayed ai.queued keeps the first (never a duplicate pending)
+      if (!acc.aiQueue.has(p.queueId)) {
+        acc.aiQueue.set(p.queueId, { queueId: p.queueId, kind, moduleId: id, goalId: e.goal_id, input: p.input ?? {}, ts: e.ts, resolved: false });
+      }
       return;
     }
     case "mission.submitted": {
@@ -427,6 +447,7 @@ function emptyAcc(): Acc {
     evaluations: new Map(),
     gates: new Map(),
     missions: new Map(),
+    aiQueue: new Map(),
   };
 }
 
@@ -448,6 +469,8 @@ function accFromModel(prev: ReadModel): Acc {
     evaluations: new Map(prev.evaluations.map((ev) => [ev.moduleId, ev])),
     gates: new Map(prev.gates.map((g) => [g.moduleId, g])),
     missions: new Map(prev.missions.map((m) => [m.moduleId, m])),
+    // resolved pendings are dropped from pendingAi → the carried queue is all-unresolved
+    aiQueue: new Map(prev.pendingAi.map((p) => [p.queueId, { ...p, resolved: false }])),
   };
 }
 
@@ -491,6 +514,7 @@ function assemble(
     evaluations: [...acc.evaluations.values()],
     gates: [...acc.gates.values()],
     missions: [...acc.missions.values()],
+    pendingAi: [...acc.aiQueue.values()].filter((x) => !x.resolved).map(({ resolved, ...p }) => { void resolved; return p; }),
     qualifiedDays,
     stats: {
       totalXp: acc.totalXp,

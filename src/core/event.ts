@@ -30,6 +30,7 @@ export const EVENT_TYPES = [
   "module.evaluated",
   "gate.evaluated",
   "mission.submitted",
+  "ai.queued",
 ] as const;
 
 export type EventType = (typeof EVENT_TYPES)[number];
@@ -171,6 +172,26 @@ export interface GateEvaluatedPayload {
   /** the pointed questions the interrogator GENERATED against the mission's real
    *  content (heavy mission cells); empty/absent for a pre-authored justify-gate */
   questions?: string[];
+  /** set when this verdict RESOLVES a queued offline submission (ai.queued.queueId) →
+   *  the projector drops that pending. The gate opens ONLY from a real AI verdict here,
+   *  never from the enqueue itself. */
+  queueId?: string;
+}
+
+/**
+ * An AI action the learner took OFFLINE (or with the Edge unreachable) — enqueued honestly
+ * instead of faked. The user's cognitive work (their justification/notes) is PRESERVED in the
+ * log; the gate does NOT open by enqueuing. On reconnect the queue drains: each pending is sent
+ * to the real evaluator and its verdict (gate.evaluated with the matching queueId) resolves it.
+ * Idempotent: draining twice fires a duplicate verdict at worst (gatePassed is monotonic;
+ * resolution is keyed by queueId). module_id/goal_id in the envelope.
+ */
+export interface AiQueuedPayload {
+  /** unique id linking this pending to its resolving gate.evaluated */
+  queueId: string;
+  kind: "gate" | "mission";
+  /** the preserved work: { justification } for a gate, { notes } for a mission interrogation */
+  input: Json;
 }
 
 /**

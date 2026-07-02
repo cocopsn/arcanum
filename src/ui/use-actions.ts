@@ -4,8 +4,8 @@ import { useArcanumStore, useArcanumSync } from "@/app/providers";
 import { makeEvent, newEventId, type EventType, type Json } from "@/core/event";
 import { getDeviceId } from "@/lib/device";
 import { buildEvaluationContext, heuristicEvaluation } from "@/core/evaluation";
-import { buildGateContext, heuristicGate } from "@/lib/gate";
-import { buildInterrogationContext, heuristicInterrogation } from "@/lib/mission";
+import { buildGateContext } from "@/lib/gate";
+import { buildInterrogationContext } from "@/lib/mission";
 import { buildLessonContext, buildLessonGradeContext } from "@/lib/lesson";
 import {
   requestModuleEvaluation,
@@ -69,50 +69,67 @@ export function useActions() {
       await fire("module.evaluated", payload as unknown as Json, { goalId, moduleId });
     },
     // The adversarial EXIT GATE (WHITE ROOM): grade the learner's justification against
-    // the cell rubric. ONLY a pass opens the gate → unseals the next cell (real power).
-    // No AI → honest heuristic that NEVER auto-passes. Records gate.evaluated (auditable).
+    // the cell rubric. ONLY a real AI pass opens the gate → unseals the next cell (real power).
+    // OFFLINE / no evaluator reachable → ENQUEUE the justification honestly (ai.queued): the gate does
+    // NOT open by enqueuing; the real verdict on reconnect decides. Records gate.evaluated (auditable).
     evaluateGate: async (moduleId: string, justification: string): Promise<void> => {
       const rm = store.getState().readModel;
       const ctx = buildGateContext(rm, moduleId, justification);
       if (!ctx) return;
-      const ai = await requestGateEvaluation(ctx);
-      const v = ai ?? heuristicGate(ctx);
       const goalId = rm.modules.find((m) => m.id === moduleId)?.goalId ?? null;
-      const payload = {
-        passed: v.passed,
-        score: v.score,
-        summary: v.summary,
-        feedback: v.feedback,
-        source: ai ? "ai" : "heuristic",
-        provider: ai ? ai.provider : null,
-      };
-      await fire("gate.evaluated", payload as unknown as Json, { goalId, moduleId });
+      const ai = await requestGateEvaluation(ctx);
+      if (ai) {
+        await fire("gate.evaluated", { passed: ai.passed, score: ai.score, summary: ai.summary, feedback: ai.feedback, source: "ai", provider: ai.provider }, { goalId, moduleId });
+      } else {
+        await fire("ai.queued", { queueId: newEventId(), kind: "gate", input: { justification } }, { goalId, moduleId });
+      }
     },
     // ── DIRECTED MISSION loop (heavy cells) ──────────────────────────────────────
     // The learner returns from the assigned source and submits EVIDENCE (their notes).
     // mission.submitted is durable proof of work in the log, independent of any verdict.
     submitMission: (refs: Refs, notes: string) => fire("mission.submitted", { notes }, refs),
-    // The INTERROGATION (the mission's gate): the Asuka interrogator generates pointed
-    // questions against the mission's REAL content and judges the submitted evidence.
-    // ONLY a pass opens the next node (gate.evaluated → gatePassed → isMastered). No AI →
-    // honest heuristic that NEVER auto-passes. The generated questions ride on the event.
+    // The INTERROGATION (the mission's gate): the Asuka interrogator generates pointed questions
+    // against the mission's REAL content and judges the submitted evidence. ONLY a real pass opens
+    // the next node. OFFLINE → ENQUEUE the evidence (ai.queued); the interrogation runs for real on
+    // reconnect. The gate never opens from the enqueue. The evidence is also durable in mission.submitted.
     interrogateMission: async (moduleId: string, notes: string): Promise<void> => {
       const rm = store.getState().readModel;
       const ctx = buildInterrogationContext(rm, moduleId, notes);
       if (!ctx) return;
-      const ai = await requestInterrogation(ctx);
-      const v = ai ?? heuristicInterrogation(ctx);
       const goalId = rm.modules.find((m) => m.id === moduleId)?.goalId ?? null;
-      const payload = {
-        passed: v.passed,
-        score: v.score,
-        summary: v.summary,
-        feedback: v.feedback,
-        questions: v.questions,
-        source: ai ? "ai" : "heuristic",
-        provider: ai ? ai.provider : null,
-      };
-      await fire("gate.evaluated", payload as unknown as Json, { goalId, moduleId });
+      const ai = await requestInterrogation(ctx);
+      if (ai) {
+        await fire("gate.evaluated", { passed: ai.passed, score: ai.score, summary: ai.summary, feedback: ai.feedback, questions: ai.questions, source: "ai", provider: ai.provider }, { goalId, moduleId });
+      } else {
+        await fire("ai.queued", { queueId: newEventId(), kind: "mission", input: { notes } }, { goalId, moduleId });
+      }
+    },
+    // Drain the offline AI queue on reconnect — send each pending to the REAL evaluator and let its
+    // verdict (gate.evaluated with the matching queueId) resolve it. NO heuristic, NO fake: if the
+    // evaluator is still unreachable, stop and leave the item queued for the next attempt. Idempotent
+    // (a duplicate verdict is harmless — gatePassed is monotonic, resolution is keyed by queueId).
+    drainAiQueue: async (): Promise<number> => {
+      const rm = store.getState().readModel;
+      let resolved = 0;
+      for (const p of rm.pendingAi) {
+        const goalId = rm.modules.find((m) => m.id === p.moduleId)?.goalId ?? null;
+        const input = (p.input ?? {}) as { justification?: string; notes?: string };
+        if (p.kind === "gate") {
+          const ctx = buildGateContext(rm, p.moduleId, input.justification ?? "");
+          if (!ctx) continue;
+          const ai = await requestGateEvaluation(ctx);
+          if (!ai) break;
+          await fire("gate.evaluated", { passed: ai.passed, score: ai.score, summary: ai.summary, feedback: ai.feedback, source: "ai", provider: ai.provider, queueId: p.queueId }, { goalId, moduleId: p.moduleId });
+        } else {
+          const ctx = buildInterrogationContext(rm, p.moduleId, input.notes ?? "");
+          if (!ctx) continue;
+          const ai = await requestInterrogation(ctx);
+          if (!ai) break;
+          await fire("gate.evaluated", { passed: ai.passed, score: ai.score, summary: ai.summary, feedback: ai.feedback, questions: ai.questions, source: "ai", provider: ai.provider, queueId: p.queueId }, { goalId, moduleId: p.moduleId });
+        }
+        resolved++;
+      }
+      return resolved;
     },
     // ── Capa B — the step-by-step LIGHT lesson (full-screen mode) ────────────────
     // generate the whole course (concept + N micro-challenges) against the cell's REAL source.

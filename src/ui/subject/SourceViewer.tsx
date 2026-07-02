@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { classifySource } from "@/lib/source-kind";
 import { diagramFor } from "@/ui/subject/ConceptDiagram";
+import { getOfflineSource } from "@/lib/offline-store";
 import { readableAccent } from "@/lib/accent";
 import type { ExtractedBlock } from "@/lib/extract";
 
@@ -65,6 +66,16 @@ function SourceItem({ url, accent }: { url: string; accent: string }) {
     setFetching(true);
     setOpen(true);
     try {
+      // OFFLINE-FIRST: a downloaded spine cached this extraction → read it locally, no network
+      const cached = await getOfflineSource(url);
+      if (cached) {
+        setResult({ ...(cached as FetchResult), sourceUrl: url });
+        return;
+      }
+      if (typeof navigator !== "undefined" && !navigator.onLine) {
+        setResult({ mode: "error", reason: "offline-not-downloaded", sourceUrl: url });
+        return;
+      }
       const r = await fetch(`/api/fetch-source?url=${encodeURIComponent(url)}`).then((res) => res.json());
       setResult(r as FetchResult);
     } catch {
@@ -168,6 +179,8 @@ function SourceItem({ url, accent }: { url: string; accent: string }) {
                 <p key={i} className="mt-2 text-[12px] leading-relaxed text-text-muted">{b.text}</p>
               ))}
             </div>
+          ) : result.reason === "offline-not-downloaded" ? (
+            <p className="text-[12px] text-text-muted">Sin conexión y esta fuente no está descargada. Descarga la espina con red (botón «Descargar para offline») para leerla en el avión, o reconéctate.</p>
           ) : (
             <p className="text-[12px] text-text-muted">No se pudo traer la página ({result.reason ?? "error"}). Ábrela en su sitio.</p>
           )}

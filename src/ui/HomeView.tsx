@@ -10,6 +10,8 @@ import { StreakFlame } from "@/ui/StreakFlame";
 import { XpBurst } from "@/ui/XpBurst";
 import { RitoDelDia } from "@/ui/RitoDelDia";
 import { SyncStatus } from "@/ui/SyncStatus";
+import { OfflinePill, OfflineSheet } from "@/ui/OfflineStatus";
+import { AiQueueDrain } from "@/ui/AiQueueDrain";
 import { AuthSheet } from "@/ui/AuthSheet";
 import { CodiceSheet } from "@/ui/CodiceSheet";
 import { NotesModule } from "@/ui/notes/NotesModule";
@@ -44,6 +46,7 @@ export function HomeView() {
   const [mapOpen, setMapOpen] = useState(false);
   const [agendaOpen, setAgendaOpen] = useState(false);
   const [audioOpen, setAudioOpen] = useState(false);
+  const [offlineOpen, setOfflineOpen] = useState(false);
   const [subjectGoal, setSubjectGoal] = useState<string | null>(null);
 
   if (status === "loading") {
@@ -64,7 +67,10 @@ export function HomeView() {
           <span className="font-display text-sm tracking-[0.4em] text-text-muted">
             ARCANUM
           </span>
-          <SyncStatus onOpen={() => setAuthOpen(true)} />
+          <div className="flex items-center gap-3">
+            <OfflinePill onOpen={() => setOfflineOpen(true)} />
+            <SyncStatus onOpen={() => setAuthOpen(true)} />
+          </div>
         </header>
 
         <Hero stats={readModel.stats} viewModel={viewModel} />
@@ -92,6 +98,8 @@ export function HomeView() {
       <AudioConfig open={audioOpen} onClose={() => setAudioOpen(false)} />
       {subjectGoal && <SubjectMap goalId={subjectGoal} onClose={() => setSubjectGoal(null)} />}
 
+      <AiQueueDrain />
+      <OfflineSheet open={offlineOpen} onClose={() => setOfflineOpen(false)} />
       <AuthSheet open={authOpen} onClose={() => setAuthOpen(false)} />
       <CodiceSheet open={codiceOpen} onClose={() => setCodiceOpen(false)} />
       <VigiliaSheet open={vigiliaOpen} onClose={() => setVigiliaOpen(false)} />

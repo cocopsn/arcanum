@@ -185,5 +185,19 @@ export interface ReadModel {
   gates: GateRM[];
   /** latest MISSION evidence per heavy cell, folded from mission.submitted */
   missions: MissionRM[];
+  /** AI actions enqueued offline and NOT yet resolved by a real verdict (ai.queued minus its
+   *  resolving gate.evaluated) — the honest pending queue. Drives the "N pendientes" badge. */
+  pendingAi: PendingAiRM[];
   cursor: { ts: number; id: string } | null;
+}
+
+export interface PendingAiRM {
+  queueId: string;
+  kind: "gate" | "mission";
+  moduleId: string;
+  goalId: string | null;
+  /** the learner's preserved work — { justification } (gate) or { notes } (mission) */
+  input: Json;
+  /** when it was enqueued, epoch ms */
+  ts: number;
 }

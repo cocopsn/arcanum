@@ -18,6 +18,7 @@ import {
 import { createDb, type ArcanumDB } from "@/db/schema";
 import { getSupabase, makeSyncClient } from "@/sync/client";
 import { signOut, currentUser, onAuthChange } from "@/sync/auth";
+import { requestPersist } from "@/lib/storage";
 
 interface ArcanumContext {
   store: ArcanumStore;
@@ -58,7 +59,15 @@ export function ArcanumProvider({
 
   useEffect(() => {
     void store.getState().hydrate(Date.now());
-    void navigator.storage?.persist?.();
+    // Ask for durable storage on the FIRST user gesture — iOS grants persist far more reliably once
+    // the PWA is engaged than on a cold load. One-shot (self-removes after the first gesture).
+    const askPersist = () => {
+      void requestPersist();
+      window.removeEventListener("pointerdown", askPersist);
+      window.removeEventListener("keydown", askPersist);
+    };
+    window.addEventListener("pointerdown", askPersist);
+    window.addEventListener("keydown", askPersist);
 
     let unsub: (() => void) | undefined;
     if (sb) {
@@ -104,6 +113,8 @@ export function ArcanumProvider({
       window.clearInterval(interval);
       window.removeEventListener("focus", onFocus);
       window.removeEventListener("online", syncNow);
+      window.removeEventListener("pointerdown", askPersist);
+      window.removeEventListener("keydown", askPersist);
     };
   }, [store, sb, syncNow]);
 
