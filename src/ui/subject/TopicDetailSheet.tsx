@@ -12,6 +12,8 @@ import { Quiz } from "@/ui/subject/Quiz";
 import { ExitGate } from "@/ui/subject/ExitGate";
 import { MissionPanel } from "@/ui/subject/MissionPanel";
 import { LessonMode } from "@/ui/subject/LessonMode";
+import { ExerciseMode } from "@/ui/exercises/ExerciseMode";
+import { bankForModule } from "@/lib/exercise-bank";
 import { LearningModes } from "@/ui/subject/LearningModes";
 import { SourceViewer } from "@/ui/subject/SourceViewer";
 import { BookReader } from "@/ui/books/BookReader";
@@ -43,6 +45,7 @@ export function TopicDetailSheet({
   const [lesson, setLesson] = useState<{ open: boolean; kind: "lesson" | "review" }>({ open: false, kind: "lesson" });
   const [book, setBook] = useState<BookRow | null>(null);
   const [readerOpen, setReaderOpen] = useState(false);
+  const [exercisesOpen, setExercisesOpen] = useState(false);
 
   useEffect(() => {
     let cancel = false;
@@ -179,6 +182,27 @@ export function TopicDetailSheet({
               ) : (
                 <p className="mt-1 text-[13px] leading-snug text-text-muted">Sin libro — genéralo con IA (Sonnet 5) en el formato de contrato e impórtalo en Lecturas. Cero contenido inventado.</p>
               )}
+            </div>
+
+            {/* ── Ejercicios · Fase 2 (escribir código desde cero, ejecutado offline) ── */}
+            <div className="mt-4 rounded-[var(--r-md)] border border-line p-4">
+              <div className="flex items-center justify-between gap-2">
+                <h3 className="font-display text-xs uppercase tracking-[0.22em] text-text-faint">Ejercicios · Fase 2</h3>
+                <span className="text-[10px] uppercase tracking-wider text-text-faint">JS · Python</span>
+              </div>
+              <p className="mt-1 text-[12px] leading-snug text-text-muted">
+                Escribe la implementación desde cero y ejecútala AQUÍ, sin datos. Te muestra el error real o el caso exacto que falla — nunca la solución. {bankForModule(moduleId).length > 0 ? "Banco curado + práctica infinita." : "Práctica infinita de sintaxis (JS/Python)."}
+              </p>
+              <button
+                onClick={() => {
+                  audio.unlock();
+                  setExercisesOpen(true);
+                }}
+                className="mt-3 min-h-11 w-full rounded-[var(--r-sm)] border px-4 text-sm transition hover:brightness-125"
+                style={{ borderColor: accent, color: readableAccent(accent) }}
+              >
+                Entrar a los ejercicios
+              </button>
             </div>
 
             {/* ── the time-by-duration SELECTOR drives the activity below ── */}
@@ -325,6 +349,15 @@ export function TopicDetailSheet({
       />
     )}
     {readerOpen && book && <BookReader book={book} onClose={() => setReaderOpen(false)} />}
+    {exercisesOpen && (
+      <ExerciseMode
+        moduleId={moduleId}
+        goalId={goalId}
+        goalTitle={goalTitle}
+        cellTitle={mod.title}
+        onClose={() => setExercisesOpen(false)}
+      />
+    )}
     </>
   );
 }

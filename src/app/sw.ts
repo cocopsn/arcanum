@@ -1,7 +1,7 @@
 /// <reference lib="webworker" />
 import { defaultCache } from "@serwist/next/worker";
 import type { PrecacheEntry, SerwistGlobalConfig } from "serwist";
-import { NetworkOnly, Serwist } from "serwist";
+import { CacheFirst, NetworkOnly, Serwist } from "serwist";
 
 declare global {
   interface WorkerGlobalScope extends SerwistGlobalConfig {
@@ -24,6 +24,12 @@ const serwist = new Serwist({
     {
       matcher: ({ url, sameOrigin }) => sameOrigin && url.pathname.startsWith("/api/"),
       handler: new NetworkOnly(),
+    },
+    {
+      // Pyodide (CPython WASM) — versioned/immutable assets. Cache on first load so the Python code
+      // runner works 100% OFFLINE afterward (the learner rarely has data). CacheFirst = never re-fetch.
+      matcher: ({ url }) => url.href.startsWith("https://cdn.jsdelivr.net/pyodide/"),
+      handler: new CacheFirst({ cacheName: "arcanum-pyodide" }),
     },
     ...defaultCache,
   ],
