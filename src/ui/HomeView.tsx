@@ -15,6 +15,7 @@ import { AiQueueDrain } from "@/ui/AiQueueDrain";
 import { AuthSheet } from "@/ui/AuthSheet";
 import { CodiceSheet } from "@/ui/CodiceSheet";
 import { NotesModule } from "@/ui/notes/NotesModule";
+import { BooksLibrary } from "@/ui/books/BooksLibrary";
 import { VigiliaSheet } from "@/ui/VigiliaSheet";
 import { AscensionCeremony } from "@/ui/AscensionCeremony";
 import { RoadmapCanvas } from "@/ui/roadmap/RoadmapCanvas";
@@ -47,6 +48,7 @@ export function HomeView() {
   const [agendaOpen, setAgendaOpen] = useState(false);
   const [audioOpen, setAudioOpen] = useState(false);
   const [offlineOpen, setOfflineOpen] = useState(false);
+  const [booksOpen, setBooksOpen] = useState(false);
   const [subjectGoal, setSubjectGoal] = useState<string | null>(null);
 
   if (status === "loading") {
@@ -88,6 +90,7 @@ export function HomeView() {
           onAgenda={() => setAgendaOpen(true)}
           onCodice={() => setCodiceOpen(true)}
           onNotes={() => setNotes({ open: true, moduleId: null })}
+          onLecturas={() => setBooksOpen(true)}
           onVigilia={() => setVigiliaOpen(true)}
           onAudio={() => setAudioOpen(true)}
         />
@@ -99,6 +102,7 @@ export function HomeView() {
       {subjectGoal && <SubjectMap goalId={subjectGoal} onClose={() => setSubjectGoal(null)} />}
 
       <AiQueueDrain />
+      <BooksLibrary open={booksOpen} onClose={() => setBooksOpen(false)} />
       <OfflineSheet open={offlineOpen} onClose={() => setOfflineOpen(false)} />
       <AuthSheet open={authOpen} onClose={() => setAuthOpen(false)} />
       <CodiceSheet open={codiceOpen} onClose={() => setCodiceOpen(false)} />
@@ -221,6 +225,7 @@ function Footer({
   onAgenda,
   onCodice,
   onNotes,
+  onLecturas,
   onVigilia,
   onAudio,
 }: {
@@ -228,6 +233,7 @@ function Footer({
   onAgenda: () => void;
   onCodice: () => void;
   onNotes: () => void;
+  onLecturas: () => void;
   onVigilia: () => void;
   onAudio: () => void;
 }) {
@@ -250,6 +256,10 @@ function Footer({
       {sep}
       <button onClick={onNotes} className={`${item} hover:text-topic`}>
         Notas
+      </button>
+      {sep}
+      <button onClick={onLecturas} className={`${item} hover:text-topic`}>
+        Lecturas
       </button>
       {sep}
       <button onClick={onVigilia} className={`${item} hover:text-gold`}>

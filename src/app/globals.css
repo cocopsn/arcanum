@@ -322,3 +322,59 @@
   height: 0;
   pointer-events: none;
 }
+
+/* ── Deep-reading book prose (EB Garamond, long-read comfort) ── */
+.book-prose {
+  font-family: var(--font-serif), Georgia, serif;
+  color: var(--text);
+  font-size: 16px;
+  line-height: 1.75;
+}
+.book-prose > * + * {
+  margin-top: 0.85em;
+}
+.book-prose h3 {
+  font-family: var(--font-display), Georgia, serif;
+  font-size: 1.12rem;
+  margin-top: 1em;
+  color: var(--text);
+}
+.book-prose strong {
+  color: var(--text);
+  font-weight: 700;
+}
+.book-prose em {
+  font-style: italic;
+}
+.book-prose a {
+  color: var(--topic);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  word-break: break-word;
+}
+.book-prose ul,
+.book-prose ol {
+  padding-left: 1.4em;
+}
+.book-prose ul {
+  list-style: disc;
+}
+.book-prose ol {
+  list-style: decimal;
+}
+.book-prose li {
+  margin: 0.25em 0;
+}
+.book-prose blockquote {
+  border-left: 2px solid color-mix(in srgb, var(--accent) 45%, var(--line));
+  padding-left: 0.9em;
+  color: var(--text-muted);
+  font-style: italic;
+}
+.book-prose .book-code-inline {
+  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  font-size: 0.85em;
+  background: color-mix(in srgb, var(--line) 55%, transparent);
+  padding: 0.1em 0.35em;
+  border-radius: 4px;
+}

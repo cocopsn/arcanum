@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useArcanum } from "@/app/providers";
 import { useActions } from "@/ui/use-actions";
 import { useFocusTrap } from "@/ui/use-focus-trap";
@@ -14,6 +14,8 @@ import { MissionPanel } from "@/ui/subject/MissionPanel";
 import { LessonMode } from "@/ui/subject/LessonMode";
 import { LearningModes } from "@/ui/subject/LearningModes";
 import { SourceViewer } from "@/ui/subject/SourceViewer";
+import { BookReader } from "@/ui/books/BookReader";
+import { getBookForModule, type BookRow } from "@/lib/book-store";
 import { audio } from "@/lib/audio";
 import { EvaluationPanel } from "@/ui/subject/EvaluationPanel";
 import { TutorSheet } from "@/ui/subject/TutorSheet";
@@ -39,6 +41,18 @@ export function TopicDetailSheet({
   const [notesOpen, setNotesOpen] = useState(false);
   const [tutorOpen, setTutorOpen] = useState(false);
   const [lesson, setLesson] = useState<{ open: boolean; kind: "lesson" | "review" }>({ open: false, kind: "lesson" });
+  const [book, setBook] = useState<BookRow | null>(null);
+  const [readerOpen, setReaderOpen] = useState(false);
+
+  useEffect(() => {
+    let cancel = false;
+    void getBookForModule(moduleId).then((b) => {
+      if (!cancel) setBook(b);
+    });
+    return () => {
+      cancel = true;
+    };
+  }, [moduleId]);
   const panelRef = useRef<HTMLDivElement>(null);
 
   const mod = readModel.modules.find((m) => m.id === moduleId) ?? null;
@@ -145,6 +159,28 @@ export function TopicDetailSheet({
           </div>
         ) : (
           <>
+            {/* ── Lectura profunda · Fase 1 (leer desde la raíz, offline) ── */}
+            <div className="mt-4 rounded-[var(--r-md)] border border-line p-4">
+              <div className="flex items-center justify-between gap-2">
+                <h3 className="font-display text-xs uppercase tracking-[0.22em] text-text-faint">Lectura profunda · Fase 1</h3>
+                {book?.meta.readingMinutes != null && <span className="text-[10px] uppercase tracking-wider text-text-faint">{book.meta.readingMinutes} min</span>}
+              </div>
+              {book ? (
+                <>
+                  <p className="mt-1 text-[12px] leading-snug text-text-muted">{book.title}{book.source === "seed" ? " · ejemplo semilla" : ""}</p>
+                  <button
+                    onClick={() => setReaderOpen(true)}
+                    className="mt-2 min-h-11 w-full rounded-[var(--r-sm)] border px-4 text-sm transition hover:brightness-125"
+                    style={{ borderColor: accent, color: readableAccent(accent) }}
+                  >
+                    Leer{book.meta.readingMinutes != null ? ` · ${book.meta.readingMinutes} min` : ""}
+                  </button>
+                </>
+              ) : (
+                <p className="mt-1 text-[13px] leading-snug text-text-muted">Sin libro — genéralo con IA (Sonnet 5) en el formato de contrato e impórtalo en Lecturas. Cero contenido inventado.</p>
+              )}
+            </div>
+
             {/* ── the time-by-duration SELECTOR drives the activity below ── */}
             <div className="mt-4">
               <LearningModes modes={modes} active={mode} onSelect={setMode} accent={accent} />
@@ -288,6 +324,7 @@ export function TopicDetailSheet({
         onClose={() => setLesson({ open: false, kind: "lesson" })}
       />
     )}
+    {readerOpen && book && <BookReader book={book} onClose={() => setReaderOpen(false)} />}
     </>
   );
 }
