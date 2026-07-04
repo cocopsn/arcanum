@@ -3,6 +3,9 @@
 import { useEffect, useRef, useState } from "react";
 import { useFocusTrap } from "@/ui/use-focus-trap";
 import { listBooks, saveBook, deleteBook, totalBookBytes, type BookRow } from "@/lib/book-store";
+import { listBanks, saveExerciseBank, deleteBank, totalBankBytes, type ExerciseBankRow } from "@/lib/exercise-store";
+import { runJs } from "@/lib/js-runner";
+import { runPy } from "@/lib/py-runner";
 import { getStorageStatus, type StorageStatus } from "@/lib/storage";
 import { BookReader } from "@/ui/books/BookReader";
 import { themeForGoal } from "@/lib/subject-themes";
@@ -16,6 +19,7 @@ const MB = (b: number) => (b >= 1e6 ? `${(b / 1e6).toFixed(1)} MB` : `${Math.max
 
 export function BooksLibrary({ open, onClose }: { open: boolean; onClose: () => void }) {
   const [books, setBooks] = useState<BookRow[]>([]);
+  const [banks, setBanks] = useState<ExerciseBankRow[]>([]);
   const [bytes, setBytes] = useState(0);
   const [storage, setStorage] = useState<StorageStatus | null>(null);
   const [reading, setReading] = useState<BookRow | null>(null);
@@ -29,7 +33,8 @@ export function BooksLibrary({ open, onClose }: { open: boolean; onClose: () => 
   useFocusTrap(rootRef);
   async function refresh() {
     setBooks(await listBooks());
-    setBytes(await totalBookBytes());
+    setBanks(await listBanks());
+    setBytes((await totalBookBytes()) + (await totalBankBytes()));
     setStorage(await getStorageStatus());
   }
   useEffect(() => {
@@ -42,12 +47,24 @@ export function BooksLibrary({ open, onClose }: { open: boolean; onClose: () => 
     setImporting(true);
     setMsg(null);
     try {
-      const saved = await saveBook(md, "import");
-      if (!saved) {
-        setMsg("Ese .md no cumple el contrato (falta frontmatter o título). No se importó nada — cero contenido inventado.");
-        return;
+      // route by frontmatter kind: an exercise bank re-validates every reference solution before landing;
+      // anything else is treated as a book (the existing contract).
+      const isExercises = /^﻿?---[\s\S]*?\bkind\s*:\s*exercises\b/i.test(md);
+      if (isExercises) {
+        const res = await saveExerciseBank(md, { source: "import", jsRun: runJs, pyRun: runPy });
+        if (!res.ok) {
+          setMsg([res.error, ...(res.details ?? [])].join(" "));
+          return;
+        }
+        setMsg(`Banco de ejercicios importado: «${res.bank.meta.title}» (${res.bank.count} ejercicios, validados).`);
+      } else {
+        const saved = await saveBook(md, "import");
+        if (!saved) {
+          setMsg("Ese .md no cumple el contrato (falta frontmatter o título). No se importó nada — cero contenido inventado.");
+          return;
+        }
+        setMsg(`Libro importado: «${saved.meta.title}».`);
       }
-      setMsg(`Importado: «${saved.meta.title}».`);
       setPaste("");
       setPasteOpen(false);
       await refresh();
@@ -76,7 +93,7 @@ export function BooksLibrary({ open, onClose }: { open: boolean; onClose: () => 
 
       <main className="scroll-touch mx-auto w-full max-w-md flex-1 overflow-y-auto px-4 pt-3">
         <p className="text-[12px] leading-snug text-text-muted">
-          Libros .md generados afuera (en Sonnet 5) e ingeridos aquí. Descargados = se leen sin datos, en el camión. {books.length} libro{books.length === 1 ? "" : "s"} · {MB(bytes)}
+          Libros y bancos de ejercicios .md generados afuera (en Sonnet 5) e ingeridos aquí. Descargados = sin datos, en el camión. {books.length} libro{books.length === 1 ? "" : "s"} · {banks.length} banco{banks.length === 1 ? "" : "s"} · {MB(bytes)}
           {storage?.usageMB != null && <> · {storage.usageMB} MB usados{storage?.persisted === true ? " (durable ✓)" : storage?.persisted === false ? " (no garantizado)" : ""}</>}
         </p>
 
@@ -128,6 +145,32 @@ export function BooksLibrary({ open, onClose }: { open: boolean; onClose: () => 
             );
           })}
         </div>
+
+        {/* exercise banks (Layer 1 curada, ingerida) */}
+        {banks.length > 0 && (
+          <div className="mt-6">
+            <div className="text-[10px] uppercase tracking-[0.24em] text-text-faint">Bancos de ejercicios</div>
+            <div className="mt-1.5 space-y-2">
+              {banks.map((bk) => {
+                const theme = themeForGoal(bk.spine);
+                return (
+                  <div key={bk.id} className="rounded-[var(--r-md)] border border-line bg-surface p-3">
+                    <div className="font-serif text-[15px] text-text">{bk.title}</div>
+                    <div className="mt-1 flex flex-wrap gap-x-3 text-[10px] uppercase tracking-wider text-text-faint">
+                      <span style={{ color: readableAccent(theme.accent) }}>{bk.spine || "—"}</span>
+                      <span>{bk.count} ejercicios</span>
+                      {bk.source === "seed" && <span>ejemplo semilla</span>}
+                      {bk.moduleId && <span>anclado</span>}
+                    </div>
+                    <div className="mt-2">
+                      <button onClick={async () => { await deleteBank(bk.id); await refresh(); }} className="min-h-11 text-[12px] uppercase tracking-wider text-text-faint transition hover:text-amber">Borrar</button>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
       </main>
 
       {reading && <BookReader book={reading} onClose={() => setReading(null)} />}

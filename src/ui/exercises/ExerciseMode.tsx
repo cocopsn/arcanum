@@ -4,7 +4,7 @@ import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react"
 import { useActions } from "@/ui/use-actions";
 import { useFocusTrap } from "@/ui/use-focus-trap";
 import { CodeEditor } from "@/ui/exercises/CodeEditor";
-import { bankForModule } from "@/lib/exercise-bank";
+import { loadBankForModule } from "@/lib/exercise-store";
 import { PROCEDURAL_TEMPLATES, generateVariant } from "@/lib/procedural";
 import { bookQuestionsForModule } from "@/lib/book-exercises";
 import { runJs } from "@/lib/js-runner";
@@ -39,8 +39,16 @@ export function ExerciseMode({ moduleId, goalId, goalTitle, cellTitle, onClose }
   useFocusTrap(rootRef);
   useEffect(() => {
     audio.unlock();
-    setCurated(bankForModule(moduleId));
-    void bookQuestionsForModule(moduleId).then(setBookQs);
+    let cancel = false;
+    void loadBankForModule(moduleId).then((ex) => {
+      if (!cancel) setCurated(ex);
+    });
+    void bookQuestionsForModule(moduleId).then((q) => {
+      if (!cancel) setBookQs(q);
+    });
+    return () => {
+      cancel = true;
+    };
   }, [moduleId]);
 
   return (

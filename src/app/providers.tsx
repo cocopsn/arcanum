@@ -20,6 +20,7 @@ import { getSupabase, makeSyncClient } from "@/sync/client";
 import { signOut, currentUser, onAuthChange } from "@/sync/auth";
 import { requestPersist } from "@/lib/storage";
 import { seedBooks } from "@/lib/seed-books";
+import { seedExerciseBanks } from "@/lib/seed-exercises";
 
 interface ArcanumContext {
   store: ArcanumStore;
@@ -61,6 +62,7 @@ export function ArcanumProvider({
   useEffect(() => {
     void store.getState().hydrate(Date.now());
     void seedBooks(); // populate the offline reader with the bundled seed books (idempotent, best-effort)
+    void seedExerciseBanks(); // populate the offline exercise store with the bundled seed banks (idempotent)
     // Ask for durable storage on the FIRST user gesture — iOS grants persist far more reliably once
     // the PWA is engaged than on a cold load. One-shot (self-removes after the first gesture).
     const askPersist = () => {

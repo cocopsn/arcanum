@@ -13,7 +13,7 @@ import { ExitGate } from "@/ui/subject/ExitGate";
 import { MissionPanel } from "@/ui/subject/MissionPanel";
 import { LessonMode } from "@/ui/subject/LessonMode";
 import { ExerciseMode } from "@/ui/exercises/ExerciseMode";
-import { bankForModule } from "@/lib/exercise-bank";
+import { loadBankForModule } from "@/lib/exercise-store";
 import { LearningModes } from "@/ui/subject/LearningModes";
 import { SourceViewer } from "@/ui/subject/SourceViewer";
 import { BookReader } from "@/ui/books/BookReader";
@@ -46,11 +46,15 @@ export function TopicDetailSheet({
   const [book, setBook] = useState<BookRow | null>(null);
   const [readerOpen, setReaderOpen] = useState(false);
   const [exercisesOpen, setExercisesOpen] = useState(false);
+  const [hasCurated, setHasCurated] = useState(false);
 
   useEffect(() => {
     let cancel = false;
     void getBookForModule(moduleId).then((b) => {
       if (!cancel) setBook(b);
+    });
+    void loadBankForModule(moduleId).then((ex) => {
+      if (!cancel) setHasCurated(ex.length > 0);
     });
     return () => {
       cancel = true;
@@ -191,7 +195,7 @@ export function TopicDetailSheet({
                 <span className="text-[10px] uppercase tracking-wider text-text-faint">JS · Python</span>
               </div>
               <p className="mt-1 text-[12px] leading-snug text-text-muted">
-                Escribe la implementación desde cero y ejecútala AQUÍ, sin datos. Te muestra el error real o el caso exacto que falla — nunca la solución. {bankForModule(moduleId).length > 0 ? "Banco curado + práctica infinita." : "Práctica infinita de sintaxis (JS/Python)."}
+                Escribe la implementación desde cero y ejecútala AQUÍ, sin datos. Te muestra el error real o el caso exacto que falla — nunca la solución. {hasCurated ? "Banco curado + práctica infinita." : "Práctica infinita de sintaxis (JS/Python)."}
               </p>
               <button
                 onClick={() => {
