@@ -100,6 +100,36 @@ Resumen de lo tuyo: levantar un droplet, `docker compose up -d` con un `.env` (c
 Canvas + `service_role` + tu `user_id`), importar `n8n-workflow.json`, activar. Sin esto,
 la Agenda muestra "Aún no conectas Canvas" (estado normal, no error).
 
+## 4) Kee Mission Control (el Vigía) → status feed de Arcanum
+
+Endpoints READ-ONLY, token-gated, para que MC surfacee el progreso de Arcanum. Todo
+server-side: el token se valida en el server, los events se leen con el `service_role`
+(nunca expuesto), y solo se devuelve progreso DERIVADO (el mismo `project()` de la app) —
+jamás un event crudo ni un secreto.
+
+**Env var (ambos Vercel):** genera un token largo (≥16 chars, p.ej. `openssl rand -hex 32`)
+y ponlo como `MC_STATUS_TOKEN` en el Vercel de Arcanum **y** el mismo valor donde MC lo
+lea para mandarlo. Requiere también `SUPABASE_SERVICE_ROLE_KEY` + `NEXT_PUBLIC_SUPABASE_URL`
+(ya configurados). Sin `MC_STATUS_TOKEN` los endpoints responden 401 a todo (deshabilitados).
+
+**Contrato (server-to-server; MC debe llamar desde su BACKEND para que el token no toque el browser):**
+
+- `GET /api/mc/ping` — header `X-MC-Token: <token>` → `{ ok, service:"arcanum", ts, apiVersion, configured }`. Heartbeat barato (sin fold).
+- `GET /api/mc/progress` — header `X-MC-Token: <token>` → snapshot derivado:
+  ```jsonc
+  {
+    "ok": true, "service": "arcanum", "ts": 0, "apiVersion": 1,
+    "stats": { "totalXp", "grade", "gradeIndex", "currentStreak", "longestStreak", "shields", "todayQualified" },
+    "counts": { "goals", "modules", "mastered", "active", "sealed", "reviewDue", "notes", "pendingAi" },
+    "active":    [{ "id", "title", "goalId", "status", "retrievability", "dueInDays" }],
+    "reviewDue": [{ "id", "title", "retrievability", "dueInDays", "overdue" }],
+    "recent":    [{ "type", "ts", "module" }],
+    "lastEventTs": 0
+  }
+  ```
+  401 sin token válido; 503 si el backend no está configurado. Los números coinciden con lo
+  que ve el aprendiz (mismo read-model event-sourced).
+
 ## Resumen: qué quedó live vs. qué te toca
 
 | Pieza | Estado | Acción tuya |
