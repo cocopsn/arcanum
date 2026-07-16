@@ -1,5 +1,5 @@
 import { makeEvent, type ArcanumEvent } from "@/core/event";
-import { SPINES } from "@/lib/spines";
+import { SPINES, pathIdForCell } from "@/lib/spines";
 
 // Day-0 seed: the THREE CURRICULAR SPINES (WHITE ROOM) as the roadmap DAG. Each goal
 // is a spine; each cell is a module; course order is the dependency (a linear chain →
@@ -48,7 +48,51 @@ function buildSeed(): ArcanumEvent[] {
   return events;
 }
 
-export const SEED_EVENTS: ArcanumEvent[] = buildSeed();
+// ── PATHS block (additive migration) ────────────────────────────────────────────────────────────
+// A goal can hold N PARALLEL PATHS, each with its own cells + fog-of-war. This block is APPENDED
+// (never renumbered into the original) with its OWN id prefix `b1000000-…` and a LATER ts, because
+// the original seed ids above are already in every existing log — shifting them would rewrite
+// history. Existing logs therefore receive ONLY these new events (hydrate re-applies the seed
+// idempotently, deduped by id), and the module.upserted re-upserts are LOSSLESS: the projector's
+// upsert branch preserves status/mastery/gatePassed and only ADDS pathId/concept/nature.
+// This is how the current FrED cells are RE-ASSIGNED to the path "Fundamentos" without losing a thing.
+let pseq = 0;
+const pathId = () => `b1000000-0000-4000-8000-${String(++pseq).padStart(12, "0")}`;
+
+function buildPaths(): ArcanumEvent[] {
+  const events: ArcanumEvent[] = [];
+  let t = TS + 1_000_000; // strictly after the original block
+  for (const sp of SPINES) {
+    sp.paths.forEach((p, i) => {
+      events.push(
+        makeEvent(
+          "path.upserted",
+          { path_id: p.id, slug: p.slug, name: p.name, description: p.description, order: i },
+          { ts: t++, deviceId: DEVICE, goalId: sp.goalId, id: pathId() },
+        ),
+      );
+    });
+    // re-upsert each existing cell WITH its path assignment (+ concept/nature when authored).
+    // Idempotent and lossless — progress is preserved by the projector.
+    for (const cell of sp.cells) {
+      const payload: Record<string, unknown> = {
+        title: cell.title,
+        prereqs: [],
+        kind: cell.mission ? "mission" : "cell",
+        pathId: pathIdForCell(sp, cell),
+      };
+      if (cell.concept) payload.concept = cell.concept;
+      if (cell.nature) payload.nature = cell.nature;
+      if (cell.parts) payload.parts = cell.parts;
+      events.push(
+        makeEvent("module.upserted", payload as never, { ts: t++, deviceId: DEVICE, goalId: sp.goalId, moduleId: cell.id, id: pathId() }),
+      );
+    }
+  }
+  return events;
+}
+
+export const SEED_EVENTS: ArcanumEvent[] = [...buildSeed(), ...buildPaths()];
 
 /** ITC spine + its first cell (CS50 ramp) — stable refs for tests/dispatch. */
 export const SEED_GOAL_ID = SPINES[0]!.goalId;

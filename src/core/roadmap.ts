@@ -1,5 +1,5 @@
 import { ARCANUM_CONFIG } from "@/core/config";
-import type { ModuleRM, Edge } from "@/core/read-model";
+import type { ModuleRM, Edge, PathRM } from "@/core/read-model";
 
 export type NodeStatus = "sealed" | "available" | "started" | "completed";
 
@@ -31,10 +31,38 @@ export function isMastered(m: ModuleRM): boolean {
  * prereq remains the node is revealed.
  */
 export function isRevealed(moduleId: string, edges: Edge[], byId: Map<string, ModuleRM>): boolean {
+  const self = byId.get(moduleId);
   const live = prereqsOf(moduleId, edges)
     .map((pid) => byId.get(pid))
-    .filter((m): m is ModuleRM => m !== undefined && !m.archived);
+    .filter((m): m is ModuleRM => m !== undefined && !m.archived)
+    // PATHS — progress NEVER crosses a path. A prereq only gates a cell in its OWN path: mastering a
+    // concept in path A must not unseal anything in path B, even if the topic repeats (that would be
+    // a placebo of mastery never demonstrated there — the learner must pass THAT path's gate too).
+    // The cross-path exemption applies ONLY when BOTH cells carry a REAL path (fail-open there is safe:
+    // path B's own chain still seals it). A null on EITHER side means "unassigned/legacy", NOT a
+    // different path — it must keep gating. Without this guard a null-path cell (e.g. one created on the
+    // roadmap canvas) hung off a path-assigned seed cell would drop its only prereq and be vacuously
+    // revealed → an UNEARNED unseal. That is the exact leak the migration would otherwise arm.
+    .filter((m) => (self && self.pathId !== null && m.pathId !== null ? m.pathId === self.pathId : true));
   return live.every((m) => isMastered(m));
+}
+
+/** An informative CROSS-PATH echo: this cell's concept was already MASTERED (gate passed) in ANOTHER
+ *  path. Pure, derived. It is context ONLY — it never unseals, never grants XP, never skips a gate.
+ *  Pure cognitive wiring so the learner sees the connection between parallel routes. */
+export interface CrossPathEcho {
+  pathId: string;
+  pathName: string;
+  moduleTitle: string;
+}
+export function crossPathEcho(m: ModuleRM, modules: ModuleRM[], paths: PathRM[]): CrossPathEcho | null {
+  if (!m.concept || !m.pathId) return null;
+  const other = modules.find(
+    (x) => x.id !== m.id && !x.archived && x.concept === m.concept && x.pathId !== null && x.pathId !== m.pathId && x.gatePassed,
+  );
+  if (!other || !other.pathId) return null;
+  const p = paths.find((pp) => pp.id === other.pathId);
+  return { pathId: other.pathId, pathName: p?.name ?? "otro path", moduleTitle: other.title };
 }
 
 /** Derived node status from prereqs + events. */

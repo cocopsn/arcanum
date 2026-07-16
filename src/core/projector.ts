@@ -19,6 +19,9 @@ import {
   type GateEvaluatedPayload,
   type MissionSubmittedPayload,
   type AiQueuedPayload,
+  type PathUpsertedPayload,
+  type NodeNature,
+  type NodePart,
 } from "@/core/event";
 import { parseWikilinks } from "@/core/wikilink";
 import { wouldCreateCycle } from "@/core/roadmap";
@@ -36,6 +39,7 @@ import { initialMastery, reinforce } from "@/core/mastery";
 import type {
   ReadModel,
   Goal,
+  PathRM,
   ModuleRM,
   Edge,
   ReviewItem,
@@ -51,6 +55,19 @@ import type {
 
 const TZ = ARCANUM_CONFIG.tz;
 const M = ARCANUM_CONFIG.mastery;
+
+// Validate the path-related fields at the fold (like every other neighbouring field), so a garbage or
+// future value can NEVER reach the UI and throw (NATURE_STANCE[nature] would be undefined). Unknown
+// nature → the strict 'a_mano' gate (never silently lightened).
+function validNature(n: unknown): NodeNature | null {
+  return n === "a_mano" || n === "delegable" || n === "mixto" ? n : null;
+}
+function validParts(p: unknown): NodePart[] | null {
+  if (!Array.isArray(p)) return null;
+  return p.filter(
+    (x): x is NodePart => !!x && typeof x === "object" && typeof (x as NodePart).name === "string" && ((x as NodePart).nature === "a_mano" || (x as NodePart).nature === "delegable"),
+  );
+}
 
 function isQualifying(e: ArcanumEvent): boolean {
   if (e.type === "error.resolved" || e.type === "checkpoint.passed") return true;
@@ -101,6 +118,8 @@ function sanitizeObligation(o: ObligationInput, fetchedTs: number): ObligationRM
 
 interface Acc {
   goals: Map<string, Goal>;
+  /** parallel routes per goal (path.upserted) */
+  paths: Map<string, PathRM>;
   modules: Map<string, ModuleRM>;
   edges: Edge[];
   edgeSet: Set<string>;
@@ -141,6 +160,23 @@ function applyDomain(acc: Acc, e: ArcanumEvent): void {
       });
       return;
     }
+    case "path.upserted": {
+      const p = e.payload as unknown as PathUpsertedPayload;
+      const id = typeof p.path_id === "string" ? p.path_id : "";
+      if (!id) return;
+      const prev = acc.paths.get(id);
+      acc.paths.set(id, {
+        id,
+        // preserve the goal on a rename-style re-upsert that omits it (same rule as modules)
+        goalId: e.goal_id ?? prev?.goalId ?? null,
+        slug: typeof p.slug === "string" && p.slug ? p.slug : (prev?.slug ?? id),
+        name: typeof p.name === "string" && p.name ? p.name : (prev?.name ?? ""),
+        description: typeof p.description === "string" ? p.description : (prev?.description ?? ""),
+        order: Number.isFinite(p.order) ? Number(p.order) : (prev?.order ?? 0),
+        archived: prev?.archived ?? false,
+      });
+      return;
+    }
     case "module.upserted": {
       const id = e.module_id;
       if (!id) return;
@@ -149,6 +185,13 @@ function applyDomain(acc: Acc, e: ArcanumEvent): void {
       if (prev) {
         acc.modules.set(id, {
           ...prev,
+          // PATHS: a later/rename upsert that OMITS the assignment must never silently detach the
+          // cell from its path/concept/nature (same defensive rule as goalId). This is what makes
+          // the re-upsert migration (old FrED cells → path "Fundamentos") lossless.
+          pathId: typeof p.pathId === "string" ? p.pathId : prev.pathId,
+          concept: typeof p.concept === "string" ? p.concept : prev.concept,
+          nature: validNature(p.nature) ?? prev.nature,
+          parts: validParts(p.parts) ?? prev.parts,
           title: p.title,
           // A heavy MISSION cell can never be silently DEMOTED to a plain cell by a
           // later/stray/synced upsert — its block on the next node depends on kind, so
@@ -165,6 +208,10 @@ function applyDomain(acc: Acc, e: ArcanumEvent): void {
         acc.modules.set(id, {
           id,
           goalId: e.goal_id,
+          pathId: typeof p.pathId === "string" ? p.pathId : null,
+          concept: typeof p.concept === "string" ? p.concept : null,
+          nature: validNature(p.nature) ?? "a_mano", // default: the rigorous gate — never silently lighten
+          parts: validParts(p.parts) ?? [],
           title: p.title,
           status: "idle",
           kind: p.kind,
@@ -246,6 +293,12 @@ function applyDomain(acc: Acc, e: ArcanumEvent): void {
       const g = acc.goals.get(ref);
       if (g) {
         acc.goals.set(ref, { ...g, archived: true });
+        return;
+      }
+      const pth = acc.paths.get(ref);
+      if (pth) {
+        // a path is ARCHIVED, never deleted — its cells + their proven mastery stay in the log
+        acc.paths.set(ref, { ...pth, archived: true });
         return;
       }
       const mod = acc.modules.get(ref);
@@ -433,6 +486,7 @@ function finalizeNotes(notes: NoteRM[]): NoteRM[] {
 function emptyAcc(): Acc {
   return {
     goals: new Map(),
+    paths: new Map(),
     modules: new Map(),
     edges: [],
     edgeSet: new Set(),
@@ -454,6 +508,7 @@ function emptyAcc(): Acc {
 function accFromModel(prev: ReadModel): Acc {
   return {
     goals: new Map(prev.goals.map((g) => [g.id, g])),
+    paths: new Map(prev.paths.map((p) => [p.id, p])),
     modules: new Map(prev.modules.map((m) => [m.id, m])),
     edges: [...prev.edges],
     edgeSet: new Set(prev.edges.map((e) => `${e.from}|${e.to}`)),
@@ -502,10 +557,15 @@ function assemble(
     lastOkTs: acc.canvasLastOkTs,
     cookieStale: acc.canvasCookieStale,
   };
+  // An edge's path is DERIVED from its source cell (edges are always intra-path). Cross-path edges
+  // are ignored by the fog-of-war (roadmap.isRevealed) — progress never crosses a path boundary.
+  const pathOf = new Map(modules.map((m) => [m.id, m.pathId]));
+  const edges: Edge[] = acc.edges.map((e) => ({ ...e, pathId: pathOf.get(e.from) ?? null }));
   return {
     goals: [...acc.goals.values()],
+    paths: [...acc.paths.values()].sort((a, b) => a.order - b.order || a.name.localeCompare(b.name)),
     modules,
-    edges: [...acc.edges],
+    edges,
     notes: finalizeNotes([...acc.notes.values()]),
     sleepCycles: [...acc.sleepCycles],
     obligations,

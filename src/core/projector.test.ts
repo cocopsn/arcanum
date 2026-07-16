@@ -202,7 +202,8 @@ describe("project — Phase 3 roadmap invariants", () => {
       makeEvent("roadmap.edge.upserted", { from: "b", to: "a" }, dev(DAY2)), // would close a→b→a
       makeEvent("roadmap.edge.upserted", { from: "a", to: "a" }, dev(DAY2)), // self-loop
     ];
-    expect(project(events).edges).toEqual([{ from: "a", to: "b" }]);
+    // edges now carry a DERIVED pathId (null here — these cells declare no path)
+    expect(project(events).edges).toEqual([{ from: "a", to: "b", pathId: null }]);
   });
 });
 

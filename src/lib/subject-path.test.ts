@@ -5,6 +5,10 @@ import type { ModuleRM, Edge } from "@/core/read-model";
 const mod = (id: string, title = id, over: Partial<ModuleRM> = {}): ModuleRM => ({
   id,
   goalId: "g",
+  pathId: null,
+  concept: null,
+  nature: "a_mano",
+  parts: [],
   title,
   status: "idle",
   kind: "core",

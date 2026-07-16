@@ -10,11 +10,11 @@ const nowDays = msToDays(NOW);
 const todayOrd = civilDayOrdinal(NOW, ARCANUM_CONFIG.tz);
 
 function mod(p: Partial<ModuleRM> & { id: string }): ModuleRM {
-  return { goalId: "g1", title: "Módulo " + p.id, status: "idle", kind: "core", prereqs: [], S: 5, lastReinforcedDays: nowDays, dueDays: nowDays + 5, startedDays: null, archived: false, firetestRatio: null, x: null, y: null, sourceObligationId: null, gatePassed: false, reinforceCount: 0, ...p };
+  return { goalId: "g1", pathId: null, concept: null, nature: "a_mano", parts: [], title: "Módulo " + p.id, status: "idle", kind: "core", prereqs: [], S: 5, lastReinforcedDays: nowDays, dueDays: nowDays + 5, startedDays: null, archived: false, firetestRatio: null, x: null, y: null, sourceObligationId: null, gatePassed: false, reinforceCount: 0, ...p };
 }
 function rm(p: Partial<ReadModel>): ReadModel {
   const stats: Stats = { totalXp: 0, grade: "Scintilla", gradeIndex: 0, currentStreak: 0, longestStreak: 0, shields: 0, lastQualifiedDay: null } as Stats;
-  return { goals: [], modules: [], edges: [], qualifiedDays: [], stats, reviewDue: [], notes: [], sleepCycles: [], obligations: [], canvas: { lastSyncTs: null, lastOkTs: null, cookieStale: false }, celebratedGrade: null, evaluations: [], gates: [], missions: [], pendingAi: [], cursor: null, ...p };
+  return { goals: [], paths: [], modules: [], edges: [], qualifiedDays: [], stats, reviewDue: [], notes: [], sleepCycles: [], obligations: [], canvas: { lastSyncTs: null, lastOkTs: null, cookieStale: false }, celebratedGrade: null, evaluations: [], gates: [], missions: [], pendingAi: [], cursor: null, ...p };
 }
 const ev = (type: string, module_id: string | null, ts: number): ArcanumEvent => ({ id: type + ts, type: type as ArcanumEvent["type"], ts, device_id: "d", goal_id: null, module_id, payload: {}, v: 1 });
 

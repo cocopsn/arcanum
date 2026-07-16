@@ -172,9 +172,27 @@ export function useActions() {
       await fire("note.updated", { note_id: noteId, title: n.title, markdown: n.markdown, moduleId });
     },
     // ── Roadmap canvas edits — all expressed as EXISTING events (log is truth) ──
-    createModule: async (goalId: string, title: string): Promise<string> => {
+    // Create a PARALLEL PATH inside a goal (e.g. a future Ciberseguridad: "Autodidacta" +
+    // "CompTIA Security+"). Generic capability: the path is a real log entity with its own cells and
+    // its own fog-of-war. Progress never crosses into it — its gates must be earned there too.
+    createPath: async (goalId: string, name: string, description = ""): Promise<string> => {
+      const id = newEventId();
+      const slug = name.trim().toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "") || id.slice(0, 8);
+      const order = store.getState().readModel.paths.filter((p) => p.goalId === goalId && !p.archived).length;
+      await fire("path.upserted", { path_id: id, slug, name: name.trim(), description: description.trim(), order }, { goalId });
+      return id;
+    },
+    // Stamp the PATH so no cell is ever minted path-less (a null-path cell breaks the per-path fog-of-war
+    // and hides from the world map). Explicit pathId wins; else the goal's first live path.
+    createModule: async (goalId: string, title: string, pathId?: string): Promise<string> => {
       const moduleId = newEventId();
-      await fire("module.upserted", { title, prereqs: [], kind: "core" }, { goalId, moduleId });
+      const resolved =
+        pathId ??
+        store
+          .getState()
+          .readModel.paths.filter((p) => p.goalId === goalId && !p.archived)
+          .sort((a, b) => a.order - b.order)[0]?.id;
+      await fire("module.upserted", { title, prereqs: [], kind: "core", ...(resolved ? { pathId: resolved } : {}) }, { goalId, moduleId });
       return moduleId;
     },
     connectPrereq: (from: string, to: string) => fire("roadmap.edge.upserted", { from, to }),
@@ -184,9 +202,13 @@ export function useActions() {
     // scraper. The link (sourceObligationId) makes the agenda mark it promoted. ──
     ascendObligation: async (obligationId: string, title: string, goalId: string): Promise<string> => {
       const moduleId = newEventId();
+      const resolved = store
+        .getState()
+        .readModel.paths.filter((p) => p.goalId === goalId && !p.archived)
+        .sort((a, b) => a.order - b.order)[0]?.id;
       await fire(
         "module.upserted",
-        { title, prereqs: [], kind: "core", sourceObligationId: obligationId },
+        { title, prereqs: [], kind: "core", sourceObligationId: obligationId, ...(resolved ? { pathId: resolved } : {}) },
         { goalId, moduleId },
       );
       return moduleId;

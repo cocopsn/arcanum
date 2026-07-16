@@ -10,6 +10,7 @@ export type Json =
 
 export const EVENT_TYPES = [
   "goal.upserted",
+  "path.upserted",
   "module.upserted",
   "roadmap.edge.upserted",
   "node.archived",
@@ -55,6 +56,39 @@ export interface GoalUpsertedPayload {
   color: string;
   sigil: string;
 }
+/** The NATURE of a cell — STRUCTURAL, not a label: it decides which gate is fired.
+ *  'a_mano'    = the intellectual heart. You implement it from scratch AND DEFEND the design
+ *                decisions from first principles (full adversarial gate).
+ *  'delegable' = plumbing. You don't write it from the root; you prove you understand it enough
+ *                to DIRECT and AUDIT an assistant (comprehension gate, lighter).
+ *  'mixto'     = sub-parts of each nature (declare them in `parts`).
+ *  The point is training the JUDGEMENT of where rigour buys something, not applying it blindly. */
+export type NodeNature = "a_mano" | "delegable" | "mixto";
+
+/** A sub-component of a 'mixto' cell with its own nature (e.g. ingesta=delegable, loop=a_mano). */
+export interface NodePart {
+  name: string;
+  nature: "a_mano" | "delegable";
+}
+
+/**
+ * A PATH — a parallel route inside a goal/spine over the SAME subject, with its OWN cell
+ * sequence and its OWN fog-of-war. A goal can have N paths (e.g. FrED: "Fundamentos" +
+ * "Operativo"; a future Ciberseguridad: "Autodidacta" + "CompTIA Security+"). Progress is
+ * 100% INDEPENDENT per path — mastering a concept in one path never unseals another
+ * (that would be a placebo of mastery never demonstrated there). goal_id is in the envelope.
+ */
+export interface PathUpsertedPayload {
+  /** stable path id (the cells reference it) */
+  path_id: string;
+  /** slug, unique within the goal */
+  slug: string;
+  name: string;
+  description: string;
+  /** display order within the goal (lower first) */
+  order?: number;
+}
+
 export interface ModuleUpsertedPayload {
   title: string;
   prereqs: string[];
@@ -62,6 +96,17 @@ export interface ModuleUpsertedPayload {
   /** set when a module was ASCENDED from a Canvas obligation (Fase 4) — links the
    *  learning module back to its compliance source so the agenda marks it promoted */
   sourceObligationId?: string;
+  /** the PATH this cell belongs to. Absent on a later re-upsert = keep the current assignment
+   *  (never silently detach a cell from its path — same defensive rule as goal_id). */
+  pathId?: string;
+  /** a SHAREABLE concept tag. Two cells in DIFFERENT paths with the same concept let the UI show
+   *  an informative "ya lo viste en [path X]" note. It NEVER unseals, NEVER grants XP, NEVER
+   *  skips a gate — pure cognitive wiring. */
+  concept?: string;
+  /** structural nature → decides which gate prompt fires (see NodeNature) */
+  nature?: NodeNature;
+  /** for nature 'mixto': the sub-parts and their individual natures */
+  parts?: NodePart[];
 }
 export interface EdgeUpsertedPayload {
   from: string;

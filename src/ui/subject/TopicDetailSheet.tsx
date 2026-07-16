@@ -21,7 +21,8 @@ import { getBookForModule, type BookRow } from "@/lib/book-store";
 import { audio } from "@/lib/audio";
 import { EvaluationPanel } from "@/ui/subject/EvaluationPanel";
 import { TutorSheet } from "@/ui/subject/TutorSheet";
-import { nodeStatus, prereqsOf, isMastered } from "@/core/roadmap";
+import { nodeStatus, prereqsOf, isMastered, crossPathEcho } from "@/core/roadmap";
+import { NATURE_STANCE } from "@/lib/gate";
 import { contentForModule } from "@/lib/subject-content";
 import { modesFor, defaultMode, type DurationMode } from "@/lib/learning-modes";
 
@@ -144,6 +145,39 @@ export function TopicDetailSheet({
             ×
           </button>
         </div>
+
+        {/* ── NATURE — structural: it decides which gate you'll face (defend vs. direct+audit) ── */}
+        {(() => {
+          const stance = NATURE_STANCE[mod.nature ?? "a_mano"];
+          const echo = crossPathEcho(mod, readModel.modules, readModel.paths);
+          return (
+            <>
+              <div className="mt-3 rounded-[var(--r-sm)] border border-line bg-surface p-3">
+                <div className="flex items-center gap-2">
+                  <span className="text-[10px] uppercase tracking-[0.2em]" style={{ color: readableAccent(accent) }}>
+                    {stance.label}
+                  </span>
+                  {mod.parts.length > 0 && (
+                    <span className="text-[10px] uppercase tracking-wider text-text-faint">
+                      {mod.parts.map((p) => `${p.name}: ${p.nature === "a_mano" ? "a mano" : "delegable"}`).join(" · ")}
+                    </span>
+                  )}
+                </div>
+                <p className="mt-1 text-[12px] leading-snug text-text-muted">{stance.meaning}</p>
+              </div>
+
+              {/* cross-path echo: CONTEXT only — no desbloquea, no da XP, no salta el gate */}
+              {echo && (
+                <div className="mt-2 rounded-[var(--r-sm)] border border-dashed border-line p-3">
+                  <div className="text-[10px] uppercase tracking-[0.2em] text-text-faint">Ya lo viste en {echo.pathName}</div>
+                  <p className="mt-1 text-[12px] leading-snug text-text-muted">
+                    «{echo.moduleTitle}». Es solo contexto para que conectes los dos caminos — aquí el gate se gana igual.
+                  </p>
+                </div>
+              )}
+            </>
+          );
+        })()}
 
         {sealed ? (
           /* ── FAIL-CLOSED: a sealed cell shows its locked state but NEVER its work flow ── */

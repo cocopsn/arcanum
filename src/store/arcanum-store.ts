@@ -87,9 +87,16 @@ export function createArcanumStore(db: ArcanumDB): ArcanumStore {
 
       async hydrate(now) {
         let events = await getAllEvents(db);
-        if (events.length === 0) {
-          await appendEvents(db, SEED_EVENTS, 0);
-          events = SEED_EVENTS;
+        // Apply only the seed events this log is MISSING (fixed uuids → set difference by id). This is
+        // what lets the seed EVOLVE: an existing device receives just the genuinely-new events (e.g.
+        // the paths block) while its history is left byte-identical. Seeding only-when-empty would
+        // have stranded every existing log on the old structure; bulkPut-ing the whole seed every
+        // hydrate would clobber the `synced` flag of already-pushed rows and re-upload them forever.
+        const have = new Set(events.map((e) => e.id));
+        const missing = SEED_EVENTS.filter((e) => !have.has(e.id));
+        if (missing.length > 0) {
+          await appendEvents(db, missing, 0);
+          events = await getAllEvents(db);
         }
         const readModel = project(events);
         await saveReadModel(db, readModel);

@@ -1,5 +1,5 @@
 import type { GradeName } from "@/core/config";
-import type { Json } from "@/core/event";
+import type { Json, NodeNature, NodePart } from "@/core/event";
 
 export interface Goal {
   id: string;
@@ -10,11 +10,35 @@ export interface Goal {
   archived: boolean;
 }
 
+/**
+ * A PATH — a parallel route inside a goal, with its OWN cells, DAG and fog-of-war.
+ * Progress NEVER crosses paths (see roadmap.isRevealed): a concept mastered in path A does
+ * not unseal path B. If the learner really owns it, the second path costs nothing; if not,
+ * the repetition exposes it and reinforces — honest spaced repetition, never a placebo.
+ */
+export interface PathRM {
+  id: string;
+  goalId: string | null;
+  slug: string;
+  name: string;
+  description: string;
+  order: number;
+  archived: boolean;
+}
+
 export type ModuleStatus = "idle" | "started" | "completed";
 
 export interface ModuleRM {
   id: string;
   goalId: string | null;
+  /** the PATH this cell lives in (null = legacy/unassigned). The DAG + fog-of-war are PER-PATH. */
+  pathId: string | null;
+  /** shareable concept tag → drives the informative cross-path "ya lo viste" note. Never unseals. */
+  concept: string | null;
+  /** structural nature — decides which gate fires (a_mano = defend; delegable = direct+audit) */
+  nature: NodeNature;
+  /** sub-parts with their own nature, for nature 'mixto' (empty otherwise) */
+  parts: NodePart[];
   title: string;
   status: ModuleStatus;
   kind: string;
@@ -46,6 +70,9 @@ export interface ModuleRM {
 export interface Edge {
   from: string;
   to: string;
+  /** the path this edge lives in — DERIVED from the source cell at assemble (an edge is always
+   *  intra-path). A stray cross-path edge is IGNORED by the fog-of-war, never honoured. */
+  pathId?: string | null;
 }
 
 export interface Stats {
@@ -161,6 +188,8 @@ export interface CanvasStatusRM {
 
 export interface ReadModel {
   goals: Goal[];
+  /** parallel routes per goal (each with its own cells + fog-of-war) */
+  paths: PathRM[];
   modules: ModuleRM[];
   edges: Edge[];
   /** qualified-day ordinals (for "is today qualified" in presentation) */

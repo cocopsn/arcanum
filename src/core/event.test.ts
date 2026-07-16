@@ -47,8 +47,8 @@ describe("makeEvent", () => {
     expect(e.id).toBe("fixed-id");
   });
 
-  it("EVENT_TYPES has the 22 taxonomy types", () => {
-    expect(EVENT_TYPES).toHaveLength(22);
+  it("EVENT_TYPES has the 23 taxonomy types", () => {
+    expect(EVENT_TYPES).toHaveLength(23); // +path.upserted (parallel routes inside a goal)
     expect(EVENT_TYPES).toContain("mission.submitted");
     expect(EVENT_TYPES).toContain("ai.queued");
   });

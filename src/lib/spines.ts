@@ -6,9 +6,26 @@
 // JS-rendered / blocked (DW chapters, ResearchGate) the course URL is anchored honestly.
 // Regenerate via scratchpad/gen-spines.mjs from the extraction output.
 
+/** A PATH declared on a spine — a parallel route with its OWN cells + fog-of-war. */
+export interface SpinePath {
+  id: string;
+  slug: string;
+  name: string;
+  description: string;
+}
+
 export interface SpineCell {
   id: string;
   title: string;
+  /** which path this cell belongs to (slug). Absent = the spine's FIRST path (the default route). */
+  pathSlug?: string;
+  /** shareable concept tag → the informative cross-path "ya lo viste" note (never unseals) */
+  concept?: string;
+  /** structural nature — decides the gate: 'a_mano' (defend from first principles) vs 'delegable'
+   *  (direct + audit an assistant) vs 'mixto' (declare `parts`). Absent = 'a_mano' (never lighten by default). */
+  nature?: "a_mano" | "delegable" | "mixto";
+  /** sub-parts with their own nature, for 'mixto' */
+  parts?: { name: string; nature: "a_mano" | "delegable" }[];
   /** REAL extracted canonical source URLs (lecture/reading) — anchored, never invented */
   sourceUrls: string[];
   /** real lecture-video URLs (YouTube / OCW), demo cells only */
@@ -39,8 +56,23 @@ export interface Spine {
   goalTitle: string;
   color: string;
   sigil: string;
-  /** ordered cells — course order IS the DAG dependency (linear chain) */
+  /** the parallel PATHS of this spine. The FIRST is the default route (cells without pathSlug land
+   *  there). The capability is GENERIC (not FrED-only): the switcher row shows on every world, naming
+   *  the route and offering "+" to spawn a second path. */
+  paths: SpinePath[];
+  /** ordered cells — course order IS the DAG dependency (a linear chain PER PATH) */
   cells: SpineCell[];
+}
+
+/** The paths of a spine, by goalId → used by the seed + tests. */
+export function pathsOf(sp: Spine): SpinePath[] {
+  return sp.paths;
+}
+/** Resolve a cell's path id: its declared pathSlug, else the spine's first (default) path. */
+export function pathIdForCell(sp: Spine, cell: SpineCell): string {
+  const slug = cell.pathSlug;
+  const found = slug ? sp.paths.find((p) => p.slug === slug) : undefined;
+  return (found ?? sp.paths[0]!).id;
 }
 
 export const SPINES: Spine[] = [
@@ -49,6 +81,9 @@ export const SPINES: Spine[] = [
     "goalTitle": "ITC",
     "color": "#25B0C9",
     "sigil": "itc",
+    "paths": [
+      { "id": "a1000000-0000-4000-8000-000000000001", "slug": "principal", "name": "Ruta principal", "description": "La secuencia curada de ITC (TC1031): estructuras de datos y algoritmos desde primer principio." }
+    ],
     "cells": [
       {
         "id": "ca000000-0000-4000-8000-000000000001",
@@ -192,6 +227,10 @@ export const SPINES: Spine[] = [
     "goalTitle": "FrED Factory",
     "color": "#1F9E84",
     "sigil": "fred",
+    "paths": [
+      { "id": "a1000000-0000-4000-8000-000000000002", "slug": "fundamentos", "name": "Fundamentos", "description": "Conocimiento de dominio TRANSFERIBLE: datos industriales, ML de anomalías, pipelines, embebidos, PID, proceso FrED. Lo que sirve en cualquier planta, no solo aquí." },
+      { "id": "a1000000-0000-4000-8000-000000000003", "slug": "operativo", "name": "Operativo", "description": "La ruta operativa (Orión / AutoCard). Vacía por diseño: sus celdas entran por ingesta de libros ancladas a este path — nada inventado aquí." }
+    ],
     "cells": [
       {
         "id": "cb000000-0000-4000-8000-000000000001",
@@ -308,6 +347,9 @@ export const SPINES: Spine[] = [
     "goalTitle": "Alemán",
     "color": "#C0455F",
     "sigil": "aleman",
+    "paths": [
+      { "id": "a1000000-0000-4000-8000-000000000004", "slug": "principal", "name": "Ruta principal", "description": "La lengua que ordena el pensamiento: DW Nico's Weg + Goethe, A1 → B1." }
+    ],
     "cells": [
       {
         "id": "cc000000-0000-4000-8000-000000000001",
@@ -436,6 +478,9 @@ export const SPINES: Spine[] = [
     "goalTitle": "Competitiva (ICPC)",
     "color": "#C9952F",
     "sigil": "icpc",
+    "paths": [
+      { "id": "a1000000-0000-4000-8000-000000000005", "slug": "principal", "name": "Ruta principal", "description": "Reconocimiento de patrones bajo el reloj (ICPC): el juez real es Codeforces/AtCoder." }
+    ],
     "cells": [
       {
         "id": "cd000000-0000-4000-8000-000000000001",

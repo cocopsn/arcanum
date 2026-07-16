@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState, type CSSProperties } from "react";
 import { useArcanum } from "@/app/providers";
+import { useActions } from "@/ui/use-actions";
 import { orderTopics } from "@/lib/subject-path";
 import { nodeStatus, type NodeStatus } from "@/core/roadmap";
 import { themeForGoal, worldVars, type MotifId } from "@/lib/subject-themes";
@@ -181,6 +182,24 @@ export function SubjectMap({ goalId, onClose }: { goalId: string; onClose: () =>
   const accent = theme.accent;
   const metal = theme.accent2;
 
+  // PATHS — parallel routes inside this world, each with its OWN cells + fog-of-war. The row is shown
+  // whenever the world has paths: with one it names the route and offers the "+" gesture to spawn a
+  // second (the Ciberseguridad case). Switching the path switches the map AND its fog-of-war.
+  const paths = useMemo(
+    () => readModel.paths.filter((p) => p.goalId === goalId && !p.archived).sort((a, b) => a.order - b.order),
+    [readModel.paths, goalId],
+  );
+  const [pathId, setPathId] = useState<string | null>(null);
+  const activePathId = pathId && paths.some((p) => p.id === pathId) ? pathId : (paths[0]?.id ?? null);
+  const defaultPathId = paths[0]?.id ?? null;
+  const showPaths = paths.length > 0;
+  const { createPath, createModule } = useActions();
+  const [newOpen, setNewOpen] = useState(false);
+  const [newName, setNewName] = useState("");
+  const [newDesc, setNewDesc] = useState("");
+  const [cellOpen, setCellOpen] = useState(false);
+  const [cellTitle, setCellTitle] = useState("");
+
   // the realm's ambient drone follows the open world (silent unless the user enables music)
   useEffect(() => {
     audio.setWorld(theme.slug);
@@ -188,9 +207,14 @@ export function SubjectMap({ goalId, onClose }: { goalId: string; onClose: () =>
   }, [theme.slug]);
 
   const topics = useMemo(() => {
-    const mods = readModel.modules.filter((m) => m.goalId === goalId);
+    // the ACTIVE path's cells — switching the path switches the map AND its fog-of-war (nodeStatus
+    // resolves prereqs strictly within the cell's own path). Legacy pathId===null cells (created before
+    // paths existed) surface under the DEFAULT path so nothing the user made ever vanishes.
+    const mods = readModel.modules.filter(
+      (m) => m.goalId === goalId && (activePathId === null || m.pathId === activePathId || (m.pathId === null && activePathId === defaultPathId)),
+    );
     return orderTopics(mods, readModel.edges);
-  }, [readModel.modules, readModel.edges, goalId]);
+  }, [readModel.modules, readModel.edges, goalId, activePathId, defaultPathId]);
 
   const byId = useMemo(() => new Map(readModel.modules.map((m) => [m.id, m])), [readModel.modules]);
   const retrOf = useMemo(() => new Map(vmModules.map((m) => [m.id, m.retrievability])), [vmModules]);
@@ -208,7 +232,8 @@ export function SubjectMap({ goalId, onClose }: { goalId: string; onClose: () =>
       <div aria-hidden className="pointer-events-none absolute inset-0" style={{ background: "radial-gradient(120% 50% at 50% -8%, var(--world-glow), transparent 58%)", opacity: 0.5 }} />
       <div aria-hidden className="pointer-events-none absolute inset-0" style={{ background: "radial-gradient(140% 80% at 50% 120%, rgba(0,0,0,0.55), transparent 55%)" }} />
 
-      <div className="scroll-touch relative h-full overflow-y-auto" style={{ paddingTop: "max(5.5rem, calc(env(safe-area-inset-top) + 4.5rem))" }}>
+      {/* extra top room when the path toggle is present, so it never overlaps the first cells */}
+      <div className="scroll-touch relative h-full overflow-y-auto" style={{ paddingTop: showPaths ? "max(8.5rem, calc(env(safe-area-inset-top) + 7.5rem))" : "max(5.5rem, calc(env(safe-area-inset-top) + 4.5rem))" }}>
         <div className="relative mx-auto" style={{ height, width: W }}>
           <svg className="pointer-events-none absolute inset-0" width={W} height={height} viewBox={`0 0 ${W} ${height}`} aria-hidden>
             <defs>
@@ -234,8 +259,153 @@ export function SubjectMap({ goalId, onClose }: { goalId: string; onClose: () =>
               }}
             />
           ))}
+          {topics.length === 0 && (
+            <div className="absolute inset-x-0 px-6 text-center" style={{ top: TOP + 8 }}>
+              <p className="font-serif text-[13px] leading-snug text-text-muted">
+                Este path aún no tiene celdas. Agrégalas con <span style={{ color: readableAccent(accent) }}>«+ celda»</span> arriba, o llegarán después por ingesta de libros anclados a este path (milla aparte). Nada se inventa aquí.
+              </p>
+            </div>
+          )}
         </div>
       </div>
+
+      {/* ── PATH switcher — parallel routes over the same territory, each with su propio fog-of-war.
+             Shown whenever the world has paths (with one, it names the route + offers "+" to spawn a
+             second). Plain buttons with aria-pressed — it isn't a full ARIA tab widget, so it doesn't
+             claim to be one. "+ celda" adds a cell to the ACTIVE path so a created path is never a
+             dead end (it goes through the path-aware createModule → real fog-of-war). ── */}
+      {showPaths && (
+        <div
+          className="pointer-events-none absolute inset-x-0 flex flex-col items-center gap-2 px-4"
+          style={{ top: "max(5.4rem, calc(env(safe-area-inset-top) + 4.4rem))" }}
+        >
+          <div
+            role="group"
+            aria-label="Paths"
+            className="pointer-events-auto flex max-w-full items-center gap-1 overflow-x-auto rounded-[var(--r-pill)] border p-1 backdrop-blur-sm"
+            style={{ borderColor: "color-mix(in srgb, var(--accent) 30%, var(--line))", background: "rgba(0,0,0,0.35)" }}
+          >
+            {paths.map((p) => {
+              const on = p.id === activePathId;
+              return (
+                <button
+                  key={p.id}
+                  aria-pressed={on}
+                  title={p.description}
+                  onClick={() => {
+                    audio.unlock();
+                    audio.sfx("click");
+                    setPathId(p.id);
+                    setCellOpen(false);
+                  }}
+                  className="min-h-9 shrink-0 rounded-[var(--r-pill)] px-3 text-[11px] uppercase tracking-[0.14em] transition"
+                  style={{
+                    color: on ? readableAccent(accent) : "var(--text-faint)",
+                    background: on ? "color-mix(in srgb, var(--accent) 16%, transparent)" : "transparent",
+                  }}
+                >
+                  {p.name}
+                </button>
+              );
+            })}
+            <button
+              onClick={() => { setCellOpen((v) => !v); setNewOpen(false); }}
+              aria-label="Añadir una celda a este path"
+              aria-expanded={cellOpen}
+              className="min-h-9 shrink-0 rounded-[var(--r-pill)] px-2 text-[10px] uppercase tracking-wider leading-none transition"
+              style={{ color: "var(--text-faint)" }}
+            >
+              + celda
+            </button>
+            <button
+              onClick={() => { setNewOpen((v) => !v); setCellOpen(false); }}
+              aria-label="Crear un path nuevo"
+              aria-expanded={newOpen}
+              className="min-h-9 min-w-9 shrink-0 rounded-[var(--r-pill)] text-[13px] leading-none transition"
+              style={{ color: "var(--text-faint)" }}
+            >
+              +
+            </button>
+          </div>
+
+          {cellOpen && (
+            <form
+              onSubmit={async (e) => {
+                e.preventDefault();
+                const title = cellTitle.trim();
+                if (!title || !activePathId) return;
+                await createModule(goalId, title, activePathId); // path-aware → born in THIS path
+                setCellTitle("");
+                setCellOpen(false);
+              }}
+              className="pointer-events-auto w-full max-w-[320px] rounded-[var(--r-md)] border p-2 backdrop-blur-sm"
+              style={{ borderColor: "color-mix(in srgb, var(--accent) 30%, var(--line))", background: "rgba(0,0,0,0.5)" }}
+            >
+              <input
+                value={cellTitle}
+                onChange={(e) => setCellTitle(e.target.value)}
+                placeholder="Título de la celda"
+                aria-label="Título de la celda"
+                className="min-h-11 w-full rounded-[var(--r-sm)] border border-line bg-surface px-3 text-[13px] text-text placeholder:text-text-faint focus:outline-none"
+              />
+              <button
+                type="submit"
+                disabled={!cellTitle.trim()}
+                className="mt-1 min-h-11 w-full rounded-[var(--r-sm)] border text-[11px] uppercase tracking-[0.16em] transition disabled:opacity-40"
+                style={{ borderColor: accent, color: readableAccent(accent) }}
+              >
+                Añadir celda
+              </button>
+              <p className="mt-1 text-[10px] leading-snug text-text-faint">
+                Nace en este path, con su propio fog-of-war. Su contenido y gate se cargan al abrirla.
+              </p>
+            </form>
+          )}
+
+          {newOpen && (
+            <form
+              onSubmit={async (e) => {
+                e.preventDefault();
+                const name = newName.trim();
+                if (!name) return;
+                const id = await createPath(goalId, name, newDesc);
+                setNewName("");
+                setNewDesc("");
+                setNewOpen(false);
+                setPathId(id); // land on the path you just created
+              }}
+              className="pointer-events-auto w-full max-w-[320px] rounded-[var(--r-md)] border p-2 backdrop-blur-sm"
+              style={{ borderColor: "color-mix(in srgb, var(--accent) 30%, var(--line))", background: "rgba(0,0,0,0.5)" }}
+            >
+              <input
+                value={newName}
+                onChange={(e) => setNewName(e.target.value)}
+                placeholder="Nombre del path (ej. CompTIA Security+)"
+                aria-label="Nombre del path"
+                className="min-h-11 w-full rounded-[var(--r-sm)] border border-line bg-surface px-3 text-[13px] text-text placeholder:text-text-faint focus:outline-none"
+              />
+              <input
+                value={newDesc}
+                onChange={(e) => setNewDesc(e.target.value)}
+                placeholder="Descripción (opcional)"
+                aria-label="Descripción del path"
+                className="mt-1 min-h-11 w-full rounded-[var(--r-sm)] border border-line bg-surface px-3 text-[13px] text-text placeholder:text-text-faint focus:outline-none"
+              />
+              <button
+                type="submit"
+                disabled={!newName.trim()}
+                className="mt-1 min-h-11 w-full rounded-[var(--r-sm)] border text-[11px] uppercase tracking-[0.16em] transition disabled:opacity-40"
+                style={{ borderColor: accent, color: readableAccent(accent) }}
+              >
+                Crear path
+              </button>
+              <p className="mt-1 text-[10px] leading-snug text-text-faint">
+                Nace vacío y con su propio fog-of-war. El progreso no cruza: aquí los gates se ganan de nuevo.
+              </p>
+            </form>
+          )}
+        </div>
+      )}
 
       {/* ── realm header — the crest, the temper, the name ── */}
       <header className="pointer-events-none absolute inset-x-0 top-0 flex items-start justify-between gap-3 p-4" style={{ paddingTop: "max(1rem, env(safe-area-inset-top))" }}>
