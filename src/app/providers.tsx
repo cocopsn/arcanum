@@ -21,6 +21,8 @@ import { signOut, currentUser, onAuthChange } from "@/sync/auth";
 import { requestPersist } from "@/lib/storage";
 import { seedBooks } from "@/lib/seed-books";
 import { seedExerciseBanks } from "@/lib/seed-exercises";
+import { LayoutModeProvider } from "@/ui/layout-mode";
+import { RewardProvider } from "@/ui/reward/RewardProvider";
 
 interface ArcanumContext {
   store: ArcanumStore;
@@ -131,7 +133,13 @@ export function ArcanumProvider({
     },
   };
 
-  return <Ctx.Provider value={value}>{children}</Ctx.Provider>;
+  return (
+    <Ctx.Provider value={value}>
+      <LayoutModeProvider>
+        <RewardProvider>{children}</RewardProvider>
+      </LayoutModeProvider>
+    </Ctx.Provider>
+  );
 }
 
 function useCtx(): ArcanumContext {

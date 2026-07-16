@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState, type CSSProperties } from "react";
 import { useArcanum } from "@/app/providers";
 import { useActions } from "@/ui/use-actions";
+import { useLayoutMode } from "@/ui/layout-mode";
 import { orderTopics } from "@/lib/subject-path";
 import { nodeStatus, type NodeStatus } from "@/core/roadmap";
 import { themeForGoal, worldVars, type MotifId } from "@/lib/subject-themes";
@@ -14,13 +15,10 @@ import type { ModuleRM } from "@/core/read-model";
 // THE WORLD-MAP — Duolingo bone (a clear serpentine path, the next step always obvious),
 // Persona skin (each realm its own atmosphere; nodes are material SIGILS, not gray circles;
 // fog-of-war for sealed territory). Engine untouched: nodeStatus/retrievability drive it all.
-const W = 340;
-const CX = W / 2;
+const W = 340; // mobile/PWA serpentine width (desktop widens it in SubjectMap)
 const ROW_H = 116;
 const AMP = 60;
 const TOP = 56;
-const WAVE = [0, AMP, 0, -AMP];
-const xAt = (i: number) => CX + WAVE[i % WAVE.length]!;
 
 function MotifPattern({ id, motif, color }: { id: string; motif: MotifId; color: string }) {
   const s = { stroke: color, strokeWidth: 1.1, fill: "none", opacity: 0.5 } as const;
@@ -116,6 +114,8 @@ function TopicBadge({
   topic,
   status,
   index,
+  x,
+  y,
   retr,
   accent,
   metal,
@@ -124,6 +124,10 @@ function TopicBadge({
   topic: ModuleRM;
   status: NodeStatus;
   index: number;
+  /** horizontal centre (px) — widens on desktop so the serpentine uses the screen */
+  x: number;
+  /** vertical position (px) */
+  y: number;
   retr: number;
   accent: string;
   metal: string;
@@ -137,8 +141,8 @@ function TopicBadge({
       className="topic-badge absolute flex -translate-x-1/2 flex-col items-center gap-2"
       style={
         {
-          left: xAt(index),
-          top: TOP + index * ROW_H,
+          left: x,
+          top: y,
           ["--accent" as string]: accent,
           animationDelay: `${Math.min(index * 55, 640)}ms`,
         } as CSSProperties
@@ -219,9 +223,19 @@ export function SubjectMap({ goalId, onClose }: { goalId: string; onClose: () =>
   const byId = useMemo(() => new Map(readModel.modules.map((m) => [m.id, m])), [readModel.modules]);
   const retrOf = useMemo(() => new Map(vmModules.map((m) => [m.id, m.retrievability])), [vmModules]);
 
+  // DESKTOP — widen the serpentine so it uses the horizontal space instead of a narrow column marooned in
+  // the middle of a wide screen (the "encajonado" complaint). The vertical rhythm is unchanged; only the
+  // width + swing grow. Mobile/PWA keeps the tuned iPhone-first geometry.
+  const desktop = useLayoutMode().mode === "desktop";
+  const w = desktop ? 760 : W;
+  const cx = w / 2;
+  const amp = desktop ? 210 : AMP;
+  const wave = [0, amp, 0, -amp];
+  const xOf = (i: number) => cx + wave[i % wave.length]!;
+
   const height = TOP + topics.length * ROW_H + 96;
   const motifId = `motif-${theme.slug}`;
-  const connectorD = topics.map((_, i) => `${i === 0 ? "M" : "L"} ${xAt(i)} ${TOP + i * ROW_H + 32}`).join(" ");
+  const connectorD = topics.map((_, i) => `${i === 0 ? "M" : "L"} ${xOf(i)} ${TOP + i * ROW_H + 32}`).join(" ");
 
   if (!goal) return null;
 
@@ -234,12 +248,12 @@ export function SubjectMap({ goalId, onClose }: { goalId: string; onClose: () =>
 
       {/* extra top room when the path toggle is present, so it never overlaps the first cells */}
       <div className="scroll-touch relative h-full overflow-y-auto" style={{ paddingTop: showPaths ? "max(8.5rem, calc(env(safe-area-inset-top) + 7.5rem))" : "max(5.5rem, calc(env(safe-area-inset-top) + 4.5rem))" }}>
-        <div className="relative mx-auto" style={{ height, width: W }}>
-          <svg className="pointer-events-none absolute inset-0" width={W} height={height} viewBox={`0 0 ${W} ${height}`} aria-hidden>
+        <div className="relative mx-auto" style={{ height, width: w }}>
+          <svg className="pointer-events-none absolute inset-0" width={w} height={height} viewBox={`0 0 ${w} ${height}`} aria-hidden>
             <defs>
               <MotifPattern id={motifId} motif={theme.motif} color={accent} />
             </defs>
-            <rect width={W} height={height} fill={`url(#${motifId})`} opacity={0.12} />
+            <rect width={w} height={height} fill={`url(#${motifId})`} opacity={0.12} />
             <path d={connectorD} fill="none" stroke={accent} strokeOpacity={0.28} strokeWidth="3" strokeLinecap="round" strokeDasharray="1 13" />
           </svg>
 
@@ -248,6 +262,8 @@ export function SubjectMap({ goalId, onClose }: { goalId: string; onClose: () =>
               key={t.id}
               topic={t}
               index={i}
+              x={xOf(i)}
+              y={TOP + i * ROW_H}
               status={nodeStatus(t, readModel.edges, byId)}
               retr={retrOf.get(t.id) ?? 0}
               accent={accent}

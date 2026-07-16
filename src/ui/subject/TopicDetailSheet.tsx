@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useArcanum } from "@/app/providers";
+import { useLayoutMode } from "@/ui/layout-mode";
 import { useActions } from "@/ui/use-actions";
 import { useFocusTrap } from "@/ui/use-focus-trap";
 import { readableAccent } from "@/lib/accent";
@@ -62,6 +63,7 @@ export function TopicDetailSheet({
     };
   }, [moduleId]);
   const panelRef = useRef<HTMLDivElement>(null);
+  const desktop = useLayoutMode().mode === "desktop";
 
   const mod = readModel.modules.find((m) => m.id === moduleId) ?? null;
   const byId = useMemo(() => new Map(readModel.modules.map((m) => [m.id, m])), [readModel.modules]);
@@ -115,7 +117,7 @@ export function TopicDetailSheet({
   return (
     <>
     <div
-      className="fixed inset-0 z-[60] flex items-end justify-center sm:items-center"
+      className={desktop ? "fixed inset-0 z-[60] flex justify-end" : "fixed inset-0 z-[60] flex items-end justify-center sm:items-center"}
       style={{ background: "var(--overlay-scrim)" }}
       onClick={onClose}
       onKeyDown={(e) => {
@@ -128,8 +130,13 @@ export function TopicDetailSheet({
         aria-modal="true"
         aria-labelledby="topic-title"
         tabIndex={-1}
-        className="scroll-touch flex max-h-[90vh] w-full max-w-md flex-col overflow-y-auto rounded-t-[var(--r-lg)] border border-line bg-surface-raised p-6 outline-none sm:rounded-[var(--r-lg)]"
-        style={{ paddingBottom: "max(1.5rem, env(safe-area-inset-bottom))" }}
+        className={
+          desktop
+            ? // DESKTOP — a right-docked side panel (full height), not a bottom sheet that wastes the width
+              "scroll-touch flex h-full w-full max-w-[440px] flex-col overflow-y-auto border-l border-line bg-surface-raised p-6 shadow-aura outline-none"
+            : "scroll-touch flex max-h-[90vh] w-full max-w-md flex-col overflow-y-auto rounded-t-[var(--r-lg)] border border-line bg-surface-raised p-6 outline-none sm:rounded-[var(--r-lg)]"
+        }
+        style={desktop ? undefined : { paddingBottom: "max(1.5rem, env(safe-area-inset-bottom))" }}
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-start justify-between gap-3">

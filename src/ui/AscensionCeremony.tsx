@@ -30,7 +30,13 @@ export function AscensionCeremony({
   }, []);
 
   useEffect(() => {
-    if (reduce) return;
+    // reduced-motion: reveal the phrase/seal IMMEDIATELY (useReducedMotion is null on first render, so the
+    // useState(reduce) initializer was false for everyone — without this, reduced-motion users would never
+    // see the phrase, because the draw timeout below is the only other path and it's skipped for them).
+    if (reduce) {
+      setRevealed(true);
+      return;
+    }
     const t = window.setTimeout(() => setRevealed(true), 1400 + 800); // draw ~1.4s + beat 0.8s
     return () => window.clearTimeout(t);
   }, [reduce]);
@@ -56,6 +62,25 @@ export function AscensionCeremony({
         transition={{ duration: reduce ? 0 : 24, ease: "linear", repeat: reduce ? 0 : Infinity, repeatType: "loop" }}
       />
       <div aria-hidden className="pointer-events-none absolute inset-0" style={{ background: "radial-gradient(130% 90% at 50% 50%, transparent 40%, rgba(0,0,0,0.85))" }} />
+
+      {/* rising embers — the swell made visible. transform/opacity only; none under reduced-motion. */}
+      {!reduce &&
+        Array.from({ length: 14 }).map((_, i) => {
+          const left = 8 + ((i * 61) % 84);
+          const delay = (i % 7) * 0.32;
+          const drift = ((i % 5) - 2) * 14;
+          return (
+            <motion.span
+              key={i}
+              aria-hidden
+              className="pointer-events-none absolute bottom-[-6%] h-1 w-1 rounded-full"
+              style={{ left: `${left}%`, background: grade.color, boxShadow: `0 0 8px ${grade.color}` }}
+              initial={{ y: 0, x: 0, opacity: 0 }}
+              animate={{ y: -560, x: drift, opacity: [0, 0.9, 0] }}
+              transition={{ duration: 5 + (i % 4), delay, repeat: Infinity, ease: "easeOut" }}
+            />
+          );
+        })}
 
       <div className="relative z-[1] text-[10px] uppercase tracking-[0.5em] text-text-faint" style={{ marginBottom: "1.4rem" }}>
         Ascensión

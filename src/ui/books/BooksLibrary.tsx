@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useFocusTrap } from "@/ui/use-focus-trap";
+import { useReward } from "@/ui/reward/RewardProvider";
 import { listBooks, saveBook, deleteBook, totalBookBytes, type BookRow } from "@/lib/book-store";
 import { listBanks, saveExerciseBank, deleteBank, totalBankBytes, type ExerciseBankRow } from "@/lib/exercise-store";
 import { runJs } from "@/lib/js-runner";
@@ -18,6 +19,7 @@ import { readableAccent } from "@/lib/accent";
 const MB = (b: number) => (b >= 1e6 ? `${(b / 1e6).toFixed(1)} MB` : `${Math.max(1, Math.round(b / 1e3))} KB`);
 
 export function BooksLibrary({ open, onClose }: { open: boolean; onClose: () => void }) {
+  const reward = useReward();
   const [books, setBooks] = useState<BookRow[]>([]);
   const [banks, setBanks] = useState<ExerciseBankRow[]>([]);
   const [bytes, setBytes] = useState(0);
@@ -57,6 +59,7 @@ export function BooksLibrary({ open, onClose }: { open: boolean; onClose: () => 
           return;
         }
         setMsg(`Banco de ejercicios importado: «${res.bank.meta.title}» (${res.bank.count} ejercicios, validados).`);
+        reward("small");
       } else {
         const saved = await saveBook(md, "import");
         if (!saved) {
@@ -64,6 +67,7 @@ export function BooksLibrary({ open, onClose }: { open: boolean; onClose: () => 
           return;
         }
         setMsg(`Libro importado: «${saved.meta.title}».`);
+        reward("small");
       }
       setPaste("");
       setPasteOpen(false);

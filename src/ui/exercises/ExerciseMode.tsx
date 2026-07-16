@@ -10,9 +10,11 @@ import { bookQuestionsForModule } from "@/lib/book-exercises";
 import { runJs } from "@/lib/js-runner";
 import { runPy } from "@/lib/py-runner";
 import { evaluateRun, matchedPatterns, formatValue, type CodeExercise, type ChoiceExercise, type Exercise, type Lang, type RunResult } from "@/lib/exercise";
+import { ARCANUM_CONFIG } from "@/core/config";
 import { themeForGoal, worldVars } from "@/lib/subject-themes";
 import { readableAccent } from "@/lib/accent";
 import { audio } from "@/lib/audio";
+import { useReward } from "@/ui/reward/RewardProvider";
 
 // PHASE 2 — offline exercises. The learner writes the implementation from scratch; the code runs LOCALLY
 // (JS Worker / Pyodide) and reports the REAL syntax error (Level 1) and the EXACT failing case (Level 2)
@@ -188,6 +190,7 @@ function Picker({ curated, bookQs, procLang, setProcLang, accent, onPick }: { cu
 
 function CodeRunner({ ex, accent, onPassed, onNextVariant }: { ex: CodeExercise; accent: string; onPassed: (hadFailure: boolean) => void; onNextVariant?: () => void }) {
   const ink = readableAccent(accent);
+  const reward = useReward();
   const [code, setCode] = useState(ex.starter);
   const [running, setRunning] = useState(false);
   const [result, setResult] = useState<(RunResult & { pyUnavailable?: boolean }) | null>(null);
@@ -210,9 +213,12 @@ function CodeRunner({ ex, accent, onPassed, onNextVariant }: { ex: CodeExercise;
     // pass is never un-awarded nor re-fired, but the panel reflects the truth of the last execution.
     setPassed(ev.allPass);
     if (ev.allPass) {
-      audio.sfx("lessonwin");
+      // a solved exercise is a real closing moment — celebrate ONCE (the first genuine pass), scaled by how
+      // hard it was (failed-then-fixed = bigger). Re-running already-correct code must NOT re-fire the
+      // flourish (the XP is one-shot too), or it would imply a reward that didn't happen.
       if (!firedPass.current) {
         firedPass.current = true;
+        reward(hadFailure.current ? "large" : "medium", { accent, sfx: "lessonwin" });
         onPassed(hadFailure.current);
       }
     } else if ((r as { pyUnavailable?: boolean }).pyUnavailable) {
@@ -311,7 +317,7 @@ function PassPanel({ ex, accent, patterns, onNextVariant }: { ex: CodeExercise; 
   const [showRef, setShowRef] = useState(patterns.length === 0);
   return (
     <div className="rounded-[var(--r-md)] border p-3" style={{ borderColor: accent }}>
-      <div className="font-display text-sm uppercase tracking-[0.16em]" style={{ color: ink }}>Corre y es correcto ✓ +{50} XP</div>
+      <div className="font-display text-sm uppercase tracking-[0.16em]" style={{ color: ink }}>Corre y es correcto ✓ +{ARCANUM_CONFIG.xp.checkpoint} XP</div>
       {patterns.length > 0 ? (
         <div className="mt-2">
           <div className="text-[10px] uppercase tracking-wider text-text-faint">Sugerencia idiomática (patrón guardado)</div>
@@ -335,6 +341,7 @@ function PassPanel({ ex, accent, patterns, onNextVariant }: { ex: CodeExercise; 
 
 function ChoiceRunner({ ex, accent, onCorrect }: { ex: ChoiceExercise; accent: string; onCorrect: () => void }) {
   const ink = readableAccent(accent);
+  const reward = useReward();
   const [picked, setPicked] = useState<number | null>(null);
   const fired = useRef(false);
   const answered = picked !== null;
@@ -355,7 +362,7 @@ function ChoiceRunner({ ex, accent, onCorrect }: { ex: ChoiceExercise; accent: s
               onClick={() => {
                 setPicked(i);
                 if (i === ex.answer) {
-                  audio.sfx("lessonwin");
+                  reward("small", { accent, sfx: "lessonwin" });
                   if (!fired.current) {
                     fired.current = true;
                     onCorrect();

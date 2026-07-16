@@ -48,6 +48,16 @@
   overscroll-behavior: contain;
 }
 
+/* DESKTOP layout (html[data-layout="desktop"], set by LayoutModeProvider). The mobile-first design is the
+   default; desktop widens the reading/dashboard surfaces and lets a wide screen breathe. Purely layout —
+   same components, same aesthetic, all still driven by derived state. */
+html[data-layout="desktop"] body {
+  /* a faint imperial vignette so the wider canvas isn't flat black at the edges */
+  background:
+    radial-gradient(120% 80% at 50% -10%, color-mix(in srgb, var(--rank) 6%, transparent), transparent 60%),
+    var(--ink);
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

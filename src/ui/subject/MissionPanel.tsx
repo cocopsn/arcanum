@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useArcanum } from "@/app/providers";
 import { useActions } from "@/ui/use-actions";
+import { useReward } from "@/ui/reward/RewardProvider";
 import { readableAccent } from "@/lib/accent";
 import { audio } from "@/lib/audio";
 import type { TopicMission } from "@/lib/subject-content";
@@ -32,17 +33,22 @@ export function MissionPanel({
   const submitted = useArcanum((s) => s.readModel.missions.find((m) => m.moduleId === moduleId) ?? null);
   const pending = useArcanum((s) => s.readModel.pendingAi.some((p) => p.moduleId === moduleId && p.kind === "mission"));
   const { submitMission, interrogateMission } = useActions();
+  const reward = useReward();
   const [notes, setNotes] = useState("");
   const [busy, setBusy] = useState(false);
   const submitting = useRef(false);
 
-  // a fresh verdict rings the gate (passed) or the fail tone — never replays an old one on open
+  // a fresh verdict: passing the interrogation (a heavy cell mastered) is a LARGE ceremonious moment;
+  // a fail stays a plain tension tone (honest, not punitive).
   const lastTs = useRef<number | null>(null);
   useEffect(() => {
     if (!verdict) return;
-    if (lastTs.current !== null && verdict.ts !== lastTs.current) audio.sfx(verdict.passed ? "gate" : "error");
+    if (lastTs.current !== null && verdict.ts !== lastTs.current) {
+      if (verdict.passed) reward("large", { accent, sfx: "gate" });
+      else audio.sfx("error");
+    }
     lastTs.current = verdict.ts;
-  }, [verdict?.ts, verdict?.passed, verdict]);
+  }, [verdict?.ts, verdict?.passed, verdict]); // eslint-disable-line react-hooks/exhaustive-deps
 
   async function submit() {
     // synchronous guard against a rapid double-tap firing duplicate events

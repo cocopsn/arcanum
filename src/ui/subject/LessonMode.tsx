@@ -4,6 +4,8 @@ import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { useActions } from "@/ui/use-actions";
 import { useFocusTrap } from "@/ui/use-focus-trap";
+import { useReward } from "@/ui/reward/RewardProvider";
+import { EnterRitual } from "@/ui/subject/EnterRitual";
 import { ARCANUM_CONFIG } from "@/core/config";
 import { initRun, reduceRun, type LessonRun, type RunEffect } from "@/lib/lesson-run";
 import { themeForGoal, worldVars } from "@/lib/subject-themes";
@@ -41,10 +43,12 @@ export function LessonMode({
   onClose: () => void;
 }) {
   const { generateLessonCourse, gradeLessonStep, resolveError, passLesson } = useActions();
+  const reward = useReward();
   const theme = themeForGoal(goalTitle);
   const accent = theme.accent;
   const ink = readableAccent(accent);
   const reduce = useReducedMotion();
+  const [entering, setEntering] = useState(true); // the threshold ritual on open
 
   const [loading, setLoading] = useState(true);
   const [noAi, setNoAi] = useState(false);
@@ -95,10 +99,14 @@ export function LessonMode({
 
   function playSounds(effects: RunEffect[]) {
     for (const e of effects) {
-      if (e === "advance") audio.sfx("step");
+      // POSITIVE moments route through the reward system (sound + a scaled, variable flourish); the
+      // crafted sfx is preserved via the sfx override. Tension moments (heart lost, fail) stay plain —
+      // they are not rewards. resolveInsight = overcoming the wall → it earns a small celebration
+      // (fallar-y-corregir es dopaminérgico, no punitivo).
+      if (e === "advance") reward("micro", { accent, sfx: "step" });
+      else if (e === "resolveInsight") reward("small", { accent, sfx: "resolve" });
+      else if (e === "passLesson") reward("medium", { accent, sfx: "lessonwin" });
       else if (e === "loseHeart") audio.sfx("heart");
-      else if (e === "resolveInsight") audio.sfx("resolve");
-      else if (e === "passLesson") audio.sfx("lessonwin");
       else if (e === "failLesson") audio.sfx("error");
       else if (e === "restart") audio.sfx("reveal");
     }
@@ -191,6 +199,10 @@ export function LessonMode({
         } as CSSProperties
       }
     >
+      {/* the THRESHOLD ritual — the world dims to the realm's sigil, a beat, then it fades to the lesson */}
+      <AnimatePresence>
+        {entering && <EnterRitual title={cellTitle} glyph={theme.glyph} accent={accent} onDone={() => setEntering(false)} />}
+      </AnimatePresence>
       {/* ── header: progress + hearts + close ── */}
       <header className="mx-auto flex w-full max-w-md shrink-0 items-center gap-3 px-4">
         <button

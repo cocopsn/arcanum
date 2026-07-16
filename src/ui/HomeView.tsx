@@ -26,6 +26,8 @@ import { AudioConfig } from "@/ui/AudioConfig";
 import { themeForGoal, worldVars } from "@/lib/subject-themes";
 import { readableAccent } from "@/lib/accent";
 import { audio } from "@/lib/audio";
+import { useLayoutMode } from "@/ui/layout-mode";
+import { LayoutToggle } from "@/ui/LayoutToggle";
 import { getSupabase } from "@/sync/client";
 import { isMastered, nodeStatus } from "@/core/roadmap";
 import type { ReadModel, Stats } from "@/core/read-model";
@@ -61,40 +63,35 @@ export function HomeView() {
 
   return (
     <RankAura grade={readModel.stats.grade}>
-      <main
-        className="scroll-touch mx-auto flex min-h-full max-w-md flex-col gap-6 px-5 pb-10"
-        style={{ paddingTop: "max(1.5rem, env(safe-area-inset-top))" }}
-      >
-        <header className="flex items-center justify-between">
-          <span className="font-display text-sm tracking-[0.4em] text-text-muted">
-            ARCANUM
-          </span>
-          <div className="flex items-center gap-3">
-            <OfflinePill onOpen={() => setOfflineOpen(true)} />
-            <SyncStatus onOpen={() => setAuthOpen(true)} />
-          </div>
-        </header>
-
-        <Hero stats={readModel.stats} viewModel={viewModel} />
-        <RitoDelDia pending={viewModel.ritoPending} />
-        <WorldPortals
-          readModel={readModel}
-          onOpen={(goalId) => {
-            audio.unlock();
-            setSubjectGoal(goalId);
-          }}
-        />
-        <InstallCoachMark />
-        <Footer
-          onMapa={() => setMapOpen(true)}
-          onAgenda={() => setAgendaOpen(true)}
-          onCodice={() => setCodiceOpen(true)}
-          onNotes={() => setNotes({ open: true, moduleId: null })}
-          onLecturas={() => setBooksOpen(true)}
-          onVigilia={() => setVigiliaOpen(true)}
-          onAudio={() => setAudioOpen(true)}
-        />
-      </main>
+      <HomeShell
+        readModel={readModel}
+        viewModel={viewModel}
+        onWorld={(goalId) => {
+          audio.unlock();
+          setSubjectGoal(goalId);
+        }}
+        header={
+          <header className="flex items-center justify-between">
+            <span className="font-display text-sm tracking-[0.4em] text-text-muted">ARCANUM</span>
+            <div className="flex items-center gap-3">
+              <LayoutToggle />
+              <OfflinePill onOpen={() => setOfflineOpen(true)} />
+              <SyncStatus onOpen={() => setAuthOpen(true)} />
+            </div>
+          </header>
+        }
+        footer={
+          <Footer
+            onMapa={() => setMapOpen(true)}
+            onAgenda={() => setAgendaOpen(true)}
+            onCodice={() => setCodiceOpen(true)}
+            onNotes={() => setNotes({ open: true, moduleId: null })}
+            onLecturas={() => setBooksOpen(true)}
+            onVigilia={() => setVigiliaOpen(true)}
+            onAudio={() => setAudioOpen(true)}
+          />
+        }
+      />
 
       <RoadmapCanvas open={mapOpen} onClose={() => setMapOpen(false)} />
       <AgendaSheet open={agendaOpen} onClose={() => setAgendaOpen(false)} />
@@ -119,10 +116,60 @@ export function HomeView() {
   );
 }
 
+// The home reflows between PWA (mobile, single column — fills an iPhone) and DESKTOP (a wide dashboard:
+// the crown as a left rail, the worlds as a 2-col grid — no more empty gutters). Same content + aesthetic.
+function HomeShell({
+  readModel,
+  viewModel,
+  onWorld,
+  header,
+  footer,
+}: {
+  readModel: ReadModel;
+  viewModel: ViewModel;
+  onWorld: (goalId: string) => void;
+  header: React.ReactNode;
+  footer: React.ReactNode;
+}) {
+  const { mode } = useLayoutMode();
+  if (mode !== "desktop") {
+    return (
+      <main className="scroll-touch mx-auto flex min-h-full max-w-md flex-col gap-6 px-5 pb-10" style={{ paddingTop: "max(1.5rem, env(safe-area-inset-top))" }}>
+        {header}
+        <Hero stats={readModel.stats} viewModel={viewModel} />
+        <RitoDelDia pending={viewModel.ritoPending} />
+        <WorldPortals readModel={readModel} onOpen={onWorld} />
+        <InstallCoachMark />
+        {footer}
+      </main>
+    );
+  }
+  return (
+    <main className="scroll-touch mx-auto min-h-full w-full max-w-6xl px-10 pb-16 pt-8">
+      {header}
+      <div className="mt-8 grid items-start gap-10 lg:grid-cols-[minmax(320px,384px)_1fr]">
+        <div className="flex flex-col gap-6 lg:sticky lg:top-8">
+          <Hero stats={readModel.stats} viewModel={viewModel} />
+          <RitoDelDia pending={viewModel.ritoPending} />
+        </div>
+        <div className="flex flex-col gap-8">
+          <WorldPortals readModel={readModel} onOpen={onWorld} grid />
+          {footer}
+        </div>
+      </div>
+    </main>
+  );
+}
+
 function Hero({ stats, viewModel }: { stats: Stats; viewModel: ViewModel }) {
   const [bursts, setBursts] = useState<{ id: number; amount: number }[]>([]);
   const prev = useRef(stats.totalXp);
   const counter = useRef(0);
+  // each burst removes itself after its lifetime. The timers are tracked and cleared ONLY on unmount —
+  // NOT via the effect's cleanup, or a second XP gain within the window would cancel the first burst's
+  // removal (the deps re-run runs the prior cleanup) and bursts would leak/stack forever.
+  const timers = useRef<number[]>([]);
+  useEffect(() => () => timers.current.forEach((t) => window.clearTimeout(t)), []);
 
   useEffect(() => {
     const delta = stats.totalXp - prev.current;
@@ -130,11 +177,7 @@ function Hero({ stats, viewModel }: { stats: Stats; viewModel: ViewModel }) {
     if (delta <= 0) return;
     const id = ++counter.current;
     setBursts((b) => [...b, { id, amount: delta }]);
-    const t = window.setTimeout(
-      () => setBursts((b) => b.filter((x) => x.id !== id)),
-      1100,
-    );
-    return () => window.clearTimeout(t);
+    timers.current.push(window.setTimeout(() => setBursts((b) => b.filter((x) => x.id !== id)), 1100));
   }, [stats.totalXp]);
 
   return (
@@ -162,11 +205,12 @@ function Hero({ stats, viewModel }: { stats: Stats; viewModel: ViewModel }) {
   );
 }
 
-function WorldPortals({ readModel, onOpen }: { readModel: ReadModel; onOpen: (goalId: string) => void }) {
+function WorldPortals({ readModel, onOpen, grid = false }: { readModel: ReadModel; onOpen: (goalId: string) => void; grid?: boolean }) {
   const byId = new Map(readModel.modules.map((m) => [m.id, m]));
   return (
     <div className="space-y-3">
       <div className="text-[10px] uppercase tracking-[0.3em] text-text-faint">Los mundos · elige territorio</div>
+      <div className={grid ? "grid gap-3 sm:grid-cols-2" : "space-y-3"}>
       {readModel.goals
         .filter((g) => !g.archived)
         .map((goal) => {
@@ -216,6 +260,7 @@ function WorldPortals({ readModel, onOpen }: { readModel: ReadModel; onOpen: (go
             </button>
           );
         })}
+      </div>
     </div>
   );
 }

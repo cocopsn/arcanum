@@ -3,6 +3,7 @@
 import type { Stats } from "@/core/read-model";
 import { gradeForXp, gradeByIndex } from "@/core/grade";
 import { gradeSigil } from "@/lib/grade-sigil";
+import { CountUp } from "@/ui/CountUp";
 
 // THE CROWN — the Scintilla→Origo ascent presented with ceremonial weight (not a corner badge):
 // the grade sigil in a halo, the imperial name (Cinzel), the epithet, the latin seal, the eternal
@@ -89,9 +90,8 @@ export function GradeSigil({ stats }: { stats: Stats }) {
       {/* the climb — XP record + the road to the next imperial rung */}
       <div className="w-full max-w-[230px]">
         <div className="tnum flex items-baseline justify-center gap-1 text-sm">
-          <span className="font-display text-lg text-gold" style={{ textShadow: "0 0 12px var(--gold-glow)" }}>
-            {stats.totalXp.toLocaleString("en-US")}
-          </span>
+          <CountUp value={stats.totalXp} className="font-display text-lg text-gold" style={{ textShadow: "0 0 12px var(--gold-glow)" }} />
+
           <span className="text-text-muted">XP</span>
           {g.nextXp != null && <span className="text-text-faint">· {g.nextXp.toLocaleString("en-US")}</span>}
         </div>

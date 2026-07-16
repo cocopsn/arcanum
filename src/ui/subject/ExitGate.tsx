@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useArcanum } from "@/app/providers";
 import { useActions } from "@/ui/use-actions";
+import { useReward } from "@/ui/reward/RewardProvider";
 import { readableAccent } from "@/lib/accent";
 import { audio } from "@/lib/audio";
 import type { TopicGate } from "@/lib/subject-content";
@@ -12,6 +13,7 @@ export function ExitGate({ moduleId, gate, accent }: { moduleId: string; gate: T
   const gatePassed = useArcanum((s) => s.readModel.modules.find((m) => m.id === moduleId)?.gatePassed ?? false);
   const pending = useArcanum((s) => s.readModel.pendingAi.some((p) => p.moduleId === moduleId && p.kind === "gate"));
   const { evaluateGate } = useActions();
+  const reward = useReward();
   const [justification, setJustification] = useState("");
   const [busy, setBusy] = useState(false);
   const submitting = useRef(false);
@@ -19,9 +21,14 @@ export function ExitGate({ moduleId, gate, accent }: { moduleId: string; gate: T
   const lastTs = useRef<number | null>(null);
   useEffect(() => {
     if (!verdict) return;
-    if (lastTs.current !== null && verdict.ts !== lastTs.current) audio.sfx(verdict.passed ? "gate" : "error");
+    // opening a cell's gate is the LARGEST in-flow moment (mastery demonstrated → the next cell unseals):
+    // a big, ceremonious flourish. A fail stays a plain tension tone (not punitive, just honest).
+    if (lastTs.current !== null && verdict.ts !== lastTs.current) {
+      if (verdict.passed) reward("large", { accent, sfx: "gate" });
+      else audio.sfx("error");
+    }
     lastTs.current = verdict.ts;
-  }, [verdict?.ts, verdict?.passed, verdict]);
+  }, [verdict?.ts, verdict?.passed, verdict]); // eslint-disable-line react-hooks/exhaustive-deps
 
   async function submit() {
     // synchronous guard against a rapid double-tap firing two gate.evaluated events
