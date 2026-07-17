@@ -4,19 +4,28 @@ import { saveBook, getBook, getBookForModule, deleteBook, setProgress, getProgre
 const BOOK = (moduleId: string, title: string) =>
   ["---", `module_id: ${moduleId}`, "spine: ITC", `title: ${title}`, "reading_minutes: 10", "---", "", "> pregunta raíz de prueba", "", "## Prólogo", "cuerpo del libro de prueba con suficiente texto real"].join("\n");
 
-// a real module_id anchor is a UUID (the shape of every roadmap cell id) — fixtures must use one, not
-// free text, since the parser now rejects non-UUID anchors as loose books (book.ts UUID_RE).
-const uuid = () => "cc000000-0000-4000-8000-" + Math.floor(Math.random() * 0xfffffffffff).toString(16).padStart(12, "0").slice(0, 12);
+// a device-unique LOOSE handle (matches no cell slug) for fixtures that only need a stable primary key.
+const looseId = () => "loose-libro-" + Math.floor(Math.random() * 0xffffffffffff).toString(16);
 
 describe("book-store — offline storage + module anchor (Phase 1 reading)", () => {
-  it("saves a valid book and retrieves it by id AND by module (bidirectional anchor)", async () => {
-    const mid = uuid();
-    const saved = await saveBook(BOOK(mid, "Libro de prueba"), "import");
-    expect(saved?.id).toBe(mid);
-    expect((await getBook(mid))?.title).toBe("Libro de prueba");
-    expect((await getBookForModule(mid))?.moduleId).toBe(mid);
-    await deleteBook(mid);
-    expect(await getBook(mid)).toBeNull();
+  it("a book whose handle RESOLVES anchors to that cell (retrievable by id AND by module)", async () => {
+    const CELL = "ca000000-0000-4000-8000-000000000002"; // ITC C1
+    const saved = await saveBook(BOOK("itc-c1-mi-libro", "Libro de prueba"), "import");
+    expect(saved?.id).toBe(CELL); // the resolved handle keys the book by the real cell id
+    expect((await getBook(CELL))?.title).toBe("Libro de prueba");
+    expect((await getBookForModule(CELL))?.moduleId).toBe(CELL); // anchored to the cell → shows "Leer"
+    await deleteBook(CELL);
+    expect(await getBook(CELL)).toBeNull();
+  });
+
+  it("a book whose handle matches NOTHING stays LOOSE (stored + readable, moduleId null, kept by spine)", async () => {
+    const saved = await saveBook(BOOK("no-match-xyz", "Libro suelto"), "import");
+    expect(saved?.id).toBe("no-match-xyz"); // keyed by its own handle
+    const row = await getBook("no-match-xyz");
+    expect(row?.title).toBe("Libro suelto");
+    expect(row?.moduleId).toBeNull(); // not anchored to any cell
+    expect(row?.spine).toBe("ITC"); // still grouped under its spine section
+    await deleteBook("no-match-xyz");
   });
 
   it("rejects an invalid .md — no faked book stored", async () => {
@@ -34,7 +43,7 @@ describe("book-store — offline storage + module anchor (Phase 1 reading)", () 
   });
 
   it("tracks reading progress as device-local session state (never the log), purged on delete", async () => {
-    const mid = uuid();
+    const mid = looseId();
     await saveBook(BOOK(mid, "Prog"), "import");
     await setProgress(mid, { scrollPct: 0.5 });
     expect((await getProgress(mid))?.scrollPct).toBe(0.5);

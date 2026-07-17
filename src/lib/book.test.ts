@@ -101,13 +101,13 @@ describe("parseBook — robust against adversarial .md (any file, the door for 1
     expect(headingless.lead).toContain("sin un solo heading");
   });
 
-  it("a garbage / whitespace module_id → loose book (never a junk anchor), a real UUID still anchors", () => {
-    // author-supplied free text: only a real UUID is accepted as a cell anchor; anything else → null.
-    expect(parseBook("---\ntitle: T\nspine: FrED\nmodule_id: not-a-uuid\n---\n\n## X\nx")!.meta.moduleId).toBeNull();
-    expect(parseBook("---\ntitle: T\nspine: FrED\nmodule_id: 12345\n---\n\n## X\nx")!.meta.moduleId).toBeNull();
+  it("keeps module_id as a raw HANDLE (slug OR uuid) verbatim; only empty/whitespace → null (loose)", () => {
+    // a friendly slug survives untouched — the resolver (lib/cell-slugs) decides link-vs-loose later.
+    expect(parseBook("---\ntitle: T\nspine: FrED\nmodule_id: itc-c1-asintotico\n---\n\n## X\nx")!.meta.moduleId).toBe("itc-c1-asintotico");
+    // a raw UUID survives untouched too.
+    expect(parseBook("---\ntitle: T\nspine: FrED\nmodule_id: cc000000-0000-4000-8000-0000000000aa\n---\n\n## X\nx")!.meta.moduleId).toBe("cc000000-0000-4000-8000-0000000000aa");
+    // whitespace-only or absent → null (a loose book, still fully readable).
     expect(parseBook('---\ntitle: T\nspine: FrED\nmodule_id: "   "\n---\n\n## X\nx')!.meta.moduleId).toBeNull();
-    const ok = parseBook("---\ntitle: T\nspine: FrED\nmodule_id: cc000000-0000-4000-8000-0000000000aa\n---\n\n## X\nx")!;
-    expect(ok.meta.moduleId).toBe("cc000000-0000-4000-8000-0000000000aa");
-    expect(ok.meta.title).toBe("T"); // still a fully readable book either way
+    expect(parseBook("---\ntitle: Suelto\nspine: FrED\n---\n\n## X\nx")!.meta.moduleId).toBeNull();
   });
 });

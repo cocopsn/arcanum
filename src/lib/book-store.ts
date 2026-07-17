@@ -1,5 +1,6 @@
 import Dexie, { type Table } from "dexie";
 import { parseBook, slugify, type BookMeta } from "@/lib/book";
+import { resolveCellId } from "@/lib/cell-slugs";
 
 // Offline DEEP-READING store — a SEPARATE Dexie DB from the event log. The log is SACRED; a book is
 // reconstructible CACHE (the .md is the truth, generated externally). Downloaded books read with the
@@ -47,14 +48,17 @@ export interface SavedBook {
 }
 
 /** Parse + store a .md book. Returns null when the .md does NOT satisfy the contract (honest — the
- *  caller shows "formato inválido", never fakes a book). Keyed by module_id (anchored) or title slug. */
+ *  caller shows "formato inválido", never fakes a book). The `module_id` HANDLE is RESOLVED to a real
+ *  roadmap cell (lib/cell-slugs.ts): matched → the book keys by that cell id and anchors there for
+ *  reading (getBookForModule); no match → LOOSE, keyed by its own handle/title slug, listed by spine. */
 export async function saveBook(md: string, source: "seed" | "import" = "import"): Promise<SavedBook | null> {
   const parsed = parseBook(md);
   if (!parsed) return null;
-  const id = parsed.meta.moduleId ?? slugify(parsed.meta.title);
+  const cellId = resolveCellId(parsed.meta.moduleId);
+  const id = cellId ?? parsed.meta.moduleId ?? slugify(parsed.meta.title);
   const row: BookRow = {
     id,
-    moduleId: parsed.meta.moduleId,
+    moduleId: cellId,
     spine: parsed.meta.spine,
     title: parsed.meta.title,
     md,

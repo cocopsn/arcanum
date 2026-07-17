@@ -1,7 +1,5 @@
 import { makeEvent, type ArcanumEvent } from "@/core/event";
 import { SPINES, pathIdForCell } from "@/lib/spines";
-import { allBookMd } from "@/lib/all-books";
-import { deriveBookCellEvents } from "@/lib/book-cells";
 
 // Day-0 seed: the THREE CURRICULAR SPINES (WHITE ROOM) as the roadmap DAG. Each goal
 // is a spine; each cell is a module; course order is the dependency (a linear chain →
@@ -94,16 +92,10 @@ function buildPaths(): ArcanumEvent[] {
   return events;
 }
 
-// ── BOOK-CELLS block (folder ingestion) ──────────────────────────────────────────────────────────
-// Every .md in content/books/ can CREATE the cell it anchors to (module.upserted, path-aware) + its DAG
-// edges. Derived from the frontmatter, DETERMINISTIC ids (b2/b3 prefixes) → re-importing the folder is
-// idempotent and the hydrate migration carries only the genuinely-new events. In vitest allBookMd() is []
-// (no webpack) → no events, so the seed stays byte-identical there; the deriver is tested directly.
-function buildBookCells(): ArcanumEvent[] {
-  return deriveBookCellEvents(allBookMd(), SPINES, TS + 2_000_000, DEVICE);
-}
-
-export const SEED_EVENTS: ArcanumEvent[] = [...buildSeed(), ...buildPaths(), ...buildBookCells()];
+// Folder books do NOT create roadmap cells — a book ANCHORS to an existing cell for reading (resolved by
+// its slug/UUID handle, lib/cell-slugs.ts) or stays LOOSE. So the seed carries only the spines + paths;
+// the books live in the Dexie reader store (lib/seed-books.ts), never the event log.
+export const SEED_EVENTS: ArcanumEvent[] = [...buildSeed(), ...buildPaths()];
 
 /** ITC spine + its first cell (CS50 ramp) — stable refs for tests/dispatch. */
 export const SEED_GOAL_ID = SPINES[0]!.goalId;
