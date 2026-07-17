@@ -100,4 +100,14 @@ describe("parseBook — robust against adversarial .md (any file, the door for 1
     expect(headingless.sections).toHaveLength(0);
     expect(headingless.lead).toContain("sin un solo heading");
   });
+
+  it("a garbage / whitespace module_id → loose book (never a junk anchor), a real UUID still anchors", () => {
+    // author-supplied free text: only a real UUID is accepted as a cell anchor; anything else → null.
+    expect(parseBook("---\ntitle: T\nspine: FrED\nmodule_id: not-a-uuid\n---\n\n## X\nx")!.meta.moduleId).toBeNull();
+    expect(parseBook("---\ntitle: T\nspine: FrED\nmodule_id: 12345\n---\n\n## X\nx")!.meta.moduleId).toBeNull();
+    expect(parseBook('---\ntitle: T\nspine: FrED\nmodule_id: "   "\n---\n\n## X\nx')!.meta.moduleId).toBeNull();
+    const ok = parseBook("---\ntitle: T\nspine: FrED\nmodule_id: cc000000-0000-4000-8000-0000000000aa\n---\n\n## X\nx")!;
+    expect(ok.meta.moduleId).toBe("cc000000-0000-4000-8000-0000000000aa");
+    expect(ok.meta.title).toBe("T"); // still a fully readable book either way
+  });
 });

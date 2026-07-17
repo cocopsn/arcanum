@@ -1,12 +1,15 @@
+import type { NodeNature } from "@/core/event";
+
 // DEEP-READING books — ARCANUM ingests .md books generated EXTERNALLY (separate Sonnet instances),
 // it does NOT generate them. This is the pure PARSER: YAML-frontmatter + markdown body → a structured
 // book (meta + root question + sections + TOC). It is the CONTRACT: any .md that satisfies it can be
 // read; anything that doesn't parses to null (honest "formato inválido", never faked). Pure, testable.
 
 export interface BookMeta {
-  /** module_id — anchors the book to a roadmap cell (null = a loose book, no cell) */
+  /** module_id — anchors the book to a roadmap cell (null = a loose book, no cell). If the cell does not
+   *  exist yet, folder ingestion CREATES it (module.upserted) anchored to this id. */
   moduleId: string | null;
-  /** ITC | FrED | Competitiva | Aleman — drives the world tint (tolerant free string) */
+  /** ITC | FrED | Competitiva | Aleman — drives the world tint AND resolves the goal for a created cell. */
   spine: string;
   title: string;
   subtitle: string;
@@ -16,6 +19,16 @@ export interface BookMeta {
   generatedBy: string;
   version: string;
   readingMinutes: number | null;
+  /** PATH slug (e.g. "operativo") — a created cell is anchored to that path (closes the path-aware debt).
+   *  Absent → the goal's default (first) path, no regression. */
+  path: string | null;
+  /** structural NATURE of a created cell (a_mano | delegable | mixto) — decides its gate. Absent → a_mano. */
+  nature: NodeNature | null;
+  /** display order within the path — cells with `order` and no explicit prereq are chained by it. */
+  order: number | null;
+  /** explicit DAG prerequisites (module_ids) — edges prereq→this cell, so the fog-of-war respects the
+   *  hierarchy. Empty = a root in its path. */
+  prereq: string[];
 }
 
 export type SectionKind = "prologue" | "core" | "connections" | "synthesis" | "questions" | "sources";
@@ -70,6 +83,13 @@ function kindOf(heading: string): SectionKind {
   return "core";
 }
 
+// A module_id ANCHORS a book to a roadmap cell and BECOMES that cell's stable id + the seed of its
+// derived event ids (lib/book-cells.ts). It is author-supplied free text, so it is validated to a real
+// UUID shape here: a garbage/whitespace/non-UUID value → null (a loose book — readable, but it never
+// creates a junk cell, and every real anchor is fixed-length so derived edge ids can't ambiguously
+// collide). This is the DATA-boundary guard: a .md is data; a malformed id fails safe, never breaks the fold.
+const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
 /** Parse the flat YAML-ish frontmatter (key: value scalars). Tolerant: unknown keys ignored, missing
  *  keys default to "". Values may be quoted. */
 function parseFrontmatter(fm: string): BookMeta {
@@ -82,8 +102,20 @@ function parseFrontmatter(fm: string): BookMeta {
     get[m[1]!] = v;
   }
   const minutes = Number.parseInt(get.reading_minutes ?? "", 10);
+  const order = Number.parseInt(get.order ?? "", 10);
+  // module_id: accept ONLY a real UUID (trimmed) — else it's a loose book (null), never a junk anchor.
+  const moduleIdRaw = (get.module_id ?? "").trim();
+  const moduleId = UUID_RE.test(moduleIdRaw) ? moduleIdRaw : null;
+  const natureRaw = (get.nature ?? "").trim().toLowerCase();
+  const nature = natureRaw === "a_mano" || natureRaw === "delegable" || natureRaw === "mixto" ? (natureRaw as NodeNature) : null;
+  // prereq: a comma/space list, tolerant of [a, b] brackets → array of module_ids
+  const prereq = (get.prereq ?? "")
+    .replace(/^\[|\]$/g, "")
+    .split(/[,\s]+/)
+    .map((s) => s.trim())
+    .filter(Boolean);
   return {
-    moduleId: get.module_id ? get.module_id : null,
+    moduleId,
     spine: get.spine ?? "",
     title: get.title ?? "",
     subtitle: get.subtitle ?? "",
@@ -93,6 +125,10 @@ function parseFrontmatter(fm: string): BookMeta {
     generatedBy: get.generated_by ?? "",
     version: get.version ?? "",
     readingMinutes: Number.isFinite(minutes) ? minutes : null,
+    path: get.path ? get.path.trim() : null,
+    nature,
+    order: Number.isFinite(order) ? order : null,
+    prereq,
   };
 }
 

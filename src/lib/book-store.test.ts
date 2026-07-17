@@ -4,9 +4,13 @@ import { saveBook, getBook, getBookForModule, deleteBook, setProgress, getProgre
 const BOOK = (moduleId: string, title: string) =>
   ["---", `module_id: ${moduleId}`, "spine: ITC", `title: ${title}`, "reading_minutes: 10", "---", "", "> pregunta raíz de prueba", "", "## Prólogo", "cuerpo del libro de prueba con suficiente texto real"].join("\n");
 
+// a real module_id anchor is a UUID (the shape of every roadmap cell id) — fixtures must use one, not
+// free text, since the parser now rejects non-UUID anchors as loose books (book.ts UUID_RE).
+const uuid = () => "cc000000-0000-4000-8000-" + Math.floor(Math.random() * 0xfffffffffff).toString(16).padStart(12, "0").slice(0, 12);
+
 describe("book-store — offline storage + module anchor (Phase 1 reading)", () => {
   it("saves a valid book and retrieves it by id AND by module (bidirectional anchor)", async () => {
-    const mid = "test-mod-" + Math.random().toString(36).slice(2);
+    const mid = uuid();
     const saved = await saveBook(BOOK(mid, "Libro de prueba"), "import");
     expect(saved?.id).toBe(mid);
     expect((await getBook(mid))?.title).toBe("Libro de prueba");
@@ -30,7 +34,7 @@ describe("book-store — offline storage + module anchor (Phase 1 reading)", () 
   });
 
   it("tracks reading progress as device-local session state (never the log), purged on delete", async () => {
-    const mid = "prog-" + Math.random().toString(36).slice(2);
+    const mid = uuid();
     await saveBook(BOOK(mid, "Prog"), "import");
     await setProgress(mid, { scrollPct: 0.5 });
     expect((await getProgress(mid))?.scrollPct).toBe(0.5);
