@@ -17,18 +17,31 @@ export type Sfx =
   | "step"
   | "heart"
   | "resolve"
-  | "lessonwin";
+  | "lessonwin"
+  // ── INTERACTION layer: every gesture answers, and each is recognisable WITHOUT looking.
+  // Kept discreet on purpose — these fire constantly, so they must never fatigue.
+  | "toggle" // a switch/tab/select flips — a crisp bright tick, shorter than any button
+  | "nav" // entering something (a world, a section) — a short forward rise
+  | "open" // a sheet/panel opens — a soft rising breath
+  | "close" // …and its falling mirror
+  | "primary" // a primary action — weighted + confident (low body, bright top)
+  | "secondary" // a secondary action — light, unobtrusive
+  | "success" // a state landed well (saved, done)
+  | "blocked" // sealed / not allowed — a DULL stop; deliberately not the sharp `error` of a wrong answer
+  | "saved" // autosave — nearly subliminal, one high tick
+  | "import"; // content ingested — a settle onto a low root
 export type WorldSlug = "itc" | "fred" | "competitiva" | "aleman";
 
 export interface AudioConfig {
   master: number; // 0..1
   sfx: boolean;
+  sfxVol: number; // 0..1 — INDEPENDENT of music
   music: boolean;
   musicVol: number; // 0..1
 }
 
 const KEY = "arcanum_audio";
-const DEFAULT: AudioConfig = { master: 0.7, sfx: true, music: false, musicVol: 0.4 };
+const DEFAULT: AudioConfig = { master: 0.7, sfx: true, sfxVol: 0.8, music: false, musicVol: 0.4 };
 
 function load(): AudioConfig {
   if (typeof window === "undefined") return { ...DEFAULT };
@@ -37,6 +50,7 @@ function load(): AudioConfig {
     return {
       master: clamp(typeof raw.master === "number" ? raw.master : DEFAULT.master),
       sfx: raw.sfx !== false,
+      sfxVol: clamp(typeof raw.sfxVol === "number" ? raw.sfxVol : DEFAULT.sfxVol),
       music: raw.music === true,
       musicVol: clamp(typeof raw.musicVol === "number" ? raw.musicVol : DEFAULT.musicVol),
     };
@@ -62,6 +76,7 @@ class Engine {
   private cfg: AudioConfig = load();
   private ctx: AudioContext | null = null;
   private master: GainNode | null = null;
+  private sfxBus: GainNode | null = null;
   private musicBus: GainNode | null = null;
   private ambient: { nodes: AudioNode[]; gain: GainNode } | null = null;
   private world: WorldSlug | null = null;
@@ -84,6 +99,7 @@ class Engine {
       }
     }
     if (this.master) this.master.gain.value = this.cfg.master;
+    if (this.sfxBus) this.sfxBus.gain.value = this.cfg.sfx ? this.cfg.sfxVol : 0;
     if (this.musicBus) this.musicBus.gain.value = this.cfg.music ? this.cfg.musicVol : 0;
     // re-evaluate ambient on/off
     if (!this.cfg.music) this.stopAmbient();
@@ -101,6 +117,11 @@ class Engine {
       this.master = this.ctx.createGain();
       this.master.gain.value = this.cfg.master;
       this.master.connect(this.ctx.destination);
+      // two independent buses under master: SFX and music each carry their own level, so the
+      // learner can keep the interaction feedback and silence the drone (or the reverse).
+      this.sfxBus = this.ctx.createGain();
+      this.sfxBus.gain.value = this.cfg.sfx ? this.cfg.sfxVol : 0;
+      this.sfxBus.connect(this.master);
       this.musicBus = this.ctx.createGain();
       this.musicBus.gain.value = this.cfg.music ? this.cfg.musicVol : 0;
       this.musicBus.connect(this.master);
@@ -109,10 +130,18 @@ class Engine {
     if (this.cfg.music && this.world && !this.ambient) this.startAmbient(this.world);
   }
 
+  /** The gesture entry point: unlock (iOS needs a user gesture) + play, in one call. Every UI
+   *  handler uses this so no gesture can ever be wired without also arming the context. */
+  cue(name: Sfx) {
+    this.unlock();
+    this.sfx(name);
+  }
+
   // ── SFX — short synthesized envelopes ──────────────────────────────────────────────
   sfx(name: Sfx) {
-    if (!this.cfg.sfx || !this.ctx || !this.master) return;
+    if (!this.cfg.sfx || !this.ctx || !this.master) return; // muted → not a single node is created
     const ctx = this.ctx;
+    const bus: AudioNode = this.sfxBus ?? this.master;
     const t = ctx.currentTime;
     const tone = (freq: number, start: number, dur: number, peak: number, type: OscillatorType = "sine", endFreq?: number) => {
       const o = ctx.createOscillator();
@@ -123,9 +152,9 @@ class Engine {
       g.gain.setValueAtTime(0.0001, start);
       g.gain.exponentialRampToValueAtTime(peak, start + Math.min(0.02, dur * 0.3));
       g.gain.exponentialRampToValueAtTime(0.0001, start + dur);
-      o.connect(g).connect(this.master!);
+      o.connect(g).connect(bus);
       o.start(start);
-      o.stop(start + dur + 0.02);
+      o.stop(start + dur + 0.02); // self-terminating → the node is released, nothing to clean up
     };
     switch (name) {
       case "click":
@@ -175,6 +204,54 @@ class Engine {
         tone(1046.5, t + 0.35, 0.6, 0.05, "sine");
         break;
       }
+
+      // ── INTERACTION layer — fires constantly, so: short, quiet, and each one its own shape ──
+      case "toggle":
+        // a switch flips — one crisp bright tick, the shortest sound in the system
+        tone(987.77, t, 0.03, 0.06, "square", 1174.66);
+        break;
+      case "nav":
+        // forward motion into a world/section — a rise with a quiet harmonic above it
+        tone(293.66, t, 0.11, 0.075, "triangle", 440);
+        tone(587.33, t + 0.03, 0.09, 0.035, "sine", 880);
+        break;
+      case "open":
+        // a sheet breathes in
+        tone(349.23, t, 0.16, 0.055, "triangle", 523.25);
+        break;
+      case "close":
+        // …and out — the exact mirror, so the pair reads as one gesture
+        tone(523.25, t, 0.14, 0.045, "triangle", 349.23);
+        break;
+      case "primary":
+        // a decision with weight: a low body under a bright top
+        tone(130.81, t, 0.13, 0.085, "triangle");
+        tone(523.25, t, 0.09, 0.06, "sine", 659.25);
+        break;
+      case "secondary":
+        // a lighter choice — present, never insistent
+        tone(493.88, t, 0.05, 0.045, "sine", 466.16);
+        break;
+      case "success":
+        // it landed — a rising major third (smaller than the gate's full triad)
+        tone(523.25, t, 0.1, 0.07, "triangle");
+        tone(659.25, t + 0.06, 0.16, 0.06, "triangle");
+        break;
+      case "blocked":
+        // sealed: a DULL stop. No pitch drama — the door simply does not move. Deliberately
+        // NOT `error` (that one judges an answer; this one only states a boundary).
+        tone(110, t, 0.1, 0.1, "square", 103.83);
+        tone(82.41, t + 0.05, 0.12, 0.06, "square");
+        break;
+      case "saved":
+        // autosave — nearly subliminal; felt more than heard
+        tone(1567.98, t, 0.035, 0.025, "sine");
+        break;
+      case "import":
+        // content ingested — a descent that settles onto a low root
+        tone(659.25, t, 0.09, 0.05, "triangle", 523.25);
+        tone(196, t + 0.07, 0.22, 0.06, "sine");
+        break;
     }
   }
 

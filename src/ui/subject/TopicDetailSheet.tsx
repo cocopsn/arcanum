@@ -240,7 +240,7 @@ export function TopicDetailSheet({
               </p>
               <button
                 onClick={() => {
-                  audio.unlock();
+                  audio.cue("primary");
                   setExercisesOpen(true);
                 }}
                 className="mt-3 min-h-11 w-full rounded-[var(--r-sm)] border px-4 text-sm transition hover:brightness-125"
@@ -252,7 +252,15 @@ export function TopicDetailSheet({
 
             {/* ── the time-by-duration SELECTOR drives the activity below ── */}
             <div className="mt-4">
-              <LearningModes modes={modes} active={mode} onSelect={setMode} accent={accent} />
+              <LearningModes
+                modes={modes}
+                active={mode}
+                onSelect={(m) => {
+                  audio.cue("toggle"); // a select, not a command
+                  setMode(m);
+                }}
+                accent={accent}
+              />
             </div>
 
             {/* ── ACTIVITY — only the SELECTED mode's flow renders (the selector really switches) ── */}

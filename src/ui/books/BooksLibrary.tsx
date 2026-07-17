@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useFocusTrap } from "@/ui/use-focus-trap";
 import { useReward } from "@/ui/reward/RewardProvider";
+import { audio } from "@/lib/audio";
 import { listBooks, saveBook, deleteBook, totalBookBytes, type BookRow } from "@/lib/book-store";
 import { listBanks, saveExerciseBank, deleteBank, totalBankBytes, type ExerciseBankRow } from "@/lib/exercise-store";
 import { runJs } from "@/lib/js-runner";
@@ -55,19 +56,21 @@ export function BooksLibrary({ open, onClose }: { open: boolean; onClose: () => 
       if (isExercises) {
         const res = await saveExerciseBank(md, { source: "import", jsRun: runJs, pyRun: runPy });
         if (!res.ok) {
+          audio.cue("error"); // rejected — you hear it before you read it
           setMsg([res.error, ...(res.details ?? [])].join(" "));
           return;
         }
         setMsg(`Banco de ejercicios importado: «${res.bank.meta.title}» (${res.bank.count} ejercicios, validados).`);
-        reward("small");
+        reward("small", { sfx: "import" }); // the reward's own visual, but the ingest SETTLE as its voice
       } else {
         const saved = await saveBook(md, "import");
         if (!saved) {
+          audio.cue("error");
           setMsg("Ese .md no cumple el contrato (falta frontmatter o título). No se importó nada — cero contenido inventado.");
           return;
         }
         setMsg(`Libro importado: «${saved.meta.title}».`);
-        reward("small");
+        reward("small", { sfx: "import" });
       }
       setPaste("");
       setPasteOpen(false);

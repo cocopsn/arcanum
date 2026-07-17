@@ -32,10 +32,6 @@ export function AudioConfig({ open, onClose }: { open: boolean; onClose: () => v
         </div>
 
         <div className="mt-5 space-y-5">
-          <Row label="Efectos (SFX)" sub="clic, compuerta, ascensión">
-            <Toggle on={cfg.sfx} onChange={(v) => set({ sfx: v })} label="SFX" />
-          </Row>
-
           <div>
             <div className="mb-1 flex items-center justify-between text-[12px] text-text-muted">
               <span>Volumen general</span>
@@ -44,8 +40,36 @@ export function AudioConfig({ open, onClose }: { open: boolean; onClose: () => v
             <input type="range" min={0} max={1} step={0.05} value={cfg.master} onChange={(e) => set({ master: Number(e.target.value) })} aria-label="Volumen general" className="w-full accent-[var(--rank)]" />
           </div>
 
-          <Row label="Música ambiente" sub="un loop por mundo, bajo, no cansa">
-            <Toggle on={cfg.music} onChange={(v) => set({ music: v })} label="Música" />
+          <Row label="Efectos (SFX)" sub="cada gesto responde: toggles, navegación, estados">
+            <Toggle
+              on={cfg.sfx}
+              onChange={(v) => {
+                set({ sfx: v });
+                audio.cue("toggle"); // silent when you just turned SFX off — honest, not a bug
+              }}
+              label="SFX"
+            />
+          </Row>
+
+          {cfg.sfx && (
+            <div>
+              <div className="mb-1 flex items-center justify-between text-[12px] text-text-muted">
+                <span>Volumen de efectos</span>
+                <span className="tnum text-text-faint">{Math.round(cfg.sfxVol * 100)}%</span>
+              </div>
+              <input type="range" min={0} max={1} step={0.05} value={cfg.sfxVol} onChange={(e) => set({ sfxVol: Number(e.target.value) })} aria-label="Volumen de efectos" className="w-full accent-[var(--rank)]" />
+            </div>
+          )}
+
+          <Row label="Música ambiente" sub="un drone por mundo, bajo, no cansa">
+            <Toggle
+              on={cfg.music}
+              onChange={(v) => {
+                set({ music: v });
+                audio.cue("toggle");
+              }}
+              label="Música"
+            />
           </Row>
 
           {cfg.music && (

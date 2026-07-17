@@ -67,7 +67,7 @@ export function HomeView() {
         readModel={readModel}
         viewModel={viewModel}
         onWorld={(goalId) => {
-          audio.unlock();
+          audio.cue("nav"); // crossing into a world — the world's drone then swells in (if music is on)
           setSubjectGoal(goalId);
         }}
         header={
@@ -289,37 +289,42 @@ function Footer({
       ·
     </span>
   );
+  // every section entry is a NAVIGATION — wired through one cue so a future entry can't land silent
+  const go = (fn: () => void) => () => {
+    audio.cue("nav");
+    fn();
+  };
   return (
     <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1">
-      <button onClick={onMapa} className={`${item} hover:text-topic`}>
+      <button onClick={go(onMapa)} className={`${item} hover:text-topic`}>
         Mapa
       </button>
       {sep}
-      <button onClick={onAgenda} className={`${item} hover:text-topic`}>
+      <button onClick={go(onAgenda)} className={`${item} hover:text-topic`}>
         Agenda
       </button>
       {sep}
-      <button onClick={onNotes} className={`${item} hover:text-topic`}>
+      <button onClick={go(onNotes)} className={`${item} hover:text-topic`}>
         Notas
       </button>
       {sep}
-      <button onClick={onLecturas} className={`${item} hover:text-topic`}>
+      <button onClick={go(onLecturas)} className={`${item} hover:text-topic`}>
         Lecturas
       </button>
       {sep}
-      <button onClick={onVigilia} className={`${item} hover:text-gold`}>
+      <button onClick={go(onVigilia)} className={`${item} hover:text-gold`}>
         Vigilia
       </button>
       {sep}
-      <button onClick={onAudio} className={`${item} hover:text-rank`}>
+      <button onClick={go(onAudio)} className={`${item} hover:text-rank`}>
         Audio
       </button>
       {sep}
-      <button onClick={onCodice} className={`${item} hover:text-rank`}>
+      <button onClick={go(onCodice)} className={`${item} hover:text-rank`}>
         Códice
       </button>
       {sep}
-      <button onClick={() => void rebuild()} className={`${item} hover:text-text-muted`}>
+      <button onClick={() => { audio.cue("secondary"); void rebuild(); }} className={`${item} hover:text-text-muted`}>
         Reconstruir índice
       </button>
       {sep}

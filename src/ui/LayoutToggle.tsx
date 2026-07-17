@@ -11,8 +11,7 @@ export function LayoutToggle() {
   return (
     <button
       onClick={() => {
-        audio.unlock();
-        audio.sfx("click");
+        audio.cue("toggle"); // a switch, not a button — the tick says so
         setMode(desktop ? "pwa" : "desktop");
       }}
       aria-label={desktop ? "Cambiar a modo móvil" : "Cambiar a modo escritorio"}

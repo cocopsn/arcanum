@@ -7,6 +7,7 @@ import { useActions } from "@/ui/use-actions";
 import { noteExtensions, serializeProse } from "@/lib/note-editor";
 import { splitInk, joinInk, type InkDrawing } from "@/lib/note-ink";
 import { InkCanvas, InkReplay } from "@/ui/notes/InkCanvas";
+import { audio } from "@/lib/audio";
 
 type SaveState = "saved" | "saving";
 interface Cell { id: string; title: string }
@@ -56,7 +57,10 @@ export function NoteWysiwyg({
     const md = joinInk(serializeProse(editor), nextInks);
     savingRef.current = false;
     void updateNote(noteId, nextTitle, md).then(() => {
-      if (openNoteId.current === noteId) setSaveState("saved");
+      if (openNoteId.current === noteId) {
+        setSaveState("saved");
+        audio.sfx("saved"); // debounced → fires when typing settles, and is nearly subliminal by design
+      }
     });
   }
   const persistRef = useRef(persist);

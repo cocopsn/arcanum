@@ -257,24 +257,28 @@ export function SubjectMap({ goalId, onClose }: { goalId: string; onClose: () =>
             <path d={connectorD} fill="none" stroke={accent} strokeOpacity={0.28} strokeWidth="3" strokeLinecap="round" strokeDasharray="1 13" />
           </svg>
 
-          {topics.map((t, i) => (
-            <TopicBadge
-              key={t.id}
-              topic={t}
-              index={i}
-              x={xOf(i)}
-              y={TOP + i * ROW_H}
-              status={nodeStatus(t, readModel.edges, byId)}
-              retr={retrOf.get(t.id) ?? 0}
-              accent={accent}
-              metal={metal}
-              onOpen={() => {
-                audio.unlock();
-                audio.sfx("click");
-                setDetailId(t.id);
-              }}
-            />
-          ))}
+          {topics.map((t, i) => {
+            const st = nodeStatus(t, readModel.edges, byId);
+            return (
+              <TopicBadge
+                key={t.id}
+                topic={t}
+                index={i}
+                x={xOf(i)}
+                y={TOP + i * ROW_H}
+                status={st}
+                retr={retrOf.get(t.id) ?? 0}
+                accent={accent}
+                metal={metal}
+                onOpen={() => {
+                  // a SEALED cell answers with the dull stop, an open one with forward motion —
+                  // you hear the fog-of-war before you read it
+                  audio.cue(st === "sealed" ? "blocked" : "nav");
+                  setDetailId(t.id);
+                }}
+              />
+            );
+          })}
           {topics.length === 0 && (
             <div className="absolute inset-x-0 px-6 text-center" style={{ top: TOP + 8 }}>
               <p className="font-serif text-[13px] leading-snug text-text-muted">
@@ -309,8 +313,7 @@ export function SubjectMap({ goalId, onClose }: { goalId: string; onClose: () =>
                   aria-pressed={on}
                   title={p.description}
                   onClick={() => {
-                    audio.unlock();
-                    audio.sfx("click");
+                    audio.cue("toggle"); // switching route — the switch tick
                     setPathId(p.id);
                     setCellOpen(false);
                   }}
@@ -325,7 +328,7 @@ export function SubjectMap({ goalId, onClose }: { goalId: string; onClose: () =>
               );
             })}
             <button
-              onClick={() => { setCellOpen((v) => !v); setNewOpen(false); }}
+              onClick={() => { audio.cue("toggle"); setCellOpen((v) => !v); setNewOpen(false); }}
               aria-label="Añadir una celda a este path"
               aria-expanded={cellOpen}
               className="min-h-9 shrink-0 rounded-[var(--r-pill)] px-2 text-[10px] uppercase tracking-wider leading-none transition"
@@ -334,7 +337,7 @@ export function SubjectMap({ goalId, onClose }: { goalId: string; onClose: () =>
               + celda
             </button>
             <button
-              onClick={() => { setNewOpen((v) => !v); setCellOpen(false); }}
+              onClick={() => { audio.cue("toggle"); setNewOpen((v) => !v); setCellOpen(false); }}
               aria-label="Crear un path nuevo"
               aria-expanded={newOpen}
               className="min-h-9 min-w-9 shrink-0 rounded-[var(--r-pill)] text-[13px] leading-none transition"
@@ -444,7 +447,17 @@ export function SubjectMap({ goalId, onClose }: { goalId: string; onClose: () =>
         </span>
       </header>
 
-      {detailId && <TopicDetailSheet key={detailId} moduleId={detailId} accent={accent} onClose={() => setDetailId(null)} />}
+      {detailId && (
+        <TopicDetailSheet
+          key={detailId}
+          moduleId={detailId}
+          accent={accent}
+          onClose={() => {
+            audio.cue("close"); // the falling mirror of the `nav` that opened it
+            setDetailId(null);
+          }}
+        />
+      )}
     </div>
   );
 }
