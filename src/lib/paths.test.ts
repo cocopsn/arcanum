@@ -5,6 +5,7 @@ import { SEED_EVENTS } from "@/lib/seed";
 import { SPINES, pathIdForCell } from "@/lib/spines";
 import { nodeStatus, isMastered, crossPathEcho } from "@/core/roadmap";
 import { buildGateContext, NATURE_STANCE } from "@/lib/gate";
+import { resolveCellId } from "@/lib/cell-slugs";
 
 // PATHS — parallel routes inside a goal, each with its OWN cells + fog-of-war. The load-bearing
 // invariant: progress NEVER crosses a path. Mastering a concept in path A must not unseal or mark
@@ -17,7 +18,7 @@ const T0 = SEED_EVENTS[SEED_EVENTS.length - 1]!.ts + 10_000;
 const dev = (ts: number) => ({ ts, deviceId: "test" });
 
 describe("paths — the seed structure", () => {
-  it("FrED declares two paths: Fundamentos (the existing cells) + Operativo (empty by design)", () => {
+  it("FrED declares two paths: Fundamentos (the existing cells) + Operativo (its seeded entry cell)", () => {
     const fredPaths = rm.paths.filter((p) => p.goalId === fred.goalId);
     expect(fredPaths.map((p) => p.slug)).toEqual(["fundamentos", "operativo"]);
     const fundamentos = fredPaths.find((p) => p.slug === "fundamentos")!;
@@ -25,8 +26,23 @@ describe("paths — the seed structure", () => {
     const cellsIn = (pid: string) => rm.modules.filter((m) => m.pathId === pid);
     // every existing FrED cell was RE-ASSIGNED to Fundamentos — nothing lost
     expect(cellsIn(fundamentos.id)).toHaveLength(fred.cells.length);
-    // Operativo exists and is EMPTY: its cells arrive later by book ingestion, never invented here
-    expect(cellsIn(operativo.id)).toHaveLength(0);
+    // Operativo now carries its node-0 ENTRY cell (seeded in an appended block) — no longer empty
+    expect(cellsIn(operativo.id)).toHaveLength(1);
+  });
+
+  it("the Operativo ENTRY cell (node 0) is a_mano + available, and the ORION book resolves to it", () => {
+    const operativo = rm.paths.find((p) => p.goalId === fred.goalId && p.slug === "operativo")!;
+    const cells = rm.modules.filter((m) => m.pathId === operativo.id);
+    expect(cells).toHaveLength(1);
+    const op0 = cells[0]!;
+    expect(op0.id).toBe("cb000000-0000-4000-8000-000000000009");
+    expect(op0.title).toBe("Arquitectura del ORION Bridge");
+    expect(op0.nature).toBe("a_mano");
+    expect(op0.kind).toBe("cell");
+    const byId = new Map(rm.modules.map((m) => [m.id, m]));
+    expect(nodeStatus(op0, rm.edges, byId)).toBe("available"); // node 0 — no prereq, the path's root
+    // the fred-op-0-bridge book (module_id "fred-op-0-bridge") RESOLVES here → stops being loose, shows "Leer"
+    expect(resolveCellId("fred-op-0-bridge")).toBe(op0.id);
   });
 
   it("the FrED re-assignment is LOSSLESS — titles/kinds survive and every cell has a path", () => {
@@ -57,9 +73,10 @@ describe("paths — the seed structure", () => {
 });
 
 describe("paths — the MIGRATION of an existing log is lossless", () => {
-  // an already-live device holds the ORIGINAL seed block (ids b0000000-…) plus real progress. On the
-  // next hydrate it receives ONLY the appended paths block (ids b1000000-…). Nothing may be lost.
-  const OLD = SEED_EVENTS.filter((e) => !e.id.startsWith("b1000000"));
+  // an already-live device holds the ORIGINAL seed block (ids b0000000-…) plus real progress. On the next
+  // hydrate it receives the appended blocks (paths b1000000-…, operativo b4000000-…). Nothing may be lost.
+  // OLD models the TRUE pre-paths state: the original block only.
+  const OLD = SEED_EVENTS.filter((e) => e.id.startsWith("b0000000"));
   const PATHS_BLOCK = SEED_EVENTS.filter((e) => e.id.startsWith("b1000000"));
   const cell = fred.cells[0]!;
   const TOLD = OLD[OLD.length - 1]!.ts + 10_000;

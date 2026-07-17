@@ -92,10 +92,43 @@ function buildPaths(): ArcanumEvent[] {
   return events;
 }
 
+// ── OPERATIVO ENTRY block (appended) ──────────────────────────────────────────────────────────────
+// The FrED Operativo path shipped EMPTY. Its node-0 ENTRY cell is seeded HERE as an APPENDED event (own
+// id prefix `b4000000-`, ts strictly after the paths block) — the original (`b0000000-`) and paths
+// (`b1000000-`) blocks are NEVER renumbered, so an existing log receives ONLY this new event (hydrate
+// set-diff by id → idempotent, no progress touched, no phantom duplicate). No prereq = the path's
+// available root (node 0). The `fred-op-0-bridge` book RESOLVES to it (lib/cell-slugs.ts) → it stops
+// being loose and shows "Leer" on the cell. Books never create cells; this is a curated SEED cell for
+// the operational track, distinct from (and orthogonal to) book ingestion.
+const FRED_GOAL_ID = "a0000000-0000-4000-8000-000000000002";
+const FRED_OPERATIVO_PATH_ID = "a1000000-0000-4000-8000-000000000003";
+/** stable id of the FrED Operativo ENTRY cell (node 0) — the `fred-op-0` slug resolves here. */
+export const FRED_OPERATIVO_ENTRY_ID = "cb000000-0000-4000-8000-000000000009";
+
+function buildOperativoSeed(): ArcanumEvent[] {
+  const payload: Record<string, unknown> = {
+    title: "Arquitectura del ORION Bridge",
+    prereqs: [],
+    kind: "cell", // comprehension node, not a code mission
+    pathId: FRED_OPERATIVO_PATH_ID,
+    nature: "a_mano", // intellectual core — defended from first principles; the full adversarial gate applies
+    concept: "orion-infra",
+  };
+  return [
+    makeEvent("module.upserted", payload as never, {
+      ts: TS + 2_000_000,
+      deviceId: DEVICE,
+      goalId: FRED_GOAL_ID,
+      moduleId: FRED_OPERATIVO_ENTRY_ID,
+      id: "b4000000-0000-4000-8000-000000000001",
+    }),
+  ];
+}
+
 // Folder books do NOT create roadmap cells — a book ANCHORS to an existing cell for reading (resolved by
-// its slug/UUID handle, lib/cell-slugs.ts) or stays LOOSE. So the seed carries only the spines + paths;
-// the books live in the Dexie reader store (lib/seed-books.ts), never the event log.
-export const SEED_EVENTS: ArcanumEvent[] = [...buildSeed(), ...buildPaths()];
+// its slug/UUID handle, lib/cell-slugs.ts) or stays LOOSE. The seed carries the spines + paths + the
+// curated Operativo entry cell; the books live in the Dexie reader store (lib/seed-books.ts), never the log.
+export const SEED_EVENTS: ArcanumEvent[] = [...buildSeed(), ...buildPaths(), ...buildOperativoSeed()];
 
 /** ITC spine + its first cell (CS50 ramp) — stable refs for tests/dispatch. */
 export const SEED_GOAL_ID = SPINES[0]!.goalId;

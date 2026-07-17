@@ -1,5 +1,5 @@
 import { parseBook, slugify } from "@/lib/book";
-import { getBook, saveBook } from "@/lib/book-store";
+import { getBook, saveBook, deleteBook } from "@/lib/book-store";
 import { allBookMd } from "@/lib/all-books";
 import { resolveCellId } from "@/lib/cell-slugs";
 
@@ -15,7 +15,15 @@ export async function seedBooks(): Promise<void> {
   for (const md of SEED_BOOK_MD) {
     const parsed = parseBook(md);
     if (!parsed) continue;
-    const id = resolveCellId(parsed.meta.moduleId) ?? parsed.meta.moduleId ?? slugify(parsed.meta.title);
+    const handle = parsed.meta.moduleId ?? slugify(parsed.meta.title);
+    const cellId = resolveCellId(parsed.meta.moduleId);
+    const id = cellId ?? handle;
+    // MIGRATION: a book that USED to be loose (keyed by its handle) but now RESOLVES to a cell — e.g. its
+    // Operativo cell was just seeded — drop the stale loose row so it doesn't duplicate the linked copy.
+    if (cellId && cellId !== handle) {
+      const stale = await getBook(handle);
+      if (stale && stale.source !== "import") await deleteBook(handle);
+    }
     const existing = await getBook(id);
     if (existing && existing.source === "import") continue; // never clobber a user's imported/edited book
     await saveBook(md, "seed"); // (re)seed — refreshes changed seed content
