@@ -26,25 +26,38 @@ describe("paths — the seed structure", () => {
     const cellsIn = (pid: string) => rm.modules.filter((m) => m.pathId === pid);
     // every existing FrED cell was RE-ASSIGNED to Fundamentos — nothing lost
     expect(cellsIn(fundamentos.id)).toHaveLength(fred.cells.length);
-    // Operativo now carries the whole ORION track (7 nodes: op-0..op-5, op-7) — seeded, appended block
-    expect(cellsIn(operativo.id)).toHaveLength(7);
+    // Operativo now carries the whole ORION track (9 nodes: op-0..op-8) — seeded, appended blocks
+    expect(cellsIn(operativo.id)).toHaveLength(9);
   });
 
   it("the Operativo track: node 0 available + a_mano, the rest sealed behind the chain, all books resolve", () => {
     const operativo = rm.paths.find((p) => p.goalId === fred.goalId && p.slug === "operativo")!;
     const cells = rm.modules.filter((m) => m.pathId === operativo.id);
-    expect(cells).toHaveLength(7);
+    expect(cells).toHaveLength(9);
     expect(cells.every((c) => c.nature === "a_mano" && c.kind === "cell")).toBe(true);
     const byId = new Map(rm.modules.map((m) => [m.id, m]));
     const op0 = byId.get("cb000000-0000-4000-8000-000000000009")!;
     const op1 = byId.get("cb000000-0000-4000-8000-00000000000a")!;
+    const op8 = byId.get("cb000000-0000-4000-8000-000000000011")!;
     expect(op0.title).toBe("Arquitectura del ORION Bridge");
     expect(nodeStatus(op0, rm.edges, byId)).toBe("available"); // node 0 — no prereq, the path's root
     expect(nodeStatus(op1, rm.edges, byId)).toBe("sealed"); // op-1 gated behind op-0 (fog-of-war climbs)
+    expect(nodeStatus(op8, rm.edges, byId)).toBe("sealed"); // op-8 (the tail) gated behind op-7
     // every fred-op-N book (and none is left loose) resolves to its seeded cell → "Leer" on the node
     expect(resolveCellId("fred-op-0-bridge")).toBe(op0.id);
     expect(resolveCellId("fred-op-1-transport")).toBe(op1.id);
-    expect(resolveCellId("fred-op-7-autocard")).toBe("cb000000-0000-4000-8000-00000000000f");
+    expect(resolveCellId("fred-op-6-modbus-plc")).toBe("cb000000-0000-4000-8000-000000000010");
+    expect(resolveCellId("fred-op-8-cv-industrial")).toBe(op8.id);
+  });
+
+  it("op-6 slots BETWEEN op-5 and op-7: op-7's gate now includes op-6, and the op-5→op-7 edge is redundant-harmless", () => {
+    const byId = new Map(rm.modules.map((m) => [m.id, m]));
+    const OP5 = "cb000000-0000-4000-8000-00000000000e";
+    const OP6 = "cb000000-0000-4000-8000-000000000010";
+    const OP7 = "cb000000-0000-4000-8000-00000000000f";
+    const prereqsOf = (to: string) => rm.edges.filter((e) => e.to === to).map((e) => e.from);
+    expect(prereqsOf(OP6)).toEqual([OP5]); // op-6 gated behind op-5
+    expect(prereqsOf(OP7).sort()).toEqual([OP5, OP6].sort()); // op-7 gated behind BOTH (op-6 subsumes op-5)
   });
 
   it("the FrED re-assignment is LOSSLESS — titles/kinds survive and every cell has a path", () => {

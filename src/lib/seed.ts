@@ -147,10 +147,45 @@ function buildOperativoSeed(): ArcanumEvent[] {
   return events;
 }
 
+// ── OPERATIVO extension (appended, additive) ────────────────────────────────────────────────────────
+// op-6 (Modbus / PLC S7-1200) and op-8 (CV industrial) arrived AFTER the op-0..op-7 block shipped. They are
+// seeded HERE as a SEPARATE appended block so buildOperativoSeed above stays BYTE-IDENTICAL (its 7 cells +
+// 6 edges never change → a live log that already hydrated them sees no diff). op-6 slots between op-5 and
+// op-7, op-8 after op-7, via 3 NEW edges (own id sub-range `-2NN`). The prior op-5→op-7 edge is left in
+// place — harmless: op-7's gate becomes {op-5, op-6}, and op-6 already requires op-5, so the direct op-5
+// requirement is subsumed. Fresh installs and already-hydrated logs CONVERGE to the identical DAG.
+const OP5 = "cb000000-0000-4000-8000-00000000000e";
+const OP6 = "cb000000-0000-4000-8000-000000000010";
+const OP7 = "cb000000-0000-4000-8000-00000000000f";
+const OP8 = "cb000000-0000-4000-8000-000000000011";
+const OPERATIVO_EXT: { cell: string; ev: string; title: string; concept: string }[] = [
+  { cell: OP6, ev: "b4000000-0000-4000-8000-000000000008", title: "Modbus y el PLC Siemens S7-1200", concept: "orion-plc" },
+  { cell: OP8, ev: "b4000000-0000-4000-8000-000000000009", title: "Computer Vision para control industrial", concept: "orion-vision" },
+];
+
+function buildOperativoExtension(): ArcanumEvent[] {
+  const events: ArcanumEvent[] = [];
+  let t = TS + 2_100_000; // strictly after the op-0..op-7 block
+  for (const n of OPERATIVO_EXT) {
+    const payload: Record<string, unknown> = { title: n.title, prereqs: [], kind: "cell", pathId: FRED_OPERATIVO_PATH_ID, nature: "a_mano", concept: n.concept };
+    events.push(makeEvent("module.upserted", payload as never, { ts: t++, deviceId: DEVICE, goalId: FRED_GOAL_ID, moduleId: n.cell, id: n.ev }));
+  }
+  // op-5 → op-6 → op-7 → op-8 (new edges; the pre-existing op-5 → op-7 edge stays, redundant-but-harmless)
+  const chain: [string, string, string][] = [
+    [OP5, OP6, "b4000000-0000-4000-8000-000000000200"],
+    [OP6, OP7, "b4000000-0000-4000-8000-000000000201"],
+    [OP7, OP8, "b4000000-0000-4000-8000-000000000202"],
+  ];
+  for (const [from, to, id] of chain) {
+    events.push(makeEvent("roadmap.edge.upserted", { from, to }, { ts: t++, deviceId: DEVICE, id }));
+  }
+  return events;
+}
+
 // Folder books do NOT create roadmap cells — a book ANCHORS to an existing cell for reading (resolved by
 // its slug/UUID handle, lib/cell-slugs.ts) or stays LOOSE. The seed carries the spines + paths + the
-// curated Operativo entry cell; the books live in the Dexie reader store (lib/seed-books.ts), never the log.
-export const SEED_EVENTS: ArcanumEvent[] = [...buildSeed(), ...buildPaths(), ...buildOperativoSeed()];
+// curated Operativo track; the books live in the Dexie reader store (lib/seed-books.ts), never the log.
+export const SEED_EVENTS: ArcanumEvent[] = [...buildSeed(), ...buildPaths(), ...buildOperativoSeed(), ...buildOperativoExtension()];
 
 /** ITC spine + its first cell (CS50 ramp) — stable refs for tests/dispatch. */
 export const SEED_GOAL_ID = SPINES[0]!.goalId;

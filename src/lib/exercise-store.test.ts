@@ -9,7 +9,7 @@ const C = { c1: "ca000000-0000-4000-8000-000000000002", c2: "ca000000-0000-4000-
 
 describe("exercise-store — seed round-trip + ingestion", () => {
   it("every seed bank .md parses and satisfies the contract", () => {
-    expect(SEED_EXERCISE_MD).toHaveLength(11); // 4 ITC (C1-C4) + 7 FrED Operativo (op-0..op-5, op-7)
+    expect(SEED_EXERCISE_MD).toHaveLength(13); // 4 ITC (C1-C4) + 9 FrED Operativo (op-0..op-8)
     for (const md of SEED_EXERCISE_MD) {
       const bank = parseExercisesMd(md);
       expect(bank, "seed bank parses").not.toBeNull();
@@ -54,11 +54,11 @@ describe("exercise-store — seed round-trip + ingestion", () => {
     expect(itcTotal).toBe(16);
   });
 
-  it("every FrED Operativo bank (op-0..op-5, op-7) parses, anchors to its seeded cell, and is non-trivial", () => {
+  it("every FrED Operativo bank (op-0..op-8) parses, anchors to its seeded cell, and is non-trivial", () => {
     const OP = [
       "cb000000-0000-4000-8000-000000000009", "cb000000-0000-4000-8000-00000000000a", "cb000000-0000-4000-8000-00000000000b",
       "cb000000-0000-4000-8000-00000000000c", "cb000000-0000-4000-8000-00000000000d", "cb000000-0000-4000-8000-00000000000e",
-      "cb000000-0000-4000-8000-00000000000f",
+      "cb000000-0000-4000-8000-00000000000f", "cb000000-0000-4000-8000-000000000010", "cb000000-0000-4000-8000-000000000011",
     ];
     const seen = new Set<string>();
     for (const md of SEED_EXERCISE_MD) {

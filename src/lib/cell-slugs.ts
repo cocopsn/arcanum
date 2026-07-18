@@ -37,7 +37,9 @@ export const CELL_SLUG_TO_ID: Record<string, string> = {
   "fred-op-3": "cb000000-0000-4000-8000-00000000000c",
   "fred-op-4": "cb000000-0000-4000-8000-00000000000d",
   "fred-op-5": "cb000000-0000-4000-8000-00000000000e",
+  "fred-op-6": "cb000000-0000-4000-8000-000000000010",
   "fred-op-7": "cb000000-0000-4000-8000-00000000000f",
+  "fred-op-8": "cb000000-0000-4000-8000-000000000011",
 };
 
 const KNOWN_IDS = new Set(Object.values(CELL_SLUG_TO_ID));
