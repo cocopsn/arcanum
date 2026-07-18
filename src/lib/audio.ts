@@ -38,10 +38,14 @@ export interface AudioConfig {
   sfxVol: number; // 0..1 — INDEPENDENT of music
   music: boolean;
   musicVol: number; // 0..1
+  // ── AUDIOBOOK (Web Speech TTS) preferences — device-local like the rest, NEVER the log ──
+  ttsVoiceURI: string; // the chosen voice's URI ("" = auto-pick the best Spanish)
+  ttsRate: number; // default reading speed, 0.75..2
+  ttsCodeMode: "announce" | "skip"; // how a code block is handled (never read literally either way)
 }
 
 const KEY = "arcanum_audio";
-const DEFAULT: AudioConfig = { master: 0.7, sfx: true, sfxVol: 0.8, music: false, musicVol: 0.4 };
+const DEFAULT: AudioConfig = { master: 0.7, sfx: true, sfxVol: 0.8, music: false, musicVol: 0.4, ttsVoiceURI: "", ttsRate: 1, ttsCodeMode: "announce" };
 
 function load(): AudioConfig {
   if (typeof window === "undefined") return { ...DEFAULT };
@@ -53,6 +57,9 @@ function load(): AudioConfig {
       sfxVol: clamp(typeof raw.sfxVol === "number" ? raw.sfxVol : DEFAULT.sfxVol),
       music: raw.music === true,
       musicVol: clamp(typeof raw.musicVol === "number" ? raw.musicVol : DEFAULT.musicVol),
+      ttsVoiceURI: typeof raw.ttsVoiceURI === "string" ? raw.ttsVoiceURI : DEFAULT.ttsVoiceURI,
+      ttsRate: typeof raw.ttsRate === "number" ? Math.max(0.75, Math.min(2, raw.ttsRate)) : DEFAULT.ttsRate,
+      ttsCodeMode: raw.ttsCodeMode === "skip" ? "skip" : DEFAULT.ttsCodeMode,
     };
   } catch {
     return { ...DEFAULT };

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { audio, type AudioConfig as Cfg } from "@/lib/audio";
+import { useVoices, spanishVoices, pickVoice } from "@/lib/speech";
 
 // Audio preferences — master volume, SFX on/off, music on/off + its volume. Persisted to
 // localStorage (a DEVICE preference, not log state). Toggling is a user gesture → unlocks audio.
@@ -82,6 +83,18 @@ export function AudioConfig({ open, onClose }: { open: boolean; onClose: () => v
             </div>
           )}
 
+          {/* AUDIOLIBRO (Web Speech, offline) — voice + how code blocks are read. The speed lives in the player. */}
+          <div className="border-t border-line pt-4">
+            <div className="text-[13px] text-text">Audiolibro</div>
+            <div className="text-[11px] text-text-faint">Escucha tus lecturas con la voz del dispositivo — 100% offline, en el lector de cada libro (botón «Escuchar»).</div>
+            <VoicePicker cfg={cfg} set={set} />
+            <div className="mt-3">
+              <Row label="Bloques de código" sub={cfg.ttsCodeMode === "announce" ? "los anuncia (nunca los lee literal)" : "los salta en silencio"}>
+                <Toggle on={cfg.ttsCodeMode === "announce"} onChange={(v) => set({ ttsCodeMode: v ? "announce" : "skip" })} label="Anunciar bloques de código" />
+              </Row>
+            </div>
+          </div>
+
           <button
             onClick={() => {
               audio.unlock();
@@ -96,6 +109,34 @@ export function AudioConfig({ open, onClose }: { open: boolean; onClose: () => v
           </p>
         </div>
       </div>
+    </div>
+  );
+}
+
+// Voice picker for the audiobook — the device's own voices (offline), Spanish first. Honest when the
+// device reports none yet (iOS loads them after the first tap / needs system voices installed).
+function VoicePicker({ cfg, set }: { cfg: Cfg; set: (p: Partial<Cfg>) => void }) {
+  const voices = useVoices();
+  const es = spanishVoices(voices);
+  const list = es.length ? es : voices; // no Spanish installed → offer whatever exists, said plainly
+  const chosen = pickVoice(voices, cfg.ttsVoiceURI || null);
+  if (!voices.length) {
+    return <p className="mt-2 text-[11px] leading-relaxed text-text-faint">Tu dispositivo aún no reporta voces (o no soporta síntesis de voz). En iOS aparecen tras el primer toque; instala voces de sistema en Ajustes → Accesibilidad.</p>;
+  }
+  return (
+    <div className="mt-2">
+      <label htmlFor="tts-voice" className="text-[11px] text-text-muted">Voz {es.length === 0 ? "(sin español instalado en este dispositivo)" : ""}</label>
+      <select
+        id="tts-voice"
+        value={cfg.ttsVoiceURI}
+        onChange={(e) => set({ ttsVoiceURI: e.target.value })}
+        className="mt-1 min-h-11 w-full rounded-[var(--r-sm)] border border-line bg-surface px-2 text-[13px] text-text"
+      >
+        <option value="">Automático{chosen ? ` · ${chosen.name}` : ""}</option>
+        {list.map((v) => (
+          <option key={v.voiceURI} value={v.voiceURI}>{v.name} · {v.lang}{v.localService ? "" : " · nube"}</option>
+        ))}
+      </select>
     </div>
   );
 }

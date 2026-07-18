@@ -26,6 +26,9 @@ export interface ProgressRow {
   scrollPct: number;
   readSections: string[];
   completed: boolean;
+  /** the audiobook item index the listener last reached — device-local session state, like scrollPct.
+   *  Listening is Phase-1 INPUT (passive absorption); it NEVER touches mastery/XP or the event log. */
+  listenIndex?: number;
   ts: number;
 }
 
@@ -114,6 +117,6 @@ export async function getProgress(id: string): Promise<ProgressRow | null> {
   }
 }
 export async function setProgress(id: string, patch: Partial<Omit<ProgressRow, "id" | "ts">>): Promise<void> {
-  const prev = (await getProgress(id)) ?? { id, scrollPct: 0, readSections: [], completed: false, ts: 0 };
+  const prev = (await getProgress(id)) ?? { id, scrollPct: 0, readSections: [], completed: false, listenIndex: 0, ts: 0 };
   await db().progress.put({ ...prev, ...patch, id, ts: Date.now() });
 }

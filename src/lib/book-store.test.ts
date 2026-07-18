@@ -52,4 +52,18 @@ describe("book-store — offline storage + module anchor (Phase 1 reading)", () 
     await deleteBook(mid);
     expect(await getProgress(mid)).toBeNull();
   });
+
+  it("LISTENING progress (audiobook position) is device-local too — round-trips, never the log, purged on delete", async () => {
+    const mid = looseId();
+    await saveBook(BOOK(mid, "Audio"), "import");
+    await setProgress(mid, { listenIndex: 12 }); // where the audiobook was reading
+    expect((await getProgress(mid))?.listenIndex).toBe(12);
+    // it coexists with reading progress without clobbering it (same device-local row, different field)
+    await setProgress(mid, { scrollPct: 0.3 });
+    const p = await getProgress(mid);
+    expect(p?.listenIndex).toBe(12);
+    expect(p?.scrollPct).toBe(0.3);
+    await deleteBook(mid);
+    expect(await getProgress(mid)).toBeNull(); // listening is input, not mastery — nothing survives in the log
+  });
 });
