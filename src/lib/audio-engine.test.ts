@@ -179,4 +179,41 @@ describe("audio engine — structural (the sound can't be heard here; the wiring
     expect(() => audio.setWorld("nonsense-realm")).not.toThrow();
     expect(rec.oscillators.length).toBe(0);
   });
+
+  it("OFFLINE: firing every SFX + the ambient drone makes ZERO network calls — no fetch, no asset, no <audio>", async () => {
+    const audio = await fresh();
+    const g = globalThis as unknown as { fetch?: unknown; XMLHttpRequest?: unknown; Audio?: unknown };
+    const fetchSpy = vi.fn();
+    const xhrSpy = vi.fn();
+    const audioElSpy = vi.fn();
+    const orig = { fetch: g.fetch, XMLHttpRequest: g.XMLHttpRequest, Audio: g.Audio };
+    g.fetch = fetchSpy;
+    g.XMLHttpRequest = class {
+      constructor() {
+        xhrSpy();
+      }
+    };
+    g.Audio = class {
+      constructor() {
+        audioElSpy();
+      }
+    };
+    try {
+      audio.unlock();
+      audio.setConfig({ music: true });
+      ALL_SFX.forEach((n) => audio.cue(n)); // every interaction sound
+      audio.setWorld("fred"); // start a drone
+      audio.setWorld("competitiva"); // crossfade to another
+      // Web Audio synthesizes every sample locally → the engine touches the network NOT ONCE, and never
+      // falls back to an <audio> element / fetched loop. This is why the whole layer works offline.
+      expect(fetchSpy).not.toHaveBeenCalled();
+      expect(xhrSpy).not.toHaveBeenCalled();
+      expect(audioElSpy).not.toHaveBeenCalled();
+      expect(rec.oscillators.length).toBeGreaterThan(0); // it DID produce sound — just all synthesized
+    } finally {
+      g.fetch = orig.fetch;
+      g.XMLHttpRequest = orig.XMLHttpRequest;
+      g.Audio = orig.Audio;
+    }
+  });
 });

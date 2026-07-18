@@ -9,7 +9,7 @@ const C = { c1: "ca000000-0000-4000-8000-000000000002", c2: "ca000000-0000-4000-
 
 describe("exercise-store — seed round-trip + ingestion", () => {
   it("every seed bank .md parses and satisfies the contract", () => {
-    expect(SEED_EXERCISE_MD).toHaveLength(4);
+    expect(SEED_EXERCISE_MD).toHaveLength(11); // 4 ITC (C1-C4) + 7 FrED Operativo (op-0..op-5, op-7)
     for (const md of SEED_EXERCISE_MD) {
       const bank = parseExercisesMd(md);
       expect(bank, "seed bank parses").not.toBeNull();
@@ -40,17 +40,34 @@ describe("exercise-store — seed round-trip + ingestion", () => {
 
   it("the migrated bank covers ITC C1-C4 with the expected counts (16 runtime entries)", () => {
     const byModule: Record<string, number> = {};
-    let total = 0;
+    let itcTotal = 0;
+    const itcModules = new Set(Object.values(C));
     for (const md of SEED_EXERCISE_MD) {
       const bank = parseExercisesMd(md)!;
       byModule[bank.meta.moduleId!] = bank.exercises.length;
-      total += bank.exercises.length;
+      if (itcModules.has(bank.meta.moduleId!)) itcTotal += bank.exercises.length;
     }
     expect(byModule[C.c1]).toBe(4); // 2 choice + 1 code×2 langs
     expect(byModule[C.c2]).toBe(4); // 2 code×2 langs
     expect(byModule[C.c3]).toBe(5); // 2 code×2 langs + 1 choice
     expect(byModule[C.c4]).toBe(3); // 2 code (js-only) + 1 choice
-    expect(total).toBe(16);
+    expect(itcTotal).toBe(16);
+  });
+
+  it("every FrED Operativo bank (op-0..op-5, op-7) parses, anchors to its seeded cell, and is non-trivial", () => {
+    const OP = [
+      "cb000000-0000-4000-8000-000000000009", "cb000000-0000-4000-8000-00000000000a", "cb000000-0000-4000-8000-00000000000b",
+      "cb000000-0000-4000-8000-00000000000c", "cb000000-0000-4000-8000-00000000000d", "cb000000-0000-4000-8000-00000000000e",
+      "cb000000-0000-4000-8000-00000000000f",
+    ];
+    const seen = new Set<string>();
+    for (const md of SEED_EXERCISE_MD) {
+      const bank = parseExercisesMd(md)!;
+      if (!OP.includes(bank.meta.moduleId!)) continue;
+      seen.add(bank.meta.moduleId!);
+      expect(bank.exercises.length, `${bank.meta.title} has exercises`).toBeGreaterThanOrEqual(4);
+    }
+    expect([...seen].sort()).toEqual([...OP].sort()); // all 7 Operativo cells have a bank
   });
 
   it("seed → store → loadBankForModule returns the cell's exercises anchored by module_id", async () => {

@@ -26,23 +26,25 @@ describe("paths — the seed structure", () => {
     const cellsIn = (pid: string) => rm.modules.filter((m) => m.pathId === pid);
     // every existing FrED cell was RE-ASSIGNED to Fundamentos — nothing lost
     expect(cellsIn(fundamentos.id)).toHaveLength(fred.cells.length);
-    // Operativo now carries its node-0 ENTRY cell (seeded in an appended block) — no longer empty
-    expect(cellsIn(operativo.id)).toHaveLength(1);
+    // Operativo now carries the whole ORION track (7 nodes: op-0..op-5, op-7) — seeded, appended block
+    expect(cellsIn(operativo.id)).toHaveLength(7);
   });
 
-  it("the Operativo ENTRY cell (node 0) is a_mano + available, and the ORION book resolves to it", () => {
+  it("the Operativo track: node 0 available + a_mano, the rest sealed behind the chain, all books resolve", () => {
     const operativo = rm.paths.find((p) => p.goalId === fred.goalId && p.slug === "operativo")!;
     const cells = rm.modules.filter((m) => m.pathId === operativo.id);
-    expect(cells).toHaveLength(1);
-    const op0 = cells[0]!;
-    expect(op0.id).toBe("cb000000-0000-4000-8000-000000000009");
-    expect(op0.title).toBe("Arquitectura del ORION Bridge");
-    expect(op0.nature).toBe("a_mano");
-    expect(op0.kind).toBe("cell");
+    expect(cells).toHaveLength(7);
+    expect(cells.every((c) => c.nature === "a_mano" && c.kind === "cell")).toBe(true);
     const byId = new Map(rm.modules.map((m) => [m.id, m]));
+    const op0 = byId.get("cb000000-0000-4000-8000-000000000009")!;
+    const op1 = byId.get("cb000000-0000-4000-8000-00000000000a")!;
+    expect(op0.title).toBe("Arquitectura del ORION Bridge");
     expect(nodeStatus(op0, rm.edges, byId)).toBe("available"); // node 0 — no prereq, the path's root
-    // the fred-op-0-bridge book (module_id "fred-op-0-bridge") RESOLVES here → stops being loose, shows "Leer"
+    expect(nodeStatus(op1, rm.edges, byId)).toBe("sealed"); // op-1 gated behind op-0 (fog-of-war climbs)
+    // every fred-op-N book (and none is left loose) resolves to its seeded cell → "Leer" on the node
     expect(resolveCellId("fred-op-0-bridge")).toBe(op0.id);
+    expect(resolveCellId("fred-op-1-transport")).toBe(op1.id);
+    expect(resolveCellId("fred-op-7-autocard")).toBe("cb000000-0000-4000-8000-00000000000f");
   });
 
   it("the FrED re-assignment is LOSSLESS — titles/kinds survive and every cell has a path", () => {

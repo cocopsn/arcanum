@@ -4,8 +4,9 @@ import { useEffect, useRef, useState } from "react";
 import { useArcanum } from "@/app/providers";
 import { useOnline } from "@/lib/use-online";
 import { getStorageStatus, requestPersist, type StorageStatus } from "@/lib/storage";
-import { listDownloadedSpines, deleteSpineDownload, type OfflineSpineRow } from "@/lib/offline-store";
+import { listDownloadedSpines, deleteSpineDownloadSafe, type OfflineSpineRow } from "@/lib/offline-store";
 import { downloadSpine } from "@/lib/offline-download";
+import { buildInventory, type Inventory } from "@/lib/download-inventory";
 import { SPINES } from "@/lib/spines";
 
 // Honest offline surface: a header pill (connection + N pendientes) that opens a panel with the
@@ -31,6 +32,8 @@ export function OfflineSheet({ open, onClose }: { open: boolean; onClose: () => 
   const pendingAi = useArcanum((s) => s.readModel.pendingAi);
   const [storage, setStorage] = useState<StorageStatus | null>(null);
   const [downloaded, setDownloaded] = useState<OfflineSpineRow[]>([]);
+  const [inv, setInv] = useState<Inventory | null>(null);
+  const [freed, setFreed] = useState<{ goalId: string; bytes: number } | null>(null);
   const [busy, setBusy] = useState<string | null>(null);
   const [progress, setProgress] = useState<{ id: string; done: number; total: number } | null>(null);
   const panelRef = useRef<HTMLDivElement>(null);
@@ -38,6 +41,7 @@ export function OfflineSheet({ open, onClose }: { open: boolean; onClose: () => 
   async function refresh() {
     setStorage(await getStorageStatus());
     setDownloaded(await listDownloadedSpines());
+    setInv(await buildInventory());
   }
   useEffect(() => {
     if (open) void refresh();
@@ -58,10 +62,11 @@ export function OfflineSheet({ open, onClose }: { open: boolean; onClose: () => 
       setProgress(null);
     }
   }
-  async function remove(goalId: string, urls: string[]) {
+  async function remove(goalId: string) {
     setBusy(goalId);
     try {
-      await deleteSpineDownload(goalId, urls);
+      const { freedBytes } = await deleteSpineDownloadSafe(goalId); // frees only EXCLUSIVE bytes, keeps shared
+      setFreed({ goalId, bytes: freedBytes });
       await refresh();
     } finally {
       setBusy(null);
@@ -135,24 +140,80 @@ export function OfflineSheet({ open, onClose }: { open: boolean; onClose: () => 
           )}
         </div>
 
-        {/* selective download per spine (Spotify model) */}
+        {/* ── DESCARGAS — inventario EXACTO, medido del store al KB, sin doble conteo ── */}
         <div className="mt-4">
-          <div className="text-[10px] uppercase tracking-[0.2em] text-text-faint">Descargar para offline</div>
+          <div className="flex items-center justify-between">
+            <div className="text-[10px] uppercase tracking-[0.2em] text-text-faint">Descargas · almacenamiento</div>
+            {inv && (
+              <div className="text-[11px] text-text-muted">
+                Total <span className="tnum text-rank">{MB(inv.grandTotal)}</span>
+              </div>
+            )}
+          </div>
+          {inv && (
+            <p className="mt-1 text-[11px] leading-snug text-text-faint">
+              Suma verificable: cada fuente cuenta UNA vez aunque dos espinas la compartan.
+              {inv.storageUsageBytes != null && (
+                <> El navegador reporta <span className="tnum">{MB(inv.storageUsageBytes)}</span> en total (incluye tu bitácora).</>
+              )}
+            </p>
+          )}
+
+          {/* bundled content (always offline) + the runtime/shell — measured line items */}
+          {inv && (
+            <div className="mt-2 grid grid-cols-2 gap-2">
+              <Line label="Libros" sub={`${inv.books.count} · incluidos`} bytes={inv.books.bytes} />
+              <Line label="Ejercicios" sub={`${inv.banks.count} bancos · incluidos`} bytes={inv.banks.bytes} />
+              <Line label="Runtime Python" sub={inv.runtime.present ? "Pyodide · en caché" : "no descargado"} bytes={inv.runtime.bytes} />
+              <Line label="App (shell)" sub="precacheada" bytes={inv.shell.bytes} />
+            </div>
+          )}
+
+          {/* audio — synthesized, so it is literally 0 bytes of assets (honest) */}
+          <div className="mt-2 rounded-[var(--r-sm)] border border-line bg-surface px-3 py-2 text-[11px] text-text-faint">
+            Audio (SFX + música): <span className="text-text-muted">sintetizado en el dispositivo</span> — 0 KB de archivos, funciona offline sin descargar nada.
+          </div>
+        </div>
+
+        {/* spine source downloads (Spotify model) — the user-managed part, with the shared/unique split */}
+        <div className="mt-4">
+          <div className="text-[10px] uppercase tracking-[0.2em] text-text-faint">Fuentes por espina (offline)</div>
           <p className="mt-1 text-[12px] leading-snug text-text-faint">
-            Precachea el texto extraído de las fuentes curadas de la espina (los diagramas y la estructura ya son locales; el video se ve con conexión).
+            Precachea el texto extraído de las fuentes curadas (los diagramas y la estructura ya son locales; el video se ve con conexión).
           </p>
           <div className="mt-2 space-y-2">
             {SPINES.map((s) => {
               const urls = s.cells.flatMap((c) => [...(c.sourceUrls ?? []), ...(c.videoUrls ?? [])]);
               const dl = byGoal.get(s.goalId);
+              const acct = inv?.spines.find((a) => a.goalId === s.goalId);
               const isBusy = busy === s.goalId;
               const prog = progress?.id === s.goalId ? progress : null;
               return (
                 <div key={s.goalId} className="rounded-[var(--r-sm)] border border-line bg-surface p-3">
                   <div className="flex items-center justify-between gap-2">
                     <span className="truncate font-serif text-[14px] text-text">{s.goalTitle}</span>
-                    {dl && <span className="shrink-0 text-[10px] uppercase tracking-wider text-topic">descargada · {MB(dl.bytes)}</span>}
+                    {acct && <span className="shrink-0 tnum text-[10px] uppercase tracking-wider text-topic">{MB(acct.footprintBytes)}</span>}
                   </div>
+                  {acct && (acct.uniqueBytes > 0 || acct.sharedBytes > 0) && (
+                    <div className="mt-1 text-[11px] text-text-faint">
+                      <span className="tnum text-text-muted">{MB(acct.uniqueBytes)}</span> únicos
+                      {acct.sharedBytes > 0 && (
+                        <>
+                          {" · "}
+                          <span className="tnum text-text-muted">{MB(acct.sharedBytes)}</span> compartidos con {acct.sharedWith.map((w) => w.title).join(", ")}
+                        </>
+                      )}
+                    </div>
+                  )}
+                  {freed?.goalId === s.goalId && !dl && (
+                    <div className="mt-1 text-[11px] text-topic">
+                      {freed.bytes > 0 ? (
+                        <>Liberados <span className="tnum">{MB(freed.bytes)}</span>.</>
+                      ) : (
+                        <>Todo era compartido con otra espina — nada exclusivo que liberar (no se rompió la otra).</>
+                      )}
+                    </div>
+                  )}
                   {prog ? (
                     <div className="mt-2 text-[12px] text-text-muted">Descargando… <span className="tnum">{prog.done}</span>/<span className="tnum">{prog.total}</span></div>
                   ) : (
@@ -165,8 +226,8 @@ export function OfflineSheet({ open, onClose }: { open: boolean; onClose: () => 
                         {dl ? "Actualizar" : "Descargar para offline"}
                       </button>
                       {dl && (
-                        <button onClick={() => void remove(s.goalId, urls)} disabled={isBusy} className="min-h-11 px-2 text-[12px] text-text-faint transition hover:text-amber disabled:opacity-40">
-                          Borrar
+                        <button onClick={() => void remove(s.goalId)} disabled={isBusy} className="min-h-11 px-2 text-[12px] text-text-faint transition hover:text-amber disabled:opacity-40">
+                          Borrar{acct && acct.uniqueBytes > 0 ? ` · libera ${MB(acct.uniqueBytes)}` : ""}
                         </button>
                       )}
                       {!online && !dl && <span className="self-center text-[11px] text-text-faint">necesita conexión para descargar</span>}
@@ -178,6 +239,20 @@ export function OfflineSheet({ open, onClose }: { open: boolean; onClose: () => 
           </div>
         </div>
       </div>
+    </div>
+  );
+}
+
+/** A measured line item — a label, a sub-line, and its exact size. */
+function Line({ label, sub, bytes }: { label: string; sub: string; bytes: number }) {
+  const size = bytes >= 1e6 ? `${(bytes / 1e6).toFixed(1)} MB` : `${Math.max(0, Math.round(bytes / 1e3))} KB`;
+  return (
+    <div className="rounded-[var(--r-sm)] border border-line bg-surface px-3 py-2">
+      <div className="flex items-center justify-between gap-2">
+        <span className="text-[12px] text-text">{label}</span>
+        <span className="tnum text-[12px] text-text-muted">{size}</span>
+      </div>
+      <div className="text-[10px] text-text-faint">{sub}</div>
     </div>
   );
 }

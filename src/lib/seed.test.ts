@@ -19,9 +19,9 @@ describe("seed — the curricular spines (WHITE ROOM)", () => {
   it("projects to the spine goals, every cell idle, course-order edges, zero XP", () => {
     const rm = project(SEED_EVENTS);
     expect(rm.goals.map((g) => g.title).sort()).toEqual(["Alemán", "Competitiva (ICPC)", "FrED Factory", "ITC"]);
-    expect(rm.modules).toHaveLength(totalCells + 1); // + the seeded FrED Operativo entry cell (node 0)
+    expect(rm.modules).toHaveLength(totalCells + 7); // + the 7 seeded FrED Operativo cells (op-0..op-5, op-7)
     expect(rm.modules.every((m) => m.status === "idle" && !m.gatePassed)).toBe(true);
-    expect(rm.edges).toHaveLength(totalEdges);
+    expect(rm.edges).toHaveLength(totalEdges + 6); // + the 6 Operativo chain edges (7 nodes → 6 links)
     expect(rm.stats.totalXp).toBe(0);
     expect(rm.stats.grade).toBe("Scintilla");
   });

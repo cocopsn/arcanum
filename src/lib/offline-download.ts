@@ -23,7 +23,7 @@ export async function downloadSpine(
 ): Promise<DownloadResult> {
   const pages = [...new Set(urls)].filter((u) => classifySource(u).kind === "page");
   let bytes = 0;
-  let cached = 0;
+  const cachedUrls: string[] = []; // the urls ACTUALLY stored (a failed fetch is not cached — honest)
   for (let i = 0; i < pages.length; i++) {
     const url = pages[i]!;
     try {
@@ -31,13 +31,15 @@ export async function downloadSpine(
       // only cache a real extraction/preview — never a fetch error (honest: it stays "requires connection")
       if (data && data.mode && data.mode !== "error") {
         bytes += await saveOfflineSource(url, data);
-        cached++;
+        cachedUrls.push(url);
       }
     } catch {
       /* skip — partial download is honest */
     }
     onProgress?.(i + 1, pages.length);
   }
-  await saveSpineIndex({ goalId, title, sourceCount: pages.length, bytes, ts: Date.now() });
-  return { goalId, sourceCount: pages.length, cached, bytes };
+  // store the exact cached urls → the inventory can account for bytes SHARED with another spine (and a delete
+  // frees only the exclusive ones). Legacy rows lacked this; a re-download fills it.
+  await saveSpineIndex({ goalId, title, sourceCount: pages.length, urls: cachedUrls, bytes, ts: Date.now() });
+  return { goalId, sourceCount: pages.length, cached: cachedUrls.length, bytes };
 }

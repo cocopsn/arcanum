@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { saveOfflineSource, getOfflineSource, saveSpineIndex, listDownloadedSpines, deleteSpineDownload } from "@/lib/offline-store";
+import { saveOfflineSource, getOfflineSource, saveSpineIndex, listDownloadedSpines, deleteSpineDownloadSafe } from "@/lib/offline-store";
 
 describe("offline-store — the download cache round-trips (Spotify-style offline)", () => {
   it("saves and reads back an extracted source (offline-first read hits this)", async () => {
@@ -10,11 +10,13 @@ describe("offline-store — the download cache round-trips (Spotify-style offlin
     expect(await getOfflineSource(url)).toEqual(data);
   });
 
-  it("tracks a downloaded spine and deleting it purges its sources", async () => {
+  it("tracks a downloaded spine and the safe delete purges its (exclusive) sources", async () => {
     const url = "https://ex.com/offline-store-test/lec1";
-    await saveSpineIndex({ goalId: "g-test", title: "FrED", sourceCount: 3, bytes: 1000, ts: 0 });
+    await saveOfflineSource(url, { mode: "extracted", title: "Lec 1" });
+    await saveSpineIndex({ goalId: "g-test", title: "FrED", sourceCount: 1, urls: [url], bytes: 1000, ts: 0 });
     expect((await listDownloadedSpines()).some((s) => s.goalId === "g-test")).toBe(true);
-    await deleteSpineDownload("g-test", [url]);
+    const res = await deleteSpineDownloadSafe("g-test"); // no sibling needs this url → freed
+    expect(res.freedBytes).toBeGreaterThan(0);
     expect((await listDownloadedSpines()).some((s) => s.goalId === "g-test")).toBe(false);
     expect(await getOfflineSource(url)).toBeNull();
   });

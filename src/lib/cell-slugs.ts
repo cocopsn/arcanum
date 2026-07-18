@@ -30,8 +30,14 @@ export const CELL_SLUG_TO_ID: Record<string, string> = {
   "fred-h2": "cb000000-0000-4000-8000-000000000006",
   "fred-h3": "cb000000-0000-4000-8000-000000000007",
   "fred-h4": "cb000000-0000-4000-8000-000000000008",
-  // FrED · Operativo (path a1000000-…-003) — node 0 (seeded, lib/seed.ts); future nodes = fred-op-1, …
+  // FrED · Operativo (path a1000000-…-003) — the ORION Bridge track, seeded in lib/seed.ts.
   "fred-op-0": "cb000000-0000-4000-8000-000000000009",
+  "fred-op-1": "cb000000-0000-4000-8000-00000000000a",
+  "fred-op-2": "cb000000-0000-4000-8000-00000000000b",
+  "fred-op-3": "cb000000-0000-4000-8000-00000000000c",
+  "fred-op-4": "cb000000-0000-4000-8000-00000000000d",
+  "fred-op-5": "cb000000-0000-4000-8000-00000000000e",
+  "fred-op-7": "cb000000-0000-4000-8000-00000000000f",
 };
 
 const KNOWN_IDS = new Set(Object.values(CELL_SLUG_TO_ID));

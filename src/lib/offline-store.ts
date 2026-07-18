@@ -18,6 +18,10 @@ export interface OfflineSpineRow {
   title: string;
   /** how many page sources were cached */
   sourceCount: number;
+  /** the EXACT source urls this spine cached — the basis for honest shared-vs-unique accounting and for a
+   *  delete that only frees the sources no OTHER downloaded spine still needs. (Legacy rows may lack it →
+   *  treated as [] / all-unique until re-downloaded.) */
+  urls?: string[];
   bytes: number;
   ts: number;
 }
@@ -58,7 +62,43 @@ export async function listDownloadedSpines(): Promise<OfflineSpineRow[]> {
     return [];
   }
 }
-export async function deleteSpineDownload(goalId: string, urls: string[]): Promise<void> {
-  await db().sources.bulkDelete(urls);
+/** Every cached source's exact byte size, keyed by url — the raw material for the honest inventory. */
+export async function sourceBytesByUrl(): Promise<Map<string, number>> {
+  const m = new Map<string, number>();
+  try {
+    for (const s of await db().sources.toArray()) m.set(s.url, s.bytes);
+  } catch {
+    /* offline / private mode → empty */
+  }
+  return m;
+}
+
+/**
+ * Delete a spine download WITHOUT breaking another. A source url is removed ONLY when NO other still-downloaded
+ * spine references it (its EXCLUSIVE bytes are freed); a source that a sibling spine still needs is KEPT (its
+ * SHARED bytes stay). Returns the real freed vs kept bytes so the UI can show the true space reclaimed — never
+ * a phantom number. (Falls back to the spine's own url list; legacy rows without `urls` free only their index.)
+ */
+export async function deleteSpineDownloadSafe(goalId: string): Promise<{ freedBytes: number; keptSharedBytes: number }> {
+  const spines = await listDownloadedSpines();
+  const target = spines.find((s) => s.goalId === goalId);
+  if (!target) return { freedBytes: 0, keptSharedBytes: 0 };
+  const mine = new Set(target.urls ?? []);
+  // urls any OTHER downloaded spine still needs — those must survive
+  const stillNeeded = new Set<string>();
+  for (const s of spines) if (s.goalId !== goalId) for (const u of s.urls ?? []) stillNeeded.add(u);
+  const bytes = await sourceBytesByUrl();
+  const toDelete: string[] = [];
+  let freedBytes = 0;
+  let keptSharedBytes = 0;
+  for (const u of mine) {
+    if (stillNeeded.has(u)) keptSharedBytes += bytes.get(u) ?? 0; // a sibling needs it → keep
+    else {
+      toDelete.push(u);
+      freedBytes += bytes.get(u) ?? 0; // exclusive → free it
+    }
+  }
+  if (toDelete.length) await db().sources.bulkDelete(toDelete);
   await db().spines.delete(goalId);
+  return { freedBytes, keptSharedBytes };
 }

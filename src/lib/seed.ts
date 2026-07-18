@@ -92,37 +92,59 @@ function buildPaths(): ArcanumEvent[] {
   return events;
 }
 
-// ── OPERATIVO ENTRY block (appended) ──────────────────────────────────────────────────────────────
-// The FrED Operativo path shipped EMPTY. Its node-0 ENTRY cell is seeded HERE as an APPENDED event (own
-// id prefix `b4000000-`, ts strictly after the paths block) — the original (`b0000000-`) and paths
-// (`b1000000-`) blocks are NEVER renumbered, so an existing log receives ONLY this new event (hydrate
-// set-diff by id → idempotent, no progress touched, no phantom duplicate). No prereq = the path's
-// available root (node 0). The `fred-op-0-bridge` book RESOLVES to it (lib/cell-slugs.ts) → it stops
-// being loose and shows "Leer" on the cell. Books never create cells; this is a curated SEED cell for
-// the operational track, distinct from (and orthogonal to) book ingestion.
+// ── OPERATIVO track block (appended) ────────────────────────────────────────────────────────────────
+// The FrED Operativo path (the ORION Bridge, Armando's own engineering) is seeded HERE as an APPENDED
+// block (own id prefix `b4000000-`, ts strictly after the paths block) — the original (`b0000000-`) and
+// paths (`b1000000-`) blocks are NEVER renumbered, so a live log receives ONLY the new events it lacks
+// (hydrate set-diff by id → idempotent, no progress touched, no phantom duplicate). node 0 (event id
+// `-001`) is UNCHANGED from the prior build (byte-identical payload/ts → a log that already had it sees no
+// new op-0 event). All a_mano (defended from first principles). op-6/op-8 have no reading yet → no cell
+// (CERO invención — never an empty node). Each `fred-op-N` book RESOLVES here (lib/cell-slugs.ts).
 const FRED_GOAL_ID = "a0000000-0000-4000-8000-000000000002";
 const FRED_OPERATIVO_PATH_ID = "a1000000-0000-4000-8000-000000000003";
 /** stable id of the FrED Operativo ENTRY cell (node 0) — the `fred-op-0` slug resolves here. */
 export const FRED_OPERATIVO_ENTRY_ID = "cb000000-0000-4000-8000-000000000009";
 
+// ORDERED — the DAG chains in this order so the fog-of-war climbs the architecture. { cell id, event id,
+// title (matches the book), concept tag }. Titles come from the r2 books; nature is a_mano for all.
+const OPERATIVO_NODES: { cell: string; ev: string; title: string; concept: string }[] = [
+  { cell: "cb000000-0000-4000-8000-000000000009", ev: "b4000000-0000-4000-8000-000000000001", title: "Arquitectura del ORION Bridge", concept: "orion-infra" },
+  { cell: "cb000000-0000-4000-8000-00000000000a", ev: "b4000000-0000-4000-8000-000000000002", title: "Transport — la conexión viva del Bridge", concept: "orion-transport" },
+  { cell: "cb000000-0000-4000-8000-00000000000b", ev: "b4000000-0000-4000-8000-000000000003", title: "El Dispatcher y los Handlers", concept: "orion-dispatch" },
+  { cell: "cb000000-0000-4000-8000-00000000000c", ev: "b4000000-0000-4000-8000-000000000004", title: "Serial y tu primer Handler real", concept: "orion-serial" },
+  { cell: "cb000000-0000-4000-8000-00000000000d", ev: "b4000000-0000-4000-8000-000000000005", title: "Capability Cards — el contrato de seguridad", concept: "orion-safety" },
+  { cell: "cb000000-0000-4000-8000-00000000000e", ev: "b4000000-0000-4000-8000-000000000006", title: "El Reactive Observer", concept: "orion-reactive" },
+  { cell: "cb000000-0000-4000-8000-00000000000f", ev: "b4000000-0000-4000-8000-000000000007", title: "AutoCard — síntesis de capability cards", concept: "orion-safety" },
+];
+
 function buildOperativoSeed(): ArcanumEvent[] {
-  const payload: Record<string, unknown> = {
-    title: "Arquitectura del ORION Bridge",
-    prereqs: [],
-    kind: "cell", // comprehension node, not a code mission
-    pathId: FRED_OPERATIVO_PATH_ID,
-    nature: "a_mano", // intellectual core — defended from first principles; the full adversarial gate applies
-    concept: "orion-infra",
-  };
-  return [
-    makeEvent("module.upserted", payload as never, {
-      ts: TS + 2_000_000,
-      deviceId: DEVICE,
-      goalId: FRED_GOAL_ID,
-      moduleId: FRED_OPERATIVO_ENTRY_ID,
-      id: "b4000000-0000-4000-8000-000000000001",
-    }),
-  ];
+  const events: ArcanumEvent[] = [];
+  let t = TS + 2_000_000; // strictly after the paths block; node 0 keeps exactly this ts (byte-identical)
+  // 1) the cells
+  for (const n of OPERATIVO_NODES) {
+    const payload: Record<string, unknown> = {
+      title: n.title,
+      prereqs: [],
+      kind: "cell", // comprehension/implementation node, not a scripted mission
+      pathId: FRED_OPERATIVO_PATH_ID,
+      nature: "a_mano", // Armando's own engineering — the full adversarial gate applies
+      concept: n.concept,
+    };
+    events.push(makeEvent("module.upserted", payload as never, { ts: t++, deviceId: DEVICE, goalId: FRED_GOAL_ID, moduleId: n.cell, id: n.ev }));
+  }
+  // 2) the linear chain node[i] → node[i+1] — fog-of-war climbs the ORION architecture. Edge ids own
+  //    sub-range `-1NN` (distinct from the cells' `-00N`); appended, so a log that had only node 0 gains
+  //    the new cells AND these edges on the next hydrate. node 0 keeps NO incoming edge → still available.
+  for (let i = 0; i + 1 < OPERATIVO_NODES.length; i++) {
+    events.push(
+      makeEvent(
+        "roadmap.edge.upserted",
+        { from: OPERATIVO_NODES[i]!.cell, to: OPERATIVO_NODES[i + 1]!.cell },
+        { ts: t++, deviceId: DEVICE, id: `b4000000-0000-4000-8000-0000000001${String(i).padStart(2, "0")}` },
+      ),
+    );
+  }
+  return events;
 }
 
 // Folder books do NOT create roadmap cells — a book ANCHORS to an existing cell for reading (resolved by
