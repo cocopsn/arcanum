@@ -1,5 +1,5 @@
 import { slugify } from "@/lib/book";
-import type { CodeExercise, ChoiceExercise, Exercise, Lang, QualityPattern, TestCase } from "@/lib/exercise";
+import type { CodeExercise, ChoiceExercise, ProductionExercise, Exercise, Lang, QualityPattern, TestCase } from "@/lib/exercise";
 
 // CONTRACT + PURE PARSER for CURATED EXERCISE BANKS as .md — the parallel to lib/book.ts. Arcanum INGESTS
 // exercise banks generated externally (Sonnet 5), it does NOT generate them. A bank .md = YAML frontmatter
@@ -183,9 +183,13 @@ const F = {
   patrones: ["patrones", "patterns"],
   opciones: ["opciones", "options"],
   justificacion: ["justificacion", "justification", "por que"],
+  modelo: ["modelo", "respuesta modelo", "model"],
+  regla: ["regla", "rule"],
+  rubrica: ["rubrica", "autoevaluacion", "criterios", "self-check"],
 };
 
 const CHOICE_TYPES = new Set(["multiple_choice", "choice", "complexity", "complejidad", "trace", "trazar"]);
+const PRODUCTION_TYPES = new Set(["production", "produccion", "producir"]);
 
 /** Parse ONE exercise block → the CodeExercise(s) (one per language) or a single ChoiceExercise, or null
  *  if the block is malformed (which invalidates the WHOLE bank — no partial ingest). */
@@ -277,6 +281,31 @@ function parseExerciseBlock(idBase: string, index: number, title: string, body: 
       source: "curated",
     };
     return [choice];
+  }
+
+  if (PRODUCTION_TYPES.has(type)) {
+    // PRODUCTION (free-response, not auto-graded): needs a MODEL to compare against, the RULE (the why), and
+    // an explicit self-check RUBRIC. All three are required — a production exercise without the rule/rubric
+    // would be a bare textarea (a placebo), so reject it (ALL-OR-NOTHING like the rest).
+    const modelBody = findSection(sections, F.modelo);
+    const ruleBody = findSection(sections, F.regla);
+    const rubric = parseListItems(findSection(sections, F.rubrica));
+    if (!modelBody || !ruleBody || rubric.length === 0) return null;
+    const modelAnswer = modelBody.join("\n").trim();
+    const rule = ruleBody.join("\n").trim();
+    if (!modelAnswer || !rule) return null;
+    const prod: ProductionExercise = {
+      id: uid,
+      kind: "production",
+      moduleId: null,
+      title,
+      statement: prompt,
+      modelAnswer,
+      rule,
+      rubric,
+      source: "curated",
+    };
+    return [prod];
   }
 
   return null; // unknown type → invalid

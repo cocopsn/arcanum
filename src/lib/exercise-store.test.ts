@@ -9,7 +9,7 @@ const C = { c1: "ca000000-0000-4000-8000-000000000002", c2: "ca000000-0000-4000-
 
 describe("exercise-store — seed round-trip + ingestion", () => {
   it("every seed bank .md parses and satisfies the contract", () => {
-    expect(SEED_EXERCISE_MD).toHaveLength(13); // 4 ITC (C1-C4) + 9 FrED Operativo (op-0..op-8)
+    expect(SEED_EXERCISE_MD).toHaveLength(25); // 6 ITC (C1-C4,C7,C8) + 9 FrED Operativo (op-0..op-8) + 8 Competitiva (cp1..cp8) + 2 Alemán (A1,A2)
     for (const md of SEED_EXERCISE_MD) {
       const bank = parseExercisesMd(md);
       expect(bank, "seed bank parses").not.toBeNull();

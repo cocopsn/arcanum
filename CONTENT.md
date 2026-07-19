@@ -141,9 +141,14 @@ light up "Leer" on it. Exercise banks anchor by the cell UUID directly.
 | **ITC** | `itc-0` · `itc-c1` … `itc-c8` · `itc-iot` |
 | **FrED · Fundamentos** | `fred-s1` … `fred-s4` · `fred-h1` … `fred-h4` |
 | **FrED · Operativo** | `fred-op-0` … `fred-op-8` (the ORION Bridge track) |
+| **Competitiva · ICPC** | `cp1` … `cp8` (1:1 with the contest-pattern cells) |
+| **Alemán** | `de-a1` → A1.1 entry cell · `de-a2` → A2.1 entry cell |
 
-*(Competitiva and Alemán have cells but no slugs in the registry yet — add them there when those spines
-get books. The rule: name a book `<slug>-<anything>` and it anchors to that cell.)*
+*Alemán note:* the spine is fine-grained (A1.1–A1.5, A2.1–A2.3, B1/B2), so a **whole-level** book anchors at
+its level's **entry cell** — `de-a1-fundamentos` → A1.1, `de-a2-conversacion` → A2.1. When two books resolve
+to the same cell (e.g. a `depth: deep` rewrite next to its `depth: standard` original), the **deeper one
+anchors and the shallower stays loose** (`seed-books.ts`, derived purely from the `depth` metadata). The
+rule everywhere: name a book `<slug>-<anything>` and it anchors to that cell; add new cells' slugs here.
 
 ## 4. Ingestion flow
 

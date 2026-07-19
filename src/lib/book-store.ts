@@ -54,14 +54,17 @@ export interface SavedBook {
  *  caller shows "formato inválido", never fakes a book). The `module_id` HANDLE is RESOLVED to a real
  *  roadmap cell (lib/cell-slugs.ts): matched → the book keys by that cell id and anchors there for
  *  reading (getBookForModule); no match → LOOSE, keyed by its own handle/title slug, listed by spine. */
-export async function saveBook(md: string, source: "seed" | "import" = "import"): Promise<SavedBook | null> {
+export async function saveBook(md: string, source: "seed" | "import" = "import", override?: { id: string; anchored: boolean }): Promise<SavedBook | null> {
   const parsed = parseBook(md);
   if (!parsed) return null;
   const cellId = resolveCellId(parsed.meta.moduleId);
-  const id = cellId ?? parsed.meta.moduleId ?? slugify(parsed.meta.title);
+  // Default: resolve the handle → key by cell (anchored) or by handle/title (loose). An `override` lets the
+  // batch seeder DEMOTE a book to loose (anchored:false → moduleId null, keyed by a distinct id) when another
+  // book already won its cell — so twin readings of one cell both persist instead of overwriting each other.
+  const id = override?.id ?? cellId ?? parsed.meta.moduleId ?? slugify(parsed.meta.title);
   const row: BookRow = {
     id,
-    moduleId: cellId,
+    moduleId: override ? (override.anchored ? cellId : null) : cellId,
     spine: parsed.meta.spine,
     title: parsed.meta.title,
     md,

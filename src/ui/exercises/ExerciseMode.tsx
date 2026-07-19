@@ -9,7 +9,7 @@ import { PROCEDURAL_TEMPLATES, generateVariant } from "@/lib/procedural";
 import { bookQuestionsForModule } from "@/lib/book-exercises";
 import { runJs } from "@/lib/js-runner";
 import { runPy } from "@/lib/py-runner";
-import { evaluateRun, matchedPatterns, formatValue, type CodeExercise, type ChoiceExercise, type Exercise, type Lang, type RunResult } from "@/lib/exercise";
+import { evaluateRun, matchedPatterns, formatValue, type CodeExercise, type ChoiceExercise, type ProductionExercise, type Exercise, type Lang, type RunResult } from "@/lib/exercise";
 import { ARCANUM_CONFIG } from "@/core/config";
 import { themeForGoal, worldVars } from "@/lib/subject-themes";
 import { readableAccent } from "@/lib/accent";
@@ -25,6 +25,7 @@ import { useReward } from "@/ui/reward/RewardProvider";
 type Selected =
   | { type: "code"; ex: CodeExercise; template?: string }
   | { type: "choice"; ex: ChoiceExercise }
+  | { type: "production"; ex: ProductionExercise }
   | { type: "bookq"; text: string };
 
 export function ExerciseMode({ moduleId, goalId, goalTitle, cellTitle, onClose }: { moduleId: string; goalId: string; goalTitle: string; cellTitle: string; onClose: () => void }) {
@@ -94,6 +95,8 @@ export function ExerciseMode({ moduleId, goalId, goalTitle, cellTitle, onClose }
           />
         ) : sel.type === "choice" ? (
           <ChoiceRunner ex={sel.ex} accent={accent} onCorrect={() => void passLesson({ goalId, moduleId }, 1)} />
+        ) : sel.type === "production" ? (
+          <ProductionRunner ex={sel.ex} accent={accent} onAttested={() => void passLesson({ goalId, moduleId }, 1)} />
         ) : (
           <BookQuestion text={sel.text} accent={accent} />
         )}
@@ -111,6 +114,7 @@ function Picker({ curated, bookQs, procLang, setProcLang, accent, onPick }: { cu
   const ink = readableAccent(accent);
   const codeEx = curated.filter((e): e is CodeExercise => e.kind === "code");
   const choiceEx = curated.filter((e): e is ChoiceExercise => e.kind === "choice");
+  const productionEx = curated.filter((e): e is ProductionExercise => e.kind === "production");
   const card = "w-full rounded-[var(--r-md)] border border-line bg-surface p-3 text-left transition hover:border-rank";
   return (
     <div className="space-y-6">
@@ -155,6 +159,20 @@ function Picker({ curated, bookQs, procLang, setProcLang, accent, onPick }: { cu
         </div>
       </section>
 
+      {productionEx.length > 0 && (
+        <section>
+          <div className="text-[10px] uppercase tracking-[0.22em] text-text-faint">Producción · construye y explica el porqué</div>
+          <div className="mt-2 space-y-2">
+            {productionEx.map((e) => (
+              <button key={e.id} onClick={() => onPick({ type: "production", ex: e })} className={card}>
+                <span className="font-serif text-[14px] text-text">{e.title}</span>
+                <div className="mt-0.5 truncate text-[12px] text-text-faint">{e.statement}</div>
+              </button>
+            ))}
+          </div>
+        </section>
+      )}
+
       {choiceEx.length > 0 && (
         <section>
           <div className="text-[10px] uppercase tracking-[0.22em] text-text-faint">Conceptuales · opción + justificación</div>
@@ -181,7 +199,7 @@ function Picker({ curated, bookQs, procLang, setProcLang, accent, onPick }: { cu
         </section>
       )}
 
-      {codeEx.length === 0 && choiceEx.length === 0 && bookQs.length === 0 && (
+      {codeEx.length === 0 && choiceEx.length === 0 && productionEx.length === 0 && bookQs.length === 0 && (
         <p className="text-[13px] text-text-faint">Esta celda aún no tiene ejercicios curados. Usa la práctica infinita de arriba (JS/Python) para machacar sintaxis.</p>
       )}
     </div>
@@ -381,6 +399,82 @@ function ChoiceRunner({ ex, accent, onCorrect }: { ex: ChoiceExercise; accent: s
         <div className="rounded-[var(--r-md)] border p-3" style={{ borderColor: correct ? accent : "var(--amber)" }}>
           <div className="text-[11px] uppercase tracking-[0.16em]" style={{ color: correct ? ink : "var(--amber)" }}>{correct ? "Correcto" : "No es esa"}</div>
           <p className="mt-1 text-[13px] leading-snug text-text-muted">{ex.rationale}</p>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function ProductionRunner({ ex, accent, onAttested }: { ex: ProductionExercise; accent: string; onAttested: () => void }) {
+  const ink = readableAccent(accent);
+  const reward = useReward();
+  const [answer, setAnswer] = useState("");
+  const [revealed, setRevealed] = useState(false);
+  const [done, setDone] = useState(false);
+  const fired = useRef(false);
+  const produced = answer.trim().length > 0;
+  return (
+    <div className="space-y-3">
+      <div className="text-[10px] uppercase tracking-[0.24em] text-text-faint">Producción · construye y explica el porqué</div>
+      <h2 className="font-display text-xl leading-tight" style={{ color: ink }}>{ex.title}</h2>
+      <p className="font-serif text-[14px] leading-snug text-text">{ex.statement}</p>
+      <textarea
+        value={answer}
+        onChange={(e) => setAnswer(e.target.value)}
+        rows={5}
+        placeholder="Prodúcelo TÚ — escribe tu(s) frase(s) y el porqué, antes de ver el modelo…"
+        className="scroll-touch w-full resize-none rounded-[var(--r-sm)] border border-line bg-ink p-3 font-serif text-[14px] text-text placeholder:text-text-faint focus:outline-none"
+        style={{ borderColor: `color-mix(in srgb, ${accent} 30%, var(--line))` }}
+      />
+
+      {!revealed ? (
+        <button
+          onClick={() => setRevealed(true)}
+          disabled={!produced}
+          className="min-h-11 w-full rounded-[var(--r-sm)] border font-display text-sm uppercase tracking-[0.16em] transition hover:brightness-125 disabled:opacity-40"
+          style={{ borderColor: accent, color: ink, background: `color-mix(in srgb, ${accent} 10%, transparent)` }}
+        >
+          {produced ? "Comparar con el modelo y la regla" : "Prodúcelo primero"}
+        </button>
+      ) : (
+        <div className="space-y-3">
+          <div className="rounded-[var(--r-md)] border p-3" style={{ borderColor: accent }}>
+            <div className="text-[10px] uppercase tracking-wider text-text-faint">Modelo — para comparar (no una calificación)</div>
+            <p className="mt-1 whitespace-pre-wrap font-serif text-[14px] leading-snug text-text">{ex.modelAnswer}</p>
+          </div>
+          <div className="rounded-[var(--r-sm)] border-l-2 p-3" style={{ borderColor: accent, background: "color-mix(in srgb, var(--world-fog) 40%, transparent)" }}>
+            <div className="text-[10px] uppercase tracking-wider text-text-faint">La regla — el porqué (esto es lo que importa)</div>
+            <p className="mt-1 font-serif text-[14px] leading-snug text-text-muted">{ex.rule}</p>
+          </div>
+          <div>
+            <div className="text-[10px] uppercase tracking-wider text-text-faint">Autoevaluación honesta — ¿tu producción cumple?</div>
+            <ul className="mt-1 space-y-1">
+              {ex.rubric.map((r, i) => (
+                <li key={i} className="rounded-[var(--r-sm)] border border-line bg-surface p-2 text-[13px] leading-snug text-text-muted">☐ {r}</li>
+              ))}
+            </ul>
+          </div>
+          {done ? (
+            <div className="rounded-[var(--r-md)] border p-3" style={{ borderColor: accent }}>
+              <div className="font-display text-sm uppercase tracking-[0.16em]" style={{ color: ink }}>Registrado ✓ +{ARCANUM_CONFIG.xp.checkpoint} XP</div>
+              <p className="mt-1 text-[12px] leading-snug text-text-muted">Reforzaste el patrón. La maestría de la celda NO se gana aquí — solo el portón adversarial (Fase 3) la concede.</p>
+            </div>
+          ) : (
+            <button
+              onClick={() => {
+                if (fired.current) return;
+                fired.current = true;
+                setDone(true);
+                reward("small", { accent, sfx: "lessonwin" });
+                onAttested();
+              }}
+              className="min-h-11 w-full rounded-[var(--r-sm)] border px-4 text-sm transition hover:brightness-125"
+              style={{ borderColor: accent, color: ink }}
+            >
+              Comparé con el modelo — lo produje bien
+            </button>
+          )}
+          <p className="text-[12px] leading-snug text-text-faint">Es autoevaluación honesta contra criterios explícitos — no un veredicto del sistema (calificar producción libre offline sería un placebo). La verificación adversarial real la hace <span style={{ color: ink }}>Asuka en la Fase 3</span>.</p>
         </div>
       )}
     </div>

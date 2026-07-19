@@ -19,6 +19,16 @@ describe("cell-slugs — resolve a book handle → cell (match) or null (loose)"
     expect(resolveCellId("  FRED-S2 ")).toBe(FRED_S2);
   });
 
+  it("resolves the new Competitiva + Alemán slugs (CC)", () => {
+    expect(resolveCellId("cp1-two-pointers")).toBe("cd000000-0000-4000-8000-000000000001");
+    expect(resolveCellId("cp8-segment-tree")).toBe("cd000000-0000-4000-8000-000000000008");
+    expect(resolveCellId("cp5")).toBe("cd000000-0000-4000-8000-000000000005"); // bare
+    // a whole-level German book anchors at the level's ENTRY cell (A1.1 / A2.1)
+    expect(resolveCellId("de-a1-fundamentos")).toBe("cc000000-0000-4000-8000-000000000001");
+    expect(resolveCellId("de-a2-conversacion")).toBe("cc000000-0000-4000-8000-000000000006");
+    expect(resolveCellId("de-a1")).toBe("cc000000-0000-4000-8000-000000000001"); // bare
+  });
+
   it("passes a raw cell UUID through when it is a known cell", () => {
     expect(resolveCellId(ITC_C4)).toBe(ITC_C4);
   });

@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { parseExercisesMd } from "@/lib/exercises-md";
-import type { CodeExercise, ChoiceExercise } from "@/lib/exercise";
+import type { CodeExercise, ChoiceExercise, ProductionExercise } from "@/lib/exercise";
 
 // build a bank .md from lines (fence lines as plain strings avoid template-literal backtick escaping)
 const md = (...lines: string[]) => lines.join("\n");
@@ -57,6 +57,8 @@ const CODE_EX = [
 
 const CHOICE_EX = ["## Recorrer una vez", "type: multiple_choice", "", "¿Complejidad de un recorrido?", "", "### Opciones", "- [x] O(n)", "- O(1)", "- O(n²)", "", "### Justificación", "Un recorrido = n pasos.", ""];
 
+const PRODUCTION_EX = ["## Construye una frase", "type: production", "", "Escribe una frase con el objeto en Akkusativ.", "", "### Modelo", "Ich sehe den Mann.", "", "### Regla", "En Akkusativ solo el masculino cambia: der → den.", "", "### Rúbrica", "- El objeto masculino usa den.", "- El sustantivo va con mayúscula.", ""];
+
 describe("exercises-md — the curated exercise-bank contract (pure parser)", () => {
   it("parses a valid bank: a code exercise → one CodeExercise per language + a choice", () => {
     const bank = parseExercisesMd(md(...HEAD, ...CODE_EX, ...CHOICE_EX));
@@ -79,6 +81,28 @@ describe("exercises-md — the curated exercise-bank contract (pure parser)", ()
     expect(choice.answer).toBe(0); // the [x] option (0-based)
     expect(choice.options).toEqual(["O(n)", "O(1)", "O(n²)"]); // marker stripped
     expect(choice.rationale).toContain("n pasos");
+  });
+
+  it("parses a PRODUCTION exercise (free-response) → model + rule + rubric, no auto-grading", () => {
+    const bank = parseExercisesMd(md(...HEAD, ...PRODUCTION_EX));
+    expect(bank).not.toBeNull();
+    expect(bank!.exercises).toHaveLength(1);
+    const prod = bank!.exercises[0] as ProductionExercise;
+    expect(prod.kind).toBe("production");
+    expect(prod.statement).toContain("Akkusativ");
+    expect(prod.modelAnswer).toBe("Ich sehe den Mann.");
+    expect(prod.rule).toContain("der → den");
+    expect(prod.rubric).toEqual(["El objeto masculino usa den.", "El sustantivo va con mayúscula."]);
+    expect(prod.moduleId).toBe("mod-1"); // anchored by the bank meta
+  });
+
+  it("rejects a PRODUCTION exercise missing the model, the rule, or the rubric (no bare textarea placebo)", () => {
+    const noModel = ["## Sin modelo", "type: production", "", "Produce algo.", "", "### Regla", "una regla", "", "### Rúbrica", "- un criterio", ""];
+    const noRule = ["## Sin regla", "type: production", "", "Produce algo.", "", "### Modelo", "un modelo", "", "### Rúbrica", "- un criterio", ""];
+    const noRubric = ["## Sin rúbrica", "type: production", "", "Produce algo.", "", "### Modelo", "un modelo", "", "### Regla", "una regla", ""];
+    expect(parseExercisesMd(md(...HEAD, ...noModel))).toBeNull();
+    expect(parseExercisesMd(md(...HEAD, ...noRule))).toBeNull();
+    expect(parseExercisesMd(md(...HEAD, ...noRubric))).toBeNull();
   });
 
   it("is FENCE-AWARE: a `##`/`###` line at column 0 INSIDE a code fence is NOT a boundary", () => {

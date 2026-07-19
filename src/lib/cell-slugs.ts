@@ -40,6 +40,20 @@ export const CELL_SLUG_TO_ID: Record<string, string> = {
   "fred-op-6": "cb000000-0000-4000-8000-000000000010",
   "fred-op-7": "cb000000-0000-4000-8000-00000000000f",
   "fred-op-8": "cb000000-0000-4000-8000-000000000011",
+  // Competitiva · ICPC (goal a0000000-…-004) — one cell per contest pattern, 1:1 with the cpN books.
+  "cp1": "cd000000-0000-4000-8000-000000000001",
+  "cp2": "cd000000-0000-4000-8000-000000000002",
+  "cp3": "cd000000-0000-4000-8000-000000000003",
+  "cp4": "cd000000-0000-4000-8000-000000000004",
+  "cp5": "cd000000-0000-4000-8000-000000000005",
+  "cp6": "cd000000-0000-4000-8000-000000000006",
+  "cp7": "cd000000-0000-4000-8000-000000000007",
+  "cp8": "cd000000-0000-4000-8000-000000000008",
+  // Alemán (goal a0000000-…-003) — the spine is FINE-GRAINED (A1.1–A1.5, A2.1–A2.3). A whole-level book
+  // anchors at its level's ENTRY cell: de-a1 → A1.1 (cc…001), de-a2 → A2.1 (cc…006). (Deeper reading wins
+  // the cell in seed-books; a shallower twin stays LOOSE.)
+  "de-a1": "cc000000-0000-4000-8000-000000000001",
+  "de-a2": "cc000000-0000-4000-8000-000000000006",
 };
 
 const KNOWN_IDS = new Set(Object.values(CELL_SLUG_TO_ID));

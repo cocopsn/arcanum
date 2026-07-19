@@ -60,7 +60,28 @@ export interface ChoiceExercise {
   source: ExerciseSource;
 }
 
-export type Exercise = CodeExercise | ChoiceExercise;
+/** PRODUCTION — a free-response exercise for PRODUCTION domains (e.g. German: build your own sentence,
+ *  decline by function, correct the error). The learner produces from scratch; the app then reveals a MODEL
+ *  answer, the RULE / the WHY (the point of the exercise), and an explicit self-check RUBRIC. It is NEVER
+ *  auto-graded (grading free production offline would be a placebo) — the learner self-attests honestly
+ *  against the rubric, exactly like the "fallback that shows the reference and advances". Self-attest fires
+ *  reinforcement (checkpoint XP), NEVER mastery — mastery stays gate-only. */
+export interface ProductionExercise {
+  id: string;
+  kind: "production";
+  moduleId: string | null;
+  title: string;
+  statement: string;
+  /** the model answer, revealed AFTER the learner produces — a thing to compare against, not a graded key */
+  modelAnswer: string;
+  /** the RULE the learner must be able to STATE — explaining the WHY is the whole point, not just producing */
+  rule: string;
+  /** explicit self-check criteria — what a correct production must satisfy */
+  rubric: string[];
+  source: ExerciseSource;
+}
+
+export type Exercise = CodeExercise | ChoiceExercise | ProductionExercise;
 
 // ── pure comparison + formatting (used by the runner + the UI) ──────────────────────────────
 export function deepEqual(a: unknown, b: unknown): boolean {
