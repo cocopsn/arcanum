@@ -11,7 +11,8 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
-    "icons": "node scripts/generate-icons.mjs"
+    "icons": "node scripts/generate-icons.mjs",
+    "loc": "node scripts/loc.mjs"
   },
   "dependencies": {
     "@dagrejs/dagre": "^3.0.0",

@@ -1,5 +1,9 @@
 # ARCANUM · Deploy
 
+> Part of the doc set: [README](README.md) · [ARCHITECTURE](ARCHITECTURE.md) · [CONTENT](CONTENT.md) ·
+> [SECURITY](SECURITY.md) · [OPERATIONS](OPERATIONS.md). This file is the deploy **status + owner
+> action list**; the reusable deploy/troubleshooting runbook lives in [OPERATIONS.md](OPERATIONS.md).
+
 Estado del despliegue y la lista EXACTA de acciones que te tocan a ti. ARCANUM es
 local-first: funciona 100% offline sin nada de esto; lo de abajo habilita **sync
 entre dispositivos**, **IA del rito** y la **capa de Canvas**.

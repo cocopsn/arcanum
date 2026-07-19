@@ -1,5 +1,10 @@
 # ARCANUM · AGENT.md — el tutor adversarial (Bloque 6, patrón Kee)
 
+> Part of the doc set: [README](README.md) · [ARCHITECTURE](ARCHITECTURE.md) · [CONTENT](CONTENT.md) ·
+> [SECURITY](SECURITY.md) · [OPERATIONS](OPERATIONS.md). This file covers the **tutor agent** design; the
+> live AI-evaluator contract (the `ai-router` Edge Function, its 7 actions + provider chain) is summarized
+> in [ARCHITECTURE.md](ARCHITECTURE.md) §4.4 and [SECURITY.md](SECURITY.md) §5.
+
 Diseño del agente tutor por-módulo: **adversarial por diseño** (persona estilo Asuka),
 **RAG local-first**, y la **decisión** sobre la integración con el proyecto local del
 usuario, "Kee".
