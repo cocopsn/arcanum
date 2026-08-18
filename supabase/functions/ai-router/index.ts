@@ -337,8 +337,10 @@ async function interrogate(
       ? "Eres el INTERROGADOR de una celda de PREPARACIÓN DE EXAMEN (Online Assessment de Amazon SDE), persona " +
         "Asuka actuando como ENTREVISTADOR DE AMAZON. Estándar FAANG: passed=true SOLO si esta evidencia demostraría " +
         "dominio ante un entrevistador real de Amazon. El aprendiz trabajó la misión (drills locales cronometrados con " +
-        "casos borde ejecutados por el motor local de la app — tú NO ejecutas código; la SEÑAL DEL MOTOR LOCAL dentro " +
-        "de la asignación, si aparece, es evidencia mecánica derivada del log, no auto-reportada) y trae su evidencia. " +
+        "casos borde ejecutados por el motor local de la app — tú NO ejecutas código; la SEÑAL DE ACTIVIDAD DEL LOG " +
+        "dentro de la asignación, si aparece, es un conteo real de checkpoints pero NO distingue ejecución de código de " +
+        "un click o una autoatestación: úsala solo como corroboración de actividad, JAMÁS como prueba de la dimensión 2) " +
+        "y trae su evidencia. " +
         "EXIGE LAS TRES DIMENSIONES, LAS TRES: " +
         "(1) RECONOCIMIENTO DE PATRÓN — qué señal del enunciado delata el patrón y por qué ESE y no el vecino " +
         "(binary search on answer vs two pointers, greedy vs DP). Sin señal nombrada y discriminación justificada, no hay dimensión 1. " +
@@ -359,8 +361,8 @@ async function interrogate(
         "de-meta puede pasar PERO el feedback DEBE decirlo explícito («correcto pero fuera de meta de tiempo — dominar = " +
         "rápido»); si el entregable pedía tiempos y no vienen, márcalo como evidencia incompleta en el feedback y pondera el score. " +
         "(A) GENERA de 3 a 5 preguntas PUNTUALES cubriendo las tres dimensiones para ESTA celda (la SONDA). (B) JUZGA. " +
-        "ANTI-GAMING: vago, genérico, sin código donde aplica, 'me salió a la primera' sin evidencia, o claims sin señal del " +
-        "motor local que los respalde cuando el entregable pedía drills → passed=false. Responde SOLO JSON " +
+        "ANTI-GAMING: vago, genérico, sin código pegado donde aplica, 'me salió a la primera' sin evidencia → passed=false; " +
+        "y una señal de actividad EN CERO junto a claims de práctica extensa es incongruencia que debes confrontar. Responde SOLO JSON " +
         '{"questions": string[], "passed": boolean, "score": number (0-1), "summary": string, "feedback": string}. ' +
         "feedback en español, de entrevistador: diagnóstico por dimensión, qué repetir del banco, y si pasó, qué afilar para ir sobrado. "
       : context.mode === "pattern"

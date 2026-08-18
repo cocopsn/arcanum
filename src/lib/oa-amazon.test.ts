@@ -102,22 +102,25 @@ describe("OA Amazon — the spine (structure + rigor)", () => {
     expect(repo.assignment).toMatch(/Sub-partes/); // mixto spells its parts out to the evaluator
   });
 
-  it("the log-derived DRILL SIGNAL reaches the exam interrogator (mechanical evidence, not self-reported)", () => {
-    // at seed: zero verified reinforcements — the signal says so honestly
+  it("the log-derived ACTIVITY SIGNAL reaches the exam interrogator — stated with exactly the precision the log supports", () => {
+    // at seed: zero checkpoints — the signal says so, and NEVER claims to prove code execution
+    // (reinforceCount counts ANY checkpoint.passed: a drill, a correct choice, a self-attest —
+    // review F1: labelling that "verified drills, not self-reported" lied to the judge)
     const fresh = buildInterrogationContext(rm, OA2, "evidencia")!;
-    expect(fresh.assignment).toMatch(/SEÑAL DEL MOTOR LOCAL/);
-    expect(fresh.assignment).toMatch(/0 refuerzo/);
-    // one real checkpoint.passed on the cell → the signal counts it
+    expect(fresh.assignment).toMatch(/SEÑAL DE ACTIVIDAD DEL LOG/);
+    expect(fresh.assignment).toMatch(/celda\): 0\./);
+    expect(fresh.assignment).toMatch(/NO lo tomes como prueba de ejecución/);
+    // one real checkpoint.passed on the cell → the count moves
     const withDrill = project([
       ...SEED_EVENTS,
       makeEvent("checkpoint.passed", { score: 1, kind: "exercise" }, { ts: T0, deviceId: "test", goalId: oa.goalId, moduleId: OA2 }),
     ]);
     const after = buildInterrogationContext(withDrill, OA2, "evidencia")!;
-    expect(after.assignment).toMatch(/1 refuerzo/);
-    // a NON-exam mission (FrED) carries no drill signal — scoped to the exam bar
+    expect(after.assignment).toMatch(/celda\): 1\./);
+    // a NON-exam mission (FrED) carries no signal — scoped to the exam bar
     const fredMission = SPINES.find((s) => s.goalTitle === "FrED Factory")!.cells.find((c) => c.mission)!;
     const fred = buildInterrogationContext(rm, fredMission.id, "evidencia")!;
-    expect(fred.assignment).not.toMatch(/SEÑAL DEL MOTOR LOCAL/);
+    expect(fred.assignment).not.toMatch(/SEÑAL DE ACTIVIDAD/);
   });
 });
 

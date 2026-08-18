@@ -58,13 +58,16 @@ export function buildInterrogationContext(
   if (!mission) return null;
   const nature: NodeNature = m.nature ?? "a_mano";
   const stance = natureRubric(nature, m.parts ?? []);
-  // EXAM cells (OA) also hand the interrogator a MECHANICAL signal derived from the log: how many
-  // verified drill reinforcements this cell has (checkpoint.passed → reinforceCount). The local
-  // Fase-2 engine is where code actually RAN against edge cases — the interrogator can't execute
-  // code, but it can weigh real, log-derived evidence instead of taking claims on faith.
+  // EXAM cells (OA) also hand the interrogator an ACTIVITY signal derived from the log — stated
+  // with exactly the precision the log supports. reinforceCount counts checkpoint.passed from ANY
+  // reinforcement path (an executed code drill, a correct choice, a production self-attest, a
+  // lesson), and the log does NOT distinguish which — so the signal says so, and explicitly warns
+  // the judge it is NOT proof of code execution (adversarial review F1: calling clicks "verified
+  // drills, not self-reported" lied to the only real judge). Proof of execution stays where it
+  // belongs: dimension 2 demands the pasted code + edge cases regardless of this counter.
   const drillSignal =
     cell?.interrogationMode === "exam"
-      ? `\n\nSEÑAL DEL MOTOR LOCAL (derivada del log, no auto-reportada): ${m.reinforceCount} refuerzo(s) verificados en los drills de esta celda.`
+      ? `\n\nSEÑAL DE ACTIVIDAD DEL LOG (conteo real de checkpoint.passed en esta celda): ${m.reinforceCount}. OJO: el log NO distingue si cada checkpoint fue un drill de código ejecutado, una opción acertada o una autoatestación — NO lo tomes como prueba de ejecución; la prueba de la dimensión 2 es el código pegado en la evidencia. Un conteo en cero con claims de mucha práctica sí es señal de incongruencia.`
       : "";
   return {
     cellTitle: m.title,
