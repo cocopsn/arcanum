@@ -198,7 +198,19 @@ function parseExerciseBlock(idBase: string, index: number, title: string, body: 
   const typeLine = preamble.find((l) => /^\s*type\s*:/i.test(l));
   if (!typeLine) return null;
   const type = norm(typeLine.replace(/^\s*type\s*:/i, ""));
-  const prompt = preamble.filter((l) => l !== typeLine).join("\n").trim();
+  // optional TIMED-DRILL target: a `tiempo: N` (or `tiempo: N min`) preamble line → timeTargetMin.
+  // A DECLARED-but-malformed tiempo (non-numeric / non-positive) rejects the block (all-or-nothing,
+  // same as every other field) — a silent drop would ship an untimed drill that claims to be timed.
+  const tiempoLine = preamble.find((l) => /^\s*tiempo\s*:/i.test(l));
+  let timeTargetMin: number | undefined;
+  if (tiempoLine) {
+    const m = tiempoLine.replace(/^\s*tiempo\s*:/i, "").trim().match(/^(\d+)\s*(?:min(?:utos)?\.?)?$/i);
+    const n = m ? parseInt(m[1]!, 10) : NaN;
+    if (!Number.isFinite(n) || n <= 0) return null;
+    timeTargetMin = n;
+  }
+  const timed = timeTargetMin !== undefined ? { timeTargetMin } : {};
+  const prompt = preamble.filter((l) => l !== typeLine && l !== tiempoLine).join("\n").trim();
   if (!prompt) return null;
   const uid = `${idBase}:${index}-${slugify(title)}`;
 
@@ -246,6 +258,7 @@ function parseExerciseBlock(idBase: string, index: number, title: string, body: 
         hints,
         patterns,
         source: "curated",
+        ...timed,
       });
     }
     return out.length ? out : null;
@@ -279,6 +292,7 @@ function parseExerciseBlock(idBase: string, index: number, title: string, body: 
       answer,
       rationale,
       source: "curated",
+      ...timed,
     };
     return [choice];
   }
@@ -304,6 +318,7 @@ function parseExerciseBlock(idBase: string, index: number, title: string, body: 
       rule,
       rubric,
       source: "curated",
+      ...timed,
     };
     return [prod];
   }

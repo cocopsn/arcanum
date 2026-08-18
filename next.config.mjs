@@ -4,6 +4,10 @@ const withSerwist = withSerwistInit({
   swSrc: "src/app/sw.ts",
   swDest: "public/sw.js",
   disable: process.env.NODE_ENV === "development",
+  // the app page chunk bundles the seed books+banks (~2.5 MB) — raise the precache limit so the
+  // OFFLINE shell stays whole after a deploy (a chunk outside the precache is exactly the cold-
+  // offline hole the app-shell fix closed; the one-time install download is the books, i.e. the point)
+  maximumFileSizeToCacheInBytes: 5 * 1024 * 1024,
 });
 
 // Content-Security-Policy — defense-in-depth for a PUBLIC-repo app that executes learner code. The code
@@ -22,6 +26,9 @@ const CSP = [
   "img-src 'self' data: blob:",
   "font-src 'self' data:",
   "connect-src 'self' blob: data: https://*.supabase.co wss://*.supabase.co https://cdn.jsdelivr.net",
+  // media-src does NOT fall back gracefully for the audiobook's silent data: WAV anchor (audio focus /
+  // lock-screen controls): without this line it falls to default-src 'self' and the <audio> is blocked.
+  "media-src 'self' data: blob:",
   "manifest-src 'self'",
 ].join("; ");
 

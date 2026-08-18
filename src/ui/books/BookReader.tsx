@@ -12,6 +12,8 @@ import { readableAccent } from "@/lib/accent";
 import { cellById } from "@/lib/spines";
 import { bookToSpeech, INTRO_SECTION } from "@/lib/book-speech";
 import { useBookSpeech, type BookSpeechState } from "@/lib/speech";
+import { AudioAnchor } from "@/lib/audio-anchor";
+import { bindAudiobookMediaSession, setAudiobookMetadata, setAudiobookPlaybackState } from "@/lib/media-session";
 import { audio, type AudioConfig } from "@/lib/audio";
 
 // The mini-book reader: full-screen, reading typography (EB Garamond body via .book-prose), tinted by the
@@ -57,6 +59,17 @@ export function BookReader({ book, onClose }: { book: BookRow; onClose: () => vo
   });
   const [showPlayer, setShowPlayer] = useState(false);
 
+  // latest-player ref → the media-session handlers (bound ONCE per book) always drive the live hook
+  const playerRef = useRef(player);
+  playerRef.current = player;
+  // the silent AUDIO ANCHOR that holds OS audio focus while speech plays (lock-screen controls +
+  // background survival where the platform allows). Created lazily ON a user gesture (autoplay rules).
+  const anchorRef = useRef<AudioAnchor | null>(null);
+  const armAnchor = () => {
+    anchorRef.current ??= new AudioAnchor();
+    void anchorRef.current.start();
+  };
+
   useFocusTrap(rootRef);
   useEffect(() => {
     void getProgress(book.id).then((p) => {
@@ -80,25 +93,57 @@ export function BookReader({ book, onClose }: { book: BookRow; onClose: () => vo
     }
   }, [player.sectionId, player.playing]);
 
-  // media-session: BEST-EFFORT lock-screen controls. Web Speech has no media element, so most platforms
-  // (notably iOS, which also stops speech when backgrounded) won't surface these — honest, not faked.
+  // MEDIA SESSION — real lock-screen controls, anchored to the silent audio element. Bound ONCE per
+  // book via the shared module (play/pause + section skips + ±3-fragment seeks); unbound + anchor torn
+  // down when the reader closes, so a dead reader never keeps lock-screen buttons or audio focus alive.
+  // Honest platform limits (stated in the UI too): Android/desktop keep speaking with the screen off;
+  // iOS may still cut speechSynthesis on lock — Media Session helps, it does not override the OS.
   useEffect(() => {
-    if (typeof navigator === "undefined" || !("mediaSession" in navigator) || !parsed) return;
-    try {
-      const ms = navigator.mediaSession;
-      if (typeof MediaMetadata !== "undefined") {
-        ms.metadata = new MediaMetadata({ title: parsed.meta.title, artist: "ARCANUM · audiolibro", album: parsed.meta.spine });
-      }
-      ms.setActionHandler("play", () => { setShowPlayer(true); player.play(); });
-      ms.setActionHandler("pause", () => player.pause());
-      ms.setActionHandler("nexttrack", () => player.next());
-      ms.setActionHandler("previoustrack", () => player.prev());
-      ms.playbackState = player.playing ? "playing" : "paused";
-    } catch {
-      /* a platform without the full mediaSession API */
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [parsed, player.playing]);
+    if (!parsed) return;
+    const unbind = bindAudiobookMediaSession({
+      play: () => {
+        setShowPlayer(true);
+        void anchorRef.current?.start(); // lock-screen play carries user activation on Android
+        playerRef.current.play();
+      },
+      pause: () => playerRef.current.pause(),
+      nextSection: () => playerRef.current.next(),
+      prevSection: () => playerRef.current.prev(),
+      seekForward: () => playerRef.current.goTo(playerRef.current.index + 3),
+      seekBackward: () => playerRef.current.goTo(playerRef.current.index - 3),
+    });
+    return () => {
+      unbind();
+      anchorRef.current?.stop();
+    };
+  }, [parsed]);
+
+  // lock-screen metadata follows the reading: book title · current section · spine + PWA artwork
+  useEffect(() => {
+    if (!parsed || !showPlayer) return;
+    const sec =
+      !player.sectionId || player.sectionId === INTRO_SECTION
+        ? "Portada"
+        : parsed.toc.find((t) => t.id === player.sectionId)?.title ?? "Lectura";
+    setAudiobookMetadata({
+      title: parsed.meta.title,
+      section: sec,
+      spine: parsed.meta.spine || book.spine || "ARCANUM",
+      artwork: [
+        { src: "/icons/icon-192.png", sizes: "192x192", type: "image/png" },
+        { src: "/icons/icon-512.png", sizes: "512x512", type: "image/png" },
+      ],
+    });
+  }, [parsed, showPlayer, player.sectionId, book.spine]);
+
+  // playback state + anchor follow the player: playing re-arms the anchor, pausing HOLDS it (the
+  // element stays → the lock screen keeps showing paused controls instead of vanishing)
+  useEffect(() => {
+    if (!showPlayer) return;
+    setAudiobookPlaybackState(player.playing ? "playing" : "paused");
+    if (player.playing) void anchorRef.current?.start();
+    else anchorRef.current?.hold();
+  }, [player.playing, showPlayer]);
 
   function onScroll() {
     const el = scrollRef.current;
@@ -146,10 +191,12 @@ export function BookReader({ book, onClose }: { book: BookRow; onClose: () => vo
             onClick={() => {
               if (!showPlayer) {
                 setShowPlayer(true);
-                player.play(); // this tap is the user gesture iOS needs to start speaking
+                armAnchor(); // the tap is the user gesture: it arms speech AND the audio-focus anchor
+                player.play();
               } else if (player.playing) {
                 player.pause();
               } else {
+                armAnchor();
                 player.play();
               }
             }}
@@ -227,7 +274,22 @@ export function BookReader({ book, onClose }: { book: BookRow; onClose: () => vo
       </main>
 
       {player.supported && showPlayer && (
-        <PlayerBar player={player} rate={cfg.ttsRate} accent={accent} total={items.length} onStop={() => { player.stop(); setShowPlayer(false); }} />
+        <PlayerBar
+          player={player}
+          rate={cfg.ttsRate}
+          accent={accent}
+          total={items.length}
+          onPlay={() => {
+            armAnchor(); // the transport tap is a user gesture too — re-arm focus before speaking
+            player.play();
+          }}
+          onStop={() => {
+            player.stop();
+            anchorRef.current?.hold();
+            setAudiobookPlaybackState("none");
+            setShowPlayer(false);
+          }}
+        />
       )}
     </div>
   );
@@ -261,7 +323,7 @@ function Section({ section, accent, speaking }: { section: BookSection; accent: 
 }
 
 /** The audiobook transport, tinted by the world. Fixed to the bottom, iPhone-first. */
-function PlayerBar({ player, rate, accent, total, onStop }: { player: BookSpeechState; rate: number; accent: string; total: number; onStop: () => void }) {
+function PlayerBar({ player, rate, accent, total, onPlay, onStop }: { player: BookSpeechState; rate: number; accent: string; total: number; onPlay: () => void; onStop: () => void }) {
   const ink = readableAccent(accent);
   const btn = "grid min-h-11 min-w-11 place-items-center rounded-[var(--r-pill)] text-text-muted transition hover:text-text";
   return (
@@ -279,7 +341,7 @@ function PlayerBar({ player, rate, accent, total, onStop }: { player: BookSpeech
           className="grid min-h-12 min-w-12 place-items-center rounded-full border-2 transition"
           style={{ borderColor: accent, color: ink }}
           aria-label={player.playing ? "Pausar" : "Reproducir"}
-          onClick={() => (player.playing ? player.pause() : player.play())}
+          onClick={() => (player.playing ? player.pause() : onPlay())}
         >
           {player.playing ? (
             <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden><path d="M7 5h4v14H7zm6 0h4v14h-4z" /></svg>
@@ -312,7 +374,9 @@ function PlayerBar({ player, rate, accent, total, onStop }: { player: BookSpeech
       </div>
       <div className="mt-1 flex items-center justify-between pb-1 text-[10px] text-text-faint">
         <span className="tnum">{Math.min(player.index + 1, total)} / {total}</span>
-        <span>voz del dispositivo · offline · pantalla encendida</span>
+        {/* honest platform limits — Media Session + the audio anchor keep background playback where
+            the OS allows; iOS throttles speechSynthesis on lock and may still cut it */}
+        <span>voz del dispositivo · offline · Android/desktop sigue en bloqueo · iPhone: pantalla encendida</span>
       </div>
     </div>
   );

@@ -64,7 +64,12 @@ version: 1
 ---
 ```
 
-Each exercise is a `## <title>` block with a `type:` line and typed `### sub-sections`:
+Each exercise is a `## <title>` block with a `type:` line and typed `### sub-sections`. An optional
+`tiempo: N` preamble line (minutes; `tiempo: 25 min` also accepted) declares a TIMED-DRILL target —
+the runner then shows a real stopwatch and an honest within/over verdict at the closing gesture
+(`lib/drill-clock.ts`). A declared-but-malformed `tiempo` rejects the whole bank (all-or-nothing).
+OA Amazon banks carry `tiempo:` on every exercise (the exam is clocked); other banks may omit it —
+without the line, nothing renders and the bank behaves exactly as before:
 
 **Choice family** — `multiple_choice` · `complexity` · `trace` (asserted, never executed):
 ```markdown
@@ -143,6 +148,7 @@ light up "Leer" on it. Exercise banks anchor by the cell UUID directly.
 | **FrED · Operativo** | `fred-op-0` … `fred-op-8` (the ORION Bridge track) |
 | **Competitiva · ICPC** | `cp1` … `cp8` (1:1 with the contest-pattern cells) |
 | **Alemán** | `de-a1` → A1.1 entry cell · `de-a2` → A2.1 entry cell |
+| **OA Amazon** | `oa-0` … `oa-13` (books named `oa-N-<anything>` anchor by the boundary-prefix rule; digit boundaries are safe: `oa-1-…` ≠ `oa-10-…`) |
 
 *Alemán note:* the spine is fine-grained (A1.1–A1.5, A2.1–A2.3, B1/B2), so a **whole-level** book anchors at
 its level's **entry cell** — `de-a1-fundamentos` → A1.1, `de-a2-conversacion` → A2.1. When two books resolve

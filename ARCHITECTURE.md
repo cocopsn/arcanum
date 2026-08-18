@@ -169,6 +169,17 @@ cell's `nature` stance (`NATURE_STANCE`, `src/lib/gate.ts:25-52`):
 - `delegable` → prove you can *direct and audit* an assistant (comprehension gate);
 - `mixto` → sub-parts of each nature, spelled out to the evaluator (`natureRubric`, `gate.ts:55-59`).
 
+Interrogation **calibration** is a second, orthogonal axis (`SpineCell.interrogationMode`): absent =
+first-principle (FrED/ITC); `pattern` = ICPC recognition + efficiency (judge: Codeforces); `exam` =
+the **strictest gate in the system** (OA Amazon) — FAANG-interview bar demanding all three dimensions
+(pattern recognition · clean execution with edge cases · first-principle defence), failure mode named
+(`reconocimiento`/`ejecución`/`defensa`), nature-pivoted (Work Simulation is judged as LP judgement,
+never as code), time-over-target reported as feedback, never a block. A log-derived **drill signal**
+(`reinforceCount`) rides in the assignment so the interrogator weighs mechanical evidence over claims.
+The learner's evidence is treated as **data, never instructions** (prompt-injection guard, all modes).
+Each cell can also name its real **judge** for the arena HUD (`SpineCell.judge`; the Codeforces line
+stays the `pattern` default).
+
 The evaluator is **one Deno Edge Function** `supabase/functions/ai-router/index.ts` (`Deno.serve`,
 `:598-658`) with 7 actions (`ocr`, `sleep`, `evaluate`, `tutor`, `lesson`, `gate`, `interrogate`) and a
 **multi-provider router**: default chain `["openai","kee"]` (`:15`), `anthropic` implemented but off the
@@ -221,6 +232,15 @@ See [CONTENT.md](CONTENT.md).
 - **Audiobook**: the Web Speech API reads a book with the device's **installed voices** (offline,
   es-MX first). Preprocessing (`book-speech.ts`) *never reads code literally* — a code block becomes
   "Bloque de código en Python, N líneas"; markdown is stripped; `O(n log n)` → "O de n log n".
+  Prose is spoken in **sentence-level fragments** (`splitSpeakable`) — pause/resume is item-granular,
+  so pausing loses at most one sentence (never restarts the paragraph/book), and every utterance
+  stays under Chrome's silent long-utterance cutoff. The fragment index persists device-local
+  (`listenIndex`) and restores across sessions.
+- **Background playback**: a Media Session layer (`media-session.ts`) puts real controls on the lock
+  screen (play/pause, section skips, ±fragment seeks, per-section metadata + PWA artwork), anchored
+  by a **runtime-synthesized silent WAV loop** (`audio-anchor.ts` — zero asset files) that holds the
+  OS audio focus. Honest limits: Android/desktop keep speaking with the screen locked; **iOS may
+  still cut speechSynthesis on lock** — the player says so instead of pretending.
 
 ### 4.10 UI / world themes / layout — `src/lib/subject-themes.ts`, `src/ui/layout-mode.tsx`
 Four world themes **derived from the goal title** (not stored): ITC throne-room blue, FrED forge amber,

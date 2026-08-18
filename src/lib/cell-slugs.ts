@@ -54,6 +54,23 @@ export const CELL_SLUG_TO_ID: Record<string, string> = {
   // the cell in seed-books; a shallower twin stays LOOSE.)
   "de-a1": "cc000000-0000-4000-8000-000000000001",
   "de-a2": "cc000000-0000-4000-8000-000000000006",
+  // OA Amazon (goal a0000000-…-005) — the assault path for the SDE Intern OA. The user names books
+  // with the FULL temario slug (`oa-0-fundamentos`, `oa-4-binary-search-answer`, …): the boundary-
+  // prefix rule anchors every `oa-N-<anything>` here. Digit boundaries are safe (`oa-1-` ≠ `oa-10-`).
+  "oa-0": "ce000000-0000-4000-8000-000000000001",
+  "oa-1": "ce000000-0000-4000-8000-000000000002",
+  "oa-2": "ce000000-0000-4000-8000-000000000003",
+  "oa-3": "ce000000-0000-4000-8000-000000000004",
+  "oa-4": "ce000000-0000-4000-8000-000000000005",
+  "oa-5": "ce000000-0000-4000-8000-000000000006",
+  "oa-6": "ce000000-0000-4000-8000-000000000007",
+  "oa-7": "ce000000-0000-4000-8000-000000000008",
+  "oa-8": "ce000000-0000-4000-8000-000000000009",
+  "oa-9": "ce000000-0000-4000-8000-000000000010",
+  "oa-10": "ce000000-0000-4000-8000-000000000011",
+  "oa-11": "ce000000-0000-4000-8000-000000000012",
+  "oa-12": "ce000000-0000-4000-8000-000000000013",
+  "oa-13": "ce000000-0000-4000-8000-000000000014",
 };
 
 const KNOWN_IDS = new Set(Object.values(CELL_SLUG_TO_ID));

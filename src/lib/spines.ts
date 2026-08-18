@@ -44,8 +44,14 @@ export interface SpineCell {
    *  foundation lives once in the log; this cell references it instead of recreating it). */
   references?: string[];
   /** interrogation calibration: 'pattern' = competitive (ICPC) pattern-recognition + efficiency
-   *  (the real judge is Codeforces/AtCoder); default/absent = first-principle (FrED/ITC). */
-  interrogationMode?: "pattern";
+   *  (the real judge is Codeforces/AtCoder); 'exam' = FAANG-interview bar (OA Amazon): pattern
+   *  recognition + clean execution with edge cases + first-principle defence — ALL three or no pass,
+   *  with the failure mode named; default/absent = first-principle (FrED/ITC). */
+  interrogationMode?: "pattern" | "exam";
+  /** who the REAL judge of this cell is (the arena HUD line). Absent on a 'pattern' cell → the
+   *  Codeforces/AtCoder default (Competitiva). Lets another timed spine (e.g. an exam OA) name its
+   *  own judge honestly instead of inheriting a foreign one. */
+  judge?: { label: string; sub?: string };
   /** conceptual SEE-ALSO across spines (a genuinely SEPARATE cell of another nature, NOT a
    *  dedup) — e.g. competitive graphs relates to ITC's graphs but is reflex-under-clock, not depth. */
   related?: string[];
@@ -599,6 +605,287 @@ export const SPINES: Spine[] = [
         "mission": {
           "assignment": "Patrón cima: segment tree (point update / range query) y sweep line. Resuelve un problema que necesite consultas/updates de rango en O(log n). El juez REAL es la plataforma (Codeforces/AtCoder/CSES), NO Arcanum: resuélvelo ALLÁ y trae tu VEREDICTO real (accepted/TLE/WA) + tu solución + el tiempo que tardaste.",
           "deliverable": "Trae: por qué un prefix sum NO bastaba (updates + queries intercalados), tu veredicto + tiempo, y por qué el segment tree da O(log n) por operación. El interrogatorio NO pide primer principio: prueba si RECONOCISTE el patrón y entiendes la EFICIENCIA (un accepted copiado sin explicar el patrón NO pasa)."
+        }
+      }
+    ]
+  },
+  {
+    // OA AMAZON — the assault path for the Amazon SDE Intern 2026 Online Assessment. A sibling world
+    // of ITC (the user's call: "path completo nuevo adyacente a ITC"), with its OWN judge: the clock
+    // of the real OA. Structure mirrors the REAL exam: a main pattern ladder (coding challenge) plus
+    // three branches — SQL and repo-debug hang off OA-1, Work Simulation off OA-0 — because the exam's
+    // three sections are parallel fronts, not a single chain. Missions are anchored to the user's own
+    // Plan de Asalto + Cuaderno (+40% calibration) and to curl-verified 200 canonical sources.
+    // NOTE for the seed-freeze test: every cell id lives under the `ce000000-` prefix.
+    "goalId": "a0000000-0000-4000-8000-000000000005",
+    "goalTitle": "OA Amazon",
+    "color": "#ff9900",
+    "sigil": "oa",
+    "paths": [
+      { "id": "a1000000-0000-4000-8000-000000000006", "slug": "asalto", "name": "Plan de asalto", "description": "Preparación dirigida del OA de Amazon SDE Intern 2026: reconocimiento de patrón + ejecución limpia bajo reloj, repo-debug con IA, y Work Simulation contra los 16 Leadership Principles." }
+    ],
+    "cells": [
+      {
+        "id": "ce000000-0000-4000-8000-000000000001",
+        "title": "OA-0 · Fundamentos — leer las restricciones, inferir el algoritmo, Big-O operativo · MISIÓN",
+        "concept": "restricciones",
+        "nature": "a_mano",
+        "interrogationMode": "exam",
+        "judge": { "label": "La arena · el juez real es el OA de Amazon — el reloj", "sub": "drill cronometrado aquí · trae tu tiempo + la tabla de oro de memoria" },
+        "related": ["ca000000-0000-4000-8000-000000000002"],
+        "sourceUrls": [
+          "https://wiki.python.org/moin/TimeComplexity",
+          "https://usaco.guide/bronze/time-comp",
+          "https://docs.python.org/3/tutorial/datastructures.html",
+          "https://www.amazon.jobs/content/en/how-we-hire/assessments"
+        ],
+        "mission": {
+          "assignment": "El fundamento operativo del OA: las restricciones del enunciado te DICEN qué algoritmo espera el examinador (~10^8 operaciones/segundo: n≤20 → exponencial ok; n≤3,000 → O(n²); n≤10^5 → O(n log n) u O(n); sumas grandes → enteros de 64 bits). Lee el libro de la celda, corre el DEMO OFICIAL de la plataforma que Amazon te mandó por correo (en Node/MERN — es la única forma de no perder minutos entendiendo la interfaz el día real), y fija por escrito los dos lenguajes: Problema 1 en Python 3, Problema 2 en Node/MERN. Resuelve el banco de la celda cronometrado.",
+          "deliverable": "Trae: (1) tu tabla restricciones→algoritmo DE MEMORIA con el porqué (de dónde sale el presupuesto de ~10^8 operaciones), (2) constancia de que corriste el demo oficial y qué aprendiste de la interfaz/panel de IA, (3) los dos lenguajes fijados y la razón de cada uno. Defiende de primer principio: ¿por qué n=10^5 mata una O(n²) pero n=3,000 la perdona? ¿Qué edge cases pruebas SIEMPRE antes de enviar (vacío, un elemento, duplicados, negativos, overflow)?"
+        }
+      },
+      {
+        "id": "ce000000-0000-4000-8000-000000000002",
+        "title": "OA-1 · Arrays + HashMap — Counter, dict, set: la columna vertebral · MISIÓN",
+        "concept": "hashmap",
+        "nature": "a_mano",
+        "interrogationMode": "exam",
+        "judge": { "label": "La arena · el juez real es el OA de Amazon — el reloj", "sub": "drill cronometrado aquí · trae tu tiempo + el patrón que reconociste" },
+        "related": ["ca000000-0000-4000-8000-000000000004"],
+        "sourceUrls": [
+          "https://docs.python.org/3/library/collections.html",
+          "https://leetcode.com/problems/two-sum/",
+          "https://leetcode.com/problems/product-of-array-except-self/",
+          "https://leetcode.com/problems/group-anagrams/"
+        ],
+        "mission": {
+          "assignment": "El patrón #1 por frecuencia: conteo de frecuencias, búsqueda de complemento, mapeo de relaciones. Trabaja el libro de la celda y resuelve CRONOMETRADO (meta ≤25 min c/u, regla del Plan: si pasas de 25, mira la solución, entiéndela y márcala para repetir): Two Sum, Contains Duplicate, Product of Array Except Self y Group Anagrams — en Python, con dict/set/Counter sin dudar. Después de cada problema hazte LA pregunta del Plan §3.1: «¿qué patrón probó esto, y lo reconocería si cambiaran la redacción?». Remata con el banco de la celda (incluye el par-de-productos-más-frecuente del Cuaderno A3).",
+          "deliverable": "Por cada problema: el patrón, POR QUÉ un dict/set convierte O(n²) en O(n) (qué trabajo se ahorra exactamente), tu tiempo real, y los edge cases que probaste. Defiende de primer principio: por qué el lookup de un dict es O(1) ESPERADO y qué lo degrada; por qué la llave canónica de Group Anagrams (sorted o conteo) agrupa correctamente; y en A3, por qué generar los pares por orden O(k²) es la decisión CORRECTA con k≤50 (no sobre-optimices: ese juicio también se examina)."
+        }
+      },
+      {
+        "id": "ce000000-0000-4000-8000-000000000003",
+        "title": "OA-2 · Prefix sum + reinicio de estado — el patrón más reportado del OA 2026 · MISIÓN (reloj)",
+        "concept": "prefix-sum",
+        "nature": "a_mano",
+        "interrogationMode": "exam",
+        "judge": { "label": "La arena · el juez real es el OA de Amazon — el reloj", "sub": "drill cronometrado aquí · trae tu tiempo + el patrón que reconociste" },
+        "related": ["cd000000-0000-4000-8000-000000000003"],
+        "sourceUrls": [
+          "https://usaco.guide/silver/prefix-sums",
+          "https://leetcode.com/problems/subarray-sum-equals-k/",
+          "https://leetcode.com/problems/maximum-subarray/"
+        ],
+        "mission": {
+          "assignment": "Patrón: prefix sum + reinicio de estado (greedy de acumulador) — el primer problema más reportado del OA 2026. Señales: «suma de un subarreglo/rango», «cuántos subarreglos cumplen», «flujo acumulado que cruza una frontera». Trabaja el libro y resuelve cronometrado: Subarray Sum Equals K y Maximum Subarray (LeetCode, Python), y los problemas A1 (reabastecimiento: flujo acumulado por frontera) y A2 (operaciones mínimas: reinicio de acumulador, reportado directo en OA 2026) del Cuaderno. Banco de la celda cronometrado.",
+          "deliverable": "Trae: la señal exacta que delata el patrón; por qué prefix[j]−prefix[i] responde un rango en O(1) tras O(n) de precómputo; tu solución de A2 con el argumento de por qué REINICIAR el acumulador es siempre óptimo (puedes poner un valor suficientemente alto); y tus tiempos reales contra las metas. Un «lo resolví» sin explicar la señal y el porqué NO pasa."
+        }
+      },
+      {
+        "id": "ce000000-0000-4000-8000-000000000004",
+        "title": "OA-3 · Two pointers + sliding window — la ventana que no retrocede · MISIÓN (reloj)",
+        "concept": "ventana",
+        "nature": "a_mano",
+        "interrogationMode": "exam",
+        "judge": { "label": "La arena · el juez real es el OA de Amazon — el reloj", "sub": "drill cronometrado aquí · trae tu tiempo + el patrón que reconociste" },
+        "related": ["cd000000-0000-4000-8000-000000000001"],
+        "sourceUrls": [
+          "https://usaco.guide/silver/two-pointers",
+          "https://leetcode.com/problems/longest-substring-without-repeating-characters/",
+          "https://leetcode.com/problems/minimum-window-substring/",
+          "https://leetcode.com/problems/container-with-most-water/"
+        ],
+        "mission": {
+          "assignment": "Patrón: two pointers y sliding window. Señales: «el subarreglo/substring MÁS LARGO/CORTO que cumple…», pares en un arreglo ordenado, manipulación in-place. Trabaja el libro y resuelve cronometrado en Python: Longest Substring Without Repeating Characters, Container With Most Water y Minimum Window Substring. Después enfréntate a E1 del Cuaderno (substring con frecuencia mínima K): la TRAMPA es que su condición NO es monótona y el sliding window directo falla — la salida es iterar el parámetro (número de caracteres distintos) y aplicar la ventana con el parámetro FIJO. Banco cronometrado.",
+          "deliverable": "Trae: por qué los dos punteros no retroceden y eso da O(n) amortizado (cada índice entra y sale a lo más una vez); CÓMO detectas que una condición no es monótona (el criterio para NO aplicar la ventana a ciegas — E1); qué hiciste en E1 y por qué fijar el parámetro restaura la monotonía; y tus tiempos. Aplicar la plantilla sin poder justificar la monotonía NO pasa."
+        }
+      },
+      {
+        "id": "ce000000-0000-4000-8000-000000000005",
+        "title": "OA-4 · Binary search — y sobre el ESPACIO DE RESPUESTA, el patrón disfrazado · MISIÓN (reloj)",
+        "concept": "binary-search-answer",
+        "nature": "a_mano",
+        "interrogationMode": "exam",
+        "judge": { "label": "La arena · el juez real es el OA de Amazon — el reloj", "sub": "drill cronometrado aquí · trae tu tiempo + el patrón que reconociste" },
+        "related": ["cd000000-0000-4000-8000-000000000002"],
+        "sourceUrls": [
+          "https://usaco.guide/silver/binary-search",
+          "https://leetcode.com/problems/capacity-to-ship-packages-within-d-days/",
+          "https://leetcode.com/problems/koko-eating-bananas/"
+        ],
+        "mission": {
+          "assignment": "El patrón MÁS SUBESTIMADO del OA: «capacidad mínima para enviar paquetes» ES binary search disfrazado. Dos variantes: clásico (posición en arreglo ordenado, plantilla lower_bound) y SOBRE LA RESPUESTA (binarizar un candidato X verificando un predicado monótono feasible(X)). Trabaja el libro y resuelve cronometrado en Python: Capacity To Ship Packages Within D Days y Koko Eating Bananas (los dos aparecen literalmente en OAs de Amazon). Después B1 del Cuaderno (capacidad con carga frágil: feasible greedy con límite efectivo C−p) y B2 (mitad inferior de almacenes — la dificultad es entender el OBJETIVO antes de codear). Banco cronometrado.",
+          "deliverable": "Trae: qué predicado monótono feasible(X) construiste en cada problema y POR QUÉ es monótono (si X sirve, X+1 sirve); los checks de imposibilidad de B1 que van ANTES de binarizar (orders[i] > C efectivo → -1); la complejidad O(n log R) y sobre QUÉ se toma el log (el rango de la respuesta, no n); y tus tiempos. Un accepted sin poder derivar el feasible NO pasa."
+        }
+      },
+      {
+        "id": "ce000000-0000-4000-8000-000000000006",
+        "title": "OA-5 · Greedy con observación — el diseño anti-LLM 2026 · MISIÓN (reloj)",
+        "concept": "greedy-observacion",
+        "nature": "a_mano",
+        "interrogationMode": "exam",
+        "judge": { "label": "La arena · el juez real es el OA de Amazon — el reloj", "sub": "drill cronometrado aquí · trae tu tiempo + la observación que dedujiste" },
+        "related": ["cd000000-0000-4000-8000-000000000004"],
+        "sourceUrls": [
+          "https://usaco.guide/bronze/intro-greedy",
+          "https://usaco.guide/silver/greedy-sorting",
+          "https://leetcode.com/problems/gas-station/",
+          "https://leetcode.com/problems/jump-game/"
+        ],
+        "mission": {
+          "assignment": "El estilo que Amazon reforzó en 2026 contra los LLM: problemas que exigen DEDUCIR una regla/observación matemática antes de codear — no aplicar plantillas. Trabaja el libro y resuelve cronometrado: Jump Game y Gas Station (Python), y del Cuaderno: B3 (proveedores mínimos: greedy descendente — tu calibración de velocidad base) y C1 (secuencia lexicográficamente mínima: LA observación es que cambiar el signo de k reduce la suma en 2k → paridad; el más duro de observación del Cuaderno). Regla de las 7: dibuja las restricciones y organízalas en ramas lógicas ANTES de escribir código. Banco cronometrado.",
+          "deliverable": "Trae: para C1, la observación de paridad ESCRITA ANTES del código (target alcanzable ⇔ misma paridad que S=n(n+1)/2 y |target|≤S) y cómo construiste la secuencia lexicográficamente mínima; el argumento de intercambio de por qué tu greedy no se arrepiente; UN caso concreto donde un greedy ingenuo falla; y tus tiempos. Código sin la observación deducida primero NO pasa."
+        }
+      },
+      {
+        "id": "ce000000-0000-4000-8000-000000000007",
+        "title": "OA-6 · Heap / Top-K — los K más frecuentes, los K más grandes · MISIÓN (reloj)",
+        "concept": "heap-topk",
+        "nature": "a_mano",
+        "interrogationMode": "exam",
+        "judge": { "label": "La arena · el juez real es el OA de Amazon — el reloj", "sub": "drill cronometrado aquí · trae tu tiempo + el patrón que reconociste" },
+        "related": ["ca000000-0000-4000-8000-000000000006"],
+        "sourceUrls": [
+          "https://docs.python.org/3/library/heapq.html",
+          "https://leetcode.com/problems/top-k-frequent-elements/",
+          "https://leetcode.com/problems/kth-largest-element-in-an-array/"
+        ],
+        "mission": {
+          "assignment": "Patrón: heap / priority queue. Señales: «los K más frecuentes/grandes/cercanos», «procesa siempre el mayor disponible», asignación con costo que cambia tras cada operación. En Python heapq es MIN-heap: para max-heap insertas valores negados — que salga de memoria muscular. Trabaja el libro y resuelve cronometrado: Top K Frequent Elements y Kth Largest Element (Python), y C4 del Cuaderno (asignación de servidores con costo acumulado: max-heap con actualización, la búsqueda lineal del máximo se agota por tiempo con n,m≤2·10^5). Banco cronometrado.",
+          "deliverable": "Trae: por qué un heap de tamaño k da O(n log k) y cuándo eso le gana al sort completo O(n log n); la mecánica exacta de negar para max-heap en Python (y el tuple-trick para desempates); en C4, por qué re-insertar la capacidad reducida mantiene el invariante del heap; y tus tiempos reales."
+        }
+      },
+      {
+        "id": "ce000000-0000-4000-8000-000000000008",
+        "title": "OA-7 · Árboles binarios — DFS/BFS, los 4 recorridos, LCA, validar BST · MISIÓN (reloj)",
+        "concept": "arboles",
+        "nature": "a_mano",
+        "interrogationMode": "exam",
+        "judge": { "label": "La arena · el juez real es el OA de Amazon — el reloj", "sub": "drill cronometrado aquí · trae tu tiempo + el patrón que reconociste" },
+        "related": ["ca000000-0000-4000-8000-000000000005"],
+        "sourceUrls": [
+          "https://leetcode.com/problems/binary-tree-level-order-traversal/",
+          "https://leetcode.com/problems/validate-binary-search-tree/",
+          "https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-tree/",
+          "https://leetcode.com/problems/all-nodes-distance-k-in-binary-tree/"
+        ],
+        "mission": {
+          "assignment": "El filtro más consistente de Amazon. Los cuatro recorridos (inorder, preorder, postorder, level-order) de MEMORIA MUSCULAR — el Plan lo pide literal. Trabaja el libro y resuelve cronometrado en Python: Level Order Traversal, Validate BST (con cotas heredadas, no comparación local — el error clásico), Lowest Common Ancestor, y del Cuaderno: D3 (nodos a distancia K SIN mapa de padres, O(n): la recursión devuelve la distancia al objetivo y desciende al otro subárbol) y D4 (subárbol de mayor suma sin adyacentes: DP en árbol con par de estados — puente a OA-10). Banco cronometrado.",
+          "deliverable": "Trae: por qué validar un BST exige COTAS heredadas (min,max) y el contraejemplo exacto donde comparar solo con el padre acepta un árbol inválido; cómo D3 logra O(n) sin construir el mapa de padres (qué devuelve la recursión y cómo desciende con k−dist); el par (incluyo, no incluyo) de D4; y tus tiempos contra las metas."
+        }
+      },
+      {
+        "id": "ce000000-0000-4000-8000-000000000009",
+        "title": "OA-8 · Grafos y grid — islas, propagación, Kahn, BFS sobre estados · MISIÓN (reloj)",
+        "concept": "grafos-grid",
+        "nature": "a_mano",
+        "interrogationMode": "exam",
+        "judge": { "label": "La arena · el juez real es el OA de Amazon — el reloj", "sub": "drill cronometrado aquí · trae tu tiempo + el modelado que viste" },
+        "related": ["ca000000-0000-4000-8000-000000000007", "cd000000-0000-4000-8000-000000000006"],
+        "sourceUrls": [
+          "https://usaco.guide/silver/graph-traversal",
+          "https://usaco.guide/silver/flood-fill",
+          "https://leetcode.com/problems/number-of-islands/",
+          "https://leetcode.com/problems/rotting-oranges/",
+          "https://leetcode.com/problems/course-schedule/"
+        ],
+        "mission": {
+          "assignment": "Amazon casi nunca dice «esto es un grafo»: describe un almacén-cuadrícula, dependencias de instalación, un robot repartidor — y tú tienes que VER los nodos y aristas (temas del mundo real reportados: logística/pathfinding, calendarización, resolución de dependencias). Trabaja el libro y resuelve cronometrado en Python: Number of Islands (flood fill + visitados), Rotting Oranges (BFS MULTI-FUENTE con cola inicial múltiple), Course Schedule (Kahn: el orden con menos de n elementos delata el ciclo), y del Cuaderno: D1 (robot con batería: el nodo NO es la casilla — es el estado (fila, columna, batería), BFS 3D con visitados 3D) y D2 (orden de instalación con incompatibilidades: Kahn + restricción posterior). Banco cronometrado.",
+          "deliverable": "Trae: el MODELADO de cada problema (qué es nodo, qué es arista, por qué BFS vs DFS); cuándo el estado deja de ser la posición y se vuelve (posición + algo más) y qué le hace eso al arreglo de visitados; cómo Kahn detecta el ciclo sin buscarlo explícitamente; la complejidad O(V+E) con V y E del GRID (m·n y 4·m·n); y tus tiempos."
+        }
+      },
+      {
+        "id": "ce000000-0000-4000-8000-000000000010",
+        "title": "OA-9 · Intervals — ordenar, fusionar, y el greedy por fin · MISIÓN (reloj)",
+        "concept": "intervalos",
+        "nature": "a_mano",
+        "interrogationMode": "exam",
+        "judge": { "label": "La arena · el juez real es el OA de Amazon — el reloj", "sub": "drill cronometrado aquí · trae tu tiempo + el criterio de orden que elegiste" },
+        "sourceUrls": [
+          "https://leetcode.com/problems/merge-intervals/",
+          "https://leetcode.com/problems/insert-interval/",
+          "https://leetcode.com/problems/non-overlapping-intervals/"
+        ],
+        "mission": {
+          "assignment": "Patrón: intervalos. Señales: «reuniones que se traslapan», «fusiona los rangos», «mínimo de remociones para que no se crucen» (calendarización de recursos es tema reportado del mundo real). Trabaja el libro y resuelve cronometrado en Python: Merge Intervals (ordena por INICIO, fusiona extendiendo el fin), Insert Interval (tres fases: antes/traslape/después, sin re-ordenar) y Non-overlapping Intervals (greedy por FIN — quedarte con el que termina antes deja máximo espacio). Banco cronometrado.",
+          "deliverable": "Trae: POR QUÉ fusionar ordena por INICIO pero maximizar no-traslapados ordena por FIN (dos objetivos, dos criterios — el argumento de intercambio del segundo); cómo manejaste los bordes que se TOCAN (¿[1,4] y [4,5] se fusionan? — la decisión y su porqué según el enunciado); la complejidad O(n log n) dominada por el sort; y tus tiempos."
+        }
+      },
+      {
+        "id": "ce000000-0000-4000-8000-000000000011",
+        "title": "OA-10 · DP 1D + DP en árbol — estado, transición, caso base · MISIÓN (reloj)",
+        "concept": "dp-1d",
+        "nature": "a_mano",
+        "interrogationMode": "exam",
+        "judge": { "label": "La arena · el juez real es el OA de Amazon — el reloj", "sub": "drill cronometrado aquí · trae tu tiempo + estado y transición" },
+        "related": ["ca000000-0000-4000-8000-000000000009", "cd000000-0000-4000-8000-000000000007"],
+        "sourceUrls": [
+          "https://usaco.guide/gold/intro-dp",
+          "https://leetcode.com/problems/coin-change/",
+          "https://leetcode.com/problems/word-break/",
+          "https://leetcode.com/problems/house-robber/",
+          "https://leetcode.com/problems/longest-increasing-subsequence/"
+        ],
+        "mission": {
+          "assignment": "El Plan lo dice: Coin Change, House Robber, Word Break y LIS cubren la mayoría de las variantes de DP que Amazon pregunta. Para cada uno, lo que se examina es que puedas NOMBRAR el estado y la transición — no recitar código. Trabaja el libro y resuelve cronometrado en Python los cuatro, más del Cuaderno: E2 (segmentación con costo: Word Break donde dp[i] guarda costo mínimo, no bool) y D4 si no lo cerraste en OA-7 (House Robber III: DP en árbol, el par (incluyo, no incluyo) por nodo). Banco cronometrado.",
+          "deliverable": "Trae: para CADA problema la tripleta ESTADO / TRANSICIÓN / CASO BASE y la complejidad como estados × costo-de-transición; por qué Coin Change usa monedas ilimitadas (unbounded: el loop interno recorre monedas por cada monto) y qué cambiaría con una moneda por tipo; por qué House Robber es dp[i]=max(dp[i−1], dp[i−2]+v[i]) y cómo el MISMO par se vuelve el estado del DP en árbol; y tus tiempos contra las metas."
+        }
+      },
+      {
+        "id": "ce000000-0000-4000-8000-000000000012",
+        "title": "OA-11 · SQL — agregación condicional: GROUP BY + SUM(CASE WHEN) · MISIÓN",
+        "concept": "sql-agregacion",
+        "nature": "a_mano",
+        "interrogationMode": "exam",
+        "judge": { "label": "La arena · el juez compara tu consulta carácter por carácter", "sub": "formato estricto: decimales con ceros, ORDER BY explícito, COALESCE" },
+        "branchFrom": "ce000000-0000-4000-8000-000000000002",
+        "sourceUrls": [
+          "https://sqlbolt.com/lesson/select_queries_with_aggregates",
+          "https://www.postgresql.org/docs/current/tutorial-agg.html",
+          "https://mode.com/sql-tutorial/sql-case"
+        ],
+        "mission": {
+          "assignment": "Algunas variantes del OA traen SQL, y tu Postgres diario es ventaja directa — no lo saltes (Cuaderno A4). El patrón: transformar filas en columnas en UNA pasada con GROUP BY + SUM(CASE WHEN status = '…' THEN weight ELSE 0 END) por cada estado. Escribe A MANO la consulta del reporte de peso por estado del Cuaderno (customers/packages, columnas por estado, orden por email, decimales con ceros finales tipo 5.00) y las variantes del banco de la celda.",
+          "deliverable": "Trae la consulta completa de A4 escrita a mano y DEFENDIDA: por qué CASE WHEN dentro de SUM pivotea (qué suma cada rama y por qué las filas de otros estados aportan 0); qué cambia si omites el ELSE 0 (SUM ignora NULL — cuándo eso da igual y cuándo no); por qué necesitas LEFT JOIN si un cliente sin paquetes debe aparecer (y qué le hace el INNER); y cómo garantizas el formato 5.00 (cast a numeric con escala / to_char). Sin poder explicar cada rama, NO pasa."
+        }
+      },
+      {
+        "id": "ce000000-0000-4000-8000-000000000013",
+        "title": "OA-12 · Repo-debug — Node/Express/Mongoose con asistente de IA (el Problema 2) · MISIÓN",
+        "concept": "repo-debug",
+        "nature": "mixto",
+        "interrogationMode": "exam",
+        "judge": { "label": "La arena · el Problema 2 — localizar y parchar bajo reloj", "sub": "10 min de exploración máx · prueba por prueba · parche mínimo, nunca regenerar" },
+        "parts": [
+          { "name": "Dirigir al asistente de IA a LOCALIZAR (prueba fallida → archivo → función → líneas)", "nature": "delegable" },
+          { "name": "Leer el código localizado y decidir el PARCHE MÍNIMO (y su porqué)", "nature": "a_mano" }
+        ],
+        "branchFrom": "ce000000-0000-4000-8000-000000000002",
+        "sourceUrls": [
+          "https://expressjs.com/en/guide/routing.html",
+          "https://mongoosejs.com/docs/documents.html",
+          "https://mongoosejs.com/docs/tutorials/findoneandupdate.html"
+        ],
+        "mission": {
+          "assignment": "EL PROBLEMA 2 — lo que casi nadie prepara y donde tienes ventaja estructural (meses dirigiendo a Claude Code). Mecánica real: app pequeña con bugs sembrados + suite que falla + panel de IA que LOCALIZA pero no arregla. Los tests verifican STATUS CODE y MENSAJE de la API, no el frontend → el fix toca handler Y service. Bugs típicos: comparación invertida, save() faltante, off-by-one, objeto guardado que nunca se escribe de vuelta o nunca se vincula. Dedica 1h a Mongoose específicamente: save(), findByIdAndUpdate con {new:true}, populate, markModified. Y EJECUTA el ejercicio del Cuaderno §8 que nadie hace: clona un CRUD de Express+Mongoose ajeno, siembra 3 bugs (comparación invertida en auth, save() faltante, off-by-one), cierra el editor 1 hora, y arréglalos usando SOLO las pruebas fallidas + la IA en modo localización («Here is the failing test output and the relevant file; identify the bug and propose the smallest patch»). Protocolo del examen: 10 min máximo de exploración, prueba por prueba, cambios quirúrgicos, correr tras cada fix, >15 min atorado → siguiente (4/6 verdes ha avanzado candidatos). Banco de la celda: localizar el bug en snippets reales y PARCHEAR funciones puras con el bug sembrado.",
+          "deliverable": "Trae: la constancia del ejercicio del repo (los 3 bugs sembrados: cuál te costó más y por qué, y si caíste en pedir regeneración en vez de localización); el protocolo de tiempo DE MEMORIA; y para cada bug del banco: la LÍNEA exacta, el parche mínimo, y por qué un cambio más grande sería peor. En la parte delegable se te juzga por cómo DIRIGES y AUDITAS al asistente (detectar cuándo alucina); en la parte a mano, por el parche y su porqué."
+        }
+      },
+      {
+        "id": "ce000000-0000-4000-8000-000000000014",
+        "title": "OA-13 · Work Simulation + Work Style — los 16 Leadership Principles · MISIÓN",
+        "concept": "leadership-principles",
+        "nature": "delegable",
+        "interrogationMode": "exam",
+        "judge": { "label": "La prueba · Work Simulation — consistencia contra los 16 LPs", "sub": "most/least effective + el principio que lo justifica, comparado contra el patrón documentado" },
+        "branchFrom": "ce000000-0000-4000-8000-000000000001",
+        "sourceUrls": [
+          "https://www.amazon.jobs/content/en/our-workplace/leadership-principles",
+          "https://www.amazon.jobs/content/en/how-we-hire/assessments"
+        ],
+        "mission": {
+          "assignment": "Donde se pierde el examen: el resultado no se revela hasta completar las TRES secciones — un coding perfecto con Work Simulation mediocre no pasa. 45 min de escenarios SDE evaluados contra los Leadership Principles + 15 min de Work Style. Lee los 16 LPs de la fuente oficial — NO para memorizarlos: para extraer el PATRÓN DE DECISIÓN de cada uno. Escribe tu hoja con las 6 reglas del Plan §4.1 (Customer Obsession: gana el cliente · Ownership: nunca «escalar y esperar» · Dive Deep: causa raíz antes del parche · Bias for Action: lo reversible se actúa · Earn Trust: escuchar y buscar datos · Deliver Results: se recorta alcance con transparencia) — esa hoja se relee el día del examen. El patrón de la respuesta correcta: investiga antes de actuar, comunica proactivamente, prioriza impacto en el cliente, asume el resultado completo. Las trampas: culpar, esperar pasivo, comodidad del equipo sobre el cliente, actuar sin comunicar. Trabaja los 8 escenarios del Cuaderno §9 y el banco de la celda (most/least effective con crédito parcial; las encuestas tienen preguntas de CONTROL — la inconsistencia penaliza más que una preferencia legítima).",
+          "deliverable": "Trae: tu hoja de las 6 reglas ESCRITA; para cada uno de los 8 escenarios del Cuaderno, tu most/least effective y el LP que lo justifica en una línea; UNA tensión entre dos principios explicada (p.ej. Bias for Action vs Dive Deep: cuándo gana cada uno y qué dato lo decide); y por qué responder consistente y honesto le gana a adivinar la respuesta «perfecta». Este gate juzga COMPRENSIÓN auditable del marco de decisión, no que recites los 16 nombres."
         }
       }
     ]

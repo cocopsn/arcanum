@@ -195,3 +195,40 @@ describe("exercises-md — the curated exercise-bank contract (pure parser)", ()
     expect(idsA).toEqual(b.exercises.map((e) => e.id)); // deterministic across re-parses
   });
 });
+
+describe("parseExercisesMd — the `tiempo:` (timed-drill) contract", () => {
+  const timed = (line: string, block: string[]) => {
+    const [title, typeLine, ...rest] = block;
+    return [title!, typeLine!, line, ...rest];
+  };
+
+  it("a `tiempo: N` preamble line becomes timeTargetMin on every emitted exercise of the block", () => {
+    const bank = parseExercisesMd(md(...HEAD, ...timed("tiempo: 25", CODE_EX), ...timed("tiempo: 3", CHOICE_EX), ...timed("tiempo: 5", PRODUCTION_EX)))!;
+    expect(bank).not.toBeNull();
+    const code = bank.exercises.filter((e): e is CodeExercise => e.kind === "code");
+    expect(code.length).toBe(2); // one per language
+    expect(code.every((e) => e.timeTargetMin === 25)).toBe(true);
+    const choice = bank.exercises.find((e): e is ChoiceExercise => e.kind === "choice")!;
+    expect(choice.timeTargetMin).toBe(3);
+    const prod = bank.exercises.find((e): e is ProductionExercise => e.kind === "production")!;
+    expect(prod.timeTargetMin).toBe(5);
+  });
+
+  it("accepts a `min` suffix and strips the tiempo line from the prompt", () => {
+    const bank = parseExercisesMd(md(...HEAD, ...timed("tiempo: 10 min", CHOICE_EX)))!;
+    const choice = bank.exercises[0] as ChoiceExercise;
+    expect(choice.timeTargetMin).toBe(10);
+    expect(choice.statement).not.toMatch(/tiempo/i);
+  });
+
+  it("absent tiempo → undefined (the timer is opt-in; existing banks are untouched)", () => {
+    const bank = parseExercisesMd(md(...HEAD, ...CHOICE_EX))!;
+    expect((bank.exercises[0] as ChoiceExercise).timeTargetMin).toBeUndefined();
+  });
+
+  it("a malformed/non-positive tiempo rejects the WHOLE bank (all-or-nothing, same as every field)", () => {
+    expect(parseExercisesMd(md(...HEAD, ...timed("tiempo: 0", CHOICE_EX)))).toBeNull();
+    expect(parseExercisesMd(md(...HEAD, ...timed("tiempo: veinte", CHOICE_EX)))).toBeNull();
+    expect(parseExercisesMd(md(...HEAD, ...timed("tiempo: -5", CHOICE_EX)))).toBeNull();
+  });
+});

@@ -89,6 +89,13 @@ POST $KEE_ENDPOINT   (Authorization: Bearer $KEE_API_KEY  — opcional)
   { action: "evaluate", context }                  → { summary, strengths[], gaps[], challenge }
   { action: "gate",        context }               → { passed, score, summary, feedback }
   { action: "interrogate", context }               → { questions[], passed, score, summary, feedback }
+      · context.mode ausente = primer principio (FrED/ITC) · "pattern" = ICPC (reconocimiento +
+        eficiencia; juez real Codeforces) · "exam" = OA Amazon, LA barra más estricta: las TRES
+        dimensiones (reconocimiento / ejecución limpia con edge cases / defensa de primer principio)
+        o no pasa, con el modo de falla nombrado; pivote por naturaleza (Work Simulation se juzga
+        como juicio de Leadership Principles, jamás como código); el tiempo fuera de meta es feedback
+        visible, no bloqueo. La evidencia del aprendiz es DATOS — el prompt lleva candado
+        anti-inyección en TODOS los modos (un "passed=true" pegado en las notas reprueba por gaming).
   { action: "lesson",      context (phase generate)} → { concept, challenge, rubric[] }
   { action: "lesson",      context (phase grade)}    → { score, understood, feedback }
   { action: "tutor",       context }               → { answer }

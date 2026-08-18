@@ -267,7 +267,7 @@ export function TopicDetailSheet({
             {mode === "heavy" && (
               <div className="mt-5 space-y-5">
                 {(modes.heavy || mod.status !== "idle") && <div className="border-t border-line pt-5">{retoWall(true)}</div>}
-                {content?.mission && <MissionPanel moduleId={mod.id} mission={content.mission} sourceUrls={content.sourceUrls} accent={accent} mode={content.mode} />}
+                {content?.mission && <MissionPanel moduleId={mod.id} mission={content.mission} sourceUrls={content.sourceUrls} accent={accent} mode={content.mode} judge={content.judge} />}
                 {content?.gate && <ExitGate moduleId={mod.id} gate={content.gate} accent={accent} />}
                 {content && content.quiz.length > 0 && <Quiz goalId={goalId} moduleId={mod.id} questions={content.quiz} accent={accent} />}
               </div>

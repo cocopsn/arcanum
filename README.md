@@ -44,7 +44,7 @@ devices when there's a network.
 
 <div align="center">
 
-**✶ ITC** · la sala del trono &nbsp;&nbsp; **⎓ FrED Factory** · la forja &nbsp;&nbsp; **✺ Competitiva** · la arena &nbsp;&nbsp; **ᚦ Alemán** · el claustro
+**✶ ITC** · la sala del trono &nbsp;&nbsp; **⎓ FrED Factory** · la forja &nbsp;&nbsp; **✺ Competitiva** · la arena &nbsp;&nbsp; **ᚦ Alemán** · el claustro &nbsp;&nbsp; **⌖ OA Amazon** · el coliseo
 
 </div>
 
@@ -128,12 +128,12 @@ Run `pnpm loc` for the live count. Snapshot at time of writing:
 
 ```
 BY CATEGORY        loc     files
-  code          17,996      147
-  content        8,680       33
-  config         8,367       10   (pnpm-lock.yaml dominates)
-  tests          5,280       71
-  docs           2,041       10
-  TOTAL         42,451      274
+  content       21,867       85   (46 mini-books + 39 exercise banks)
+  code          19,257      151
+  config         8,374       10   (pnpm-lock.yaml dominates)
+  tests          6,328       81
+  docs           2,079       10
+  TOTAL         57,992      340
 ```
 
 <div align="center">

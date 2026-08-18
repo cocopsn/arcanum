@@ -90,6 +90,21 @@ export const SUBJECT_THEMES: Record<string, WorldTheme> = {
     tagline: "la lengua que ordena el pensamiento",
     temper: "El claustro",
   },
+  // OA Amazon — the coliseum. The assault on a real, dated exam: smile-orange heat over warm
+  // near-black, business rules hiding patterns, the clock as the judge.
+  oa: {
+    slug: "oa",
+    accent: "#ff9900",
+    accent2: "#7fa3c0",
+    glow: "rgba(255, 153, 0, 0.5)",
+    bg: "#120c04",
+    bg2: "#1d1408",
+    fog: "#241c11",
+    motif: "cipher",
+    glyph: "⌖",
+    tagline: "reglas de negocio que esconden un patrón — bajo el reloj",
+    temper: "El coliseo",
+  },
 };
 
 const DEFAULT_THEME: WorldTheme = {
@@ -113,6 +128,7 @@ export function themeForGoal(title: string): WorldTheme {
   if (t.includes("fred") || t.includes("manufact") || t.includes("robot")) return SUBJECT_THEMES.fred!;
   if (t.includes("competit") || t.includes("icpc") || t.includes("cp")) return SUBJECT_THEMES.competitiva!;
   if (t.includes("alem") || t.includes("german") || t.includes("deutsch")) return SUBJECT_THEMES.aleman!;
+  if (t.includes("amazon") || t.includes("oa ") || t.startsWith("oa")) return SUBJECT_THEMES.oa!;
   return DEFAULT_THEME;
 }
 

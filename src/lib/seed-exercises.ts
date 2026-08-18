@@ -26,6 +26,23 @@ import cp8Md from "../../content/exercises/cp8.md";
 // Alemán — PRODUCCIÓN (construir frases + explicar el porqué), anclado a los libros deep A1/A2.
 import deA1Md from "../../content/exercises/de-a1.md";
 import deA2Md from "../../content/exercises/de-a2.md";
+// OA Amazon — el path de asalto al Online Assessment: un banco CRONOMETRADO por celda (tiempo: en
+// cada ejercicio), anclado al libro oa-N de su nodo. Reconocimiento estilo-Amazon + drills en ambos
+// lenguajes + parche-de-bug (oa-12) + producción (SQL/Work Simulation). El juez real es el OA.
+import oa0Md from "../../content/exercises/oa-0.md";
+import oa1Md from "../../content/exercises/oa-1.md";
+import oa2Md from "../../content/exercises/oa-2.md";
+import oa3Md from "../../content/exercises/oa-3.md";
+import oa4Md from "../../content/exercises/oa-4.md";
+import oa5Md from "../../content/exercises/oa-5.md";
+import oa6Md from "../../content/exercises/oa-6.md";
+import oa7Md from "../../content/exercises/oa-7.md";
+import oa8Md from "../../content/exercises/oa-8.md";
+import oa9Md from "../../content/exercises/oa-9.md";
+import oa10Md from "../../content/exercises/oa-10.md";
+import oa11Md from "../../content/exercises/oa-11.md";
+import oa12Md from "../../content/exercises/oa-12.md";
+import oa13Md from "../../content/exercises/oa-13.md";
 import { parseExercisesMd } from "@/lib/exercises-md";
 import { slugify } from "@/lib/book";
 import { getBank, saveExerciseBank } from "@/lib/exercise-store";
@@ -40,6 +57,7 @@ export const SEED_EXERCISE_MD: string[] = [
   op0Md, op1Md, op2Md, op3Md, op4Md, op5Md, op6Md, op7Md, op8Md,
   cp1Md, cp2Md, cp3Md, cp4Md, cp5Md, cp6Md, cp7Md, cp8Md,
   deA1Md, deA2Md,
+  oa0Md, oa1Md, oa2Md, oa3Md, oa4Md, oa5Md, oa6Md, oa7Md, oa8Md, oa9Md, oa10Md, oa11Md, oa12Md, oa13Md,
 ];
 
 /** Populate the offline exercise store with the seed banks — IDEMPOTENT: only seeds a bank id that has no

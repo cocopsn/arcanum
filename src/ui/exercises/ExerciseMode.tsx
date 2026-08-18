@@ -10,6 +10,7 @@ import { bookQuestionsForModule } from "@/lib/book-exercises";
 import { runJs } from "@/lib/js-runner";
 import { runPy } from "@/lib/py-runner";
 import { evaluateRun, matchedPatterns, formatValue, type CodeExercise, type ChoiceExercise, type ProductionExercise, type Exercise, type Lang, type RunResult } from "@/lib/exercise";
+import { formatClock, clockVerdict } from "@/lib/drill-clock";
 import { ARCANUM_CONFIG } from "@/core/config";
 import { themeForGoal, worldVars } from "@/lib/subject-themes";
 import { readableAccent } from "@/lib/accent";
@@ -94,9 +95,9 @@ export function ExerciseMode({ moduleId, goalId, goalTitle, cellTitle, onClose }
             onNextVariant={sel.template ? () => spawnVariant(sel.template!, sel.ex.lang, setSel) : undefined}
           />
         ) : sel.type === "choice" ? (
-          <ChoiceRunner ex={sel.ex} accent={accent} onCorrect={() => void passLesson({ goalId, moduleId }, 1)} />
+          <ChoiceRunner key={sel.ex.id} ex={sel.ex} accent={accent} onCorrect={() => void passLesson({ goalId, moduleId }, 1)} />
         ) : sel.type === "production" ? (
-          <ProductionRunner ex={sel.ex} accent={accent} onAttested={() => void passLesson({ goalId, moduleId }, 1)} />
+          <ProductionRunner key={sel.ex.id} ex={sel.ex} accent={accent} onAttested={() => void passLesson({ goalId, moduleId }, 1)} />
         ) : (
           <BookQuestion text={sel.text} accent={accent} />
         )}
@@ -108,6 +109,46 @@ export function ExerciseMode({ moduleId, goalId, goalTitle, cellTitle, onClose }
 function spawnVariant(templateId: string, lang: Lang, setSel: (s: Selected) => void) {
   const ex = generateVariant(templateId, lang, (Date.now() ^ Math.floor(Math.random() * 1e9)) >>> 0);
   if (ex) setSel({ type: "code", ex, template: templateId });
+}
+
+// DRILL CLOCK — real measurement for exercises that DECLARE a time target (`tiempo:` in the bank).
+// Opt-in per exercise: without a target, nothing renders and every existing bank is untouched. It
+// measures honestly (device clock, session-ephemeral — never the log, never mastery): live count
+// while working, amber past the target, frozen at the exercise's closing gesture with a plain
+// within/over verdict. The OA is won under a clock; a stated meta without measurement is dead text.
+function DrillTimer({ targetMin, stopped, accent }: { targetMin: number; stopped: boolean; accent: string }) {
+  const ink = readableAccent(accent);
+  const startRef = useRef<number>(Date.now());
+  const [frozen, setFrozen] = useState<number | null>(null);
+  const [, setTick] = useState(0);
+  useEffect(() => {
+    if (stopped) {
+      setFrozen((f) => f ?? Date.now() - startRef.current);
+      return;
+    }
+    const t = setInterval(() => setTick((n) => n + 1), 1000);
+    return () => clearInterval(t);
+  }, [stopped]);
+  const elapsed = frozen ?? Date.now() - startRef.current;
+  const v = clockVerdict(elapsed, targetMin);
+  const tone = v.within ? ink : "var(--amber)";
+  return (
+    <div
+      role="timer"
+      aria-label={`Cronómetro: ${v.elapsedLabel} de una meta de ${targetMin} minutos`}
+      className="inline-flex items-center gap-2 rounded-[var(--r-sm)] border px-2.5 py-1"
+      style={{ borderColor: `color-mix(in srgb, ${v.within ? accent : "var(--amber)"} 45%, var(--line))`, background: `color-mix(in srgb, ${v.within ? accent : "var(--amber)"} 8%, transparent)` }}
+    >
+      <span aria-hidden className="font-display text-[13px]" style={{ color: tone }}>⏱</span>
+      <span className="font-mono text-[13px] tabular-nums" style={{ color: tone }}>{v.elapsedLabel}</span>
+      <span className="text-[11px] text-text-faint">meta {v.targetLabel}</span>
+      {frozen !== null && (
+        <span className="text-[11px] uppercase tracking-wider" style={{ color: tone }}>
+          {v.within ? "dentro de la meta" : `${v.overLabel} sobre la meta`}
+        </span>
+      )}
+    </div>
+  );
 }
 
 function Picker({ curated, bookQs, procLang, setProcLang, accent, onPick }: { curated: Exercise[]; bookQs: string[]; procLang: Lang; setProcLang: (l: Lang) => void; accent: string; onPick: (s: Selected) => void }) {
@@ -128,7 +169,10 @@ function Picker({ curated, bookQs, procLang, setProcLang, accent, onPick }: { cu
               <button key={e.id} onClick={() => onPick({ type: "code", ex: e })} className={card}>
                 <div className="flex items-center justify-between gap-2">
                   <span className="font-serif text-[14px] text-text">{e.title}</span>
-                  <span className="shrink-0 text-[10px] uppercase tracking-wider" style={{ color: ink }}>{e.lang === "python" ? "Python" : "JS"}</span>
+                  <span className="shrink-0 text-[10px] uppercase tracking-wider" style={{ color: ink }}>
+                    {e.timeTargetMin !== undefined && <span className="mr-2 text-text-faint">⏱ {e.timeTargetMin} min</span>}
+                    {e.lang === "python" ? "Python" : "JS"}
+                  </span>
                 </div>
                 <div className="mt-0.5 truncate text-[12px] text-text-faint">{e.statement}</div>
               </button>
@@ -165,7 +209,10 @@ function Picker({ curated, bookQs, procLang, setProcLang, accent, onPick }: { cu
           <div className="mt-2 space-y-2">
             {productionEx.map((e) => (
               <button key={e.id} onClick={() => onPick({ type: "production", ex: e })} className={card}>
-                <span className="font-serif text-[14px] text-text">{e.title}</span>
+                <div className="flex items-center justify-between gap-2">
+                  <span className="font-serif text-[14px] text-text">{e.title}</span>
+                  {e.timeTargetMin !== undefined && <span className="shrink-0 text-[10px] uppercase tracking-wider text-text-faint">⏱ {e.timeTargetMin} min</span>}
+                </div>
                 <div className="mt-0.5 truncate text-[12px] text-text-faint">{e.statement}</div>
               </button>
             ))}
@@ -179,7 +226,10 @@ function Picker({ curated, bookQs, procLang, setProcLang, accent, onPick }: { cu
           <div className="mt-2 space-y-2">
             {choiceEx.map((e) => (
               <button key={e.id} onClick={() => onPick({ type: "choice", ex: e })} className={card}>
-                <span className="font-serif text-[14px] text-text">{e.title}</span>
+                <div className="flex items-center justify-between gap-2">
+                  <span className="font-serif text-[14px] text-text">{e.title}</span>
+                  {e.timeTargetMin !== undefined && <span className="shrink-0 text-[10px] uppercase tracking-wider text-text-faint">⏱ {e.timeTargetMin} min</span>}
+                </div>
               </button>
             ))}
           </div>
@@ -215,6 +265,9 @@ function CodeRunner({ ex, accent, onPassed, onNextVariant }: { ex: CodeExercise;
   const [hintLevel, setHintLevel] = useState(0);
   const [showSolution, setShowSolution] = useState(false);
   const [passed, setPassed] = useState(false);
+  // the drill clock freezes at the FIRST genuine pass (editing afterwards re-verdicts the panel,
+  // but the measured drill already closed — one exercise, one measured time)
+  const [everPassed, setEverPassed] = useState(false);
   const hadFailure = useRef(false);
   const firedPass = useRef(false);
 
@@ -231,6 +284,7 @@ function CodeRunner({ ex, accent, onPassed, onNextVariant }: { ex: CodeExercise;
     // pass is never un-awarded nor re-fired, but the panel reflects the truth of the last execution.
     setPassed(ev.allPass);
     if (ev.allPass) {
+      setEverPassed(true);
       // a solved exercise is a real closing moment — celebrate ONCE (the first genuine pass), scaled by how
       // hard it was (failed-then-fixed = bigger). Re-running already-correct code must NOT re-fire the
       // flourish (the XP is one-shot too), or it would imply a reward that didn't happen.
@@ -256,6 +310,7 @@ function CodeRunner({ ex, accent, onPassed, onNextVariant }: { ex: CodeExercise;
     <div className="space-y-3">
       <div className="text-[10px] uppercase tracking-[0.24em] text-text-faint">{ex.lang === "python" ? "Python" : "JavaScript"} · {ex.source === "procedural" ? "variante" : "banco"}</div>
       <h2 className="font-display text-xl leading-tight" style={{ color: ink }}>{ex.title}</h2>
+      {ex.timeTargetMin !== undefined && <DrillTimer targetMin={ex.timeTargetMin} stopped={everPassed} accent={accent} />}
       <p className="font-serif text-[14px] leading-snug text-text">{ex.statement}</p>
       {ex.pseudocode && (
         <div className="rounded-[var(--r-sm)] border-l-2 p-3" style={{ borderColor: accent, background: "color-mix(in srgb, var(--world-fog) 40%, transparent)" }}>
@@ -367,6 +422,7 @@ function ChoiceRunner({ ex, accent, onCorrect }: { ex: ChoiceExercise; accent: s
   return (
     <div className="space-y-3">
       <h2 className="font-display text-xl leading-tight" style={{ color: ink }}>{ex.title}</h2>
+      {ex.timeTargetMin !== undefined && <DrillTimer targetMin={ex.timeTargetMin} stopped={answered} accent={accent} />}
       <p className="font-serif text-[14px] leading-snug text-text">{ex.statement}</p>
       <div className="space-y-2">
         {ex.options.map((o, i) => {
@@ -417,6 +473,7 @@ function ProductionRunner({ ex, accent, onAttested }: { ex: ProductionExercise; 
     <div className="space-y-3">
       <div className="text-[10px] uppercase tracking-[0.24em] text-text-faint">Producción · construye y explica el porqué</div>
       <h2 className="font-display text-xl leading-tight" style={{ color: ink }}>{ex.title}</h2>
+      {ex.timeTargetMin !== undefined && <DrillTimer targetMin={ex.timeTargetMin} stopped={revealed} accent={accent} />}
       <p className="font-serif text-[14px] leading-snug text-text">{ex.statement}</p>
       <textarea
         value={answer}

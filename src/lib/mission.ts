@@ -26,8 +26,9 @@ export interface InterrogationContext {
   sourceRefs: string[];
   /** the learner's submitted evidence (their own notes + reflections) */
   notes: string;
-  /** interrogation calibration: 'pattern' (competitive ICPC) vs first-principle (absent) */
-  mode?: "pattern";
+  /** interrogation calibration: 'pattern' (competitive ICPC) · 'exam' (FAANG-interview bar, OA) ·
+   *  first-principle (absent) */
+  mode?: "pattern" | "exam";
   /** the cell's NATURE — structural: decides whether the interrogation demands a first-principle
    *  DEFENCE ('a_mano') or auditable COMPREHENSION ('delegable'). */
   nature: NodeNature;
@@ -57,12 +58,20 @@ export function buildInterrogationContext(
   if (!mission) return null;
   const nature: NodeNature = m.nature ?? "a_mano";
   const stance = natureRubric(nature, m.parts ?? []);
+  // EXAM cells (OA) also hand the interrogator a MECHANICAL signal derived from the log: how many
+  // verified drill reinforcements this cell has (checkpoint.passed → reinforceCount). The local
+  // Fase-2 engine is where code actually RAN against edge cases — the interrogator can't execute
+  // code, but it can weigh real, log-derived evidence instead of taking claims on faith.
+  const drillSignal =
+    cell?.interrogationMode === "exam"
+      ? `\n\nSEÑAL DEL MOTOR LOCAL (derivada del log, no auto-reportada): ${m.reinforceCount} refuerzo(s) verificados en los drills de esta celda.`
+      : "";
   return {
     cellTitle: m.title,
     // fold the NATURE stance INTO `assignment` — the field the interrogator (Edge) already interpolates
     // into its prompt — so nature actually CHANGES the interrogation (a_mano = defend the design;
     // delegable = prove you can direct + audit) rather than being cosmetic metadata the Edge ignores.
-    assignment: `${mission.assignment}\n\nNATURALEZA DE LA CELDA — calibra así la interrogación:\n${stance.join("\n")}`,
+    assignment: `${mission.assignment}\n\nNATURALEZA DE LA CELDA — calibra así la interrogación:\n${stance.join("\n")}${drillSignal}`,
     deliverable: mission.deliverable,
     sourceRefs: cell?.sourceUrls ?? [],
     notes: notes.trim(),

@@ -44,6 +44,8 @@ export interface CodeExercise {
   /** saved idiomatic patterns the local heuristic can flag (never invents a critique) */
   patterns: QualityPattern[];
   source: ExerciseSource;
+  /** declared time target in minutes (`tiempo:` in the bank contract) — arms the real drill clock */
+  timeTargetMin?: number;
 }
 
 export interface ChoiceExercise {
@@ -58,6 +60,8 @@ export interface ChoiceExercise {
   /** the justification (why) — shown after answering */
   rationale: string;
   source: ExerciseSource;
+  /** declared time target in minutes (`tiempo:` in the bank contract) — arms the real drill clock */
+  timeTargetMin?: number;
 }
 
 /** PRODUCTION — a free-response exercise for PRODUCTION domains (e.g. German: build your own sentence,
@@ -79,6 +83,8 @@ export interface ProductionExercise {
   /** explicit self-check criteria — what a correct production must satisfy */
   rubric: string[];
   source: ExerciseSource;
+  /** declared time target in minutes (`tiempo:` in the bank contract) — arms the real drill clock */
+  timeTargetMin?: number;
 }
 
 export type Exercise = CodeExercise | ChoiceExercise | ProductionExercise;

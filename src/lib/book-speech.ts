@@ -63,6 +63,58 @@ function clean(raw: string): string {
   return normalizeNotation(stripMarkdown(raw)).replace(/\s+/g, " ").trim();
 }
 
+// ── sentence-level fragmentation ──────────────────────────────────────────────────────────────────
+// Prose is spoken in SENTENCE fragments, not whole paragraphs. Two real reasons: (1) pause/resume is
+// item-granular (pausing restarts the CURRENT item — with paragraph items, a pause could lose a
+// minute of listening; with sentences, at most one sentence), and (2) Chrome is known to silently
+// kill long utterances (~15s) — short fragments keep every utterance under the cutoff. The split is
+// PURE + deterministic, so a saved listen index maps to the same fragment on every device.
+
+export const MAX_FRAGMENT_CHARS = 260;
+
+/** a monster sentence (no boundary before maxLen) is cut at the last "; "/", " (else space) window */
+function hardSplit(s: string, maxLen: number): string[] {
+  const out: string[] = [];
+  let rest = s.trim();
+  while (rest.length > maxLen) {
+    const window = rest.slice(0, maxLen + 1);
+    const punct = Math.max(window.lastIndexOf("; "), window.lastIndexOf(", "));
+    const space = window.lastIndexOf(" ");
+    const at = punct >= Math.floor(maxLen * 0.35) ? punct + 1 : space > 0 ? space : maxLen;
+    out.push(rest.slice(0, at).trim());
+    rest = rest.slice(at).trim();
+  }
+  if (rest) out.push(rest);
+  return out;
+}
+
+/** Split CLEANED prose into speakable sentence fragments (merging tiny sentences up to maxLen).
+ *  Boundary: sentence-ending punctuation followed by a capital/opening mark — "p. ej. algo" stays
+ *  whole because "algo" is lowercase. Pure. */
+export function splitSpeakable(text: string, maxLen = MAX_FRAGMENT_CHARS): string[] {
+  const t = text.replace(/\s+/g, " ").trim();
+  if (!t) return [];
+  const sentences = t.split(/(?<=[.!?…])\s+(?=[«"'¿¡(]?[A-ZÁÉÍÓÚÜÑ0-9])/u);
+  const out: string[] = [];
+  let buf = "";
+  const flush = () => {
+    if (buf.trim()) out.push(buf.trim());
+    buf = "";
+  };
+  for (const s of sentences) {
+    for (const piece of hardSplit(s, maxLen)) {
+      if (!buf) buf = piece;
+      else if (buf.length + 1 + piece.length <= maxLen) buf = `${buf} ${piece}`;
+      else {
+        flush();
+        buf = piece;
+      }
+    }
+  }
+  flush();
+  return out;
+}
+
 function announceCode(lang: string, lines: number): string {
   const names: Record<string, string> = {
     js: "JavaScript", javascript: "JavaScript", ts: "TypeScript", typescript: "TypeScript",
@@ -159,6 +211,12 @@ export function bookToSpeech(parsed: ParsedBook, opts: SpeechOpts): SpeechItem[]
   const items: SpeechItem[] = [];
   let n = 0;
   const push = (sectionId: string, kind: SpeechItem["kind"], raw: string) => {
+    // BODY prose fragments to sentence level (pause loses ≤1 sentence; utterances stay short).
+    // Titles and notes are short by nature and stay single items (their intonation is per-item).
+    if (kind === "body") {
+      for (const frag of splitSpeakable(clean(raw))) items.push({ id: `u${n++}`, sectionId, kind, text: frag });
+      return;
+    }
     const text = kind === "note" ? raw.replace(/\s+/g, " ").trim() : clean(raw);
     if (text) items.push({ id: `u${n++}`, sectionId, kind, text });
   };
