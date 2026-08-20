@@ -256,7 +256,9 @@ def minutos_para_pudrirse(grid):
   { "input": [[[2]]], "expected": 0 },
   { "input": [[[2, 1, 1, 1, 1]]], "expected": 4 },
   { "input": [[[2, 0, 1]]], "expected": -1 },
-  { "input": [[[2, 1, 1], [1, 1, 1], [1, 1, 2]]], "expected": 2 }
+  { "input": [[[2, 1, 1], [1, 1, 1], [1, 1, 2]]], "expected": 2 },
+  { "input": [[]], "expected": 0 },
+  { "input": [[[]]], "expected": 0 }
 ]
 ```
 

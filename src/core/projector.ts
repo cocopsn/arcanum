@@ -404,8 +404,14 @@ function applyDomain(acc: Acc, e: ArcanumEvent): void {
       });
       // gatePassed is MONOTONIC — once the cell's gate is passed it stays open
       // (a later re-evaluation can't re-seal what was already demonstrated).
+      // 🔴 SECOND LOCK (audit F3): the gate opens ONLY on a verdict whose source is a real AI
+      // evaluator. Every production writer already stamps source:"ai" (use-actions.ts:82,102,122,128
+      // — all four behind `if (ai)`), and there is NO exit-gate heuristic by design. Requiring it here
+      // means a hand-crafted or replayed {passed:true, source:"heuristic"} event cannot open a cell:
+      // the invariant now lives in the FOLD, not only in the call sites that mint the event.
+      const fromRealEvaluator = p.source === "ai";
       const mod = acc.modules.get(id);
-      if (mod && passed && !mod.gatePassed) acc.modules.set(id, { ...mod, gatePassed: true });
+      if (mod && passed && fromRealEvaluator && !mod.gatePassed) acc.modules.set(id, { ...mod, gatePassed: true });
       // if this verdict RESOLVES a queued offline submission, drop it from the pending queue.
       if (typeof p.queueId === "string") {
         const q = acc.aiQueue.get(p.queueId);

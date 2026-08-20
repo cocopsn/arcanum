@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useActions } from "@/ui/use-actions";
 
 function RangeRow({
@@ -50,6 +50,7 @@ export function FireTest({
   const [reached, setReached] = useState(2);
   const [done, setDone] = useState(false);
   const [busy, setBusy] = useState(false);
+  const submitting = useRef(false);
   const r = Math.min(reached, ceiling);
 
   if (done) {
@@ -82,6 +83,11 @@ export function FireTest({
       <button
         disabled={busy}
         onClick={async () => {
+          // synchronous latch: `busy` (useState) lags a frame, so two fast taps could BOTH pass it and
+          // fire two firetest.attempted events (double XP). Same guard the repo standardized in
+          // Quiz/ExitGate/MissionPanel/LessonMode — audit finding F2.
+          if (submitting.current) return;
+          submitting.current = true;
           setBusy(true);
           await submitFiretest({ goalId, moduleId }, r, ceiling);
           setDone(true);

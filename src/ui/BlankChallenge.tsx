@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useActions } from "@/ui/use-actions";
 
 /** Reto-first: the wall comes before any resource (spec §10.1). */
@@ -16,6 +16,7 @@ export function BlankChallenge({
   const { resolveError, logError } = useActions();
   const [insight, setInsight] = useState("");
   const [busy, setBusy] = useState(false);
+  const submitting = useRef(false);
 
   return (
     <div className="space-y-3">
@@ -35,10 +36,18 @@ export function BlankChallenge({
         <button
           disabled={!insight.trim() || busy}
           onClick={async () => {
+            // synchronous latch — `busy` lags a frame; two fast taps would log the SAME insight twice
+            // (double +25 XP and a double reinforcement of S). Audit finding F2.
+            if (submitting.current) return;
+            submitting.current = true;
             setBusy(true);
-            await resolveError({ goalId, moduleId }, insight.trim());
-            setInsight("");
-            setBusy(false);
+            try {
+              await resolveError({ goalId, moduleId }, insight.trim());
+              setInsight("");
+            } finally {
+              submitting.current = false;
+              setBusy(false);
+            }
           }}
           className="min-h-11 rounded-[var(--r-sm)] border border-rank bg-[var(--rank-soft)] px-4 py-2 text-sm tracking-wide text-rank transition hover:brightness-125 disabled:opacity-40"
         >

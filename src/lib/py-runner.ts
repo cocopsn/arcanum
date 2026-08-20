@@ -41,9 +41,17 @@ function boot() {
     _ready = loadPyodide({ indexURL: "${PYODIDE_BASE}" }).then(function (py) {
       // Sever the storage bridge: Pyodide's js module proxies this worker's globals, so a learner's
       // "import js; js.indexedDB.deleteDatabase('arcanum')" would otherwise reach the real event log.
-      // Null the storage globals (Pyodide keeps fetch/importScripts for package loads — harmless now
-      // that the log can no longer be read via indexedDB).
-      ['indexedDB','caches','openDatabase','localStorage','sessionStorage'].forEach(function (k) { try { Object.defineProperty(self, k, { value: undefined, configurable: true, writable: true }); } catch (_e) { try { self[k] = undefined; } catch (_e2) {} } });
+      // 🔴 HARDENED (audit H3): the old sever used the SAME configurable:true shadow that was proven
+      // bypassable in the JS worker — and Pyodide hands the learner full JS reflection (js.Object,
+      // js.Reflect), so a delete / the prototype getter restored the live handle. Since Pyodide MUST
+      // keep fetch/importScripts for package loads, a re-readable log meant "read AND exfiltrate" was
+      // wide open. Now every prototype-chain level that owns the property is redefined non-configurable
+      // and non-writable. (Declared debt #1/#2 stand: fetch survives, and the worker is a singleton.)
+      ['indexedDB','caches','openDatabase','localStorage','sessionStorage','BroadcastChannel'].forEach(function (k) {
+        var hit = false, o = self;
+        while (o) { try { if (Object.getOwnPropertyDescriptor(o, k)) { Object.defineProperty(o, k, { value: undefined, configurable: false, writable: false }); hit = true; } } catch (_e) {} o = Object.getPrototypeOf(o); }
+        if (!hit) { try { Object.defineProperty(self, k, { value: undefined, configurable: false, writable: false }); } catch (_e2) { try { self[k] = undefined; } catch (_e3) {} } }
+      });
       return py;
     });
   }

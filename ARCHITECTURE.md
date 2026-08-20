@@ -32,7 +32,7 @@ projection of that log, and re-folding the log always yields the same result.**
 |---|---|
 | **Conflict-free multi-device sync** | Two devices each append their own events; sync is a union of immutable rows keyed by `id`. There is no shared mutable state to conflict — order is recomputed from `(ts,id)`. |
 | **Retroactive recomputation** | Change a projector rule (a grade threshold, a mastery formula) and *every* past state re-derives correctly from the same log. |
-| **Un-corruptible progress** | Progress is never *stored*; it is *derived*. A bad write cannot silently corrupt mastery — the worst case is an extra event, and the fold is idempotent. |
+| **Un-corruptible progress** | Progress is never *stored*; it is *derived*. A bad write cannot silently corrupt mastery — the worst case is an extra event. **Precisely:** the *log* is a set (Dexie dedups by primary key on append) and the fold trusts that uniqueness — `project()` itself does **not** dedup, so feeding it the same event id twice would double-count XP. Idempotency lives in the storage layer, not in the fold; never concatenate two event sources without deduping by id first. |
 | **Auditability** | Every gate verdict, evaluation, and mission submission is an event in the log with `source: "ai"|"heuristic"` and `provider` — you can always ask *why* a cell is mastered. |
 
 ### The load-bearing invariant: `incremental == rebuild`
@@ -146,8 +146,9 @@ Each layer, its responsibility, and its key files.
   only the seed events the local log is *missing*. This lets the seed **evolve** (an existing device gets
   only genuinely-new seed events) without renumbering history or re-uploading already-synced rows.
 - **Local-first**: `hydrate` + `seedBooks` + `seedExerciseBanks` run unconditionally on mount
-  (`providers.tsx:64-67`). With no Supabase env, `getSupabase()` is `null` and sync/AI are simply off
-  (honest degradation) — the app is fully usable from the local log alone.
+  (`providers.tsx:64-67`). With no Supabase env, `getSupabase()` **throws** (`sync/client.ts:12-15`) and
+  every caller guards (`providers.tsx:45-47`, the try/catch in `sync/ai.ts`, `AiQueueDrain.tsx:21-28`), so
+  sync/AI are simply off (honest degradation) — the app is fully usable from the local log alone.
 
 ### 4.3 Roadmap: paths + fog-of-war — `src/core/roadmap.ts`, `src/lib/spines.ts`
 - The roadmap is a **DAG** of cells; `roadmap.edge.upserted` adds prereq edges (cycles rejected,
@@ -247,7 +248,9 @@ See [CONTENT.md](CONTENT.md).
   Prose is spoken in **sentence-level fragments** (`splitSpeakable`) — pause/resume is item-granular,
   so pausing loses at most one sentence (never restarts the paragraph/book), and every utterance
   stays under Chrome's silent long-utterance cutoff. The fragment index persists device-local
-  (`listenIndex`) and restores across sessions.
+  (`listenIndex`) and restores across sessions. *Declared limit:* it is a raw item index over the
+  fragment list, and announce-mode emits more items than skip-mode, so **flipping `ttsCodeMode` shifts a
+  saved position by a few fragments** (clamped, never a crash). It resumes exactly for a fixed code-mode.
 - **Background playback**: a Media Session layer (`media-session.ts`) puts real controls on the lock
   screen (play/pause, section skips, ±fragment seeks, per-section metadata + PWA artwork), anchored
   by a **runtime-synthesized silent WAV loop** (`audio-anchor.ts` — zero asset files) that holds the

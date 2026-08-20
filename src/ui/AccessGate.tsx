@@ -13,21 +13,39 @@ export function AccessGate({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     let cancel = false;
+    // localStorage can THROW outright (Safari "block all cookies", locked-down enterprise profile).
+    // Unguarded, a throw inside the .then() fell to the .catch(), whose own getItem threw again →
+    // unhandled rejection with phase stuck on "checking" FOREVER: a blank ARCANUM screen with no way
+    // out. The boot path degrades honestly instead (audit finding, Domain 4).
+    const remember = () => {
+      try {
+        localStorage.setItem("arcanum_authed", "1");
+      } catch {
+        /* storage disabled — the session still works, it just won't survive offline */
+      }
+    };
+    const remembered = () => {
+      try {
+        return localStorage.getItem("arcanum_authed") === "1";
+      } catch {
+        return false; // no storage → no prior-login proof → fail closed to the login screen
+      }
+    };
     fetch("/api/session", { cache: "no-store" })
       .then((r) => r.json())
       .then((d: { authed?: boolean; configured?: boolean }) => {
         if (cancel) return;
         if (!d.configured) return setPhase("in"); // no password configured → no gate (dev)
         if (d.authed) {
-          localStorage.setItem("arcanum_authed", "1");
+          remember();
           return setPhase("in");
         }
         setPhase("out");
       })
       .catch(() => {
         if (cancel) return;
-        // offline: trust the device's prior successful login
-        setPhase(localStorage.getItem("arcanum_authed") === "1" ? "in" : "out");
+        // offline / captive portal: trust the device's prior successful login
+        setPhase(remembered() ? "in" : "out");
       });
     return () => {
       cancel = true;
@@ -41,7 +59,11 @@ export function AccessGate({ children }: { children: React.ReactNode }) {
     return (
       <LoginScreen
         onIn={() => {
-          localStorage.setItem("arcanum_authed", "1");
+          try {
+            localStorage.setItem("arcanum_authed", "1");
+          } catch {
+            /* storage disabled — the login still succeeded; it just won't be remembered offline */
+          }
           setPhase("in");
         }}
       />

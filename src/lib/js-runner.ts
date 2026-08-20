@@ -52,9 +52,51 @@ export function execCode(code: string, functionName: string, inputs: unknown[][]
 
 /** Neutralize same-origin storage + network globals BEFORE any learner code runs. A Web Worker shares the
  *  page origin, so without this a learner's code could reach self.indexedDB and read/delete the Arcanum
- *  event log, or exfiltrate via fetch. The JS runner needs none of these. Exported so a test can assert it. */
+ *  event log, or exfiltrate via fetch. The JS runner needs none of these. Exported so a test can assert it.
+ *
+ *  🔴 HARDENED after an adversarial audit PROVED the previous version bypassable in one line. It shadowed
+ *  only `self` with `configurable: true`, but in a real Worker these globals are **inherited accessors on
+ *  the prototype chain**, so `delete self.indexedDB` removed the shadow and the native accessor came back
+ *  — and `Object.getPrototypeOf(self).indexedDB` reached the live getter without even deleting. Measured
+ *  in a real Chrome blob Worker: indexedDB/caches/fetch/importScripts/navigator ALL returned, and
+ *  `self.indexedDB.open()` yielded a working IDBOpenDBRequest → a malicious imported bank's reference
+ *  solution (executed at validation time) could wipe or exfiltrate the event log.
+ *
+ *  The fix walks the WHOLE prototype chain and redefines every level that owns the property, with
+ *  `configurable: false` (so `delete` fails and it can't be redefined) and `writable: false`. It also
+ *  covers the network globals the old list simply forgot (EventSource, BroadcastChannel, Worker, …).
+ *  NOTE: this is defense-in-depth on a trusted-client, single-user app — the structural fix for
+ *  untrusted third-party banks would be an opaque-origin iframe; see SECURITY.md. */
+export const SHIELDED_GLOBALS = [
+  "indexedDB",
+  "caches",
+  "fetch",
+  "XMLHttpRequest",
+  "WebSocket",
+  "EventSource",
+  "BroadcastChannel",
+  "importScripts",
+  "navigator",
+  "Notification",
+  "openDatabase",
+  "localStorage",
+  "sessionStorage",
+  "Worker",
+  "SharedWorker",
+  "Request",
+  "Response",
+] as const;
+
 export const WORKER_SHIELD =
-  "['indexedDB','caches','fetch','XMLHttpRequest','WebSocket','importScripts','navigator','Notification','openDatabase','localStorage','sessionStorage'].forEach(function(k){try{Object.defineProperty(self,k,{value:undefined,configurable:true,writable:true});}catch(_e){try{self[k]=undefined;}catch(_e2){}}});";
+  "(function(){var K=" +
+  JSON.stringify(SHIELDED_GLOBALS) +
+  ";K.forEach(function(k){var hit=false;var o=self;" +
+  // walk the prototype chain: in a real Worker the global is an INHERITED accessor, so shadowing `self`
+  // alone leaves the proto getter (and a `delete` of the shadow) as live escape hatches.
+  "while(o){try{if(Object.getOwnPropertyDescriptor(o,k)){Object.defineProperty(o,k,{value:undefined,configurable:false,writable:false});hit=true;}}catch(_e){}o=Object.getPrototypeOf(o);}" +
+  // nothing owned it (or every redefine threw) → still plant a locked own-property on self
+  "if(!hit){try{Object.defineProperty(self,k,{value:undefined,configurable:false,writable:false});}catch(_e2){try{self[k]=undefined;}catch(_e3){}}}" +
+  "});})();";
 
 // The Worker body — self-contained (blob); runs the SHIELD first, then the SAME exec shape as execCode.
 const WORKER_SRC = `

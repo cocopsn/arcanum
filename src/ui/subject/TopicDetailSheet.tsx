@@ -71,6 +71,7 @@ export function TopicDetailSheet({
     };
   }, [moduleId]);
   const panelRef = useRef<HTMLDivElement>(null);
+  const completing = useRef(false); // one-shot latch for "Cerrar tópico" (+150 XP) — see F1 below
   const desktop = useLayoutMode().mode === "desktop";
 
   const mod = readModel.modules.find((m) => m.id === moduleId) ?? null;
@@ -115,7 +116,17 @@ export function TopicDetailSheet({
         {/* A mission cell closes ONLY via its interrogation (kind:'mission' → isMastered requires
             gatePassed). Hide the manual complete button there so it can't read as a way out. */}
         {showComplete && mod.status === "started" && mod.kind !== "mission" && (
-          <button onClick={() => completeModule({ goalId, moduleId: mod.id })} className="min-h-11 text-sm text-text-faint transition hover:text-text">
+          <button
+            onClick={() => {
+              // synchronous latch — the button only disappears after the post-fold re-render, and a
+              // same-day event forces a FULL O(n) rebuild, so on a large log the double-tap window is
+              // real: two module.completed events pay +150 XP EACH. Audit finding F1.
+              if (completing.current) return;
+              completing.current = true;
+              void completeModule({ goalId, moduleId: mod.id });
+            }}
+            className="min-h-11 text-sm text-text-faint transition hover:text-text"
+          >
             Cerrar tópico · +150 XP
           </button>
         )}
