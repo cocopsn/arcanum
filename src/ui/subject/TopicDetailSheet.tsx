@@ -25,6 +25,7 @@ import { TutorSheet } from "@/ui/subject/TutorSheet";
 import { nodeStatus, prereqsOf, isMastered, crossPathEcho } from "@/core/roadmap";
 import { NATURE_STANCE } from "@/lib/gate";
 import { contentForModule } from "@/lib/subject-content";
+import { saveResume } from "@/lib/resume";
 import { modesFor, defaultMode, type DurationMode } from "@/lib/learning-modes";
 
 const STATUS_LABEL = { sealed: "Sellado", available: "Disponible", started: "En curso", completed: "Completado" } as const;
@@ -49,6 +50,13 @@ export function TopicDetailSheet({
   const [readerOpen, setReaderOpen] = useState(false);
   const [exercisesOpen, setExercisesOpen] = useState(false);
   const [hasCurated, setHasCurated] = useState(false);
+
+  // resume: the open cell sheet survives a reload; a deliberate close clears (cleanups don't run
+  // on reloads). Keyed remounts (cell → cell) clean the old id then write the new one.
+  useEffect(() => {
+    saveResume({ cell: moduleId });
+    return () => saveResume({ cell: null });
+  }, [moduleId]);
 
   useEffect(() => {
     let cancel = false;

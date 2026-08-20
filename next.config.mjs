@@ -8,6 +8,14 @@ const withSerwist = withSerwistInit({
   // OFFLINE shell stays whole after a deploy (a chunk outside the precache is exactly the cold-
   // offline hole the app-shell fix closed; the one-time install download is the books, i.e. the point)
   maximumFileSizeToCacheInBytes: 5 * 1024 * 1024,
+  // 🔴 Serwist's DEFAULT is true: its injected client does `addEventListener("online", () =>
+  // location.reload())` — a FULL page reload every time the device regains connectivity. For a
+  // local-first PWA that is destructive, not helpful: it killed the audiobook mid-listen when the
+  // phone auto-joined a WiFi (captive portals included) and refreshed background tabs on any
+  // network blip, landing on home. Reproduced live on prod (sentinel + synthetic online event →
+  // navigation type "reload"). Sync + the AI queue already have their own gentle `online`
+  // listeners — nothing here needs a reload to use the network again.
+  reloadOnOnline: false,
 });
 
 // Content-Security-Policy — defense-in-depth for a PUBLIC-repo app that executes learner code. The code

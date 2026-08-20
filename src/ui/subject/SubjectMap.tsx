@@ -10,6 +10,7 @@ import { themeForGoal, worldVars, type MotifId } from "@/lib/subject-themes";
 import { readableAccent } from "@/lib/accent";
 import { audio } from "@/lib/audio";
 import { TopicDetailSheet } from "@/ui/subject/TopicDetailSheet";
+import { saveResume } from "@/lib/resume";
 import type { ModuleRM } from "@/core/read-model";
 
 // THE WORLD-MAP — Duolingo bone (a clear serpentine path, the next step always obvious),
@@ -168,10 +169,21 @@ function TopicBadge({
   );
 }
 
-export function SubjectMap({ goalId, onClose }: { goalId: string; onClose: () => void }) {
+export function SubjectMap({ goalId, onClose, initialCellId }: { goalId: string; onClose: () => void; initialCellId?: string | null }) {
   const readModel = useArcanum((s) => s.readModel);
   const vmModules = useArcanum((s) => s.viewModel.modules);
-  const [detailId, setDetailId] = useState<string | null>(null);
+  // resume: reopen the cell sheet the learner had open — validated against THIS goal's live
+  // modules (fail-closed: a stale/foreign id is ignored; a sealed cell restores to its honest
+  // sealed view — the sheet itself enforces the fog).
+  const [detailId, setDetailId] = useState<string | null>(() =>
+    initialCellId && readModel.modules.some((m) => m.id === initialCellId && m.goalId === goalId && !m.archived) ? initialCellId : null,
+  );
+  // resume: an open world survives a reload; a deliberate close (unmount) clears it — reloads
+  // never run React cleanups, which is exactly the wanted semantics.
+  useEffect(() => {
+    saveResume({ world: goalId });
+    return () => saveResume({ world: null, cell: null });
+  }, [goalId]);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {

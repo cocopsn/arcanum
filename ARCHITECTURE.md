@@ -225,6 +225,18 @@ See [CONTENT.md](CONTENT.md).
 - **Pending-AI queue**: offline gate/mission work is `ai.queued` (the user's justification is preserved).
   The queue drains on reconnect to the *real* evaluator; **the gate never opens by enqueuing** — the
   projector's `ai.queued` handler never touches `gatePassed` (tested, `ai-queue.test.ts:14-19`).
+- **No reload on reconnect** (`next.config.mjs`): Serwist's injected client defaults to
+  `reloadOnOnline: true` — a full `location.reload()` on every `online` event, which killed the
+  audiobook mid-listen when the phone auto-joined a WiFi and refreshed background tabs on network
+  blips (reproduced live: synthetic `online` → navigation type `"reload"`). It is explicitly set
+  **false**: sync and the AI queue have their own gentle `online` listeners; a local-first app never
+  needs a reload to start using the network again.
+- **Resume where you were** (`src/lib/resume.ts`): the open world / cell sheet / book / library is
+  device-local state (never the log). Surfaces write on mount and clear on deliberate close (React
+  cleanups don't run on reloads — exactly the wanted semantics), and boot restores the location
+  fail-closed (ids validated against the live read-model / book store; a sealed cell restores to its
+  honest sealed view). So a tab discard, an OS killing the PWA, or a deploy lands the learner back
+  in the open book at the stored fragment — not on the throne hall.
 
 ### 4.9 Audio — `src/lib/audio.ts`, `book-speech.ts`, `speech.ts`
 - **SFX and per-world ambient music are 100% synthesized** via Web Audio (oscillators + a breathing

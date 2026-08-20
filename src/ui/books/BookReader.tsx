@@ -14,6 +14,7 @@ import { bookToSpeech, INTRO_SECTION } from "@/lib/book-speech";
 import { useBookSpeech, type BookSpeechState } from "@/lib/speech";
 import { AudioAnchor } from "@/lib/audio-anchor";
 import { bindAudiobookMediaSession, setAudiobookMetadata, setAudiobookPlaybackState } from "@/lib/media-session";
+import { saveResume } from "@/lib/resume";
 import { audio, type AudioConfig } from "@/lib/audio";
 
 // The mini-book reader: full-screen, reading typography (EB Garamond body via .book-prose), tinted by the
@@ -46,6 +47,14 @@ export function BookReader({ book, onClose }: { book: BookRow; onClose: () => vo
   // audio config (voice / rate / code-mode) — device-local, shared with the global audio panel
   const [cfg, setCfg] = useState<AudioConfig>(() => audio.getConfig());
   useEffect(() => audio.subscribe(setCfg), []);
+
+  // resume: an open reader survives a reload (the podcast case: reconnecting mid-listen used to
+  // reboot the app to home — now boot reopens THIS book, and the stored listen index resumes the
+  // fragment). Deliberate close runs the cleanup and clears; reloads never run cleanups.
+  useEffect(() => {
+    saveResume({ bookId: book.id });
+    return () => saveResume({ bookId: null });
+  }, [book.id]);
   const items = useMemo(() => (parsed ? bookToSpeech(parsed, { codeMode: cfg.ttsCodeMode }) : []), [parsed, cfg.ttsCodeMode]);
   const listenTimer = useRef<number | undefined>(undefined);
   const player = useBookSpeech(items, {

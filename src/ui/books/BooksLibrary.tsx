@@ -9,6 +9,7 @@ import { listBanks, saveExerciseBank, deleteBank, totalBankBytes, type ExerciseB
 import { runJs } from "@/lib/js-runner";
 import { runPy } from "@/lib/py-runner";
 import { getStorageStatus, type StorageStatus } from "@/lib/storage";
+import { saveResume } from "@/lib/resume";
 import { BookReader } from "@/ui/books/BookReader";
 import { themeForGoal } from "@/lib/subject-themes";
 import { readableAccent } from "@/lib/accent";
@@ -32,6 +33,13 @@ export function BooksLibrary({ open, onClose }: { open: boolean; onClose: () => 
   const [msg, setMsg] = useState<string | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
   const rootRef = useRef<HTMLDivElement>(null);
+
+  // resume: remember the Lecturas overlay across reloads. This component stays MOUNTED with an
+  // `open` prop (no mount/cleanup lifecycle), so it mirrors the prop instead; the boot-time
+  // `false` write is harmless because HomeView snapshots the stored location before this runs.
+  useEffect(() => {
+    saveResume({ library: open });
+  }, [open]);
 
   useFocusTrap(rootRef);
   async function refresh() {

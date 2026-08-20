@@ -20,6 +20,9 @@ import { VigiliaSheet } from "@/ui/VigiliaSheet";
 import { AscensionCeremony } from "@/ui/AscensionCeremony";
 import { RoadmapCanvas } from "@/ui/roadmap/RoadmapCanvas";
 import { SubjectMap } from "@/ui/subject/SubjectMap";
+import { BookReader } from "@/ui/books/BookReader";
+import { getBook, type BookRow } from "@/lib/book-store";
+import { loadResume, clearResume } from "@/lib/resume";
 import { AgendaSheet } from "@/ui/AgendaSheet";
 import { InstallCoachMark } from "@/ui/InstallCoachMark";
 import { AudioConfig } from "@/ui/AudioConfig";
@@ -53,6 +56,34 @@ export function HomeView() {
   const [booksOpen, setBooksOpen] = useState(false);
   const [subjectGoal, setSubjectGoal] = useState<string | null>(null);
 
+  // RESUME — put the learner back where they were after ANY reload (tab discard, OS killing the
+  // PWA, a deploy). The stored location is SNAPSHOTTED synchronously on the first render: child
+  // effects run before parent effects, so an effect-time read would already see BooksLibrary's
+  // mount write and lose the library flag. Applied ONCE after hydration, fail-closed (ids are
+  // validated against the live read-model / book store; stale ids are ignored).
+  const [resumeSnapshot] = useState(() => (typeof window === "undefined" ? null : loadResume()));
+  const resumed = useRef(false);
+  const [resumeCell, setResumeCell] = useState<string | null>(null);
+  const [resumeBook, setResumeBook] = useState<BookRow | null>(null);
+  useEffect(() => {
+    if (status === "loading" || resumed.current) return;
+    resumed.current = true;
+    const r = resumeSnapshot;
+    if (!r) return;
+    if (r.world && readModel.goals.some((g) => g.id === r.world)) {
+      if (r.cell && readModel.modules.some((m) => m.id === r.cell && m.goalId === r.world && !m.archived)) {
+        setResumeCell(r.cell);
+      }
+      setSubjectGoal(r.world);
+    }
+    if (r.library) setBooksOpen(true);
+    if (r.bookId) {
+      void getBook(r.bookId).then((b) => {
+        if (b) setResumeBook(b);
+      });
+    }
+  }, [status, readModel, resumeSnapshot]);
+
   if (status === "loading") {
     return (
       <main className="mx-auto max-w-md px-5 py-16 text-center font-display text-sm tracking-[0.4em] text-text-faint">
@@ -68,6 +99,7 @@ export function HomeView() {
         viewModel={viewModel}
         onWorld={(goalId) => {
           audio.cue("nav"); // crossing into a world — the world's drone then swells in (if music is on)
+          setResumeCell(null); // a fresh portal entry never carries a restored cell sheet
           setSubjectGoal(goalId);
         }}
         header={
@@ -96,7 +128,16 @@ export function HomeView() {
       <RoadmapCanvas open={mapOpen} onClose={() => setMapOpen(false)} />
       <AgendaSheet open={agendaOpen} onClose={() => setAgendaOpen(false)} />
       <AudioConfig open={audioOpen} onClose={() => setAudioOpen(false)} />
-      {subjectGoal && <SubjectMap goalId={subjectGoal} onClose={() => setSubjectGoal(null)} />}
+      {subjectGoal && (
+        <SubjectMap
+          goalId={subjectGoal}
+          initialCellId={resumeCell}
+          onClose={() => {
+            setResumeCell(null);
+            setSubjectGoal(null);
+          }}
+        />
+      )}
 
       <AiQueueDrain />
       <BooksLibrary open={booksOpen} onClose={() => setBooksOpen(false)} />
@@ -109,6 +150,10 @@ export function HomeView() {
         moduleId={notes.moduleId}
         onClose={() => setNotes({ open: false, moduleId: null })}
       />
+      {/* the RESUMED reader — a top-level host so an open book comes back after a reload no
+          matter which surface originally opened it (library or a cell sheet). Its own mount/
+          cleanup resume-writes keep the stored location truthful from here on. */}
+      {resumeBook && <BookReader book={resumeBook} onClose={() => setResumeBook(null)} />}
       {ceremony && (
         <AscensionCeremony grade={ceremony} onDismiss={() => store.getState().dismissCeremony()} />
       )}
@@ -342,6 +387,7 @@ function Footer({
           } catch {
             /* private mode */
           }
+          clearResume(); // logging out is a deliberate exit — next entry lands home
           window.location.reload();
         }}
         className={`${item} hover:text-amber`}
