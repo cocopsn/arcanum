@@ -26,8 +26,12 @@
 ---
 
 > **Honest scope.** Arcanum is a **personal, single-user system** — one learner, one identity, no
-> sign-up. It is public so it can be read and learned from, not run as a service. There is no
-> multi-tenant mode and none is planned.
+> sign-up. It is not run as a service; there is no multi-tenant mode and none is planned.
+>
+> **Repository visibility: PRIVATE** (verified 2026-08-27 with `gh repo view --json visibility`).
+> This README is written to be readable by a third party, and the intent was to publish it so it
+> could be read and learned from — but the repository has not been made public. Until it is, the
+> "it is public" framing would be false, so it is not claimed here.
 
 ## What it is
 
@@ -128,13 +132,18 @@ Run `pnpm loc` for the live count. Snapshot at time of writing:
 
 ```
 BY CATEGORY        loc     files
-  content       21,867       85   (46 mini-books + 39 exercise banks)
-  code          19,257      151
-  config         8,374       10   (pnpm-lock.yaml dominates)
-  tests          6,328       81
-  docs           2,079       10
-  TOTAL         57,992      340
+  content       21,869       85   (46 mini-books + 39 exercise banks)
+  code          19,528      152
+  config         8,382       10   (pnpm-lock.yaml dominates)
+  tests          6,593       83
+  docs           2,127       10
+  other             87        3
+  TOTAL         58,586      343
 ```
+
+*Measured 2026-08-27 with `node scripts/loc.mjs`. The previous snapshot omitted the
+`other` row while still counting it in the total, so its rows summed to 57,905 against a
+printed total of 57,992 — the missing 87 was exactly that row. Rows now sum to the total.*
 
 <div align="center">
 <br/>

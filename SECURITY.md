@@ -142,8 +142,9 @@ priority. Low risk for a single trusted user; worth an allowlist if the surface 
 
 ## Declared debt (summary)
 
-*(Re-verified item by item in the 2026-08-18 audit — all six confirmed still open, none silently closed
-and none silently worse; #1–#3 keep their low rating for a single-user trusted client.)*
+*(Items #1–#6 re-verified one by one in the 2026-08-18 audit — all confirmed still open, none silently
+closed and none silently worse; #1–#3 keep their low rating for a single-user trusted client. #7 was
+added afterwards. The table below therefore lists **seven**, not six.)*
 
 | # | Item | Severity (personal app) |
 |---|---|---|
