@@ -125,7 +125,7 @@ Each layer, its responsibility, and its key files.
 ### 4.1 Event-sourced core — `src/core/`
 `event.ts` (envelope + types), `projector.ts` (the fold + `applyEvents`), `read-model.ts` (the shape),
 `present.ts` (clock injection), `roadmap.ts` (fog-of-war), `streak.ts` / `mastery.ts` / `grade` in
-`config.ts`, `evaluation.ts` (advisory heuristic), `ai-queue.ts` invariant. Pure, deterministic, tested.
+`config.ts`, `evaluation.ts` (advisory heuristic). La invariante de la cola de IA no tiene archivo propio: vive en `projector.ts` (el mapa `aiQueue`, líneas 143 y 417-429) y la cubre `ai-queue.test.ts`. Pure, deterministic, tested.
 
 ### 4.2 Local-first sync — `src/db/`, `src/sync/`, `src/store/`
 - **Four separate Dexie databases**, deliberately isolated (the log is *sacred*; the rest is
