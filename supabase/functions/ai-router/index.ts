@@ -1,18 +1,71 @@
 // ARCANUM AI router — Supabase Edge Function (Deno).
 // ALL AI calls go through here. Keys live ONLY in the function secrets
-// (OPENAI_API_KEY / KEE_* / ANTHROPIC_API_KEY via Deno.env.get) — never in the
-// client, never hardcoded. The client invokes this authenticated with its JWT.
+// (AZURE_FOUNDRY_* / OPENAI_API_KEY / KEE_* / ANTHROPIC_API_KEY via
+// Deno.env.get) — never in the client, never hardcoded. The client invokes
+// this authenticated with its JWT.
 //
-// Provider priority is CONFIG (the array), not hardcode. DEFAULT = OpenAI
-// gpt-4o-mini PRIMARY, Kee (the learner's own RAG agent) as FALLBACK. We do NOT
-// depend on Kee: if it is unconfigured it simply throws and the router has
-// already answered via OpenAI. `anthropic` stays implemented but OFF the default
-// chain — reachable only via an explicit `providers` override. Fallback logic
-// mirrors src/core/ai-router.ts (tested).
+// Provider priority is CONFIG (the array), not hardcode. DEFAULT = Azure AI
+// Foundry (GPT-5.6) PRIMARY, OpenAI (gpt-4o-mini) as FALLBACK, Kee (the
+// learner's own RAG agent) as the last resort. We do NOT depend on Kee: if it
+// is unconfigured it simply throws and the router has already answered via
+// Azure/OpenAI. `anthropic` stays implemented but OFF the default chain —
+// reachable only via an explicit `providers` override. Fallback logic mirrors
+// src/core/ai-router.ts (tested).
+//
+// ── Azure AI Foundry (GPT-5.6) ──────────────────────────────────────────────
+// Resource admin-8008-resource (West US 3). Two deployments, mapped by WORKLOAD:
+//   · gpt-5.6-sol   → the GATES / adversarial judges (gate, interrogate,
+//                     evaluate): depth of judgement matters, a weak model lets
+//                     gaming through.
+//   · gpt-5.6-terra → high-volume micro-tasks (lesson, tutor, sleep, ocr).
+// GPT-5 family API quirks handled centrally in `azureChat`: `max_completion_tokens`
+// (NOT `max_tokens`), NO `temperature`/`top_p`/penalties, and the token budget
+// must cover REASONING tokens, so Azure budgets are raised vs the OpenAI path.
+// The model travels in the URL (deployment name), not the body.
 
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
-const PROVIDER_PRIORITY = ["openai", "kee"] as const;
+const PROVIDER_PRIORITY = ["azure", "openai", "kee"] as const;
+
+// Which Foundry deployment serves each action. Gates → sol, volume → terra.
+const AZURE_DEPLOYMENTS: Record<string, "gpt-5.6-sol" | "gpt-5.6-terra"> = {
+  gate: "gpt-5.6-sol",
+  interrogate: "gpt-5.6-sol",
+  evaluate: "gpt-5.6-sol",
+  lesson: "gpt-5.6-terra",
+  tutor: "gpt-5.6-terra",
+  sleep: "gpt-5.6-terra",
+  ocr: "gpt-5.6-terra",
+};
+
+// ── Azure chat-completions transport (GPT-5.6) ──────────────────────────────
+// ONE place that knows the Foundry URL shape, auth header, and GPT-5 parameter
+// rules. Returns the assistant message text, or throws (so routeWithFallback
+// moves on to OpenAI). `action` picks the deployment; `visionImage` (a data URL)
+// switches the user turn to a multimodal content array for OCR.
+async function azureChat(
+  action: string,
+  messages: Array<{ role: string; content: unknown }>,
+  maxCompletionTokens: number,
+): Promise<string> {
+  const endpoint = (Deno.env.get("AZURE_FOUNDRY_ENDPOINT") ?? "").replace(/\/+$/, "");
+  const key = Deno.env.get("AZURE_FOUNDRY_API_KEY");
+  if (!endpoint || !key) throw new Error("AZURE_FOUNDRY_ENDPOINT/API_KEY ausente");
+  const apiVersion = Deno.env.get("AZURE_FOUNDRY_API_VERSION") || "2025-04-01-preview";
+  const deployment = AZURE_DEPLOYMENTS[action] ?? "gpt-5.6-terra";
+  const res = await fetch(
+    `${endpoint}/openai/deployments/${deployment}/chat/completions?api-version=${apiVersion}`,
+    {
+      method: "POST",
+      headers: { "api-key": key, "Content-Type": "application/json" },
+      // GPT-5 family: max_completion_tokens (not max_tokens), no temperature.
+      body: JSON.stringify({ max_completion_tokens: maxCompletionTokens, messages }),
+    },
+  );
+  if (!res.ok) throw new Error(`azure ${res.status}`);
+  const j = await res.json();
+  return j.choices?.[0]?.message?.content ?? "";
+}
 
 // ── Kee as a FALLBACK provider ─────────────────────────────────────────────
 // Inert until KEE_ENDPOINT is set as a function secret. It then receives the
@@ -81,6 +134,22 @@ function json(obj: unknown, status = 200): Response {
 async function ocr(provider: string, imageDataUrl: string): Promise<string> {
   const instruction =
     "Transcribe esta página manuscrita a markdown limpio, conservando títulos, listas y estructura. Devuelve SOLO el markdown, sin explicaciones.";
+  if (provider === "azure") {
+    // GPT-5.6 is vision-enabled: same multimodal content array as OpenAI.
+    return await azureChat(
+      "ocr",
+      [
+        {
+          role: "user",
+          content: [
+            { type: "text", text: instruction },
+            { type: "image_url", image_url: { url: imageDataUrl } },
+          ],
+        },
+      ],
+      3000,
+    );
+  }
   if (provider === "openai") {
     const key = Deno.env.get("OPENAI_API_KEY");
     if (!key) throw new Error("OPENAI_API_KEY ausente");
@@ -160,6 +229,9 @@ async function sleep(provider: string, context: unknown): Promise<{ patterns: st
       return { patterns: text.slice(0, 400), axioms: "" };
     }
   };
+  if (provider === "azure") {
+    return parse(await azureChat("sleep", [{ role: "user", content: prompt }], 2000));
+  }
   if (provider === "openai") {
     const key = Deno.env.get("OPENAI_API_KEY");
     if (!key) throw new Error("OPENAI_API_KEY ausente");
@@ -219,6 +291,9 @@ async function evaluate(
       return { summary: text.slice(0, 300), strengths: [], gaps: [], challenge: "" };
     }
   };
+  if (provider === "azure") {
+    return parse(await azureChat("evaluate", [{ role: "user", content: prompt }], 2500));
+  }
   if (provider === "openai") {
     const key = Deno.env.get("OPENAI_API_KEY");
     if (!key) throw new Error("OPENAI_API_KEY ausente");
@@ -293,6 +368,9 @@ async function gate(
       return { passed: false, score: 0, summary: "No evaluable.", feedback: text.slice(0, 300) };
     }
   };
+  if (provider === "azure") {
+    return parse(await azureChat("gate", [{ role: "user", content: prompt }], 3000));
+  }
   if (provider === "openai") {
     const key = Deno.env.get("OPENAI_API_KEY");
     if (!key) throw new Error("OPENAI_API_KEY ausente");
@@ -435,6 +513,9 @@ async function interrogate(
       return { questions: [], passed: false, score: 0, summary: "No evaluable.", feedback: text.slice(0, 300) };
     }
   };
+  if (provider === "azure") {
+    return parse(await azureChat("interrogate", [{ role: "user", content: prompt }], 3500));
+  }
   if (provider === "openai") {
     const key = Deno.env.get("OPENAI_API_KEY");
     if (!key) throw new Error("OPENAI_API_KEY ausente");
@@ -539,6 +620,10 @@ async function lesson(
     }
   };
   const maxTokens = isGrade ? 600 : 2000;
+  if (provider === "azure") {
+    // Headroom over the OpenAI budget to cover GPT-5.6 reasoning tokens.
+    return parse(await azureChat("lesson", [{ role: "user", content: prompt }], isGrade ? 2000 : 4000));
+  }
   if (provider === "openai") {
     const key = Deno.env.get("OPENAI_API_KEY");
     if (!key) throw new Error("OPENAI_API_KEY ausente");
@@ -602,6 +687,16 @@ async function tutor(provider: string, context: { question?: string } & Record<s
     JSON.stringify(context);
   const question = typeof context.question === "string" && context.question ? context.question : "(sin pregunta)";
 
+  if (provider === "azure") {
+    return await azureChat(
+      "tutor",
+      [
+        { role: "system", content: system },
+        { role: "user", content: question },
+      ],
+      3000,
+    );
+  }
   if (provider === "openai") {
     const key = Deno.env.get("OPENAI_API_KEY");
     if (!key) throw new Error("OPENAI_API_KEY ausente");
