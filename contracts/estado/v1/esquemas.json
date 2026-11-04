@@ -1,0 +1,212 @@
+{
+  "$comment": "Contrato de estado v1 (Milla 12). Fuente canonica: Auctorum/auctorum contracts/estado/v1. Cerrado: additionalProperties false en todo objeto. Solo tipos operativos: conteos, versiones, marcas de tiempo, estados y montos de costo. Ningun texto libre que venga de datos de usuario: toda cadena es enum, patron cerrado o fecha.",
+  "version": "1.0.0",
+  "definiciones": {
+    "sistema": { "type": "string", "enum": ["med", "primus", "kee", "pendy", "arcanum", "autom", "plataforma"] },
+    "instante": { "type": "string", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(\\.[0-9]{1,6})?(Z|[+-][0-9]{2}:[0-9]{2})$" },
+    "dia": { "type": "string", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$" },
+    "estado": { "type": "string", "enum": ["vivo", "degradado", "caido", "sin_datos"] },
+    "clave": { "type": "string", "pattern": "^[a-z][a-z0-9_]{0,47}$" },
+    "commit": { "type": "string", "pattern": "^[0-9a-f]{7,40}$" },
+    "version_runtime": { "type": "string", "pattern": "^[a-z]{2,12} [0-9]{1,3}(\\.[0-9]{1,4}){0,3}$" },
+    "firma": { "type": "string", "pattern": "^[0-9a-f]{16}$" },
+    "tenant_opaco": { "type": "string", "pattern": "^t_[0-9a-f]{12}$" },
+    "conteo": { "type": "integer", "minimum": 0, "maximum": 1000000000 },
+    "usd": { "type": "number", "minimum": -1000000, "maximum": 1000000 },
+    "rama": { "type": "string", "enum": ["med", "med-staging", "civis-primus", "kee", "plataforma", "cyberthon", "autom", "hudilab", "observatorio", "compartido", "sin_rama"] }
+  },
+  "respuestas": {
+    "salud": {
+      "type": "object", "additionalProperties": false,
+      "required": ["contrato", "sistema", "generado", "estado", "dependencias"],
+      "properties": {
+        "contrato": { "type": "string", "enum": ["estado/v1"] },
+        "sistema": { "$ref": "sistema" },
+        "generado": { "$ref": "instante" },
+        "estado": { "$ref": "estado" },
+        "dependencias": {
+          "type": "array", "maxItems": 32,
+          "items": {
+            "type": "object", "additionalProperties": false,
+            "required": ["nombre", "estado"],
+            "properties": {
+              "nombre": { "$ref": "clave" },
+              "estado": { "$ref": "estado" },
+              "latencia_ms": { "$ref": "conteo" }
+            }
+          }
+        }
+      }
+    },
+    "version": {
+      "type": "object", "additionalProperties": false,
+      "required": ["contrato", "sistema", "generado", "commit", "construido", "runtime"],
+      "properties": {
+        "contrato": { "type": "string", "enum": ["estado/v1"] },
+        "sistema": { "$ref": "sistema" },
+        "generado": { "$ref": "instante" },
+        "commit": { "$ref": "commit" },
+        "construido": { "$ref": "instante" },
+        "runtime": { "$ref": "version_runtime" }
+      }
+    },
+    "despliegues": {
+      "type": "object", "additionalProperties": false,
+      "required": ["contrato", "sistema", "generado", "despliegues"],
+      "properties": {
+        "contrato": { "type": "string", "enum": ["estado/v1"] },
+        "sistema": { "$ref": "sistema" },
+        "generado": { "$ref": "instante" },
+        "despliegues": {
+          "type": "array", "maxItems": 50,
+          "items": {
+            "type": "object", "additionalProperties": false,
+            "required": ["en", "commit", "resultado"],
+            "properties": {
+              "en": { "$ref": "instante" },
+              "commit": { "$ref": "commit" },
+              "anterior": { "$ref": "commit" },
+              "camino": { "type": "string", "enum": ["artefacto", "compilado_en_host", "plataforma", "manual"] },
+              "resultado": { "type": "string", "enum": ["ok", "fallo", "revertido", "en_curso"] },
+              "sonda": { "type": "string", "enum": ["ok", "fallo", "no_medida"] }
+            }
+          }
+        }
+      }
+    },
+    "metricas": {
+      "type": "object", "additionalProperties": false,
+      "required": ["contrato", "sistema", "generado", "conteos"],
+      "properties": {
+        "contrato": { "type": "string", "enum": ["estado/v1"] },
+        "sistema": { "$ref": "sistema" },
+        "generado": { "$ref": "instante" },
+        "conteos": { "type": "object", "maxProperties": 40, "propertyNames": { "$ref": "clave" }, "additionalProperties": { "$ref": "conteo" } },
+        "por_tenant": {
+          "type": "array", "maxItems": 500,
+          "items": {
+            "type": "object", "additionalProperties": false,
+            "required": ["tenant", "conteos"],
+            "properties": {
+              "tenant": { "$ref": "tenant_opaco" },
+              "conteos": { "type": "object", "maxProperties": 20, "propertyNames": { "$ref": "clave" }, "additionalProperties": { "$ref": "conteo" } }
+            }
+          }
+        }
+      }
+    },
+    "eventos": {
+      "type": "object", "additionalProperties": false,
+      "required": ["contrato", "sistema", "generado", "desde", "eventos"],
+      "properties": {
+        "contrato": { "type": "string", "enum": ["estado/v1"] },
+        "sistema": { "$ref": "sistema" },
+        "generado": { "$ref": "instante" },
+        "desde": { "$ref": "instante" },
+        "eventos": {
+          "type": "array", "maxItems": 500,
+          "items": {
+            "type": "object", "additionalProperties": false,
+            "required": ["en", "tipo", "nivel"],
+            "properties": {
+              "en": { "$ref": "instante" },
+              "tipo": { "type": "string", "enum": ["deploy", "alerta", "error", "anomalia_costo", "reinicio", "respaldo"] },
+              "nivel": { "type": "string", "enum": ["info", "aviso", "critico"] },
+              "firma": { "$ref": "firma" },
+              "origen": { "$ref": "clave" },
+              "conteo": { "$ref": "conteo" },
+              "commit": { "$ref": "commit" },
+              "usd": { "$ref": "usd" }
+            }
+          }
+        }
+      }
+    },
+    "costos": {
+      "type": "object", "additionalProperties": false,
+      "required": ["contrato", "sistema", "generado", "moneda", "hoy", "mes", "mes_anterior", "por_rama", "top_recursos", "creditos", "pronostico"],
+      "properties": {
+        "contrato": { "type": "string", "enum": ["estado/v1"] },
+        "sistema": { "type": "string", "enum": ["plataforma"] },
+        "generado": { "$ref": "instante" },
+        "moneda": { "type": "string", "enum": ["USD"] },
+        "datos_hasta": { "$ref": "dia" },
+        "hoy": { "$ref": "usd" },
+        "mes": { "$ref": "usd" },
+        "mes_anterior": { "$ref": "usd" },
+        "por_rama": {
+          "type": "array", "maxItems": 20,
+          "items": {
+            "type": "object", "additionalProperties": false,
+            "required": ["rama", "hoy", "mes", "mes_anterior"],
+            "properties": { "rama": { "$ref": "rama" }, "hoy": { "$ref": "usd" }, "mes": { "$ref": "usd" }, "mes_anterior": { "$ref": "usd" } }
+          }
+        },
+        "top_recursos": {
+          "type": "array", "maxItems": 10,
+          "items": {
+            "type": "object", "additionalProperties": false,
+            "required": ["recurso", "tipo", "rama", "mes"],
+            "properties": {
+              "recurso": { "type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._/-]{0,119}$" },
+              "tipo": { "type": "string", "pattern": "^[a-z0-9.]{1,60}/[a-z0-9./]{1,80}$" },
+              "rama": { "$ref": "rama" },
+              "mes": { "$ref": "usd" }
+            }
+          }
+        },
+        "creditos": {
+          "type": "array", "maxItems": 10,
+          "items": {
+            "type": "object", "additionalProperties": false,
+            "required": ["bolsa", "otorgado", "saldo", "fuente_saldo", "vence", "se_agota_estimado"],
+            "properties": {
+              "bolsa": { "type": "string", "enum": ["azure_startup_sponsorship", "foundry", "otra"] },
+              "otorgado": { "$ref": "usd" },
+              "saldo": { "$ref": "usd" },
+              "fuente_saldo": { "type": "string", "enum": ["api_consumption", "calculado", "conciliado"] },
+              "activacion": { "$ref": "dia" },
+              "vence": { "$ref": "dia" },
+              "ritmo_diario_30d": { "$ref": "usd" },
+              "se_agota_estimado": { "anyOf": [{ "$ref": "dia" }, { "type": "string", "enum": ["despues_del_vencimiento"] }] },
+              "diferencia_conciliacion_pct": { "$ref": "usd" }
+            }
+          }
+        },
+        "pronostico": {
+          "type": "object", "additionalProperties": false,
+          "required": ["cierre_mes", "fuente"],
+          "properties": {
+            "cierre_mes": { "$ref": "usd" },
+            "hasta_vencimiento": { "$ref": "usd" },
+            "fuente": { "type": "string", "enum": ["api_forecast", "ritmo_30d"] }
+          }
+        },
+        "anomalias": {
+          "type": "array", "maxItems": 50,
+          "items": {
+            "type": "object", "additionalProperties": false,
+            "required": ["dia", "ambito", "nombre", "usd", "mediana_30d"],
+            "properties": {
+              "dia": { "$ref": "dia" },
+              "ambito": { "type": "string", "enum": ["recurso", "rama"] },
+              "nombre": { "type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._/-]{0,119}$" },
+              "usd": { "$ref": "usd" },
+              "mediana_30d": { "$ref": "usd" }
+            }
+          }
+        },
+        "sin_medir": {
+          "type": "array", "maxItems": 10,
+          "items": { "type": "string", "enum": ["openai", "vercel", "supabase", "github"] }
+        }
+      }
+    }
+  },
+  "autenticacion": {
+    "scope": "estado:leer",
+    "vida_maxima_s": 900,
+    "hs256": { "claims_obligatorios": ["iss", "aud", "exp", "iat", "scope"], "secreto_en_key_vault": "estado-v1-<emisor>-a-<receptor>" },
+    "entra": { "claims_obligatorios": ["iss", "aud", "exp", "appid|azp"], "nota": "Entre servicios en Azure: token de identidad administrada para la audiencia del receptor; sin secretos." }
+  }
+}

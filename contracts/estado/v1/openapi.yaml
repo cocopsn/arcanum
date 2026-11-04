@@ -1,0 +1,38 @@
+openapi: 3.1.0
+info:
+  title: Contrato de estado v1 (holding AUCTORUM)
+  version: 1.0.0
+  description: >
+    Estado operativo entre sistemas. Sólo lectura. Los cuerpos de respuesta se definen en
+    esquemas.json (cerrados); este archivo declara rutas, autenticación y códigos.
+servers:
+  - url: https://med.auctorum.com.mx
+  - url: https://pendy-app.vercel.app
+  - url: https://arcanum-brown.vercel.app
+security:
+  - estadoHs256: []
+  - entra: []
+paths:
+  /api/estado/v1/salud:
+    get: { operationId: salud, responses: { '200': { $ref: '#/components/responses/ok' }, '401': { $ref: '#/components/responses/no' }, '403': { $ref: '#/components/responses/no' } } }
+  /api/estado/v1/version:
+    get: { operationId: version, responses: { '200': { $ref: '#/components/responses/ok' }, '401': { $ref: '#/components/responses/no' }, '403': { $ref: '#/components/responses/no' } } }
+  /api/estado/v1/despliegues:
+    get: { operationId: despliegues, responses: { '200': { $ref: '#/components/responses/ok' }, '401': { $ref: '#/components/responses/no' }, '403': { $ref: '#/components/responses/no' } } }
+  /api/estado/v1/metricas:
+    get: { operationId: metricas, responses: { '200': { $ref: '#/components/responses/ok' }, '401': { $ref: '#/components/responses/no' }, '403': { $ref: '#/components/responses/no' } } }
+  /api/estado/v1/eventos:
+    get:
+      operationId: eventos
+      parameters:
+        - { name: desde, in: query, required: false, schema: { type: string, format: date-time } }
+      responses: { '200': { $ref: '#/components/responses/ok' }, '401': { $ref: '#/components/responses/no' }, '403': { $ref: '#/components/responses/no' } }
+  /api/estado/v1/costos:
+    get: { operationId: costos, description: Sólo en el recolector de la plataforma., responses: { '200': { $ref: '#/components/responses/ok' }, '401': { $ref: '#/components/responses/no' }, '403': { $ref: '#/components/responses/no' } } }
+components:
+  securitySchemes:
+    estadoHs256: { type: http, scheme: bearer, bearerFormat: JWT, description: 'HS256, llave por par, vida <= 900 s, scope estado:leer' }
+    entra: { type: oauth2, flows: { clientCredentials: { tokenUrl: 'https://login.microsoftonline.com/0bb4a9c4-42db-4357-b00b-1532deef1b5c/oauth2/v2.0/token', scopes: {} } } }
+  responses:
+    ok: { description: Cuerpo válido contra esquemas.json → respuestas.<operationId>. }
+    no: { description: '{"error":"no_autorizado"} — vocabulario cerrado, sin eco del token.' }
