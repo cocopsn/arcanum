@@ -1,7 +1,7 @@
 {
  "v": 1,
  "code": "SW4-04",
- "sha10": "80367b8473",
+ "sha10": "0d3580e2c3",
  "versiones": {
   "python": "3.12.10",
   "sqlite": "3.49.1",
@@ -13,14 +13,14 @@
    "tipo": "code",
    "lenguaje": "javascript",
    "resultado": "paso",
-   "ms": 3
+   "ms": 4
   },
   {
    "id": "codigo-serializable",
    "tipo": "code",
    "lenguaje": "python",
    "resultado": "paso",
-   "ms": 63
+   "ms": 60
   }
  ],
  "resumen": {

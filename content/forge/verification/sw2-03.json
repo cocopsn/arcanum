@@ -1,7 +1,7 @@
 {
  "v": 1,
  "code": "SW2-03",
- "sha10": "04fcc141c3",
+ "sha10": "6c15ed20d5",
  "versiones": {
   "python": "3.12.10",
   "sqlite": "3.49.1",
@@ -13,14 +13,14 @@
    "tipo": "code",
    "lenguaje": "javascript",
    "resultado": "paso",
-   "ms": 3
+   "ms": 4
   },
   {
    "id": "codigo-cola-secuencial",
    "tipo": "code",
    "lenguaje": "python",
    "resultado": "paso",
-   "ms": 62
+   "ms": 147
   }
  ],
  "resumen": {
