@@ -1,0 +1,32 @@
+{
+ "v": 1,
+ "code": "SW3-06",
+ "sha10": "fdf91cf8f1",
+ "versiones": {
+  "python": "3.12.10",
+  "sqlite": "3.49.1",
+  "node": "v24.22.1"
+ },
+ "items": [
+  {
+   "id": "codigo-registro-claves",
+   "tipo": "code",
+   "lenguaje": "javascript",
+   "resultado": "paso",
+   "ms": 4
+  },
+  {
+   "id": "codigo-registro-claves",
+   "tipo": "code",
+   "lenguaje": "python",
+   "resultado": "paso",
+   "ms": 70
+  }
+ ],
+ "resumen": {
+  "ejecutables": 2,
+  "cubiertos": 2,
+  "fallidos": 0,
+  "sin_verificar": 0
+ }
+}

@@ -1,0 +1,32 @@
+{
+ "v": 1,
+ "code": "SW3-07",
+ "sha10": "2097c2c6fe",
+ "versiones": {
+  "python": "3.12.10",
+  "sqlite": "3.49.1",
+  "node": "v24.22.1"
+ },
+ "items": [
+  {
+   "id": "codigo-presupuesto-error",
+   "tipo": "code",
+   "lenguaje": "javascript",
+   "resultado": "paso",
+   "ms": 3
+  },
+  {
+   "id": "codigo-presupuesto-error",
+   "tipo": "code",
+   "lenguaje": "python",
+   "resultado": "paso",
+   "ms": 71
+  }
+ ],
+ "resumen": {
+  "ejecutables": 2,
+  "cubiertos": 2,
+  "fallidos": 0,
+  "sin_verificar": 0
+ }
+}

@@ -1,0 +1,32 @@
+{
+ "v": 1,
+ "code": "SW3-04",
+ "sha10": "01a29ed8f1",
+ "versiones": {
+  "python": "3.12.10",
+  "sqlite": "3.49.1",
+  "node": "v24.22.1"
+ },
+ "items": [
+  {
+   "id": "codigo-puede",
+   "tipo": "code",
+   "lenguaje": "javascript",
+   "resultado": "paso",
+   "ms": 5
+  },
+  {
+   "id": "codigo-puede",
+   "tipo": "code",
+   "lenguaje": "python",
+   "resultado": "paso",
+   "ms": 77
+  }
+ ],
+ "resumen": {
+  "ejecutables": 2,
+  "cubiertos": 2,
+  "fallidos": 0,
+  "sin_verificar": 0
+ }
+}

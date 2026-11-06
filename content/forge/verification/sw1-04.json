@@ -1,0 +1,40 @@
+{
+ "v": 1,
+ "code": "SW1-04",
+ "sha10": "5d24c3a79c",
+ "versiones": {
+  "python": "3.12.10",
+  "sqlite": "3.49.1",
+  "node": "v24.22.1"
+ },
+ "items": [
+  {
+   "id": "contraejemplo-igualdad-moneda",
+   "tipo": "contraejemplo",
+   "lenguaje": "javascript",
+   "resultado": "sin-verificar",
+   "ms": 0,
+   "detalle": "sin arnés scripts/forge/bank-check/contraejemplo.py"
+  },
+  {
+   "id": "codigo-clave-canonica",
+   "tipo": "code",
+   "lenguaje": "javascript",
+   "resultado": "paso",
+   "ms": 5
+  },
+  {
+   "id": "codigo-clave-canonica",
+   "tipo": "code",
+   "lenguaje": "python",
+   "resultado": "paso",
+   "ms": 76
+  }
+ ],
+ "resumen": {
+  "ejecutables": 3,
+  "cubiertos": 2,
+  "fallidos": 0,
+  "sin_verificar": 1
+ }
+}
