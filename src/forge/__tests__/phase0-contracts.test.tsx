@@ -101,7 +101,7 @@ describe("honest stubs", () => {
     expect((await submitForgeVerdict({ cellCode: "P2-06", kind: "mision", scope: "local" })).estado).not.toBe("acunado");
     expect(STUB_QUEUE_MOTIVO).toBe("el evaluador desplegado todavía no tiene la acción Forge");
     expect((await askSimulatedUser({ cellCode: "F1-03", itemId: "x", fase: "preguntas", question: "¿?" })).estado).toBe("sin-ia");
-  });
+  }, 30_000); // the port lazily imports use-actions when no runtime is bound
   // Phase 1 replaces the loader stubs (forge/p-plataforma, §22.4): while loaders.ts is still the Phase-0 stub it answers
   // «no descargado» or null; the real bodies are covered by books-loader.test.ts and banks-loader.test.ts.
   const loadersStillStub = readFileSync(join(process.cwd(), "src", "forge", "loaders.ts"), "utf8").includes("these bodies are STUBS");
