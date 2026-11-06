@@ -83,11 +83,14 @@ describe("lazy check registry", () => {
     const staticImports = src.split("\n").filter((l) => /^\s*import\s/.test(l) && !/^\s*import\s+type\s/.test(l));
     expect(staticImports, "un evaluador de Forge se importó de forma estática en check/registry.ts").toEqual([]);
   });
-  it("the 9 stub checks answer { disponible: false } and the 7 structural ones validate the fixtures", async () => {
+  it("the stub checks answer { disponible: false } and the real ones (7 structural + those Phase 1 replaced) validate the fixtures", async () => {
+    // Phase 1 replaces stubs file by file (§22.4): a check that is no longer the shared stub must validate its fixture.
+    const { stubCheck } = await import("@/forge/bank/check/_stub");
     for (const t of FORGE_TYPES) {
       const [item] = items(bankMd([BLOCKS[t]]));
-      const r = await (await CHECKS[t]()).check(item!, { source: "seed", jsRun: async () => ({ syntaxError: null, cases: [] }) });
-      if (["giro", "expediente", "entrevista", "gameday", "recuperacion", "senal", "prediccion"].includes(t)) expect(r, `el chequeo real de ${t} rechazó su fixture válido`).toEqual({ ok: true });
+      const mod = await CHECKS[t]();
+      const r = await mod.check(item!, { source: "seed", jsRun: async () => ({ syntaxError: null, cases: [] }) });
+      if (["giro", "expediente", "entrevista", "gameday", "recuperacion", "senal", "prediccion"].includes(t) || mod.check !== stubCheck) expect(r, `el chequeo real de ${t} rechazó su fixture válido`).toEqual({ ok: true });
       else expect(r).toEqual({ disponible: false });
     }
   });
