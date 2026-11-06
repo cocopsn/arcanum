@@ -29,6 +29,9 @@ export interface ForgeBankForAuthoring {
   valid: boolean;
   /** every item with the languages of ALL its code fences (any section) */
   items: readonly { id: string; langs: readonly string[] }[];
+  /** §9.2 pending rule (D11.5): ids of items whose ingestion check is still a stub (`{ disponible: false }`).
+   *  A bank with pending items passes ingestion but is never «Verificado». */
+  pendientes?: readonly string[];
 }
 
 /** content/forge/verification/<code>.json (format frozen by c0-build, §5.7): only what this needs. */
@@ -85,6 +88,7 @@ export function fichaComplete(cell: CellForAuthoring): boolean {
 function bankVerified(a: ForgeArtifacts): boolean {
   const b = a.bank;
   if (!b || !b.valid) return false;
+  if ((b.pendientes?.length ?? 0) > 0) return false;
   return executableItems(b).length > 0 && unverifiedItems(b, a.verification).length === 0;
 }
 
