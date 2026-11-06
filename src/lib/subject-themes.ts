@@ -6,7 +6,7 @@
 
 import type { CSSProperties } from "react";
 
-export type MotifId = "lattice" | "circuit" | "runes" | "cipher" | "default";
+export type MotifId = "lattice" | "circuit" | "runes" | "cipher" | "ontology" | "default";
 
 export interface WorldTheme {
   slug: string;
@@ -30,7 +30,71 @@ export interface WorldTheme {
   tagline: string;
   /** the realm's name — the temperature in one phrase */
   temper: string;
+  /** style the world's subtree overrides: custom properties (text, surfaces, rewards, fonts) plus `color` and
+   *  `fontFamily`, which must be declared again because `body` resolves them with the globals and descendants
+   *  inherit the computed value (Engineering Forge, design §14.2). No other theme declares it. */
+  vars?: Record<string, string>;
+  /** light variant of the reader and the Atlas; only the surfaces that offer the switch use it */
+  light?: WorldTheme;
+  /** the world admits no chromatic colour in its interface (monochrome code, no coloured glow) */
+  monochrome?: true;
 }
+
+// Engineering Forge (D4, «nada salmón, blanco negro carbón místico»): every value points at a --forge-* token of
+// tokens.css (the single source of values); globals.css mirrors the same assignments for body[data-world="forge"].
+const FORGE_DARK_VARS: Record<string, string> = {
+  "--ink": "var(--forge-void)",
+  "--ink-deep": "var(--forge-abyss)",
+  "--surface": "var(--forge-surface)",
+  "--surface-raised": "var(--forge-surface-raised)",
+  "--line": "var(--forge-line)",
+  "--line-soft": "rgba(255, 255, 255, 0.06)",
+  "--text": "var(--forge-text)",
+  "--text-muted": "var(--forge-text-muted)",
+  "--text-faint": "var(--forge-text-faint)",
+  "--topic": "var(--forge-text)",
+  "--topic-deep": "var(--forge-surface)",
+  "--gold": "var(--forge-text)",
+  "--gold-glow": "rgba(255, 255, 255, 0.25)",
+  "--amber": "var(--forge-text-muted)",
+  "--amber-glow": "rgba(255, 255, 255, 0.15)",
+  "--rank": "var(--forge-text)",
+  "--rank-soft": "rgba(255, 255, 255, 0.18)",
+  "--rank-glow": "rgba(255, 255, 255, 0.12)",
+  "--overlay-scrim": "rgba(0, 0, 0, 0.78)",
+  "--font-display": "var(--font-forge-sans)",
+  "--font-serif": "var(--font-forge-sans)",
+  "--font-sans": "var(--font-forge-sans)",
+  color: "var(--text)",
+  fontFamily: "var(--font-forge-sans), system-ui, sans-serif",
+};
+const FORGE_LIGHT_VARS: Record<string, string> = {
+  "--ink": "var(--forge-light-surface)",
+  "--ink-deep": "var(--forge-light-surface)",
+  "--surface": "var(--forge-light-bg)",
+  "--surface-raised": "var(--forge-light-surface)",
+  "--line": "var(--forge-light-line)",
+  "--line-soft": "rgba(30, 33, 36, 0.08)",
+  "--text": "var(--forge-light-text)",
+  "--text-muted": "var(--forge-light-text-muted)",
+  "--text-faint": "var(--forge-light-text-faint)",
+  "--topic": "var(--forge-light-text)",
+  "--topic-deep": "var(--forge-light-surface)",
+  "--gold": "var(--forge-light-text)",
+  "--gold-glow": "rgba(30, 33, 36, 0.12)",
+  "--amber": "var(--forge-light-text-muted)",
+  "--amber-glow": "rgba(30, 33, 36, 0.10)",
+  "--rank": "var(--forge-light-text)",
+  "--rank-soft": "rgba(30, 33, 36, 0.10)",
+  "--rank-glow": "rgba(30, 33, 36, 0.08)",
+  "--overlay-scrim": "rgba(255, 255, 255, 0.85)",
+  "--font-display": "var(--font-forge-sans)",
+  "--font-serif": "var(--font-forge-sans)",
+  "--font-sans": "var(--font-forge-sans)",
+  color: "var(--text)",
+  fontFamily: "var(--font-forge-sans), system-ui, sans-serif",
+};
+const FORGE_TAGLINE = "datos, decisiones y sistemas que aguantan la operación real";
 
 // Designed realms — the user's direction, not a generic template.
 export const SUBJECT_THEMES: Record<string, WorldTheme> = {
@@ -105,6 +169,38 @@ export const SUBJECT_THEMES: Record<string, WorldTheme> = {
     tagline: "reglas de negocio que esconden un patrón — bajo el reloj",
     temper: "El coliseo",
   },
+  // Engineering Forge — the operations room. Monochrome «carbón místico» (D4): white is the only accent; the
+  // mystique comes from atmosphere (grain, fog, moonlight, vignette, reticle), never from colour.
+  forge: {
+    slug: "forge",
+    accent: "#ffffff",
+    accent2: "#b9b9b9",
+    glow: "rgba(255, 255, 255, 0.10)",
+    bg: "#0a0a0b",
+    bg2: "#1e2124",
+    fog: "#2f3234",
+    motif: "ontology",
+    glyph: "↳",
+    tagline: FORGE_TAGLINE,
+    temper: "La sala de operaciones",
+    monochrome: true,
+    vars: FORGE_DARK_VARS,
+    light: {
+      slug: "forge",
+      accent: "#1e2124",
+      accent2: "#494a4b",
+      glow: "rgba(30, 33, 36, 0)",
+      bg: "#ffffff",
+      bg2: "#f3f3f3",
+      fog: "#f3f3f3",
+      motif: "ontology",
+      glyph: "↳",
+      tagline: FORGE_TAGLINE,
+      temper: "La sala de operaciones",
+      monochrome: true,
+      vars: FORGE_LIGHT_VARS,
+    },
+  },
 };
 
 const DEFAULT_THEME: WorldTheme = {
@@ -124,6 +220,8 @@ const DEFAULT_THEME: WorldTheme = {
 /** Resolve a realm from a goal title (tolerant substring match — derived from log state). */
 export function themeForGoal(title: string): WorldTheme {
   const t = title.toLowerCase();
+  // FIRST, so no older rule ("dato", "algorit"…) can claim it; only this title meets it (CA-01).
+  if (t.includes("engineering forge")) return SUBJECT_THEMES.forge!;
   if (t.includes("itc") || t.includes("dato") || t.includes("algorit")) return SUBJECT_THEMES.itc!;
   if (t.includes("fred") || t.includes("manufact") || t.includes("robot")) return SUBJECT_THEMES.fred!;
   if (t.includes("competit") || t.includes("icpc") || t.includes("cp")) return SUBJECT_THEMES.competitiva!;
@@ -141,5 +239,7 @@ export function worldVars(theme: WorldTheme): CSSProperties {
     ["--world-bg" as string]: theme.bg,
     ["--world-bg-2" as string]: theme.bg2,
     ["--world-fog" as string]: theme.fog,
+    // a world that overrides the globals inside its subtree (Engineering Forge); empty for every other theme
+    ...(theme.vars ?? {}),
   } as CSSProperties;
 }

@@ -1,0 +1,104 @@
+{
+  "maestro_sha10": "38cbc7da42",
+  "pilotos": [
+    {
+      "code": "P2-06",
+      "titulo": "Concurrencia: una acción válida puede competir con otra válida",
+      "campos": [
+        {
+          "etiqueta": "Pregunta inicial",
+          "texto": "dos operadores leen que queda un recurso y cada uno crea una reserva. Cada petición parece válida. ¿Qué condición global se rompió y dónde debería protegerse?"
+        },
+        {
+          "etiqueta": "Prerrequisitos",
+          "texto": "estados y transacciones de S1; acciones de P2-05. **Lectura esencial:** [CONSIST], secciones sobre atomicidad, write modes, conflict checks e isolation levels; [ACTION], sección de conflictos entre edits y datasource. La atomicidad de edits en la Ontology no incluye automáticamente un webhook externo. Estas distinciones deben verificarse en la versión disponible de la instancia."
+        },
+        {
+          "etiqueta": "Secuencia de aprendizaje propuesta",
+          "texto": "",
+          "items": [
+            "Reconstruye con lápiz un historial de dos transacciones. Marca lectura, validación, write y commit.",
+            "Estudia un ejemplo trabajado de doble reserva. Antes de cada explicación predice si se preserva el invariante.",
+            "Completa un ejemplo parcialmente resuelto que cambia el recurso compartido.",
+            "Reproduce el problema con dos clientes locales; adjunta trazas y resultados.",
+            "Ejecuta el equivalente en una instancia Foundry si está disponible. Registra aislamiento y modo de escritura en lugar de asumirlos.",
+            "Introduce un webhook que aplica una operación pero responde tarde. Rediseña estado pendiente y reconciliación.",
+            "Prueba una variación reservada con dos objetos diferentes que comparten una restricción de capacidad."
+          ]
+        },
+        {
+          "etiqueta": "Paquete mínimo",
+          "texto": "módulo de 4–6 secciones, tres trazas comentadas, seis ejercicios cortos, dos bugs sembrados y una misión. El material debe enseñar la diferencia entre conflicto de escritura y una regla de negocio de varios objetos, sin prometer que detectar el primero garantiza la segunda."
+        },
+        {
+          "etiqueta": "Evidencia de salida",
+          "texto": "reproducción inicial, tests, decisión de diseño, historial correcto y escenario que tu solución aún no cubre. La defensa pregunta: “Si las acciones editan objetos distintos, ¿qué protege el cupo compartido?”. No pasa responder “usa una transacción” sin analizar la garantía."
+        },
+        {
+          "etiqueta": "Retención",
+          "texto": "a los siete días, defender un caso de inventario; a las tres semanas, diagnosticar un timeout con resultado desconocido. Los intervalos son propuesta de programación, ajustables."
+        }
+      ]
+    },
+    {
+      "code": "S2-02",
+      "titulo": "Reintentos: responder rápido no basta",
+      "campos": [
+        {
+          "etiqueta": "Pregunta",
+          "texto": "enviaste una orden, hubo timeout y el cliente reintenta. ¿Tienes cero órdenes, una o dos? Tu sistema tiene que admitir que aún no lo sabe."
+        },
+        {
+          "etiqueta": "Fuentes",
+          "texto": "[RETRY], timeouts y backoff; [IDEMP], diseño de APIs idempotentes; [WEBHOOK], vínculo con integración de Foundry. El laboratorio local permite observar fallas de red sin depender de la plataforma."
+        },
+        {
+          "etiqueta": "Laboratorio original",
+          "texto": "un servicio registra una orden y luego simula perder la respuesta. El consumidor debe distinguir errores permanentes de transitorios, conservar un identificador de solicitud y limitar sus reintentos. Incluye cancelación, deadlines y observabilidad por intento."
+        },
+        {
+          "etiqueta": "Escalera de dificultad",
+          "texto": "fallo antes de recibir → fallo después de aplicar → respuesta tardía → solicitud repetida con payload incompatible → dos workers simultáneos → caída del consumidor entre confirmación y persistencia local. Cada variante obliga a revisar supuestos."
+        },
+        {
+          "etiqueta": "Criterios",
+          "texto": "una sola operación lógica bajo replay del conjunto de pruebas; conflicto de clave/payload visible; nada de loops infinitos; registro de intentos y estado desconocido; demostración del reconciliador. El número exacto de reintentos se escoge con presupuesto de latencia y política de la dependencia, no por una constante mágica."
+        },
+        {
+          "etiqueta": "Defensa",
+          "texto": "dibuja una secuencia, identifica una ventana de fallo y explica dónde termina la garantía. Un sistema idempotente no implica que todo el transporte sea exactly-once. Extensión: compara worker con cola, llamada síncrona y outbox local, explicitando qué componente se hace responsable del envío."
+        }
+      ]
+    },
+    {
+      "code": "F1-03",
+      "titulo": "Descomposición: el usuario pide un dashboard, tú descubres una decisión",
+      "campos": [
+        {
+          "etiqueta": "Brief",
+          "texto": "“Necesitamos visibilidad de las fallas de la planta”. No hay definición de falla, usuario primario ni plazo."
+        },
+        {
+          "etiqueta": "Fuentes",
+          "texto": "[USE], distinción entre un caso de uso y una implementación; [FDE], experiencia pública del rol; [DELTA], resultados y responsabilidad. Los ejercicios son propios, no preguntas oficiales de entrevista."
+        },
+        {
+          "etiqueta": "Sesión",
+          "texto": "diez minutos de preguntas al usuario simulado, diez de estructuración y diez de defensa. El evaluador conserva información que solo revela ante preguntas pertinentes: las alarmas existentes son demasiado frecuentes, mantenimiento usa otra identificación de activos y el jefe quiere datos agregados mientras el operador necesita una acción inmediata."
+        },
+        {
+          "etiqueta": "Entregable",
+          "texto": "una página que identifique quién decide, qué información necesita, cómo actuaría, qué indicador mostraría mejora y qué evidencia invalidaría tu solución. Después, un modelo mínimo de objetos y una vertical de implementación secuenciada."
+        },
+        {
+          "etiqueta": "Variación",
+          "texto": "a mitad de la defensa se elimina una fuente. Debes preservar la utilidad posible y declarar lo que ya no puedes sostener. No se premia fingir certeza ni construir antes de haber identificado el problema."
+        },
+        {
+          "etiqueta": "Criterio",
+          "texto": "preguntas que cambian el diseño, supuestos visibles, arquitectura proporcional, primera entrega útil y comunicación clara. Las preguntas de negocio cuentan tanto como las técnicas cuando cambian qué debes construir."
+        }
+      ]
+    }
+  ]
+}

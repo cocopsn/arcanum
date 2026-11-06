@@ -1,0 +1,510 @@
+{
+  "v": 1,
+  "slug": "p3",
+  "code": "P3",
+  "name": "P3 · Aplicaciones, funciones y experiencia operacional",
+  "family": "Plataforma Foundry/AIP",
+  "header": {
+    "entrada": "P2-05; F0-04.",
+    "entradaRecomendada": [
+      "P2-05",
+      "F0-04"
+    ],
+    "evidencia": "Aplicación, flujo de tarea, tests y observación de uso; distinguir mocks de instancia real.",
+    "apoyo": [
+      {
+        "clave": "C-17",
+        "etiqueta": "Ontologize: tutoriales",
+        "url": "https://www.ontologize.com/tutorials",
+        "tipo": "curso",
+        "acceso": "publico"
+      }
+    ]
+  },
+  "cells": [
+    {
+      "code": "P3-01",
+      "id": "cf000000-0000-4000-8000-0050332d3031",
+      "title": "P3-01 · Workshop: una decisión por pantalla",
+      "cls": "ruta",
+      "flujo": "mision",
+      "compuerta": "mision",
+      "ficha": {
+        "foco": "Workshop: una decisión por pantalla.",
+        "fuentes": [
+          {
+            "clave": "WORK",
+            "etiqueta": "Workshop • Getting started • Palantir",
+            "url": "https://www.palantir.com/docs/foundry/workshop/getting-started",
+            "tipo": "docs",
+            "acceso": "publico"
+          }
+        ],
+        "mision": "Construye una bandeja de trabajo con contexto, decisión y acción.",
+        "defensa": "Justifica qué debe ver primero un operador bajo presión."
+      },
+      "gate": {
+        "pregunta": "Justifica qué debe ver primero un operador bajo presión.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Producto ≥ 3: Justifica qué debe ver primero un operador bajo presión.",
+          "Correctitud (condición crítica): Justifica qué debe ver primero un operador bajo presión."
+        ]
+      },
+      "capacidades": [
+        "producto"
+      ],
+      "rastroCapacidades": {
+        "producto": "Justifica qué debe ver primero un operador bajo presión."
+      },
+      "criticas": [
+        {
+          "id": "correctitud",
+          "texto": "Correctitud",
+          "rastro": "Justifica qué debe ver primero un operador bajo presión."
+        }
+      ],
+      "naturaleza": {
+        "valor": "a_mano"
+      },
+      "alcance": "local+nativa",
+      "etiquetas": []
+    },
+    {
+      "code": "P3-02",
+      "id": "cf000000-0000-4000-8000-0050332d3032",
+      "title": "P3-02 · Variables, eventos y estados",
+      "cls": "ruta",
+      "flujo": "mision",
+      "compuerta": "mision",
+      "ficha": {
+        "foco": "Variables, eventos y estados.",
+        "fuentes": [
+          {
+            "clave": "VARS",
+            "etiqueta": "Workshop • Core concepts • Variables • Palantir",
+            "url": "https://www.palantir.com/docs/foundry/workshop/concepts-variables",
+            "tipo": "docs",
+            "acceso": "publico"
+          },
+          {
+            "clave": "EVENTS",
+            "etiqueta": "Workshop • Core concepts • Events • Palantir",
+            "url": "https://www.palantir.com/docs/foundry/workshop/concepts-events",
+            "tipo": "docs",
+            "acceso": "publico"
+          }
+        ],
+        "mision": "Implementa selección, filtros y navegación sin estados inconsistentes.",
+        "defensa": "Reproduce un cambio de selección durante una actualización de datos."
+      },
+      "gate": {
+        "pregunta": "Reproduce un cambio de selección durante una actualización de datos.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Producto ≥ 3: Implementa selección, filtros y navegación sin estados inconsistentes.",
+          "Datos ≥ 3: Reproduce un cambio de selección durante una actualización de datos.",
+          "Responsabilidad ≥ 3: Reproduce un cambio de selección durante una actualización de datos.",
+          "Consistencia (condición crítica): Implementa selección, filtros y navegación sin estados inconsistentes."
+        ]
+      },
+      "capacidades": [
+        "producto",
+        "datos",
+        "responsabilidad"
+      ],
+      "rastroCapacidades": {
+        "producto": "Implementa selección, filtros y navegación sin estados inconsistentes.",
+        "datos": "Reproduce un cambio de selección durante una actualización de datos.",
+        "responsabilidad": "Reproduce un cambio de selección durante una actualización de datos."
+      },
+      "criticas": [
+        {
+          "id": "consistencia",
+          "texto": "Consistencia",
+          "rastro": "Implementa selección, filtros y navegación sin estados inconsistentes."
+        }
+      ],
+      "naturaleza": {
+        "valor": "a_mano"
+      },
+      "alcance": "local+nativa",
+      "etiquetas": []
+    },
+    {
+      "code": "P3-03",
+      "id": "cf000000-0000-4000-8000-0050332d3033",
+      "title": "P3-03 · Funciones de dominio",
+      "cls": "ruta",
+      "flujo": "mision",
+      "compuerta": "mision",
+      "ficha": {
+        "foco": "Funciones de dominio.",
+        "fuentes": [
+          {
+            "clave": "FUN",
+            "etiqueta": "Functions • Overview • Palantir",
+            "url": "https://www.palantir.com/docs/foundry/functions/overview",
+            "tipo": "docs",
+            "acceso": "publico"
+          },
+          {
+            "clave": "TSUP",
+            "etiqueta": "Functions • Feature support by language • Palantir",
+            "url": "https://www.palantir.com/docs/foundry/functions/language-feature-support",
+            "tipo": "docs",
+            "acceso": "publico"
+          }
+        ],
+        "mision": "Implementa una regla no trivial con entradas, errores y pruebas claras.",
+        "defensa": "Compara alternativas de lenguaje y runtime según soporte real."
+      },
+      "gate": {
+        "pregunta": "Compara alternativas de lenguaje y runtime según soporte real.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Producto ≥ 3: Implementa una regla no trivial con entradas, errores y pruebas claras.",
+          "Correctitud (condición crítica): Implementa una regla no trivial con entradas, errores y pruebas claras."
+        ]
+      },
+      "capacidades": [
+        "producto"
+      ],
+      "rastroCapacidades": {
+        "producto": "Implementa una regla no trivial con entradas, errores y pruebas claras."
+      },
+      "criticas": [
+        {
+          "id": "correctitud",
+          "texto": "Correctitud",
+          "rastro": "Implementa una regla no trivial con entradas, errores y pruebas claras."
+        }
+      ],
+      "naturaleza": {
+        "valor": "a_mano"
+      },
+      "alcance": "local+nativa",
+      "etiquetas": []
+    },
+    {
+      "code": "P3-04",
+      "id": "cf000000-0000-4000-8000-0050332d3034",
+      "title": "P3-04 · OSDK y cliente tipado",
+      "cls": "ruta",
+      "flujo": "mision",
+      "compuerta": "mision",
+      "ficha": {
+        "foco": "OSDK y cliente tipado.",
+        "fuentes": [
+          {
+            "clave": "OSDK",
+            "etiqueta": "Ontology SDK • Overview • Palantir",
+            "url": "https://www.palantir.com/docs/foundry/ontology-sdk",
+            "tipo": "docs",
+            "acceso": "publico"
+          },
+          {
+            "clave": "TS",
+            "etiqueta": "Ontology SDK • TypeScript OSDK • Palantir",
+            "url": "https://www.palantir.com/docs/foundry/ontology-sdk/typescript-osdk",
+            "tipo": "docs",
+            "acceso": "publico"
+          }
+        ],
+        "mision": "Construye una aplicación TypeScript que consulta objetos y ejecuta una acción.",
+        "defensa": "Explica identidad del usuario, autenticación y permisos efectivos."
+      },
+      "gate": {
+        "pregunta": "Explica identidad del usuario, autenticación y permisos efectivos.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Producto ≥ 3: OSDK y cliente tipado.",
+          "Datos ≥ 3: Construye una aplicación TypeScript que consulta objetos y ejecuta una acción.",
+          "Comunicación ≥ 3: Explica identidad del usuario, autenticación y permisos efectivos.",
+          "Identidad (condición crítica): Explica identidad del usuario, autenticación y permisos efectivos.",
+          "Autorización (condición crítica): Explica identidad del usuario, autenticación y permisos efectivos."
+        ]
+      },
+      "capacidades": [
+        "producto",
+        "datos",
+        "comunicacion"
+      ],
+      "rastroCapacidades": {
+        "producto": "OSDK y cliente tipado.",
+        "datos": "Construye una aplicación TypeScript que consulta objetos y ejecuta una acción.",
+        "comunicacion": "Explica identidad del usuario, autenticación y permisos efectivos."
+      },
+      "criticas": [
+        {
+          "id": "identidad",
+          "texto": "Identidad",
+          "rastro": "Explica identidad del usuario, autenticación y permisos efectivos."
+        },
+        {
+          "id": "autorizacion",
+          "texto": "Autorización",
+          "rastro": "Explica identidad del usuario, autenticación y permisos efectivos."
+        }
+      ],
+      "naturaleza": {
+        "valor": "a_mano"
+      },
+      "alcance": "local+nativa",
+      "etiquetas": []
+    },
+    {
+      "code": "P3-05",
+      "id": "cf000000-0000-4000-8000-0050332d3035",
+      "title": "P3-05 · Tests con OSDK",
+      "cls": "ruta",
+      "flujo": "mision",
+      "compuerta": "mision",
+      "ficha": {
+        "foco": "Tests con OSDK.",
+        "fuentes": [
+          {
+            "clave": "MOCK",
+            "etiqueta": "Ontology SDK • Unit testing TypeScript OSDK code • Palantir",
+            "url": "https://www.palantir.com/docs/foundry/ontology-sdk/typescript-osdk-testing",
+            "tipo": "docs",
+            "acceso": "publico"
+          }
+        ],
+        "mision": "Prueba el cliente con mocks y añade una comprobación contra una instancia.",
+        "defensa": "No presentes el mock como evidencia de autorización real."
+      },
+      "gate": {
+        "pregunta": "No presentes el mock como evidencia de autorización real.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Producto ≥ 3: Prueba el cliente con mocks y añade una comprobación contra una instancia.",
+          "Correctitud (condición crítica): Tests con OSDK.",
+          "Autorización (condición crítica): No presentes el mock como evidencia de autorización real."
+        ]
+      },
+      "capacidades": [
+        "producto"
+      ],
+      "rastroCapacidades": {
+        "producto": "Prueba el cliente con mocks y añade una comprobación contra una instancia."
+      },
+      "criticas": [
+        {
+          "id": "correctitud",
+          "texto": "Correctitud",
+          "rastro": "Tests con OSDK."
+        },
+        {
+          "id": "autorizacion",
+          "texto": "Autorización",
+          "rastro": "No presentes el mock como evidencia de autorización real."
+        }
+      ],
+      "naturaleza": {
+        "valor": "a_mano"
+      },
+      "alcance": "local+nativa",
+      "etiquetas": []
+    },
+    {
+      "code": "P3-06",
+      "id": "cf000000-0000-4000-8000-0050332d3036",
+      "title": "P3-06 · Automate y prevención de ciclos",
+      "cls": "ruta",
+      "flujo": "mision",
+      "compuerta": "mision",
+      "ficha": {
+        "foco": "Automate y prevención de ciclos.",
+        "fuentes": [
+          {
+            "clave": "AUTO",
+            "etiqueta": "Automate • Overview • Palantir",
+            "url": "https://www.palantir.com/docs/foundry/automate/overview",
+            "tipo": "docs",
+            "acceso": "publico"
+          },
+          {
+            "clave": "ACON",
+            "etiqueta": "Automate • Condition • Object set conditions • Palantir",
+            "url": "https://www.palantir.com/docs/foundry/automate/condition-objects",
+            "tipo": "docs",
+            "acceso": "publico"
+          },
+          {
+            "clave": "FREQ",
+            "etiqueta": "Automate • Settings • Evaluation frequency • Palantir",
+            "url": "https://www.palantir.com/docs/foundry/automate/evaluation-frequency",
+            "tipo": "docs",
+            "acceso": "publico"
+          }
+        ],
+        "mision": "Configura condición, efecto y recuperación; introduce una condición que rebota.",
+        "defensa": "Controla repeticiones, concurrencia y escaladas sin loops de acciones."
+      },
+      "gate": {
+        "pregunta": "Controla repeticiones, concurrencia y escaladas sin loops de acciones.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Producto ≥ 3: Configura condición, efecto y recuperación; introduce una condición que rebota.",
+          "Sistemas ≥ 3: Controla repeticiones, concurrencia y escaladas sin loops de acciones.",
+          "Responsabilidad ≥ 3: Configura condición, efecto y recuperación;",
+          "Consistencia (condición crítica): Controla repeticiones, concurrencia y escaladas sin loops de acciones.",
+          "Recuperación (condición crítica): Configura condición, efecto y recuperación;"
+        ]
+      },
+      "capacidades": [
+        "producto",
+        "sistemas",
+        "responsabilidad"
+      ],
+      "rastroCapacidades": {
+        "producto": "Configura condición, efecto y recuperación; introduce una condición que rebota.",
+        "sistemas": "Controla repeticiones, concurrencia y escaladas sin loops de acciones.",
+        "responsabilidad": "Configura condición, efecto y recuperación;"
+      },
+      "criticas": [
+        {
+          "id": "consistencia",
+          "texto": "Consistencia",
+          "rastro": "Controla repeticiones, concurrencia y escaladas sin loops de acciones."
+        },
+        {
+          "id": "recuperacion",
+          "texto": "Recuperación",
+          "rastro": "Configura condición, efecto y recuperación;"
+        }
+      ],
+      "naturaleza": {
+        "valor": "a_mano"
+      },
+      "alcance": "local+nativa",
+      "etiquetas": []
+    },
+    {
+      "code": "P3-07",
+      "id": "cf000000-0000-4000-8000-0050332d3037",
+      "title": "P3-07 · Series temporales y diagnóstico",
+      "cls": "ruta",
+      "flujo": "mision",
+      "compuerta": "mision",
+      "ficha": {
+        "foco": "Series temporales y diagnóstico.",
+        "fuentes": [
+          {
+            "clave": "TIME",
+            "etiqueta": "Time series • Overview • Palantir",
+            "url": "https://www.palantir.com/docs/foundry/time-series/time-series-overview",
+            "tipo": "docs",
+            "acceso": "publico"
+          },
+          {
+            "clave": "VERTEX",
+            "etiqueta": "Vertex • Overview • Palantir",
+            "url": "https://www.palantir.com/docs/foundry/vertex/overview",
+            "tipo": "docs",
+            "acceso": "publico"
+          }
+        ],
+        "mision": "Construye una vista de fallas con eventos y series de sensores sintéticos.",
+        "defensa": "Separa correlación temporal de evidencia causal."
+      },
+      "gate": {
+        "pregunta": "Separa correlación temporal de evidencia causal.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Producto ≥ 3: Construye una vista de fallas con eventos y series de sensores sintéticos.",
+          "Responsabilidad ≥ 3: Construye una vista de fallas con eventos y series de sensores sintéticos.",
+          "Correctitud (condición crítica): Separa correlación temporal de evidencia causal."
+        ]
+      },
+      "capacidades": [
+        "producto",
+        "responsabilidad"
+      ],
+      "rastroCapacidades": {
+        "producto": "Construye una vista de fallas con eventos y series de sensores sintéticos.",
+        "responsabilidad": "Construye una vista de fallas con eventos y series de sensores sintéticos."
+      },
+      "criticas": [
+        {
+          "id": "correctitud",
+          "texto": "Correctitud",
+          "rastro": "Separa correlación temporal de evidencia causal."
+        }
+      ],
+      "naturaleza": {
+        "valor": "a_mano"
+      },
+      "alcance": "local+nativa",
+      "etiquetas": []
+    },
+    {
+      "code": "P3-08",
+      "id": "cf000000-0000-4000-8000-0050332d3038",
+      "title": "P3-08 · Aplicación usable y transferible",
+      "cls": "ruta",
+      "flujo": "mision",
+      "compuerta": "mision",
+      "ficha": {
+        "foco": "Aplicación usable y transferible.",
+        "fuentes": [
+          {
+            "clave": "WORK",
+            "etiqueta": "Workshop • Getting started • Palantir",
+            "url": "https://www.palantir.com/docs/foundry/workshop/getting-started",
+            "tipo": "docs",
+            "acceso": "publico"
+          },
+          {
+            "clave": "USE",
+            "etiqueta": "Use case lifecycle • Overview • Palantir",
+            "url": "https://www.palantir.com/docs/foundry/use-case-life-cycle/overview",
+            "tipo": "docs",
+            "acceso": "publico"
+          }
+        ],
+        "mision": "Entrega una demo a un usuario; observa errores y corrige el flujo.",
+        "defensa": "Mide una tarea completada y redacta un handoff que otro pueda seguir."
+      },
+      "gate": {
+        "pregunta": "Mide una tarea completada y redacta un handoff que otro pueda seguir.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Producto ≥ 3: Entrega una demo a un usuario;",
+          "Comunicación ≥ 3: Entrega una demo a un usuario;",
+          "Correctitud (condición crítica): Mide una tarea completada y redacta un handoff que otro pueda seguir."
+        ]
+      },
+      "capacidades": [
+        "producto",
+        "comunicacion"
+      ],
+      "rastroCapacidades": {
+        "producto": "Entrega una demo a un usuario;",
+        "comunicacion": "Entrega una demo a un usuario;"
+      },
+      "criticas": [
+        {
+          "id": "correctitud",
+          "texto": "Correctitud",
+          "rastro": "Mide una tarea completada y redacta un handoff que otro pueda seguir."
+        }
+      ],
+      "naturaleza": {
+        "valor": "a_mano"
+      },
+      "alcance": "local+nativa",
+      "etiquetas": []
+    }
+  ],
+  "maestro_sha10": "38cbc7da42"
+}

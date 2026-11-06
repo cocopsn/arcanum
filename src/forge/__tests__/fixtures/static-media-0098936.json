@@ -1,0 +1,119 @@
+{
+    "head":  "0098936",
+    "source":  "D:\\projects\\arcanum-forge\\.next (BUILD_ID 4C4eUEzEy4tbgDqie1Ets, built 2026-11-05 23:51 on HEAD 0098936, worktree clean)",
+    "media":  [
+                  {
+                      "name":  "062340a5902d57de-s.woff2",
+                      "bytes":  33932
+                  },
+                  {
+                      "name":  "1fc9a8acda3903f0-s.woff2",
+                      "bytes":  7536
+                  },
+                  {
+                      "name":  "2913b528b2922316-s.woff2",
+                      "bytes":  19868
+                  },
+                  {
+                      "name":  "29e4af7482351bce-s.woff2",
+                      "bytes":  8904
+                  },
+                  {
+                      "name":  "2a7c45462b39533e-s.woff2",
+                      "bytes":  9100
+                  },
+                  {
+                      "name":  "3926fa88ed32c251-s.woff2",
+                      "bytes":  7512
+                  },
+                  {
+                      "name":  "3955bbd902881c26-s.woff2",
+                      "bytes":  3716
+                  },
+                  {
+                      "name":  "48b76bf2200d991e-s.woff2",
+                      "bytes":  3680
+                  },
+                  {
+                      "name":  "4c7c43bdd7a35c63-s.p.woff2",
+                      "bytes":  10040
+                  },
+                  {
+                      "name":  "548b5aa0a10194aa-s.woff2",
+                      "bytes":  10936
+                  },
+                  {
+                      "name":  "6681946d7a6ccbb7-s.p.woff2",
+                      "bytes":  9944
+                  },
+                  {
+                      "name":  "69e44c27a0558172-s.woff2",
+                      "bytes":  11476
+                  },
+                  {
+                      "name":  "7b750d5bfef15842-s.woff2",
+                      "bytes":  3720
+                  },
+                  {
+                      "name":  "84f090e3b62fb9e3-s.p.woff2",
+                      "bytes":  9868
+                  },
+                  {
+                      "name":  "8d541ca8617572f0-s.woff2",
+                      "bytes":  7288
+                  },
+                  {
+                      "name":  "a273567b21a7c318-s.p.woff2",
+                      "bytes":  25888
+                  },
+                  {
+                      "name":  "af2852512783d6fe-s.woff2",
+                      "bytes":  113756
+                  },
+                  {
+                      "name":  "b497598118275079-s.woff2",
+                      "bytes":  14536
+                  },
+                  {
+                      "name":  "b7d7f401753dc0c4-s.woff2",
+                      "bytes":  9024
+                  },
+                  {
+                      "name":  "c3206c67a3393998-s.woff2",
+                      "bytes":  3724
+                  },
+                  {
+                      "name":  "c43ef54631c6ad3c-s.woff2",
+                      "bytes":  7012
+                  },
+                  {
+                      "name":  "c679f70df756412c-s.p.woff2",
+                      "bytes":  44172
+                  },
+                  {
+                      "name":  "d63e13930677f53f-s.woff2",
+                      "bytes":  25968
+                  },
+                  {
+                      "name":  "e6fd32ec5acdd27d-s.p.woff2",
+                      "bytes":  9728
+                  },
+                  {
+                      "name":  "f6d84cc3be9d6158-s.woff2",
+                      "bytes":  9044
+                  }
+              ],
+    "css":  [
+                {
+                    "name":  "c0e487a75317929d.css",
+                    "bytes":  15757
+                },
+                {
+                    "name":  "cd1d269c9e9b3451.css",
+                    "bytes":  43605
+                }
+            ],
+    "mediaCount":  25,
+    "mediaBytes":  420372,
+    "cssBytes":  59362
+}

@@ -1,5 +1,11 @@
 import { makeEvent, type ArcanumEvent } from "@/core/event";
 import { SPINES, pathIdForCell } from "@/lib/spines";
+import { FORGE_SEED_EVENTS } from "@/forge/seed";
+
+// The two POSITIONAL constructors below number their events by walking the spines in order. A world that seeds
+// itself in its own block (Engineering Forge, `ownSeedBlock`) is skipped here, so for every older world the result
+// is byte-identical (seed-frozen.test.ts) and the new world never shifts a shipped id (RD-4).
+const POSITIONAL_SPINES = SPINES.filter((s) => !s.ownSeedBlock);
 
 // Day-0 seed: the THREE CURRICULAR SPINES (WHITE ROOM) as the roadmap DAG. Each goal
 // is a spine; each cell is a module; course order is the dependency (a linear chain →
@@ -16,7 +22,7 @@ const fixedId = () => `b0000000-0000-4000-8000-${String(++seq).padStart(12, "0")
 
 function buildSeed(): ArcanumEvent[] {
   const events: ArcanumEvent[] = [];
-  for (const sp of SPINES) {
+  for (const sp of POSITIONAL_SPINES) {
     events.push(
       makeEvent(
         "goal.upserted",
@@ -62,7 +68,7 @@ const pathId = () => `b1000000-0000-4000-8000-${String(++pseq).padStart(12, "0")
 function buildPaths(): ArcanumEvent[] {
   const events: ArcanumEvent[] = [];
   let t = TS + 1_000_000; // strictly after the original block
-  for (const sp of SPINES) {
+  for (const sp of POSITIONAL_SPINES) {
     sp.paths.forEach((p, i) => {
       events.push(
         makeEvent(
@@ -185,7 +191,14 @@ function buildOperativoExtension(): ArcanumEvent[] {
 // Folder books do NOT create roadmap cells — a book ANCHORS to an existing cell for reading (resolved by
 // its slug/UUID handle, lib/cell-slugs.ts) or stays LOOSE. The seed carries the spines + paths + the
 // curated Operativo track; the books live in the Dexie reader store (lib/seed-books.ts), never the log.
-export const SEED_EVENTS: ArcanumEvent[] = [...buildSeed(), ...buildPaths(), ...buildOperativoSeed(), ...buildOperativoExtension()];
+export const SEED_EVENTS: ArcanumEvent[] = [
+  ...buildSeed(),
+  ...buildPaths(),
+  ...buildOperativoSeed(),
+  ...buildOperativoExtension(),
+  // Engineering Forge: its own appended block (b5000000-, ts from 2026-11-05T18:00:00Z), design §4.2
+  ...FORGE_SEED_EVENTS,
+];
 
 /** ITC spine + its first cell (CS50 ramp) — stable refs for tests/dispatch. */
 export const SEED_GOAL_ID = SPINES[0]!.goalId;

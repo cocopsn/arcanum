@@ -42,7 +42,9 @@ afterEach(async () => {
   await dbB.delete();
 });
 
-describe("sync loop — two devices", () => {
+// The day-0 seed grew by the 296 events of Engineering Forge's own block; hydrating and syncing it on two
+// fake-indexeddb devices takes ~5 s on a loaded machine, so this suite gets an explicit budget.
+describe("sync loop — two devices", { timeout: 30_000 }, () => {
   it("event on A appears on B after sync, with deterministic re-fold on both", async () => {
     const server = new FakeServer();
     const A = createArcanumStore(dbA);

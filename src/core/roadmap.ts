@@ -15,6 +15,8 @@ export function prereqsOf(moduleId: string, edges: Edge[]): string[] {
  * the next cell). Derived; idempotent under re-fold.
  */
 export function isMastered(m: ModuleRM): boolean {
+  // A DIAGNOSTIC cell (Engineering Forge D1–D8) records observations: it is never mastered (RF-M6).
+  if (m.kind === "diagnostic") return false;
   // A heavy MISSION cell is mastered ONLY by passing its adversarial interrogation
   // (gate.evaluated → gatePassed). Completing it or clearing a firetest must NOT
   // bypass the directed loop — the block on the next node is real, derived from the
@@ -70,6 +72,8 @@ export function nodeStatus(m: ModuleRM, edges: Edge[], byId: Map<string, ModuleR
   // A mission cell reads "completed" (✓) ONLY when its interrogation actually passed — a bare
   // module.completed must never paint a ✓ on a mission whose gate is still closed (it doesn't
   // lift the block, so showing it as done would be a placebo). Non-mission cells unchanged.
+  // A diagnostic cell never reads "completed": a module.completed there is shown as "available".
+  if (m.kind === "diagnostic") return m.status === "started" ? "started" : isRevealed(m.id, edges, byId) ? "available" : "sealed";
   if (m.status === "completed" && (m.kind !== "mission" || m.gatePassed)) return "completed";
   if (m.status === "started") return "started";
   // A node you've proven (firetest cleared the bar) surfaces itself, not just its
