@@ -9,23 +9,44 @@
  },
  "items": [
   {
+   "id": "a1-08-desv-pago",
+   "tipo": "desvanecido",
+   "lenguaje": "javascript",
+   "resultado": "paso",
+   "ms": 333
+  },
+  {
    "id": "a1-08-code-monedas",
    "tipo": "code",
    "lenguaje": "javascript",
    "resultado": "paso",
-   "ms": 3
+   "ms": 164
   },
   {
    "id": "a1-08-code-monedas",
    "tipo": "code",
    "lenguaje": "python",
    "resultado": "paso",
-   "ms": 60
+   "ms": 277
+  },
+  {
+   "id": "a1-08-ret-formas",
+   "tipo": "retencion",
+   "lenguaje": "javascript",
+   "resultado": "paso",
+   "ms": 349
+  },
+  {
+   "id": "a1-08-ret-formas",
+   "tipo": "retencion",
+   "lenguaje": "python",
+   "resultado": "paso",
+   "ms": 263
   }
  ],
  "resumen": {
-  "ejecutables": 2,
-  "cubiertos": 2,
+  "ejecutables": 5,
+  "cubiertos": 5,
   "fallidos": 0,
   "sin_verificar": 0
  }

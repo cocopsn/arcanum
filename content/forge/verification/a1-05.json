@@ -9,23 +9,30 @@
  },
  "items": [
   {
+   "id": "a1-05-desv-cola",
+   "tipo": "desvanecido",
+   "lenguaje": "javascript",
+   "resultado": "paso",
+   "ms": 11
+  },
+  {
    "id": "a1-05-code-topk",
    "tipo": "code",
    "lenguaje": "javascript",
    "resultado": "paso",
-   "ms": 3
+   "ms": 332
   },
   {
    "id": "a1-05-code-topk",
    "tipo": "code",
    "lenguaje": "python",
    "resultado": "paso",
-   "ms": 79
+   "ms": 285
   }
  ],
  "resumen": {
-  "ejecutables": 2,
-  "cubiertos": 2,
+  "ejecutables": 3,
+  "cubiertos": 3,
   "fallidos": 0,
   "sin_verificar": 0
  }

@@ -13,14 +13,14 @@
    "tipo": "code",
    "lenguaje": "javascript",
    "resultado": "paso",
-   "ms": 4
+   "ms": 32
   },
   {
    "id": "a2-08-code-frecuentes",
    "tipo": "code",
    "lenguaje": "python",
    "resultado": "paso",
-   "ms": 82
+   "ms": 108
   },
   {
    "id": "a2-08-sql-categorias",
@@ -35,14 +35,14 @@
    "tipo": "code",
    "lenguaje": "javascript",
    "resultado": "paso",
-   "ms": 4
+   "ms": 89
   },
   {
    "id": "a2-08-code-mediana",
    "tipo": "code",
    "lenguaje": "python",
    "resultado": "paso",
-   "ms": 76
+   "ms": 247
   }
  ],
  "resumen": {

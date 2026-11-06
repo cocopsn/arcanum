@@ -9,23 +9,44 @@
  },
  "items": [
   {
+   "id": "a1-03-desv-ventana",
+   "tipo": "desvanecido",
+   "lenguaje": "javascript",
+   "resultado": "paso",
+   "ms": 431
+  },
+  {
    "id": "a1-03-code-siguiente-mayor",
    "tipo": "code",
    "lenguaje": "javascript",
    "resultado": "paso",
-   "ms": 3
+   "ms": 391
   },
   {
    "id": "a1-03-code-siguiente-mayor",
    "tipo": "code",
    "lenguaje": "python",
    "resultado": "paso",
-   "ms": 157
+   "ms": 591
+  },
+  {
+   "id": "a1-03-ret-minimo",
+   "tipo": "retencion",
+   "lenguaje": "javascript",
+   "resultado": "paso",
+   "ms": 752
+  },
+  {
+   "id": "a1-03-ret-minimo",
+   "tipo": "retencion",
+   "lenguaje": "python",
+   "resultado": "paso",
+   "ms": 515
   }
  ],
  "resumen": {
-  "ejecutables": 2,
-  "cubiertos": 2,
+  "ejecutables": 5,
+  "cubiertos": 5,
   "fallidos": 0,
   "sin_verificar": 0
  }

@@ -9,6 +9,13 @@
  },
  "items": [
   {
+   "id": "a1-02-desv-faltantes",
+   "tipo": "desvanecido",
+   "lenguaje": "javascript",
+   "resultado": "paso",
+   "ms": 716
+  },
+  {
    "id": "a1-02-forense-dedupe",
    "tipo": "forense",
    "lenguaje": "sql",
@@ -21,19 +28,19 @@
    "tipo": "code",
    "lenguaje": "javascript",
    "resultado": "paso",
-   "ms": 3
+   "ms": 741
   },
   {
    "id": "a1-02-code-conciliar",
    "tipo": "code",
    "lenguaje": "python",
    "resultado": "paso",
-   "ms": 65
+   "ms": 506
   }
  ],
  "resumen": {
-  "ejecutables": 3,
-  "cubiertos": 2,
+  "ejecutables": 4,
+  "cubiertos": 3,
   "fallidos": 0,
   "sin_verificar": 1
  }

@@ -9,23 +9,44 @@
  },
  "items": [
   {
+   "id": "a1-06-desv-kahn",
+   "tipo": "desvanecido",
+   "lenguaje": "javascript",
+   "resultado": "paso",
+   "ms": 201
+  },
+  {
    "id": "a1-06-code-ciclo",
    "tipo": "code",
    "lenguaje": "javascript",
    "resultado": "paso",
-   "ms": 3
+   "ms": 398
   },
   {
    "id": "a1-06-code-ciclo",
    "tipo": "code",
    "lenguaje": "python",
    "resultado": "paso",
-   "ms": 50
+   "ms": 454
+  },
+  {
+   "id": "a1-06-ret-menor-orden",
+   "tipo": "retencion",
+   "lenguaje": "javascript",
+   "resultado": "paso",
+   "ms": 141
+  },
+  {
+   "id": "a1-06-ret-menor-orden",
+   "tipo": "retencion",
+   "lenguaje": "python",
+   "resultado": "paso",
+   "ms": 383
   }
  ],
  "resumen": {
-  "ejecutables": 2,
-  "cubiertos": 2,
+  "ejecutables": 5,
+  "cubiertos": 5,
   "fallidos": 0,
   "sin_verificar": 0
  }

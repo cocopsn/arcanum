@@ -9,6 +9,13 @@
  },
  "items": [
   {
+   "id": "a1-07-desv-intervalos",
+   "tipo": "desvanecido",
+   "lenguaje": "javascript",
+   "resultado": "paso",
+   "ms": 421
+  },
+  {
    "id": "a1-07-contra-corto",
    "tipo": "contraejemplo",
    "lenguaje": "javascript",
@@ -21,14 +28,14 @@
    "tipo": "code",
    "lenguaje": "javascript",
    "resultado": "paso",
-   "ms": 4
+   "ms": 240
   },
   {
    "id": "a1-07-code-dijkstra",
    "tipo": "code",
    "lenguaje": "python",
    "resultado": "paso",
-   "ms": 83
+   "ms": 274
   },
   {
    "id": "a1-07-mut-greedy",
@@ -40,8 +47,8 @@
   }
  ],
  "resumen": {
-  "ejecutables": 4,
-  "cubiertos": 2,
+  "ejecutables": 5,
+  "cubiertos": 3,
   "fallidos": 0,
   "sin_verificar": 2
  }

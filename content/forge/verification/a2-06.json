@@ -13,28 +13,28 @@
    "tipo": "code",
    "lenguaje": "javascript",
    "resultado": "paso",
-   "ms": 3
+   "ms": 235
   },
   {
    "id": "a2-06-code-paginar",
    "tipo": "code",
    "lenguaje": "python",
    "resultado": "paso",
-   "ms": 84
+   "ms": 344
   },
   {
    "id": "a2-06-code-dia",
    "tipo": "code",
    "lenguaje": "javascript",
    "resultado": "paso",
-   "ms": 4
+   "ms": 203
   },
   {
    "id": "a2-06-code-dia",
    "tipo": "code",
    "lenguaje": "python",
    "resultado": "paso",
-   "ms": 97
+   "ms": 192
   }
  ],
  "resumen": {

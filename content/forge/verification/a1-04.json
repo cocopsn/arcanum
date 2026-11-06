@@ -9,23 +9,30 @@
  },
  "items": [
   {
+   "id": "a1-04-desv-altura",
+   "tipo": "desvanecido",
+   "lenguaje": "javascript",
+   "resultado": "paso",
+   "ms": 130
+  },
+  {
    "id": "a1-04-code-es-bst",
    "tipo": "code",
    "lenguaje": "javascript",
    "resultado": "paso",
-   "ms": 3
+   "ms": 765
   },
   {
    "id": "a1-04-code-es-bst",
    "tipo": "code",
    "lenguaje": "python",
    "resultado": "paso",
-   "ms": 69
+   "ms": 358
   }
  ],
  "resumen": {
-  "ejecutables": 2,
-  "cubiertos": 2,
+  "ejecutables": 3,
+  "cubiertos": 3,
   "fallidos": 0,
   "sin_verificar": 0
  }
