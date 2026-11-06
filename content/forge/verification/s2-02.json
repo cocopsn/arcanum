@@ -1,7 +1,7 @@
 {
  "v": 1,
  "code": "S2-02",
- "sha10": "f808cfbacc",
+ "sha10": "dfcb9694a7",
  "versiones": {
   "python": "3.12.10",
   "sqlite": "3.49.1",
@@ -21,12 +21,19 @@
    "tipo": "code",
    "lenguaje": "javascript",
    "resultado": "paso",
-   "ms": 3
+   "ms": 352
+  },
+  {
+   "id": "s202-code-presupuesto",
+   "tipo": "code",
+   "lenguaje": "python",
+   "resultado": "paso",
+   "ms": 174
   }
  ],
  "resumen": {
-  "ejecutables": 2,
-  "cubiertos": 1,
+  "ejecutables": 3,
+  "cubiertos": 2,
   "fallidos": 0,
   "sin_verificar": 1
  }

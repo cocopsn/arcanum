@@ -1,7 +1,7 @@
 {
  "v": 1,
  "code": "P2-06",
- "sha10": "ca85c8f9fb",
+ "sha10": "d6c24734a8",
  "versiones": {
   "python": "3.12.10",
   "sqlite": "3.49.1",
@@ -13,19 +13,33 @@
    "tipo": "code",
    "lenguaje": "javascript",
    "resultado": "paso",
-   "ms": 3
+   "ms": 421
+  },
+  {
+   "id": "p206-bug-version",
+   "tipo": "code",
+   "lenguaje": "python",
+   "resultado": "paso",
+   "ms": 504
   },
   {
    "id": "p206-bug-writeback",
    "tipo": "code",
    "lenguaje": "javascript",
    "resultado": "paso",
-   "ms": 2
+   "ms": 52
+  },
+  {
+   "id": "p206-bug-writeback",
+   "tipo": "code",
+   "lenguaje": "python",
+   "resultado": "paso",
+   "ms": 146
   }
  ],
  "resumen": {
-  "ejecutables": 2,
-  "cubiertos": 2,
+  "ejecutables": 4,
+  "cubiertos": 4,
   "fallidos": 0,
   "sin_verificar": 0
  }
