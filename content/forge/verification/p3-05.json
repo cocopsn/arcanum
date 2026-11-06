@@ -1,0 +1,26 @@
+{
+ "v": 1,
+ "code": "P3-05",
+ "sha10": "d8bd2a2e65",
+ "versiones": {
+  "python": "3.12.10",
+  "sqlite": "3.49.1",
+  "node": "v24.22.1"
+ },
+ "items": [
+  {
+   "id": "mutantes-sugerido",
+   "tipo": "mutantes",
+   "lenguaje": "javascript",
+   "resultado": "sin-verificar",
+   "ms": 0,
+   "detalle": "sin arnés scripts/forge/bank-check/mutantes.py"
+  }
+ ],
+ "resumen": {
+  "ejecutables": 1,
+  "cubiertos": 0,
+  "fallidos": 0,
+  "sin_verificar": 1
+ }
+}
