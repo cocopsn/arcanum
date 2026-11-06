@@ -109,7 +109,7 @@ export function fixtureRoute(cell: { code: string; id?: string; compuerta: Forge
     alcance: "local",
     etiquetas: [],
   };
-  return { v: 1, slug: "fixture", code: cell.code.split("-")[0] ?? "F", name: "Ruta de prueba", family: "Fundamentos", header: { entrada: "", entradaRecomendada: [], evidencia: "", apoyo: [] }, cells: [c] };
+  return { v: 1, slug: "p2", maestro_sha10: "0000000000", code: cell.code.split("-")[0] ?? "F", name: "Ruta de prueba", family: "Fundamentos", header: { entrada: "", entradaRecomendada: [], evidencia: "", apoyo: [] }, cells: [c] };
 }
 
 /** FlowProps for a fixture cell, with the envelope's current read model. */
