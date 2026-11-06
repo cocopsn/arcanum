@@ -6,7 +6,7 @@ vi.mock("@/forge/ai-port", async () => (await import("@/forge/__tests__/helpers/
 
 import { STUB_QUEUE_MOTIVO, createEnvelope, fixtureProps, hadSubmissionBefore } from "@/forge/__tests__/helpers/flow-envelope";
 import { submitForgeVerdict } from "@/forge/ai-port";
-import { PENDING_TEXT } from "@/forge/ui/flow-contract";
+import { MISCONFIGURED_TEXT } from "@/forge/ui/flow-contract";
 import ForgeMission from "@/forge/ui/flows/mision";
 
 // SMOKE of the Phase-0 harness (design §9.5, §22.3): it mounts a flow with an in-memory store and the simulated
@@ -17,7 +17,8 @@ describe("flow-envelope harness", () => {
   it("mounts a registry flow and records verdict calls with the log at the moment of the call", async () => {
     const env = await createEnvelope();
     env.mount(ForgeMission, fixtureProps(env, { code: "P2-06", compuerta: "mision", flujo: "mision" }));
-    expect(screen.getByRole("status").textContent).toBe(PENDING_TEXT);
+    // Phase 1: the real ForgeMission without `kind` is a misconfiguration (§9.5 step 1) and offers no Entregar.
+    expect(screen.getByRole("alert").textContent).toBe(MISCONFIGURED_TEXT);
     expect(env.verdictCalls).toHaveLength(0);
     const r = await submitForgeVerdict({ cellCode: "P2-06", kind: "mision", scope: "local" });
     expect(r).toEqual({ estado: "en-cola", motivo: STUB_QUEUE_MOTIVO });
