@@ -3,6 +3,7 @@
 import { useArcanumStore, useArcanumSync } from "@/app/providers";
 import { makeEvent, newEventId, type EventType, type Json } from "@/core/event";
 import { getDeviceId } from "@/lib/device";
+import type { ForgeRuntime } from "@/forge/ai-port";
 import { buildEvaluationContext, heuristicEvaluation } from "@/core/evaluation";
 import { buildGateContext } from "@/lib/gate";
 import { buildInterrogationContext } from "@/lib/mission";
@@ -16,6 +17,13 @@ import {
   type LessonCourseReply,
   type LessonGrade,
 } from "@/sync/ai";
+
+// Engineering Forge: the log reader and writer the Forge port uses (§9.5). Bound by every useActions() call;
+// read by src/forge/ai-port.ts through a lazy import, so no Forge code enters the main chunk.
+let forgeRuntime: ForgeRuntime | null = null;
+export function getForgeRuntime(): ForgeRuntime | null {
+  return forgeRuntime;
+}
 
 interface Refs {
   goalId?: string | null;
@@ -38,6 +46,16 @@ export function useActions() {
     await store.getState().dispatch(event, now);
     syncNow(); // fire-and-forget; offline queue holds until a session/network exists
   }
+
+  // Engineering Forge: the same writer, returning the id of the event it wrote (the Forge port needs it, §9.5).
+  async function fireWithId(type: EventType, payload: Json, refs: Refs = {}): Promise<string> {
+    const now = Date.now();
+    const event = makeEvent(type, payload, { ts: now, deviceId: getDeviceId(), goalId: refs.goalId ?? null, moduleId: refs.moduleId ?? null });
+    await store.getState().dispatch(event, now);
+    syncNow();
+    return event.id;
+  }
+  forgeRuntime = { events: () => store.getState().getEvents(), fire: fireWithId };
 
   return {
     fire,
@@ -114,6 +132,16 @@ export function useActions() {
       for (const p of rm.pendingAi) {
         const goalId = rm.modules.find((m) => m.id === p.moduleId)?.goalId ?? null;
         const input = (p.input ?? {}) as { justification?: string; notes?: string };
+        if (p.kind === "forge") {
+          // Engineering Forge (§10.6): delegated to the Forge drain (lazy). `keep` (old Edge, bank missing on this
+          // device) continues with the next pending so a Forge item never blocks other worlds; `stop` stops as today.
+          const { drainForgeItem, defaultDrainDeps } = await import("@/forge/ai-drain");
+          const r = await drainForgeItem(p, { ...defaultDrainDeps, events: () => store.getState().getEvents(), fire: fireWithId });
+          if (r.outcome === "stop") break;
+          if (r.outcome === "keep") continue;
+          resolved++;
+          continue;
+        }
         if (p.kind === "gate") {
           const ctx = buildGateContext(rm, p.moduleId, input.justification ?? "");
           if (!ctx) continue;

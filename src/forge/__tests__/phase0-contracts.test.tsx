@@ -13,7 +13,7 @@ import { MISCONFIGURED_TEXT, PENDING_TEXT, closingMount, missionConfigError } fr
 import { RUNNERS, RUNNER_LOADERS, isSelectable } from "@/forge/ui/exercises/registry";
 import { FLOWS, FLOW_LOADERS } from "@/forge/ui/flows/registry";
 import { project } from "@/core/projector";
-import ForgeMission from "@/forge/ui/flows/mision";
+import ExpedienteStub from "@/forge/ui/flows/expediente";
 import { BLOCKS, bankMd } from "@/forge/__tests__/fixtures/forge-blocks";
 import { parseExercisesMd } from "@/lib/exercises-md";
 import type { ForgeBankItem } from "@/forge/bank/registry";
@@ -98,7 +98,9 @@ describe("lazy check registry", () => {
 
 describe("honest stubs", () => {
   it("ai-port queues with the honest message and never mints", async () => {
-    expect(await submitForgeVerdict({ cellCode: "P2-06", kind: "mision", scope: "local" })).toEqual({ estado: "en-cola", motivo: STUB_QUEUE_MOTIVO });
+    // Phase 1 (e3-ia) replaced the stub: without the app's log bound there is nothing to queue on, and it never mints.
+    expect((await submitForgeVerdict({ cellCode: "P2-06", kind: "mision", scope: "local" })).estado).not.toBe("acunado");
+    expect(STUB_QUEUE_MOTIVO).toBe("el evaluador desplegado todavía no tiene la acción Forge");
     expect((await askSimulatedUser({ cellCode: "F1-03", itemId: "x", fase: "preguntas", question: "¿?" })).estado).toBe("sin-ia");
   });
   it("loaders answer «no descargado» or null, never a fabricated book, bank or route", async () => {
@@ -121,7 +123,8 @@ describe("honest stubs", () => {
       expect(screen.getByRole("status").textContent, `el corredor stub de ${t} no pinta el texto pendiente`).toBe(PENDING_TEXT);
       unmount();
     }
-    render(<ForgeMission cellCode="P2-06" cellId="x" route={{ v: 1, slug: "p2", maestro_sha10: "0000000000", code: "P2", name: "", family: "Plataforma Foundry/AIP", header: { entrada: "", entradaRecomendada: [], evidencia: "", apoyo: [] }, cells: [] }} readModel={project([])} onClose={() => {}} />);
+    // Phase 1: ForgeMission is real (flow-envelope.test.tsx covers it); the stub check uses a flow that is still a stub.
+    render(<ExpedienteStub cellCode="SD-01" cellId="x" route={{ v: 1, slug: "p2", maestro_sha10: "0000000000", code: "P2", name: "", family: "Plataforma Foundry/AIP", header: { entrada: "", entradaRecomendada: [], evidencia: "", apoyo: [] }, cells: [] }} readModel={project([])} onClose={() => {}} />);
     expect(screen.getByRole("status").textContent).toBe(PENDING_TEXT);
     expect(screen.queryByText(/Pedir veredicto/)).toBeNull();
   });
