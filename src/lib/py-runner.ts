@@ -61,22 +61,61 @@ self.onmessage = async function (e) {
   const d = e.data;
   try {
     const py = await boot();
+    // Forge (§6.6, §9.3 k): sqlite3 is not in Pyodide's base image; loadPackage fetches it once (the SW caches it).
+    if (d.packages && d.packages.length) await py.loadPackage(d.packages);
+    if (d.warm) { self.postMessage({ rid: d.rid, ok: true, warm: true }); return; }
     py.globals.set("_code", d.code);
     py.globals.set("_fn_name", d.functionName);
     py.globals.set("_inputs", py.toPy(d.inputs));
     const out = await py.runPythonAsync(${JSON.stringify(RUNNER_PY)});
-    self.postMessage({ ok: true, out: out });
+    self.postMessage({ rid: d.rid, ok: true, out: out });
   } catch (err) {
-    self.postMessage({ loadError: String(err && err.message ? err.message : err) });
+    self.postMessage({ rid: d.rid, loadError: String(err && err.message ? err.message : err) });
   }
 };
 `;
 
 interface Reply {
+  rid?: number;
   ok?: boolean;
   out?: string;
+  warm?: boolean;
   loadError?: string;
   __timeout?: boolean;
+}
+
+/** The only packages the runner loads (frozen signature: `"sqlite3"[]`). */
+const ALLOWED_PACKAGES = new Set(["sqlite3"]);
+/** A learner/harness program that imports sqlite3 gets it loaded even when the caller is a plain ExecRunner (the bank
+ *  import passes runPy without opts): sqlite3 is CPython stdlib, so this only restores what Pyodide unvendors. */
+const IMPORTS_SQLITE3 = /^\s*(?:import\s+sqlite3\b|from\s+sqlite3\s+import\b|import\s+[\w\s,]*\bsqlite3\b)/m;
+
+function packagesFor(code: string, opts?: { packages?: "sqlite3"[] }): string[] {
+  const out = new Set((opts?.packages ?? []).filter((p) => ALLOWED_PACKAGES.has(p)));
+  if (IMPORTS_SQLITE3.test(code)) out.add("sqlite3");
+  return [...out];
+}
+
+let _rid = 0;
+/** Post one request to the singleton worker and wait for ITS reply (matched by id) or the timeout. */
+function request(msg: Record<string, unknown>, timeoutMs: number): Promise<Reply> {
+  const w = worker();
+  const rid = ++_rid;
+  return new Promise<Reply>((resolve) => {
+    const timer = setTimeout(() => {
+      w.removeEventListener("message", onMsg);
+      resolve({ __timeout: true });
+    }, timeoutMs);
+    function onMsg(e: MessageEvent) {
+      const data = e.data as Reply;
+      if (data && typeof data.rid === "number" && data.rid !== rid) return; // another request's reply
+      clearTimeout(timer);
+      w.removeEventListener("message", onMsg);
+      resolve(data);
+    }
+    w.addEventListener("message", onMsg);
+    w.postMessage({ ...msg, rid });
+  });
 }
 
 let _worker: Worker | null = null;
@@ -103,23 +142,14 @@ export async function runPy(
   functionName: string,
   cases: TestCase[],
   timeoutMs = 15000,
-  // Frozen signature (Forge phase 0). STUB: `packages` is ignored for now (behaves exactly as before);
-  // forge/e2-datos writes the loadPackage(["sqlite3"]) body in phase 1.
-  _opts?: { packages?: "sqlite3"[] },
+  // Frozen signature (Forge phase 0). `packages` (only "sqlite3") is loaded in the worker before running; a program
+  // that imports sqlite3 gets it too (packagesFor), so the bank import's plain ExecRunner call works.
+  opts?: { packages?: "sqlite3"[] },
 ): Promise<RunResult & { pyUnavailable?: boolean }> {
   const real = cases.filter((c) => !c.hint);
   if (typeof window === "undefined" || typeof Worker === "undefined") return { syntaxError: null, cases: [], pyUnavailable: true };
-  const w = worker();
-  const reply = await new Promise<Reply>((resolve) => {
-    const timer = setTimeout(() => resolve({ __timeout: true }), timeoutMs);
-    const onMsg = (e: MessageEvent) => {
-      clearTimeout(timer);
-      w.removeEventListener("message", onMsg);
-      resolve(e.data as Reply);
-    };
-    w.addEventListener("message", onMsg);
-    w.postMessage({ code, functionName, inputs: real.map((c) => c.input) });
-  });
+  const packages = packagesFor(code, opts);
+  const reply = await request({ code, functionName, inputs: real.map((c) => c.input), ...(packages.length ? { packages } : {}) }, timeoutMs);
   if (reply.__timeout) {
     resetPy(); // terminate the runaway
     return { syntaxError: null, cases: [], timedOut: true };
@@ -142,12 +172,36 @@ export async function runPy(
 
 export type WarmPyResult = { ok: true } | { ok: false; reason: "sin-red" | "tiempo" | "no-disponible" };
 
-/** UI text for the stub answer (`no-disponible`): offline Python preparation is not in this version yet. */
+/** UI text for `no-disponible` (no Worker in this environment, e.g. server render). */
 export const WARM_PY_UNAVAILABLE = "La preparación de Python sin red aún no está disponible en esta versión";
+/** UI texts of «Preparar ruta sin red» (§6.6). */
+export const WARM_PY_READY = "Python y SQLite listos sin red";
+export const WARM_PY_FAILED = "No se pudo descargar Python: conéctate y reintenta";
+/** Shown before opening a Python/SQL item when offline and Pyodide is not cached yet (§6.6). */
+export const PY_NEEDS_DOWNLOAD = "Este ejercicio necesita descargar Python una vez (≈ 10 MB)";
 
-/** Load Pyodide + `packages` in the worker WITHOUT running code, with its own limit (not runPy's 15 s).
- *  Frozen signature (Forge phase 0). STUB: always answers `no-disponible` and loads nothing; the real body
- *  (load, loadPackage, resetPy() on timeout) is forge/e2-datos' in phase 1. */
-export async function warmPy(_packages: "sqlite3"[], _timeoutMs = 120_000): Promise<WarmPyResult> {
-  return { ok: false, reason: "no-disponible" };
+/** Load Pyodide + `packages` in the worker WITHOUT running code, with its own limit (not runPy's 15 s): the first
+ *  download of Pyodide with sqlite3 can pass 15 s on a slow network. On timeout the worker is dropped (resetPy), as
+ *  runPy does with a runaway. A load error (no network, CDN blocked) answers `sin-red`. */
+export async function warmPy(packages: "sqlite3"[], timeoutMs = 120_000): Promise<WarmPyResult> {
+  if (typeof window === "undefined" || typeof Worker === "undefined") return { ok: false, reason: "no-disponible" };
+  const pk = packages.filter((p) => ALLOWED_PACKAGES.has(p));
+  const reply = await request({ warm: true, packages: pk }, timeoutMs);
+  if (reply.__timeout) {
+    resetPy();
+    return { ok: false, reason: "tiempo" };
+  }
+  if (reply.loadError || !reply.warm) return { ok: false, reason: "sin-red" };
+  return { ok: true };
+}
+
+/** Whether Pyodide is already in the Service Worker cache (`arcanum-pyodide`), so a Python/SQL item can run offline.
+ *  `null` when it cannot be known (no Cache API). */
+export async function pyodideCached(): Promise<boolean | null> {
+  if (typeof caches === "undefined") return null;
+  try {
+    return Boolean(await caches.match(`${PYODIDE_BASE}pyodide.js`, { cacheName: "arcanum-pyodide" }));
+  } catch {
+    return null;
+  }
 }
