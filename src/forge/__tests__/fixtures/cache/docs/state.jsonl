@@ -1,0 +1,4 @@
+{"url": "https://palantir.com/docs/foundry/ontology/overview/", "source": "sitemap:docs-sitemap-1.xml", "status": 200, "final_url": "https://www.palantir.com/docs/foundry/ontology/overview", "soft_404": false}
+{"url": "https://www.palantir.com/docs/foundry/ontology/semantic-old/", "source": "discovered:content-link", "status": 200, "final_url": "https://www.palantir.com/docs/foundry/action-types/consistency-guarantees", "soft_404": false}
+{"url": "https://www.palantir.com/docs/foundry/ontology/gone/", "source": "discovered:content-link", "status": 200, "final_url": "https://www.palantir.com/docs/404", "soft_404": true}
+{"url": "https://www.palantir.com/docs/jp/foundry/ontology/discovered-page/", "source": "discovered:nav", "status": 200, "final_url": "https://www.palantir.com/docs/jp/foundry/ontology/discovered-page", "soft_404": false}
