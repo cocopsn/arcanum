@@ -1,7 +1,7 @@
 {
  "v": 1,
  "code": "A1-01",
- "sha10": "c3bbab079a",
+ "sha10": "c26635c82e",
  "versiones": {
   "python": "3.12.10",
   "sqlite": "3.49.1",
@@ -21,20 +21,28 @@
    "tipo": "code",
    "lenguaje": "javascript",
    "resultado": "paso",
-   "ms": 4
+   "ms": 13
   },
   {
    "id": "a1-01-code-inversiones",
    "tipo": "code",
    "lenguaje": "python",
    "resultado": "paso",
-   "ms": 193
+   "ms": 163
+  },
+  {
+   "id": "a1-01-mut-frontera",
+   "tipo": "mutantes",
+   "lenguaje": "javascript",
+   "resultado": "sin-verificar",
+   "ms": 0,
+   "detalle": "sin arnés scripts/forge/bank-check/mutantes.py"
   }
  ],
  "resumen": {
-  "ejecutables": 3,
+  "ejecutables": 4,
   "cubiertos": 2,
   "fallidos": 0,
-  "sin_verificar": 1
+  "sin_verificar": 2
  }
 }

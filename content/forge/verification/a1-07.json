@@ -1,7 +1,7 @@
 {
  "v": 1,
  "code": "A1-07",
- "sha10": "c14539fa25",
+ "sha10": "f55c51968d",
  "versiones": {
   "python": "3.12.10",
   "sqlite": "3.49.1",
@@ -21,20 +21,28 @@
    "tipo": "code",
    "lenguaje": "javascript",
    "resultado": "paso",
-   "ms": 3
+   "ms": 4
   },
   {
    "id": "a1-07-code-dijkstra",
    "tipo": "code",
    "lenguaje": "python",
    "resultado": "paso",
-   "ms": 72
+   "ms": 83
+  },
+  {
+   "id": "a1-07-mut-greedy",
+   "tipo": "mutantes",
+   "lenguaje": "javascript",
+   "resultado": "sin-verificar",
+   "ms": 0,
+   "detalle": "sin arnés scripts/forge/bank-check/mutantes.py"
   }
  ],
  "resumen": {
-  "ejecutables": 3,
+  "ejecutables": 4,
   "cubiertos": 2,
   "fallidos": 0,
-  "sin_verificar": 1
+  "sin_verificar": 2
  }
 }
