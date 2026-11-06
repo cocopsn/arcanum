@@ -1,0 +1,9 @@
+{
+ "generated_from": "fixture",
+ "files": [
+  { "file": "learn-catalog.json", "bytes": 10, "sha256_10": "0000000000" },
+  { "file": "youtube-catalog.json", "bytes": 10, "sha256_10": "0000000000" }
+ ],
+ "total_bytes": 20,
+ "file_count": 2
+}

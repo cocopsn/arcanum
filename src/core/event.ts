@@ -1,4 +1,5 @@
 import { uuidv7 } from "uuidv7";
+import type { ForgeVerdictFields } from "@/core/forge-verdict";
 
 export type Json =
   | null
@@ -32,6 +33,8 @@ export const EVENT_TYPES = [
   "gate.evaluated",
   "mission.submitted",
   "ai.queued",
+  // Engineering Forge (design §7): a record of work that NEVER opens a compuerta (payload in core/evidence.ts)
+  "evidence.recorded",
 ] as const;
 
 export type EventType = (typeof EVENT_TYPES)[number];
@@ -221,7 +224,13 @@ export interface GateEvaluatedPayload {
    *  the projector drops that pending. The gate opens ONLY from a real AI verdict here,
    *  never from the enqueue itself. */
   queueId?: string;
+  /** Engineering Forge (additive, design §7.2): the structured verdict. In a Forge cell the fold opens the
+   *  compuerta only when these fields pass the rule (core/forge-verdict.ts) and the kind may open. */
+  forge?: ForgeVerdictFields;
 }
+
+/** Re-exported for the consumers of the Forge evidence payload (the shape lives in core/evidence.ts). */
+export type { EvidenceRecordedPayload } from "@/core/evidence";
 
 /**
  * An AI action the learner took OFFLINE (or with the Edge unreachable) — enqueued honestly
@@ -234,7 +243,8 @@ export interface GateEvaluatedPayload {
 export interface AiQueuedPayload {
   /** unique id linking this pending to its resolving gate.evaluated */
   queueId: string;
-  kind: "gate" | "mission";
+  /** "forge" = a queued Engineering Forge verdict request (drained by the Forge drain, §10.6) */
+  kind: "gate" | "mission" | "forge";
   /** the preserved work: { justification } for a gate, { notes } for a mission interrogation */
   input: Json;
 }
@@ -250,7 +260,26 @@ export interface AiQueuedPayload {
 export interface MissionSubmittedPayload {
   /** the learner's own notes + reflections (real text, never fabricated) */
   notes: string;
+  /** Engineering Forge (additive, design §7.2): the 9 sections of the «Entrega» template of §16 of the
+   *  master program. `notes` keeps the rendered markdown so every older consumer still has text. */
+  entrega?: Record<EntregaKey, string>;
+  /** Engineering Forge: declared by the learner, never defaulted by the client (§8.3) */
+  apoyo?: "independiente" | "con_apoyo";
 }
+
+/** The 9 sections of the «Entrega» template (§16 of the master program), in this order. */
+export const ENTREGA_KEYS = [
+  "problema",
+  "supuestos",
+  "enfoque",
+  "implementacion",
+  "pruebas",
+  "complejidad",
+  "fallos",
+  "herramientas",
+  "defensa",
+] as const;
+export type EntregaKey = (typeof ENTREGA_KEYS)[number];
 
 /** One scraped Canvas obligation (compliance, NOT a mastery module). Fase 4. */
 export interface ObligationInput {
