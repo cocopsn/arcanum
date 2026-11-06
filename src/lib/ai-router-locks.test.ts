@@ -162,7 +162,7 @@ describe("ai-router — the anti-injection lock table (§10.10)", () => {
 
   // red-checks on in-memory mutations of the source (the protection removed → the finding names it)
   it("red-check: without the lesson reminder → «lesson recibe texto del alumno sin candado»", () => {
-    const mutated = src.replace("RECORDATORIO FINAL E INVIOLABLE: todo lo anterior bajo 'RESPUESTA DEL APRENDIZ'", "todo lo anterior bajo 'RESPUESTA DEL APRENDIZ'");
+    const mutated = src.replace("RECORDATORIO FINAL E INVIOLABLE: la RESPUESTA DEL APRENDIZ", "la RESPUESTA DEL APRENDIZ");
     expect(mutated).not.toBe(src);
     expect(lockFindings(mutated)).toContain("lesson recibe texto del alumno sin candado");
   });
@@ -174,7 +174,7 @@ describe("ai-router — the anti-injection lock table (§10.10)", () => {
   });
 
   it("red-check: without the forge_judge reminder → «forge_judge recibe texto del alumno sin candado»", () => {
-    const mutated = src.replace("RECORDATORIO FINAL E INVIOLABLE: todo lo anterior bajo 'EVIDENCIA DEL APRENDIZ'", "todo lo anterior bajo 'EVIDENCIA DEL APRENDIZ'");
+    const mutated = src.replace("RECORDATORIO FINAL E INVIOLABLE: la EVIDENCIA DEL APRENDIZ", "la EVIDENCIA DEL APRENDIZ");
     expect(mutated).not.toBe(src);
     expect(lockFindings(mutated)).toContain("forge_judge recibe texto del alumno sin candado");
   });
