@@ -100,7 +100,10 @@ describe("honest stubs", () => {
     expect(await submitForgeVerdict({ cellCode: "P2-06", kind: "mision", scope: "local" })).toEqual({ estado: "en-cola", motivo: STUB_QUEUE_MOTIVO });
     expect((await askSimulatedUser({ cellCode: "F1-03", itemId: "x", fase: "preguntas", question: "¿?" })).estado).toBe("sin-ia");
   });
-  it("loaders answer «no descargado» or null, never a fabricated book, bank or route", async () => {
+  // Phase 1 replaces the loader stubs (forge/p-plataforma, §22.4): while loaders.ts is still the Phase-0 stub it answers
+  // «no descargado» or null; the real bodies are covered by books-loader.test.ts and banks-loader.test.ts.
+  const loadersStillStub = readFileSync(join(process.cwd(), "src", "forge", "loaders.ts"), "utf8").includes("these bodies are STUBS");
+  it.skipIf(!loadersStillStub)("loaders answer «no descargado» or null, never a fabricated book, bank or route", async () => {
     expect(await loadForgeRoute("p2")).toBeNull();
     expect(await loadForgeBookMd("P2-06")).toBeNull();
     expect(await ensureForgeBook("P2-06", project([]))).toEqual({ ok: false, reason: "no-descargado" });
