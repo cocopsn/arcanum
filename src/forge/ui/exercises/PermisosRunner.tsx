@@ -1,14 +1,20 @@
 "use client";
 
 import type { RunnerProps } from "./registry";
-import { PENDING_TEXT } from "@/forge/ui/flow-contract";
+import { PermissionMatrix, type PermisosItem } from "@/forge/ui/PermissionMatrix";
 
-// STUB (Phase 0) of the `permisos` runner. Owner: forge/e1-modelos, which replaces this file (design §9.5, §22.4). It grades
-// nothing and offers no verdict: it only says, honestly, that the type is not available yet.
-export default function PermisosRunner({ item }: RunnerProps) {
+// PRACTICE runner of `permisos` (design §9.5): mounts PermissionMatrix. The grade is local, from the propagation
+// evaluator; it records evidence and never opens a gate.
+export default function PermisosRunner({ item, cellId, onClose }: RunnerProps) {
+  const it = item as PermisosItem;
   return (
-    <p role="status" data-forge-stub="permisos" data-item={item.itemId}>
-      {PENDING_TEXT}
-    </p>
+    <section data-forge-runner="permisos" data-item={it.itemId} aria-label={`Permisos · ${it.title}`}>
+      <h3>{it.title}</h3>
+      <p style={{ whiteSpace: "pre-wrap" }}>{it.statement}</p>
+      <PermissionMatrix item={it} cellId={cellId} />
+      <button type="button" onClick={onClose}>
+        Cerrar
+      </button>
+    </section>
   );
 }
