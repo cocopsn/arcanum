@@ -1,5 +1,5 @@
 import Dexie, { type Table } from "dexie";
-import { parseExercisesMd, type ExerciseBankMeta } from "@/lib/exercises-md";
+import { explainExercisesMd, parseExercisesMd, type ExerciseBankMeta } from "@/lib/exercises-md";
 import { validateBank, type ExecRunner } from "@/lib/exercises-validate";
 import { slugify } from "@/lib/book";
 import type { Exercise } from "@/lib/exercise";
@@ -57,10 +57,12 @@ export interface SaveBankOpts {
 /** Parse + VALIDATE (auto-consistency) + persist a bank .md. Returns the specific validation errors when a
  *  reference solution doesn't pass its own cases (honest — never ingests a broken bank). null-safe. */
 export async function saveExerciseBank(md: string, opts: SaveBankOpts = {}): Promise<SaveBankResult> {
-  const parsed = parseExercisesMd(md);
-  if (!parsed) {
-    return { ok: false, error: "Formato inválido: el .md no cumple el contrato de ejercicios (frontmatter kind: exercises + al menos un ejercicio bien formado)." };
+  const explained = explainExercisesMd(md);
+  if (!explained.ok) {
+    // the reason names the exercise and the field (CA-31), so an author knows what to fix
+    return { ok: false, error: "Formato inválido: el .md no cumple el contrato de ejercicios (frontmatter kind: exercises + al menos un ejercicio bien formado).", details: [explained.error] };
   }
+  const parsed = explained.bank;
   const source = opts.source ?? "import";
   const v = await validateBank(parsed, { pyRun: opts.pyRun, jsRun: opts.jsRun, trustPython: source === "seed", source });
   if (!v.ok) {
