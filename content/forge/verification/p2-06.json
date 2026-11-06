@@ -1,0 +1,60 @@
+{
+ "v": 1,
+ "code": "P2-06",
+ "sha10": "d6c24734a8",
+ "versiones": {
+  "python": "3.12.10",
+  "sqlite": "3.49.1",
+  "node": "v24.22.1"
+ },
+ "items": [
+  {
+   "id": "p206-desv-version",
+   "tipo": "desvanecido",
+   "lenguaje": "javascript",
+   "resultado": "paso",
+   "ms": 2
+  },
+  {
+   "id": "p206-bug-version",
+   "tipo": "code",
+   "lenguaje": "javascript",
+   "resultado": "paso",
+   "ms": 2
+  },
+  {
+   "id": "p206-bug-version",
+   "tipo": "code",
+   "lenguaje": "python",
+   "resultado": "paso",
+   "ms": 96
+  },
+  {
+   "id": "p206-bug-writeback",
+   "tipo": "code",
+   "lenguaje": "javascript",
+   "resultado": "paso",
+   "ms": 3
+  },
+  {
+   "id": "p206-bug-writeback",
+   "tipo": "code",
+   "lenguaje": "python",
+   "resultado": "paso",
+   "ms": 52
+  },
+  {
+   "id": "p206-ret-timeout",
+   "tipo": "retencion",
+   "lenguaje": "javascript",
+   "resultado": "paso",
+   "ms": 3
+  }
+ ],
+ "resumen": {
+  "ejecutables": 6,
+  "cubiertos": 6,
+  "fallidos": 0,
+  "sin_verificar": 0
+ }
+}

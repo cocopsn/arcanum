@@ -1,0 +1,32 @@
+{
+ "v": 1,
+ "code": "S2-05",
+ "sha10": "19c6592a6c",
+ "versiones": {
+  "python": "3.12.10",
+  "sqlite": "3.49.1",
+  "node": "v24.22.1"
+ },
+ "items": [
+  {
+   "id": "s2-05-code-proyectar",
+   "tipo": "code",
+   "lenguaje": "javascript",
+   "resultado": "paso",
+   "ms": 3
+  },
+  {
+   "id": "s2-05-sql-estado-actual",
+   "tipo": "sql",
+   "lenguaje": "sql",
+   "resultado": "paso",
+   "ms": 59
+  }
+ ],
+ "resumen": {
+  "ejecutables": 2,
+  "cubiertos": 2,
+  "fallidos": 0,
+  "sin_verificar": 0
+ }
+}

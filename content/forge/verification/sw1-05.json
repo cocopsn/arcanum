@@ -1,0 +1,40 @@
+{
+ "v": 1,
+ "code": "SW1-05",
+ "sha10": "158a7d4fc0",
+ "versiones": {
+  "python": "3.12.10",
+  "sqlite": "3.49.1",
+  "node": "v24.22.1"
+ },
+ "items": [
+  {
+   "id": "codigo-evaluar-aritmetica",
+   "tipo": "code",
+   "lenguaje": "javascript",
+   "resultado": "paso",
+   "ms": 4
+  },
+  {
+   "id": "codigo-evaluar-aritmetica",
+   "tipo": "code",
+   "lenguaje": "python",
+   "resultado": "paso",
+   "ms": 61
+  },
+  {
+   "id": "contraejemplo-asociatividad",
+   "tipo": "contraejemplo",
+   "lenguaje": "javascript",
+   "resultado": "sin-verificar",
+   "ms": 0,
+   "detalle": "sin arnés scripts/forge/bank-check/contraejemplo.py"
+  }
+ ],
+ "resumen": {
+  "ejecutables": 3,
+  "cubiertos": 2,
+  "fallidos": 0,
+  "sin_verificar": 1
+ }
+}

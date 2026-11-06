@@ -1,0 +1,32 @@
+{
+ "v": 1,
+ "code": "S1-01",
+ "sha10": "bfb3788e8c",
+ "versiones": {
+  "python": "3.12.10",
+  "sqlite": "3.49.1",
+  "node": "v24.22.1"
+ },
+ "items": [
+  {
+   "id": "s1-01-sql-resolver-identidad",
+   "tipo": "sql",
+   "lenguaje": "sql",
+   "resultado": "paso",
+   "ms": 62
+  },
+  {
+   "id": "s1-01-sql-pendientes",
+   "tipo": "sql",
+   "lenguaje": "sql",
+   "resultado": "paso",
+   "ms": 61
+  }
+ ],
+ "resumen": {
+  "ejecutables": 2,
+  "cubiertos": 2,
+  "fallidos": 0,
+  "sin_verificar": 0
+ }
+}

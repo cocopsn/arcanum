@@ -1,0 +1,1729 @@
+{
+ "v": 1,
+ "capturado": "2026-11-05",
+ "fuente_sha10": "f118167141",
+ "capas": {
+  "docs": {
+   "paginas": 12019,
+   "por_idioma": {
+    "en": 5460,
+    "jp": 3406,
+    "zh": 2386,
+    "kr": 767
+   },
+   "urls_capturadas": 12025,
+   "urls_sitemap": 12011,
+   "urls_sitemap_por_idioma": {
+    "en": 5466,
+    "jp": 3400,
+    "zh": 2385,
+    "kr": 760
+   },
+   "descubiertas_nuevas": 14,
+   "alias_sitemap": 6,
+   "alias_descubiertos": 117,
+   "alias": 123,
+   "rotos": 91,
+   "api": 918,
+   "pares_en": 6281,
+   "pares_en_sitemap": 6267,
+   "imagenes": 27156,
+   "imagenes_unicas": 10095,
+   "imagenes_fuera": 5,
+   "imagenes_fuera_unicas": 2,
+   "alt_largos": 0,
+   "videos": 54,
+   "filas_alias_en_particiones": 117
+  },
+  "build": {
+   "publicadas": 97,
+   "no_encontradas": 36,
+   "con_video": 6,
+   "archivo": "build.be58e82cba.json"
+  },
+  "videos": {
+   "youtube": 20,
+   "youtube_docs": 18,
+   "youtube_maestro": 2,
+   "vimeo": 5,
+   "canales": 2,
+   "archivo": "videos.e5f51371fa.json"
+  },
+  "inventario": {
+   "entradas": 613,
+   "publicadas": 603,
+   "credenciales_contadas": 10,
+   "archivo": "inventario.5cfbf30011.json"
+  },
+  "catalogo": {
+   "claves": 91,
+   "cursos": 18,
+   "paginas_con_clave": 61
+  },
+  "celdas": {
+   "total": 168,
+   "con_paginas": 70,
+   "archivo": "celdas.fa9ce5a0e9.json"
+  }
+ },
+ "arbol": {
+  "en": {
+   "500": {
+    "(index)": {
+     "(sin sección)": 1
+    }
+   },
+   "apollo": {
+    "(index)": {
+     "(sin sección)": 1
+    },
+    "apollo-getting-started": {
+     "apollo-getting-started": 14
+    },
+    "apollo-references": {
+     "apollo-cli": 122,
+     "apollo-cli-deprecated": 3,
+     "apollo-mcp": 2,
+     "apollo-product-specification": 18,
+     "apollo-references": 5,
+     "cel-policies": 6
+    },
+    "core": {
+     "core": 24,
+     "debugging": 4,
+     "export-import": 18,
+     "managing-artifact-registries": 5,
+     "managing-changes": 5,
+     "managing-entities": 10,
+     "managing-environments": 13,
+     "managing-k8s-namespaces": 4,
+     "managing-labels": 7,
+     "managing-modules": 7,
+     "managing-notifications": 4,
+     "managing-products": 9,
+     "managing-release-channels": 5,
+     "managing-secrets": 4,
+     "managing-teams": 5,
+     "managing-vulnerabilities": 9,
+     "recalling-releases": 5
+    },
+    "search": {
+     "search": 1
+    }
+   },
+   "defense-osdk": {
+    "(index)": {
+     "(sin sección)": 1
+    },
+    "api": {
+     "interfaceTypes": 84,
+     "overview": 22
+    }
+   },
+   "feedback": {
+    "(index)": {
+     "(sin sección)": 1
+    }
+   },
+   "foundry": {
+    "(index)": {
+     "(sin sección)": 2
+    },
+    "administration": {
+     "administration": 43,
+     "authentication": 22,
+     "consumer-mode": 9,
+     "custom-docs": 13,
+     "email": 5,
+     "flow-capture": 4,
+     "foundry-adoption": 12,
+     "platform-announcements": 2,
+     "resource-management": 13,
+     "retention": 7,
+     "upgrade-assistant": 9,
+     "use-case-examples": 20,
+     "use-case-life-cycle": 6,
+     "use-case-patterns": 6,
+     "walkthroughs": 6
+    },
+    "aip": {
+     "agent-builder": 4,
+     "agent-manager": 3,
+     "agent-sdk": 5,
+     "ai-fde": 9,
+     "aip": 23,
+     "aip-analyst": 9,
+     "aip-evals": 11,
+     "aip-evolve": 2,
+     "assist": 10,
+     "boardroom": 6,
+     "chatbot-studio": 13,
+     "document-intelligence": 6,
+     "logic": 12,
+     "model-catalog": 3,
+     "realtime-audio": 3,
+     "threads": 3
+    },
+    "analytics": {
+     "analytics": 9,
+     "analytics-connectivity": 25,
+     "code-workbook": 43,
+     "contour": 33,
+     "forms": 19,
+     "fusion": 22,
+     "insight": 15,
+     "notepad": 49,
+     "quiver": 290,
+     "reports": 22
+    },
+    "announcements": {
+     "announcements": 59
+    },
+    "api": {
+     "action-types": 20,
+     "actions": 18,
+     "agent-versions": 8,
+     "agents": 10,
+     "artifact-tables": 8,
+     "attachment-properties": 12,
+     "attachments": 20,
+     "authentication-providers": 12,
+     "board-objects": 10,
+     "branches": 26,
+     "builds": 14,
+     "cbac-banners": 6,
+     "cbac-marking-restrictions-objects": 6,
+     "check-reports": 8,
+     "checks": 14,
+     "cipher-text-properties": 6,
+     "connections": 20,
+     "contents": 6,
+     "datasets": 48,
+     "enrollment-role-assignments": 10,
+     "enrollments": 8,
+     "experiment-series-list": 8,
+     "experiments": 10,
+     "export-jobs": 8,
+     "file-imports": 16,
+     "files": 34,
+     "folders": 12,
+     "generation-jobs": 8,
+     "geotemporal-series-properties": 6,
+     "group-members": 10,
+     "group-membership-expiration-policies": 8,
+     "group-memberships": 6,
+     "group-provider-infos": 8,
+     "groups": 20,
+     "hosts": 6,
+     "invocation-objects": 8,
+     "jobs": 8,
+     "linked-objects": 8,
+     "live-deployments": 18,
+     "log-files": 10,
+     "marketplace-installation-inputs": 6,
+     "marketplace-installation-job-details": 6,
+     "marketplace-installation-jobs": 12,
+     "marketplace-installations": 10,
+     "marking-categories": 12,
+     "marking-members": 10,
+     "marking-role-assignments": 10,
+     "markings": 16,
+     "media-reference-properties": 6,
+     "media-sets": 40,
+     "model-functions": 10,
+     "model-studio-config-versions": 12,
+     "model-studio-runs": 6,
+     "model-studio-trainers": 8,
+     "model-studios": 10,
+     "model-versions": 8,
+     "models": 34,
+     "object-types": 32,
+     "objects": 20,
+     "ontologies": 20,
+     "ontology-interfaces": 8,
+     "ontology-object-sets": 14,
+     "ontology-objects": 12,
+     "ontology-scenarios": 20,
+     "ontology-value-types": 8,
+     "organization-role-assignments": 10,
+     "organizations": 12,
+     "overview": 44,
+     "project-resource-references": 10,
+     "projects": 16,
+     "queries": 28,
+     "query-types": 16,
+     "records": 12,
+     "resource-roles": 10,
+     "resources": 36,
+     "scan-records": 8,
+     "schedule-versions": 8,
+     "schedules": 26,
+     "session-traces": 6,
+     "sessions": 22,
+     "spaces": 6,
+     "sql-queries": 16,
+     "streams": 20,
+     "symbols": 6,
+     "table-imports": 16,
+     "templates": 8,
+     "time-series-properties": 10,
+     "time-series-value-bank-properties": 8,
+     "transactions": 24,
+     "user-provider-infos": 8,
+     "users": 24,
+     "versions": 12,
+     "views": 16,
+     "virtual-tables": 6,
+     "websites": 12
+    },
+    "api-reference": {
+     "api-reference": 1
+    },
+    "app-building": {
+     "app-building": 6,
+     "automate": 39,
+     "autopilot": 10,
+     "carbon": 25,
+     "custom-widgets": 19,
+     "ontology-sdk-react-applications": 18,
+     "pilot": 16,
+     "slate": 47,
+     "solution-designer": 8,
+     "use-cases": 9,
+     "workflow-builder": 2,
+     "workflow-lineage": 8,
+     "workshop": 124
+    },
+    "architecture-center": {
+     "architecture-center": 8
+    },
+    "data-integration": {
+     "available-connectors": 215,
+     "building-pipelines": 44,
+     "code-repositories": 36,
+     "data-connection": 52,
+     "data-integration": 25,
+     "data-lineage": 20,
+     "dataset-preview": 5,
+     "geospatial": 13,
+     "hyperauto": 16,
+     "iceberg": 31,
+     "linter": 7,
+     "maintaining-pipelines": 6,
+     "media-sets-advanced-formats": 16,
+     "microsoft-excel": 2,
+     "optimizing-pipelines": 22,
+     "pb-functions-expression": 339,
+     "pb-functions-transform": 90,
+     "peer-manager": 13,
+     "pipeline-builder": 65,
+     "preparation": 8,
+     "private-link": 6,
+     "recipes": 7,
+     "sap": 26,
+     "sql-warehousing": 15,
+     "time-series": 42,
+     "transforms-common": 4,
+     "transforms-container": 3,
+     "transforms-java": 13,
+     "transforms-python": 39,
+     "transforms-python-spark": 26,
+     "transforms-r": 3,
+     "transforms-sql": 3
+    },
+    "dev-toolchain": {
+     "agents": 10,
+     "code-workspaces": 15,
+     "compute-modules": 18,
+     "cross-app-interactivity": 12,
+     "custom-endpoints": 7,
+     "dev-toolchain": 2,
+     "developer-console": 19,
+     "foundryts": 43,
+     "global-branching": 8,
+     "ontology-mcp": 8,
+     "ontology-sdk": 14,
+     "palantir-extension-for-visual-studio-code": 12,
+     "palantir-mcp": 8,
+     "superrepo": 10,
+     "vs-code": 7
+    },
+    "developers": {
+     "developers": 1
+    },
+    "devops": {
+     "devops": 3,
+     "devops-release-management": 3,
+     "foundry-devops": 14,
+     "marketplace": 8
+    },
+    "getting-started": {
+     "getting-help": 7,
+     "getting-started": 13,
+     "guides-and-workflows": 3,
+     "platform-overview": 6
+    },
+    "knowledge-base": {
+     "code-examples": 17,
+     "questions-answers": 33
+    },
+    "model-integration": {
+     "evaluate-models": 9,
+     "integrate-models": 41,
+     "manage-models": 18,
+     "migrate-models": 4,
+     "model-integration": 21,
+     "model-studio": 12
+    },
+    "observability": {
+     "aip-observability": 9,
+     "health-checks": 9,
+     "monitoring-views": 8,
+     "observability": 4
+    },
+    "ontology": {
+     "action-types": 39,
+     "dynamic-scheduling": 20,
+     "foundry-rules": 28,
+     "functions": 73,
+     "interfaces": 10,
+     "machinery": 7,
+     "map": 39,
+     "object-backend": 5,
+     "object-databases": 2,
+     "object-edits": 7,
+     "object-explorer": 17,
+     "object-indexing": 7,
+     "object-link-types": 46,
+     "object-monitors": 12,
+     "object-permissioning": 8,
+     "object-views": 22,
+     "ontologies": 11,
+     "ontology": 24,
+     "ontology-manager": 10,
+     "vertex": 31,
+     "vulcan": 5
+    },
+    "release-notes": {
+     "release-notes": 6
+    },
+    "search": {
+     "search": 1
+    },
+    "security": {
+     "approvals": 3,
+     "checkpoints": 7,
+     "cipher": 10,
+     "compass": 11,
+     "data-lifetime": 10,
+     "platform-security-management": 12,
+     "platform-security-third-party": 10,
+     "privacy-civil-liberties": 3,
+     "security": 46,
+     "sensitive-data-scanner": 8
+    },
+    "transforms-libraries": {
+     "transforms-python-library": 53
+    }
+   },
+   "gotham": {
+    "api": {
+     "federated-sources": 8,
+     "high-priority-target-list": 8,
+     "high-priority-target-lists": 10,
+     "intel": 8,
+     "maps": 50,
+     "media": 6,
+     "messages": 6,
+     "objects": 24,
+     "observation-linking": 12,
+     "observations": 14,
+     "overview": 27,
+     "resolution": 10,
+     "target": 12,
+     "target-boards": 14,
+     "targetBoard": 12,
+     "targets": 20
+    },
+    "search": {
+     "search": 1
+    },
+    "security": {
+     "(sin sección)": 1,
+     "platform-security-third-party": 9,
+     "security": 2
+    }
+   },
+   "versions": {
+    "(index)": {
+     "(sin sección)": 1
+    }
+   }
+  },
+  "jp": {
+   "apollo": {
+    "apollo-product-specification": {
+     "apollo-product-specification": 1
+    },
+    "core": {
+     "core": 4
+    },
+    "managing-notifications": {
+     "managing-notifications": 1
+    }
+   },
+   "foundry": {
+    "(index)": {
+     "(sin sección)": 1
+    },
+    "administration": {
+     "administration": 44,
+     "authentication": 22,
+     "consumer-mode": 9,
+     "custom-docs": 13,
+     "email": 5,
+     "flow-capture": 4,
+     "foundry-adoption": 12,
+     "platform-announcements": 2,
+     "resource-management": 13,
+     "retention": 7,
+     "upgrade-assistant": 9,
+     "use-case-examples": 20,
+     "use-case-life-cycle": 6,
+     "use-case-patterns": 6,
+     "walkthroughs": 6
+    },
+    "aip": {
+     "agent-builder": 4,
+     "agent-manager": 3,
+     "agent-sdk": 5,
+     "ai-fde": 9,
+     "aip": 23,
+     "aip-analyst": 9,
+     "aip-evals": 11,
+     "aip-evolve": 2,
+     "assist": 10,
+     "boardroom": 6,
+     "chatbot-studio": 13,
+     "document-intelligence": 6,
+     "logic": 12,
+     "model-catalog": 3,
+     "realtime-audio": 3,
+     "threads": 3
+    },
+    "analytics": {
+     "analytics": 9,
+     "analytics-connectivity": 25,
+     "code-workbook": 43,
+     "contour": 33,
+     "forms": 19,
+     "fusion": 22,
+     "insight": 15,
+     "notepad": 49,
+     "quiver": 290,
+     "reports": 22
+    },
+    "announcements": {
+     "announcements": 36
+    },
+    "app-building": {
+     "app-building": 6,
+     "automate": 39,
+     "autopilot": 10,
+     "carbon": 25,
+     "custom-widgets": 19,
+     "ontology-sdk-react-applications": 18,
+     "pilot": 16,
+     "slate": 47,
+     "solution-designer": 8,
+     "use-cases": 9,
+     "workflow-builder": 3,
+     "workflow-lineage": 8,
+     "workshop": 124
+    },
+    "architecture-center": {
+     "architecture-center": 8
+    },
+    "data-integration": {
+     "available-connectors": 215,
+     "building-pipelines": 44,
+     "code-repositories": 36,
+     "data-connection": 54,
+     "data-integration": 25,
+     "data-lineage": 20,
+     "dataset-preview": 5,
+     "geospatial": 13,
+     "hyperauto": 16,
+     "iceberg": 32,
+     "linter": 7,
+     "maintaining-pipelines": 6,
+     "media-sets-advanced-formats": 16,
+     "microsoft-excel": 2,
+     "optimizing-pipelines": 22,
+     "pb-functions-expression": 339,
+     "pb-functions-transform": 90,
+     "peer-manager": 13,
+     "pipeline-builder": 65,
+     "preparation": 8,
+     "private-link": 6,
+     "recipes": 7,
+     "sap": 25,
+     "sql-warehousing": 15,
+     "time-series": 42,
+     "transforms-common": 4,
+     "transforms-container": 3,
+     "transforms-java": 13,
+     "transforms-python": 40,
+     "transforms-python-spark": 28,
+     "transforms-r": 3,
+     "transforms-sql": 3
+    },
+    "dev-toolchain": {
+     "agents": 10,
+     "code-workspaces": 15,
+     "compute-modules": 18,
+     "cross-app-interactivity": 12,
+     "custom-endpoints": 7,
+     "dev-toolchain": 2,
+     "developer-console": 19,
+     "foundryts": 43,
+     "global-branching": 8,
+     "ontology-mcp": 8,
+     "ontology-sdk": 14,
+     "palantir-extension-for-visual-studio-code": 12,
+     "palantir-mcp": 8,
+     "superrepo": 10,
+     "vs-code": 7
+    },
+    "devops": {
+     "devops": 3,
+     "devops-release-management": 3,
+     "foundry-devops": 14,
+     "marketplace": 8
+    },
+    "getting-started": {
+     "getting-help": 7,
+     "getting-started": 13,
+     "guides-and-workflows": 3,
+     "platform-overview": 6
+    },
+    "knowledge-base": {
+     "code-examples": 17,
+     "questions-answers": 33
+    },
+    "model-integration": {
+     "evaluate-models": 9,
+     "integrate-models": 41,
+     "manage-models": 18,
+     "migrate-models": 4,
+     "model-integration": 21,
+     "model-studio": 12
+    },
+    "observability": {
+     "aip-observability": 9,
+     "health-checks": 9,
+     "monitoring-views": 8,
+     "observability": 4
+    },
+    "ontology": {
+     "action-types": 39,
+     "dynamic-scheduling": 20,
+     "foundry-rules": 28,
+     "functions": 73,
+     "interfaces": 10,
+     "machinery": 7,
+     "map": 39,
+     "object-backend": 5,
+     "object-databases": 2,
+     "object-edits": 7,
+     "object-explorer": 17,
+     "object-indexing": 7,
+     "object-link-types": 46,
+     "object-monitors": 12,
+     "object-permissioning": 8,
+     "object-views": 22,
+     "ontologies": 11,
+     "ontology": 24,
+     "ontology-manager": 10,
+     "vertex": 31,
+     "vulcan": 5
+    },
+    "search": {
+     "search": 1
+    },
+    "security": {
+     "approvals": 3,
+     "checkpoints": 7,
+     "cipher": 10,
+     "compass": 11,
+     "data-lifetime": 10,
+     "platform-security-management": 12,
+     "platform-security-third-party": 10,
+     "privacy-civil-liberties": 3,
+     "security": 46,
+     "sensitive-data-scanner": 8
+    }
+   }
+  },
+  "kr": {
+   "foundry": {
+    "(index)": {
+     "(sin sección)": 1
+    },
+    "aip": {
+     "aip": 1
+    },
+    "analytics": {
+     "analytics": 9,
+     "analytics-connectivity": 24,
+     "code-workbook": 3,
+     "code-workspaces": 2,
+     "contour": 30,
+     "fusion": 21,
+     "notepad": 2,
+     "quiver": 50
+    },
+    "announcements": {
+     "announcements": 1
+    },
+    "app-building": {
+     "app-building": 2,
+     "carbon": 2,
+     "ontology-sdk": 7,
+     "slate": 2,
+     "solution-designer": 5,
+     "workshop": 88
+    },
+    "carbon": {
+     "carbon": 1
+    },
+    "data-integration": {
+     "building-pipelines": 33,
+     "code-repositories": 31,
+     "data-connection": 35,
+     "data-health": 2,
+     "data-integration": 3,
+     "data-lineage": 17,
+     "hyperauto": 14,
+     "maintaining-pipelines": 2,
+     "optimizing-pipelines": 14,
+     "pipeline-builder": 41,
+     "sap": 2,
+     "transforms-python": 51,
+     "transforms-sql": 2
+    },
+    "evaluate-models": {
+     "evaluate-models": 1
+    },
+    "getting-started": {
+     "getting-started": 15
+    },
+    "model-integration": {
+     "integrate-models": 25,
+     "model-integration": 3
+    },
+    "object-link-types": {
+     "object-link-types": 1
+    },
+    "ontology": {
+     "action-types": 25,
+     "functions": 43,
+     "object-explorer": 2,
+     "object-permissioning": 2,
+     "object-views": 2,
+     "ontologies": 9,
+     "ontology": 6,
+     "ontology-manager": 9,
+     "process-mining": 2,
+     "vertex": 2
+    },
+    "platform-overview": {
+     "logic": 2,
+     "platform-overview": 9,
+     "use-case-examples": 20
+    },
+    "search": {
+     "search": 1
+    },
+    "security": {
+     "approvals": 3,
+     "checkpoints": 7,
+     "cipher": 10,
+     "data-lifetime": 10,
+     "platform-security-management": 11,
+     "platform-security-third-party": 10,
+     "security": 32,
+     "sensitive-data-scanner": 7
+    }
+   }
+  },
+  "zh": {
+   "foundry": {
+    "(index)": {
+     "(sin sección)": 1
+    },
+    "administration": {
+     "administration": 31,
+     "assist": 9,
+     "authentication": 14,
+     "email": 5,
+     "foundry-adoption": 12,
+     "resource-management": 11,
+     "retention": 8,
+     "upgrade-assistant": 9,
+     "use-case-examples": 20,
+     "use-case-life-cycle": 6,
+     "use-case-patterns": 6
+    },
+    "aip": {
+     "aip": 1
+    },
+    "analytics": {
+     "analytics": 9,
+     "analytics-connectivity": 25,
+     "code-workbook": 43,
+     "code-workspaces": 13,
+     "contour": 33,
+     "forms": 19,
+     "fusion": 22,
+     "notepad": 41,
+     "quiver": 77,
+     "reports": 22,
+     "threads": 3
+    },
+    "announcements": {
+     "announcements": 29
+    },
+    "app-building": {
+     "app-building": 5,
+     "automate": 23,
+     "carbon": 25,
+     "chatbot-studio": 7,
+     "cross-app-interactivity": 9,
+     "foundryts": 42,
+     "ontology-sdk": 19,
+     "ontology-sdk-react-applications": 4,
+     "slate": 47,
+     "solution-designer": 5,
+     "use-cases": 9,
+     "workshop": 96
+    },
+    "data-integration": {
+     "available-connectors": 192,
+     "building-pipelines": 41,
+     "code-repositories": 33,
+     "compute-modules": 7,
+     "data-connection": 30,
+     "data-health": 12,
+     "data-integration": 27,
+     "data-lineage": 17,
+     "dataset-preview": 5,
+     "geospatial": 9,
+     "geotemporal-series": 6,
+     "hyperauto": 16,
+     "linter": 7,
+     "maintaining-pipelines": 7,
+     "media-sets-advanced-formats": 3,
+     "microsoft-excel": 2,
+     "optimizing-pipelines": 18,
+     "palantir-extension-for-visual-studio-code": 4,
+     "pb-functions-expression": 302,
+     "pb-functions-transform": 81,
+     "pipeline-builder": 51,
+     "preparation": 8,
+     "recipes": 7,
+     "sap": 34,
+     "time-series": 29,
+     "transforms-common": 3,
+     "transforms-java": 13,
+     "transforms-python": 52,
+     "transforms-r": 3,
+     "transforms-sql": 3,
+     "vs-code": 3
+    },
+    "devops": {
+     "devops": 3,
+     "foundry-devops": 8,
+     "marketplace": 7
+    },
+    "getting-started": {
+     "getting-started": 18,
+     "projects": 10
+    },
+    "knowledge-base": {
+     "code-examples": 16,
+     "questions-answers": 33
+    },
+    "model-integration": {
+     "evaluate-models": 9,
+     "integrate-models": 26,
+     "manage-models": 18,
+     "migrate-models": 2,
+     "model-catalog": 2,
+     "model-integration": 15
+    },
+    "ontology": {
+     "action-types": 27,
+     "dynamic-scheduling": 11,
+     "foundry-rules": 28,
+     "functions": 53,
+     "interfaces": 9,
+     "logic": 11,
+     "map": 34,
+     "object-backend": 5,
+     "object-databases": 2,
+     "object-edits": 7,
+     "object-explorer": 15,
+     "object-indexing": 5,
+     "object-link-types": 40,
+     "object-monitors": 12,
+     "object-permissioning": 5,
+     "object-views": 18,
+     "ontologies": 9,
+     "ontology": 6,
+     "ontology-manager": 9,
+     "process-mining": 5,
+     "vertex": 27
+    },
+    "platform-overview": {
+     "platform-overview": 6
+    },
+    "search": {
+     "search": 1
+    },
+    "security": {
+     "approvals": 3,
+     "checkpoints": 7,
+     "cipher": 10,
+     "data-lifetime": 10,
+     "platform-security-management": 10,
+     "platform-security-third-party": 10,
+     "security": 32,
+     "sensitive-data-scanner": 7
+    }
+   }
+  }
+ },
+ "particiones": [
+  {
+   "id": "en/500/_index_",
+   "files": [
+    "docs/en/500/_index_.6d2d282b28.json"
+   ],
+   "bytes": 215,
+   "pages": 1,
+   "sitemap": 1
+  },
+  {
+   "id": "en/apollo/_index_",
+   "files": [
+    "docs/en/apollo/_index_.43d12f8a82.json"
+   ],
+   "bytes": 981,
+   "pages": 1,
+   "sitemap": 1
+  },
+  {
+   "id": "en/apollo/apollo-getting-started",
+   "files": [
+    "docs/en/apollo/apollo-getting-started.0dfce70614.json"
+   ],
+   "bytes": 13479,
+   "pages": 14,
+   "sitemap": 14
+  },
+  {
+   "id": "en/apollo/apollo-references",
+   "files": [
+    "docs/en/apollo/apollo-references.e345030a73.json"
+   ],
+   "bytes": 112515,
+   "pages": 156,
+   "sitemap": 156
+  },
+  {
+   "id": "en/apollo/core",
+   "files": [
+    "docs/en/apollo/core.7ea76ddab1.json"
+   ],
+   "bytes": 171859,
+   "pages": 138,
+   "sitemap": 138
+  },
+  {
+   "id": "en/apollo/search",
+   "files": [
+    "docs/en/apollo/search.fecb01c6a1.json"
+   ],
+   "bytes": 304,
+   "pages": 1,
+   "sitemap": 1
+  },
+  {
+   "id": "en/defense-osdk/_index_",
+   "files": [
+    "docs/en/defense-osdk/_index_.470bedc42f.json"
+   ],
+   "bytes": 299,
+   "pages": 1,
+   "sitemap": 1
+  },
+  {
+   "id": "en/defense-osdk/api",
+   "files": [
+    "docs/en/defense-osdk/api.67eff15894.json"
+   ],
+   "bytes": 60398,
+   "pages": 106,
+   "sitemap": 106
+  },
+  {
+   "id": "en/feedback/_index_",
+   "files": [
+    "docs/en/feedback/_index_.73b26fe289.json"
+   ],
+   "bytes": 244,
+   "pages": 1,
+   "sitemap": 1
+  },
+  {
+   "id": "en/foundry/_index_",
+   "files": [
+    "docs/en/foundry/_index_.a77e2f6ae2.json"
+   ],
+   "bytes": 3210,
+   "pages": 2,
+   "sitemap": 2
+  },
+  {
+   "id": "en/foundry/administration",
+   "files": [
+    "docs/en/foundry/administration.63fe0e913c.json"
+   ],
+   "bytes": 224048,
+   "pages": 177,
+   "sitemap": 177
+  },
+  {
+   "id": "en/foundry/aip",
+   "files": [
+    "docs/en/foundry/aip.de88c78d92.json"
+   ],
+   "bytes": 158790,
+   "pages": 122,
+   "sitemap": 122
+  },
+  {
+   "id": "en/foundry/analytics",
+   "files": [
+    "docs/en/foundry/analytics.ceac566f35.json"
+   ],
+   "bytes": 512190,
+   "pages": 527,
+   "sitemap": 527
+  },
+  {
+   "id": "en/foundry/announcements",
+   "files": [
+    "docs/en/foundry/announcements.beb3898214.json"
+   ],
+   "bytes": 486988,
+   "pages": 59,
+   "sitemap": 59
+  },
+  {
+   "id": "en/foundry/api",
+   "files": [
+    "docs/en/foundry/api.7c695a4370.json"
+   ],
+   "bytes": 794645,
+   "pages": 1308,
+   "sitemap": 1308
+  },
+  {
+   "id": "en/foundry/api-reference",
+   "files": [
+    "docs/en/foundry/api-reference.7383b128c4.json"
+   ],
+   "bytes": 620,
+   "pages": 1,
+   "sitemap": 1
+  },
+  {
+   "id": "en/foundry/app-building",
+   "files": [
+    "docs/en/foundry/app-building.13ee2ca788.json"
+   ],
+   "bytes": 462482,
+   "pages": 331,
+   "sitemap": 332
+  },
+  {
+   "id": "en/foundry/architecture-center",
+   "files": [
+    "docs/en/foundry/architecture-center.8b7a0b36c9.json"
+   ],
+   "bytes": 12707,
+   "pages": 8,
+   "sitemap": 8
+  },
+  {
+   "id": "en/foundry/data-integration",
+   "files": [
+    "docs/en/foundry/data-integration.8c30fba246.json"
+   ],
+   "bytes": 1419158,
+   "pages": 1212,
+   "sitemap": 1215
+  },
+  {
+   "id": "en/foundry/dev-toolchain",
+   "files": [
+    "docs/en/foundry/dev-toolchain.941cb6f4f7.json"
+   ],
+   "bytes": 257901,
+   "pages": 193,
+   "sitemap": 193
+  },
+  {
+   "id": "en/foundry/developers",
+   "files": [
+    "docs/en/foundry/developers.6c32af6dad.json"
+   ],
+   "bytes": 1103,
+   "pages": 1,
+   "sitemap": 1
+  },
+  {
+   "id": "en/foundry/devops",
+   "files": [
+    "docs/en/foundry/devops.f146aaa21c.json"
+   ],
+   "bytes": 42828,
+   "pages": 28,
+   "sitemap": 28
+  },
+  {
+   "id": "en/foundry/getting-started",
+   "files": [
+    "docs/en/foundry/getting-started.b0df05054c.json"
+   ],
+   "bytes": 33396,
+   "pages": 29,
+   "sitemap": 29
+  },
+  {
+   "id": "en/foundry/knowledge-base",
+   "files": [
+    "docs/en/foundry/knowledge-base.a2c107e949.json"
+   ],
+   "bytes": 81308,
+   "pages": 50,
+   "sitemap": 50
+  },
+  {
+   "id": "en/foundry/model-integration",
+   "files": [
+    "docs/en/foundry/model-integration.c24a245e2f.json"
+   ],
+   "bytes": 153156,
+   "pages": 105,
+   "sitemap": 105
+  },
+  {
+   "id": "en/foundry/observability",
+   "files": [
+    "docs/en/foundry/observability.c379003ef8.json"
+   ],
+   "bytes": 42989,
+   "pages": 30,
+   "sitemap": 30
+  },
+  {
+   "id": "en/foundry/ontology",
+   "files": [
+    "docs/en/foundry/ontology.31c67f12a1.json"
+   ],
+   "bytes": 558700,
+   "pages": 423,
+   "sitemap": 423
+  },
+  {
+   "id": "en/foundry/release-notes",
+   "files": [
+    "docs/en/foundry/release-notes.2b41340d07.json"
+   ],
+   "bytes": 2187,
+   "pages": 6,
+   "sitemap": 6
+  },
+  {
+   "id": "en/foundry/search",
+   "files": [
+    "docs/en/foundry/search.09e636931c.json"
+   ],
+   "bytes": 285,
+   "pages": 1,
+   "sitemap": 1
+  },
+  {
+   "id": "en/foundry/security",
+   "files": [
+    "docs/en/foundry/security.65dda4a4b6.json"
+   ],
+   "bytes": 152005,
+   "pages": 120,
+   "sitemap": 120
+  },
+  {
+   "id": "en/foundry/transforms-libraries",
+   "files": [
+    "docs/en/foundry/transforms-libraries.a324186df1.json"
+   ],
+   "bytes": 58779,
+   "pages": 53,
+   "sitemap": 55
+  },
+  {
+   "id": "en/gotham/api",
+   "files": [
+    "docs/en/gotham/api.efa9708e3b.json"
+   ],
+   "bytes": 139286,
+   "pages": 241,
+   "sitemap": 241
+  },
+  {
+   "id": "en/gotham/search",
+   "files": [
+    "docs/en/gotham/search.3b21fbc285.json"
+   ],
+   "bytes": 281,
+   "pages": 1,
+   "sitemap": 1
+  },
+  {
+   "id": "en/gotham/security",
+   "files": [
+    "docs/en/gotham/security.dffa44f064.json"
+   ],
+   "bytes": 10167,
+   "pages": 12,
+   "sitemap": 12
+  },
+  {
+   "id": "en/versions/_index_",
+   "files": [
+    "docs/en/versions/_index_.3e85f8df78.json"
+   ],
+   "bytes": 283,
+   "pages": 1,
+   "sitemap": 1
+  },
+  {
+   "id": "jp/apollo/apollo-product-specification",
+   "files": [
+    "docs/jp/apollo/apollo-product-specification.a3a2855cfa.json"
+   ],
+   "bytes": 508,
+   "pages": 1,
+   "sitemap": 0
+  },
+  {
+   "id": "jp/apollo/core",
+   "files": [
+    "docs/jp/apollo/core.fb0665b07a.json"
+   ],
+   "bytes": 1559,
+   "pages": 4,
+   "sitemap": 0
+  },
+  {
+   "id": "jp/apollo/managing-notifications",
+   "files": [
+    "docs/jp/apollo/managing-notifications.643843ce0e.json"
+   ],
+   "bytes": 472,
+   "pages": 1,
+   "sitemap": 0
+  },
+  {
+   "id": "jp/foundry/_index_",
+   "files": [
+    "docs/jp/foundry/_index_.8574acf3f6.json"
+   ],
+   "bytes": 1134,
+   "pages": 1,
+   "sitemap": 1
+  },
+  {
+   "id": "jp/foundry/administration",
+   "files": [
+    "docs/jp/foundry/administration.3161bda17e.json"
+   ],
+   "bytes": 290471,
+   "pages": 178,
+   "sitemap": 178
+  },
+  {
+   "id": "jp/foundry/aip",
+   "files": [
+    "docs/jp/foundry/aip.8e07184ca9.json"
+   ],
+   "bytes": 201906,
+   "pages": 122,
+   "sitemap": 122
+  },
+  {
+   "id": "jp/foundry/analytics",
+   "files": [
+    "docs/jp/foundry/analytics.cf365d5a13.json"
+   ],
+   "bytes": 637462,
+   "pages": 527,
+   "sitemap": 527
+  },
+  {
+   "id": "jp/foundry/announcements",
+   "files": [
+    "docs/jp/foundry/announcements.7401db9cff.json"
+   ],
+   "bytes": 369895,
+   "pages": 36,
+   "sitemap": 36
+  },
+  {
+   "id": "jp/foundry/app-building",
+   "files": [
+    "docs/jp/foundry/app-building.4831626a34.json"
+   ],
+   "bytes": 585318,
+   "pages": 332,
+   "sitemap": 332
+  },
+  {
+   "id": "jp/foundry/architecture-center",
+   "files": [
+    "docs/jp/foundry/architecture-center.5030e505c9.json"
+   ],
+   "bytes": 16295,
+   "pages": 8,
+   "sitemap": 8
+  },
+  {
+   "id": "jp/foundry/data-integration",
+   "files": [
+    "docs/jp/foundry/data-integration.c4de2858a2.json"
+   ],
+   "bytes": 1747896,
+   "pages": 1217,
+   "sitemap": 1217
+  },
+  {
+   "id": "jp/foundry/dev-toolchain",
+   "files": [
+    "docs/jp/foundry/dev-toolchain.c67cf2759d.json"
+   ],
+   "bytes": 337853,
+   "pages": 193,
+   "sitemap": 193
+  },
+  {
+   "id": "jp/foundry/devops",
+   "files": [
+    "docs/jp/foundry/devops.854f1c39ad.json"
+   ],
+   "bytes": 52884,
+   "pages": 28,
+   "sitemap": 28
+  },
+  {
+   "id": "jp/foundry/getting-started",
+   "files": [
+    "docs/jp/foundry/getting-started.abec685641.json"
+   ],
+   "bytes": 43210,
+   "pages": 29,
+   "sitemap": 29
+  },
+  {
+   "id": "jp/foundry/knowledge-base",
+   "files": [
+    "docs/jp/foundry/knowledge-base.219b00a5e5.json"
+   ],
+   "bytes": 116127,
+   "pages": 50,
+   "sitemap": 50
+  },
+  {
+   "id": "jp/foundry/model-integration",
+   "files": [
+    "docs/jp/foundry/model-integration.b458fdf6ca.json"
+   ],
+   "bytes": 188138,
+   "pages": 105,
+   "sitemap": 105
+  },
+  {
+   "id": "jp/foundry/observability",
+   "files": [
+    "docs/jp/foundry/observability.9e0147a3d0.json"
+   ],
+   "bytes": 56081,
+   "pages": 30,
+   "sitemap": 30
+  },
+  {
+   "id": "jp/foundry/ontology",
+   "files": [
+    "docs/jp/foundry/ontology.72fc20ebf7.json"
+   ],
+   "bytes": 722788,
+   "pages": 423,
+   "sitemap": 423
+  },
+  {
+   "id": "jp/foundry/search",
+   "files": [
+    "docs/jp/foundry/search.7da8118849.json"
+   ],
+   "bytes": 360,
+   "pages": 1,
+   "sitemap": 1
+  },
+  {
+   "id": "jp/foundry/security",
+   "files": [
+    "docs/jp/foundry/security.fbe941c040.json"
+   ],
+   "bytes": 194448,
+   "pages": 120,
+   "sitemap": 120
+  },
+  {
+   "id": "kr/foundry/_index_",
+   "files": [
+    "docs/kr/foundry/_index_.6ef45f8f44.json"
+   ],
+   "bytes": 1063,
+   "pages": 1,
+   "sitemap": 1
+  },
+  {
+   "id": "kr/foundry/aip",
+   "files": [
+    "docs/kr/foundry/aip.59f572b15e.json"
+   ],
+   "bytes": 431,
+   "pages": 1,
+   "sitemap": 0
+  },
+  {
+   "id": "kr/foundry/analytics",
+   "files": [
+    "docs/kr/foundry/analytics.67ec5a020e.json"
+   ],
+   "bytes": 184967,
+   "pages": 141,
+   "sitemap": 141
+  },
+  {
+   "id": "kr/foundry/announcements",
+   "files": [
+    "docs/kr/foundry/announcements.eba91df761.json"
+   ],
+   "bytes": 396,
+   "pages": 1,
+   "sitemap": 0
+  },
+  {
+   "id": "kr/foundry/app-building",
+   "files": [
+    "docs/kr/foundry/app-building.32f61ca1cf.json"
+   ],
+   "bytes": 133101,
+   "pages": 106,
+   "sitemap": 106
+  },
+  {
+   "id": "kr/foundry/carbon",
+   "files": [
+    "docs/kr/foundry/carbon.2439345f08.json"
+   ],
+   "bytes": 381,
+   "pages": 1,
+   "sitemap": 0
+  },
+  {
+   "id": "kr/foundry/data-integration",
+   "files": [
+    "docs/kr/foundry/data-integration.c1be51a82b.json"
+   ],
+   "bytes": 323566,
+   "pages": 247,
+   "sitemap": 246
+  },
+  {
+   "id": "kr/foundry/evaluate-models",
+   "files": [
+    "docs/kr/foundry/evaluate-models.1bc6bb4204.json"
+   ],
+   "bytes": 489,
+   "pages": 1,
+   "sitemap": 0
+  },
+  {
+   "id": "kr/foundry/getting-started",
+   "files": [
+    "docs/kr/foundry/getting-started.f013059cec.json"
+   ],
+   "bytes": 17262,
+   "pages": 15,
+   "sitemap": 15
+  },
+  {
+   "id": "kr/foundry/model-integration",
+   "files": [
+    "docs/kr/foundry/model-integration.17896849c2.json"
+   ],
+   "bytes": 44073,
+   "pages": 28,
+   "sitemap": 27
+  },
+  {
+   "id": "kr/foundry/object-link-types",
+   "files": [
+    "docs/kr/foundry/object-link-types.2bb2efecf8.json"
+   ],
+   "bytes": 488,
+   "pages": 1,
+   "sitemap": 0
+  },
+  {
+   "id": "kr/foundry/ontology",
+   "files": [
+    "docs/kr/foundry/ontology.96a5abbe13.json"
+   ],
+   "bytes": 117102,
+   "pages": 102,
+   "sitemap": 102
+  },
+  {
+   "id": "kr/foundry/platform-overview",
+   "files": [
+    "docs/kr/foundry/platform-overview.72844218bf.json"
+   ],
+   "bytes": 35649,
+   "pages": 31,
+   "sitemap": 31
+  },
+  {
+   "id": "kr/foundry/search",
+   "files": [
+    "docs/kr/foundry/search.d1d0977b76.json"
+   ],
+   "bytes": 336,
+   "pages": 1,
+   "sitemap": 1
+  },
+  {
+   "id": "kr/foundry/security",
+   "files": [
+    "docs/kr/foundry/security.4344a43cd3.json"
+   ],
+   "bytes": 118844,
+   "pages": 90,
+   "sitemap": 90
+  },
+  {
+   "id": "zh/foundry/_index_",
+   "files": [
+    "docs/zh/foundry/_index_.7b5ed657bc.json"
+   ],
+   "bytes": 1024,
+   "pages": 1,
+   "sitemap": 1
+  },
+  {
+   "id": "zh/foundry/administration",
+   "files": [
+    "docs/zh/foundry/administration.c9bfa8b65b.json"
+   ],
+   "bytes": 150960,
+   "pages": 131,
+   "sitemap": 131
+  },
+  {
+   "id": "zh/foundry/aip",
+   "files": [
+    "docs/zh/foundry/aip.f3cdf21227.json"
+   ],
+   "bytes": 431,
+   "pages": 1,
+   "sitemap": 0
+  },
+  {
+   "id": "zh/foundry/analytics",
+   "files": [
+    "docs/zh/foundry/analytics.fca791d0c8.json"
+   ],
+   "bytes": 403941,
+   "pages": 307,
+   "sitemap": 307
+  },
+  {
+   "id": "zh/foundry/announcements",
+   "files": [
+    "docs/zh/foundry/announcements.e098a6b0be.json"
+   ],
+   "bytes": 176755,
+   "pages": 29,
+   "sitemap": 29
+  },
+  {
+   "id": "zh/foundry/app-building",
+   "files": [
+    "docs/zh/foundry/app-building.b231a17813.json"
+   ],
+   "bytes": 356565,
+   "pages": 291,
+   "sitemap": 291
+  },
+  {
+   "id": "zh/foundry/data-integration",
+   "files": [
+    "docs/zh/foundry/data-integration.89e467294e.json"
+   ],
+   "bytes": 1121314,
+   "pages": 1025,
+   "sitemap": 1025
+  },
+  {
+   "id": "zh/foundry/devops",
+   "files": [
+    "docs/zh/foundry/devops.9253b8be5f.json"
+   ],
+   "bytes": 21109,
+   "pages": 18,
+   "sitemap": 18
+  },
+  {
+   "id": "zh/foundry/getting-started",
+   "files": [
+    "docs/zh/foundry/getting-started.466c49db8c.json"
+   ],
+   "bytes": 26323,
+   "pages": 28,
+   "sitemap": 28
+  },
+  {
+   "id": "zh/foundry/knowledge-base",
+   "files": [
+    "docs/zh/foundry/knowledge-base.2717127955.json"
+   ],
+   "bytes": 76167,
+   "pages": 49,
+   "sitemap": 49
+  },
+  {
+   "id": "zh/foundry/model-integration",
+   "files": [
+    "docs/zh/foundry/model-integration.7d7c950c3e.json"
+   ],
+   "bytes": 105682,
+   "pages": 72,
+   "sitemap": 72
+  },
+  {
+   "id": "zh/foundry/ontology",
+   "files": [
+    "docs/zh/foundry/ontology.253d33e7ea.json"
+   ],
+   "bytes": 393384,
+   "pages": 338,
+   "sitemap": 338
+  },
+  {
+   "id": "zh/foundry/platform-overview",
+   "files": [
+    "docs/zh/foundry/platform-overview.1a8b20d9a7.json"
+   ],
+   "bytes": 6690,
+   "pages": 6,
+   "sitemap": 6
+  },
+  {
+   "id": "zh/foundry/search",
+   "files": [
+    "docs/zh/foundry/search.8bf816a5cc.json"
+   ],
+   "bytes": 336,
+   "pages": 1,
+   "sitemap": 1
+  },
+  {
+   "id": "zh/foundry/security",
+   "files": [
+    "docs/zh/foundry/security.7a4583ac09.json"
+   ],
+   "bytes": 108511,
+   "pages": 89,
+   "sitemap": 89
+  }
+ ],
+ "indices": [
+  {
+   "lang": "en",
+   "files": [
+    "index/en.0.a2eee5ecfe.json",
+    "index/en.1.b319fee7c0.json",
+    "index/en.2.b800396caf.json"
+   ],
+   "bytes": 4992545,
+   "rows": 5460
+  },
+  {
+   "lang": "jp",
+   "files": [
+    "index/jp.0.8b61534140.json",
+    "index/jp.1.52979c1bb6.json",
+    "index/jp.2.1345c05e03.json"
+   ],
+   "bytes": 4638173,
+   "rows": 3406
+  },
+  {
+   "lang": "zh",
+   "files": [
+    "index/zh.0.b731b1f3cb.json",
+    "index/zh.1.760191b0f6.json"
+   ],
+   "bytes": 2230400,
+   "rows": 2386
+  },
+  {
+   "lang": "kr",
+   "files": [
+    "index/kr.0.0d6c90242e.json"
+   ],
+   "bytes": 721356,
+   "rows": 767
+  }
+ ],
+ "alias": "alias.edd1e15427.json",
+ "secciones_guiadas": {
+  "getting-started": 13,
+  "use-case-examples": 20,
+  "code-examples": 17,
+  "architecture-center": 8,
+  "recipes": 7,
+  "walkthroughs": 6,
+  "use-case-life-cycle": 6,
+  "use-case-patterns": 6,
+  "guides-and-workflows": 3
+ },
+ "requiere_cuenta": [
+  "https://learn.palantir.com/",
+  "https://learn.palantir.com/speedrun-your-e2e-aip-workflow"
+ ]
+}

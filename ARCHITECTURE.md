@@ -56,7 +56,7 @@ produces byte-identical output to a full rebuild. The whole streak timeline is s
 
 ---
 
-## 2. The event model (23 types)
+## 2. The event model (24 types; `evidence.recorded` is Forge's, §8)
 
 Read from `src/core/event.ts:11-35` and each payload interface. `goal_id` / `module_id` live in the
 envelope; the table shows the `payload`.
@@ -319,6 +319,31 @@ content/         books/ (mini-books .md) · exercises/ (exercise banks .md)  ←
 infra/           canvas-scraper (n8n workflow + docker-compose) — the Fase-4 obligations scraper
 scripts/         tooling (loc.mjs, generate-icons.mjs)
 ```
+
+## 8. Engineering Forge (the sixth world)
+
+Design: `.agents/tasks/arcanum-forge/design.md`. Code: `src/forge/**`, `src/lib/spines-forge.ts`.
+
+- **Events: 24 types.** Forge adds `evidence.recorded` (a typed record of local work: SQL runs, history traces,
+  ontology models, predictions). Old consumers fall into the `default` branch and ignore it.
+- **ReadModel additions.** `evidence` (append-only, fold order), `forgeVerdicts` (every Forge verdict with its
+  `queueId`) and `nativeGates` (last native verdict per cell). All three only grow or replace by key, so
+  `incremental == rebuild` holds; `projector-forge.test.ts` checks it on the fast path and on the rebuild path.
+- **Verdict rule.** A Forge `compuerta` opens only with `source: "ai"`, `aprobado` and the rule of design §8.1 (no
+  failed critical condition, no essential capability below 3). A heuristic verdict is recorded and opens nothing; a
+  diagnostic cell never opens; `ai.queued` never opens. Each cell declares its `compuerta`.
+- **Seed.** Forge has its own seed block (`src/forge/seed.ts`, `FORGE_SEED_TS = 1793901600000`), last in `SPINES`.
+  `seed-frozen.test.ts` only gained lines; the fingerprints of the five older worlds are unchanged.
+- **Lazy loading.** Route data, books and banks load per route through `src/forge/loaders.ts`; runners, flows and
+  ingestion checks sit behind lazy registries (`ui/exercises/registry.ts`, `ui/flows/registry.ts`,
+  `bank/check/registry.ts`), none imported statically. Books are downloaded per route and never precached; banks
+  are precached. `budget-report` attributes chunks by the module graph (`forge-chunks.json`).
+- **Atlas.** `public/atlas/v1/` holds the hashed metadata of the public pages of palantir.com/docs and a sharded
+  search index (schema: `src/forge/atlas/types.ts`). It is outside the precache. The Atlas screens (tree, search,
+  entry, viewer) are not built in this version; nothing in the UI links to them.
+- **Authoring state.** `src/forge/model/authoring.ts` derives «Especificado / Autorado / Verificado» from the
+  route data, `bank-index.json` and `content/forge/verification/*.json` only. «Verificado» needs every executable
+  item covered by a passing run with the current `sha10` and no pending items.
 
 See also: [README.md](README.md) · [CONTENT.md](CONTENT.md) · [SECURITY.md](SECURITY.md) ·
 [OPERATIONS.md](OPERATIONS.md) · [DEPLOY.md](DEPLOY.md) · [AGENT.md](AGENT.md).

@@ -1,0 +1,854 @@
+{
+  "maestro_sha10": "38cbc7da42",
+  "claves": {
+    "ACCESS": {
+      "url": "https://community.palantir.com/t/unable-to-access-dev-tier-in-mexico-associate-application-developer-exam-code-request/7314",
+      "etiqueta": "Unable to access Dev Tier in Mexico — Associate Application Developer exam code request - Ask the Community - Palantir Developer Community",
+      "tipo": "comunitario",
+      "acceso": "publico"
+    },
+    "ACON": {
+      "url": "https://www.palantir.com/docs/foundry/automate/condition-objects",
+      "etiqueta": "Automate • Condition • Object set conditions • Palantir",
+      "tipo": "docs",
+      "acceso": "publico"
+    },
+    "ACTION": {
+      "url": "https://www.palantir.com/docs/foundry/action-types/getting-started",
+      "etiqueta": "Action types • Getting started • Palantir",
+      "tipo": "docs",
+      "acceso": "publico"
+    },
+    "AGENT": {
+      "url": "https://www.palantir.com/docs/foundry/aip/agent-stack",
+      "etiqueta": "Overview • AIP • Palantir",
+      "tipo": "docs",
+      "acceso": "publico"
+    },
+    "AIINDEX": {
+      "url": "https://github.com/perixtar/Tech-OA-Interview-Questions/blob/master/formats/ai-coding.md",
+      "etiqueta": "Índice comunitario de AI coding",
+      "tipo": "otro",
+      "acceso": "publico"
+    },
+    "AIP": {
+      "url": "https://www.palantir.com/docs/foundry/aip/overview",
+      "etiqueta": "AIP overview",
+      "tipo": "docs",
+      "acceso": "publico"
+    },
+    "APOLLO": {
+      "url": "https://www.palantir.com/docs/apollo/core/introduction/index.html",
+      "etiqueta": "Introduction • Palantir",
+      "tipo": "docs",
+      "acceso": "publico"
+    },
+    "ARCH": {
+      "url": "https://www.palantir.com/docs/foundry/architecture-center/ontology-system",
+      "etiqueta": "The Ontology system • Palantir",
+      "tipo": "docs",
+      "acceso": "publico"
+    },
+    "ASYNC": {
+      "url": "https://docs.python.org/3/library/asyncio-task.html",
+      "etiqueta": "Coroutines and tasks — Python 3.15.2 documentation",
+      "tipo": "otro",
+      "acceso": "publico"
+    },
+    "AUTO": {
+      "url": "https://www.palantir.com/docs/foundry/automate/overview",
+      "etiqueta": "Automate • Overview • Palantir",
+      "tipo": "docs",
+      "acceso": "publico"
+    },
+    "BRANCH": {
+      "url": "https://www.palantir.com/docs/foundry/global-branching",
+      "etiqueta": "Global Branching • Overview • Palantir",
+      "tipo": "docs",
+      "acceso": "publico"
+    },
+    "BUILD": {
+      "url": "https://build.palantir.com/",
+      "etiqueta": "Build with AIP",
+      "tipo": "otro",
+      "acceso": "publico"
+    },
+    "CAREER": {
+      "url": "https://www.palantir.com/careers/getting-hired",
+      "etiqueta": "Palantir Careers | Getting Hired",
+      "tipo": "otro",
+      "acceso": "publico"
+    },
+    "CDC": {
+      "url": "https://www.palantir.com/docs/foundry/data-integration/change-data-capture",
+      "etiqueta": "Core concepts • Change data capture (CDC) • Palantir",
+      "tipo": "docs",
+      "acceso": "publico"
+    },
+    "CERT": {
+      "url": "https://community.palantir.com/t/palantir-certifications-are-getting-a-refresh-with-a-brand-new-ai-engineer-exam-launching-3-august/7022",
+      "etiqueta": "Palantir certifications are getting a refresh, with a brand-new AI Engineer exam launching 3 August - Community Announcements - Palantir Developer Community",
+      "tipo": "comunitario",
+      "acceso": "publico"
+    },
+    "CHAT": {
+      "url": "https://www.palantir.com/docs/foundry/chatbot-studio/getting-started",
+      "etiqueta": "AIP Chatbot Studio • Getting started • Palantir",
+      "tipo": "docs",
+      "acceso": "publico"
+    },
+    "CITE": {
+      "url": "https://www.palantir.com/docs/foundry/chatbot-studio/citations",
+      "etiqueta": "AIP Chatbot Studio • Retrieval context • Citations • Palantir",
+      "tipo": "docs",
+      "acceso": "publico"
+    },
+    "COMP": {
+      "url": "https://www.palantir.com/docs/foundry/compute-modules/overview",
+      "etiqueta": "Compute modules • Overview • Palantir",
+      "tipo": "docs",
+      "acceso": "publico"
+    },
+    "COMPMODE": {
+      "url": "https://www.palantir.com/docs/foundry/compute-modules/execution-modes",
+      "etiqueta": "Compute modules • Configuration • Execution modes • Palantir",
+      "tipo": "docs",
+      "acceso": "publico"
+    },
+    "CONNECT": {
+      "url": "https://www.palantir.com/docs/foundry/data-connection/overview",
+      "etiqueta": "Data Connection • Overview • Palantir",
+      "tipo": "docs",
+      "acceso": "publico"
+    },
+    "CONSIST": {
+      "url": "https://www.palantir.com/docs/foundry/action-types/consistency-guarantees",
+      "etiqueta": "Action types • Consistency and isolation • Palantir",
+      "tipo": "docs",
+      "acceso": "publico"
+    },
+    "CONSOLE": {
+      "url": "https://www.palantir.com/docs/foundry/developer-console/overview",
+      "etiqueta": "Developer Console • Overview • Palantir",
+      "tipo": "docs",
+      "acceso": "publico"
+    },
+    "COST": {
+      "url": "https://www.palantir.com/docs/foundry/resource-management/usage-types",
+      "etiqueta": "Resource Management • Usage types • Palantir",
+      "tipo": "docs",
+      "acceso": "publico"
+    },
+    "CUSTOM": {
+      "url": "https://www.palantir.com/docs/foundry/agent-sdk/advanced-customization",
+      "etiqueta": "Agent SDK • Advanced customization • Palantir",
+      "tipo": "docs",
+      "acceso": "publico"
+    },
+    "DB": {
+      "url": "https://15445.courses.cs.cmu.edu/fall2026/schedule.html",
+      "etiqueta": "Schedule | CMU 15-445/645 :: Intro to Database Systems (Fall 2026)",
+      "tipo": "curso",
+      "acceso": "publico"
+    },
+    "DELTA": {
+      "url": "https://blog.palantir.com/who-wants-to-be-a-delta-8d2ea948035",
+      "etiqueta": "Who Wants to be a Delta?",
+      "tipo": "blog",
+      "acceso": "publico"
+    },
+    "DEV": {
+      "url": "https://blog.palantir.com/dev-versus-delta-demystifying-engineering-roles-at-palantir-ad44c2a6e87",
+      "etiqueta": "Dev Versus Delta: Demystifying Engineering Roles at Palantir",
+      "tipo": "blog",
+      "acceso": "publico"
+    },
+    "DIST": {
+      "url": "https://pdos.csail.mit.edu/6.5840/schedule.html",
+      "etiqueta": "6.5840 Schedule: Spring 2026",
+      "tipo": "curso",
+      "acceso": "publico"
+    },
+    "DOC": {
+      "url": "https://www.palantir.com/docs/foundry/document-intelligence/overview",
+      "etiqueta": "AIP Document Intelligence • Overview • Palantir",
+      "tipo": "docs",
+      "acceso": "publico"
+    },
+    "DQ": {
+      "url": "https://www.palantir.com/docs/foundry/pipeline-builder/dataexpectations-overview",
+      "etiqueta": "Pipeline Builder • Data expectations • Overview • Palantir",
+      "tipo": "docs",
+      "acceso": "publico"
+    },
+    "END": {
+      "url": "https://blog.palantir.com/building-end-to-end-e3a8349aee70",
+      "etiqueta": "Building End-to-End",
+      "tipo": "blog",
+      "acceso": "publico"
+    },
+    "EVAL": {
+      "url": "https://www.palantir.com/docs/foundry/aip-evals/getting-started",
+      "etiqueta": "AIP Evals • Evaluation suites for Logic functions • Palantir",
+      "tipo": "docs",
+      "acceso": "publico"
+    },
+    "EVENTS": {
+      "url": "https://www.palantir.com/docs/foundry/workshop/concepts-events",
+      "etiqueta": "Workshop • Core concepts • Events • Palantir",
+      "tipo": "docs",
+      "acceso": "publico"
+    },
+    "FDE": {
+      "url": "https://blog.palantir.com/a-day-in-the-life-of-a-palantir-forward-deployed-software-engineer-45ef2de257b1",
+      "etiqueta": "A Day in the Life of a Palantir Forward Deployed Software Engineer",
+      "tipo": "blog",
+      "acceso": "publico"
+    },
+    "FREQ": {
+      "url": "https://www.palantir.com/docs/foundry/automate/evaluation-frequency",
+      "etiqueta": "Automate • Settings • Evaluation frequency • Palantir",
+      "tipo": "docs",
+      "acceso": "publico"
+    },
+    "FUN": {
+      "url": "https://www.palantir.com/docs/foundry/functions/overview",
+      "etiqueta": "Functions • Overview • Palantir",
+      "tipo": "docs",
+      "acceso": "publico"
+    },
+    "HEALTH": {
+      "url": "https://www.palantir.com/docs/foundry/observability/data-health",
+      "etiqueta": "Data Health • Palantir",
+      "tipo": "docs",
+      "acceso": "publico"
+    },
+    "IDEMP": {
+      "url": "https://aws.amazon.com/builders-library/making-retries-safe-with-idempotent-APIs/",
+      "etiqueta": "Making retries safe with idempotent APIs",
+      "tipo": "otro",
+      "acceso": "publico"
+    },
+    "INCR": {
+      "url": "https://www.palantir.com/docs/foundry/transforms-python/incremental-usage",
+      "etiqueta": "Python • Incremental transforms • Usage guide • Palantir",
+      "tipo": "docs",
+      "acceso": "publico"
+    },
+    "INDEX": {
+      "url": "https://www.palantir.com/docs/foundry/object-indexing/overview",
+      "etiqueta": "Indexing • Overview • Palantir",
+      "tipo": "docs",
+      "acceso": "publico"
+    },
+    "INTEGR": {
+      "url": "https://www.palantir.com/docs/foundry/compute-modules/osdk-integration",
+      "etiqueta": "Compute modules • OSDK integration • Palantir",
+      "tipo": "docs",
+      "acceso": "publico"
+    },
+    "INTERLEAVE": {
+      "url": "https://pubmed.ncbi.nlm.nih.gov/35436145/",
+      "etiqueta": "Interleaving Retrieval Practice Promotes Science Learning - PubMed",
+      "tipo": "otro",
+      "acceso": "publico"
+    },
+    "LEARN": {
+      "url": "https://learn.palantir.com/",
+      "etiqueta": "Palantir Learning",
+      "tipo": "curso",
+      "acceso": "cuenta"
+    },
+    "LOGIC": {
+      "url": "https://www.palantir.com/docs/foundry/logic/getting-started",
+      "etiqueta": "AIP Logic • Getting started • Palantir",
+      "tipo": "docs",
+      "acceso": "publico"
+    },
+    "LOGICVID": {
+      "url": "https://www.youtube.com/watch?v=TOsgyjJuQVc",
+      "etiqueta": "Building with Palantir AIP: Logic Tools for RAG/OAG",
+      "tipo": "video",
+      "acceso": "publico"
+    },
+    "MARK": {
+      "url": "https://www.palantir.com/docs/foundry/security/markings",
+      "etiqueta": "Concepts • Markings • Palantir",
+      "tipo": "docs",
+      "acceso": "publico"
+    },
+    "MARKET": {
+      "url": "https://www.palantir.com/docs/foundry/marketplace/overview",
+      "etiqueta": "Marketplace • Overview • Palantir",
+      "tipo": "docs",
+      "acceso": "publico"
+    },
+    "MEDIA": {
+      "url": "https://www.palantir.com/docs/foundry/data-integration/media-sets",
+      "etiqueta": "Core concepts • Media sets (unstructured data) • Palantir",
+      "tipo": "docs",
+      "acceso": "publico"
+    },
+    "MGR": {
+      "url": "https://www.palantir.com/docs/foundry/agent-manager/overview",
+      "etiqueta": "Agent Manager • Overview • Palantir",
+      "tipo": "docs",
+      "acceso": "publico"
+    },
+    "MIT": {
+      "url": "https://www.ocw.mit.edu/courses/6-006-introduction-to-algorithms-spring-2020/pages/lecture-notes/",
+      "etiqueta": "Lecture Notes | Introduction to Algorithms | Electrical Engineering and Computer Science | MIT OpenCourseWare",
+      "tipo": "curso",
+      "acceso": "publico"
+    },
+    "MOCK": {
+      "url": "https://www.palantir.com/docs/foundry/ontology-sdk/typescript-osdk-testing",
+      "etiqueta": "Ontology SDK • Unit testing TypeScript OSDK code • Palantir",
+      "tipo": "docs",
+      "acceso": "publico"
+    },
+    "MODEL": {
+      "url": "https://www.palantir.com/docs/foundry/integrate-models/integrate-overview",
+      "etiqueta": "Models • Overview • Palantir",
+      "tipo": "docs",
+      "acceso": "publico"
+    },
+    "MTYPE": {
+      "url": "https://www.palantir.com/docs/foundry/model-integration/what-to-use",
+      "etiqueta": "Core concepts • Selecting the right modeling tool • Palantir",
+      "tipo": "docs",
+      "acceso": "publico"
+    },
+    "OA": {
+      "url": "https://github.com/perixtar/Tech-OA-Interview-Questions",
+      "etiqueta": "Tech OA and Interview Questions — índice comunitario",
+      "tipo": "otro",
+      "acceso": "publico"
+    },
+    "OACODE": {
+      "url": "https://github.com/perixtar/Tech-OA-Interview-Questions/blob/master/formats/coding.md",
+      "etiqueta": "Índice comunitario de coding",
+      "tipo": "otro",
+      "acceso": "publico"
+    },
+    "OASD": {
+      "url": "https://github.com/perixtar/Tech-OA-Interview-Questions/blob/master/formats/system-design.md",
+      "etiqueta": "Índice comunitario de system design",
+      "tipo": "otro",
+      "acceso": "publico"
+    },
+    "OBJ": {
+      "url": "https://www.palantir.com/docs/foundry/object-link-types/link-types-overview/",
+      "etiqueta": "Object and link types • Link types • Overview • Palantir",
+      "tipo": "docs",
+      "acceso": "publico"
+    },
+    "ONTO": {
+      "url": "https://www.palantir.com/docs/foundry/ontology/overview",
+      "etiqueta": "Overview • Ontology • Palantir",
+      "tipo": "docs",
+      "acceso": "publico"
+    },
+    "ONTOLOGIZE": {
+      "url": "https://www.ontologize.com/tutorials",
+      "etiqueta": "Ontologize tutorials",
+      "tipo": "otro",
+      "acceso": "publico"
+    },
+    "OP": {
+      "url": "https://www.palantir.com/docs/foundry/action-types/submission-criteria",
+      "etiqueta": "Action types • Submission criteria • Palantir",
+      "tipo": "docs",
+      "acceso": "publico"
+    },
+    "OSDK": {
+      "url": "https://www.palantir.com/docs/foundry/ontology-sdk",
+      "etiqueta": "Ontology SDK • Overview • Palantir",
+      "tipo": "docs",
+      "acceso": "publico"
+    },
+    "OSDKVID": {
+      "url": "https://www.youtube.com/watch?v=vSJ5H00V7Es",
+      "etiqueta": "Building with Palantir AIP: the Ontology Software Development Kit",
+      "tipo": "video",
+      "acceso": "publico"
+    },
+    "OSV2": {
+      "url": "https://www.palantir.com/docs/foundry/object-backend/overview",
+      "etiqueta": "Overview and getting started • Overview • Palantir",
+      "tipo": "docs",
+      "acceso": "publico"
+    },
+    "OVER": {
+      "url": "https://sre.google/workbook/overload/",
+      "etiqueta": "Google SRE: Handling Operational Overload, Workload Management",
+      "tipo": "otro",
+      "acceso": "publico"
+    },
+    "PG": {
+      "url": "https://www.postgresql.org/docs/current/mvcc.html?trk=article-ssr-frontend-pulse_little-text-block",
+      "etiqueta": "PostgreSQL: Documentation: 18: Chapter 13. Concurrency Control",
+      "tipo": "otro",
+      "acceso": "publico"
+    },
+    "PIPE": {
+      "url": "https://www.palantir.com/docs/foundry/pipeline-builder/overview",
+      "etiqueta": "Pipeline Builder • Overview • Palantir",
+      "tipo": "docs",
+      "acceso": "publico"
+    },
+    "PY": {
+      "url": "https://docs.python.org/3/tutorial/datastructures.html",
+      "etiqueta": "5. Data Structures — Python 3.15.2 documentation",
+      "tipo": "otro",
+      "acceso": "publico"
+    },
+    "PYTEST": {
+      "url": "https://www.palantir.com/docs/foundry/transforms-python/unit-tests",
+      "etiqueta": "Python • Basic transforms • Unit tests • Palantir",
+      "tipo": "docs",
+      "acceso": "publico"
+    },
+    "RAG": {
+      "url": "https://www.palantir.com/docs/foundry/chatbot-studio/retrieval-context",
+      "etiqueta": "AIP Chatbot Studio • Retrieval context • Context types • Palantir",
+      "tipo": "docs",
+      "acceso": "publico"
+    },
+    "RETRIEVE": {
+      "url": "https://pubmed.ncbi.nlm.nih.gov/21252317/",
+      "etiqueta": "Retrieval practice produces more learning than elaborative studying with concept mapping - PubMed",
+      "tipo": "otro",
+      "acceso": "publico"
+    },
+    "RETRY": {
+      "url": "https://aws.amazon.com/es/builders-library/timeouts-retries-and-backoff-with-jitter/",
+      "etiqueta": "Tiempos de espera, reintentos y retardo con fluctuación",
+      "tipo": "otro",
+      "acceso": "publico"
+    },
+    "SCENARIO": {
+      "url": "https://www.palantir.com/docs/foundry/workshop/scenarios-overview",
+      "etiqueta": "Workshop • Scenarios [Legacy] • Overview • Palantir",
+      "tipo": "docs",
+      "acceso": "publico"
+    },
+    "SDK": {
+      "url": "https://www.palantir.com/docs/foundry/agent-sdk/overview",
+      "etiqueta": "Agent SDK • Overview • Palantir",
+      "tipo": "docs",
+      "acceso": "publico"
+    },
+    "SEC": {
+      "url": "https://www.palantir.com/docs/foundry/security/access-control-propagation",
+      "etiqueta": "Concepts • Access control propagation • Palantir",
+      "tipo": "docs",
+      "acceso": "publico"
+    },
+    "SECRES": {
+      "url": "https://www.palantir.com/docs/foundry/object-permissioning/overview",
+      "etiqueta": "Object permissioning • Overview • Palantir",
+      "tipo": "docs",
+      "acceso": "publico"
+    },
+    "SEM": {
+      "url": "https://www.palantir.com/docs/foundry/ontology/using-palantir-provided-models-to-create-a-semantic-search-workflow",
+      "etiqueta": "Semantic search • Use Palantir-provided models to create a semantic search workflow • Palantir",
+      "tipo": "docs",
+      "acceso": "publico"
+    },
+    "SLO": {
+      "url": "https://sre.google/workbook/implementing-slos/",
+      "etiqueta": "Google SRE - Continuous Improvement To Get Reliability",
+      "tipo": "otro",
+      "acceso": "publico"
+    },
+    "SPACE": {
+      "url": "https://pubmed.ncbi.nlm.nih.gov/16719566/",
+      "etiqueta": "Distributed practice in verbal recall tasks: A review and quantitative synthesis - PubMed",
+      "tipo": "otro",
+      "acceso": "publico"
+    },
+    "SPEED": {
+      "url": "https://learn.palantir.com/speedrun-your-e2e-aip-workflow",
+      "etiqueta": "Speedrun: Your first AIP workflow",
+      "tipo": "curso",
+      "acceso": "cuenta"
+    },
+    "STAGED": {
+      "url": "https://www.palantir.com/docs/foundry/logic/staged-writes",
+      "etiqueta": "AIP Logic • Staged writes • Palantir",
+      "tipo": "docs",
+      "acceso": "publico"
+    },
+    "STREAM": {
+      "url": "https://www.palantir.com/docs/foundry/data-integration/streaming-guide",
+      "etiqueta": "Resource guides • Streaming • Palantir",
+      "tipo": "docs",
+      "acceso": "publico"
+    },
+    "SUPER": {
+      "url": "https://www.palantir.com/docs/foundry/superrepo/overview",
+      "etiqueta": "SuperRepo • Overview • Palantir",
+      "tipo": "docs",
+      "acceso": "publico"
+    },
+    "TIME": {
+      "url": "https://www.palantir.com/docs/foundry/time-series/time-series-overview",
+      "etiqueta": "Time series • Overview • Palantir",
+      "tipo": "docs",
+      "acceso": "publico"
+    },
+    "TS": {
+      "url": "https://www.palantir.com/docs/foundry/ontology-sdk/typescript-osdk",
+      "etiqueta": "Ontology SDK • TypeScript OSDK • Palantir",
+      "tipo": "docs",
+      "acceso": "publico"
+    },
+    "TSUP": {
+      "url": "https://www.palantir.com/docs/foundry/functions/language-feature-support",
+      "etiqueta": "Functions • Feature support by language • Palantir",
+      "tipo": "docs",
+      "acceso": "publico"
+    },
+    "TUTORIAL": {
+      "url": "https://www.ontologize.com/tutorials",
+      "etiqueta": "Ontologize tutorials",
+      "tipo": "otro",
+      "acceso": "publico"
+    },
+    "USE": {
+      "url": "https://www.palantir.com/docs/foundry/use-case-life-cycle/overview",
+      "etiqueta": "Use case lifecycle • Overview • Palantir",
+      "tipo": "docs",
+      "acceso": "publico"
+    },
+    "VARS": {
+      "url": "https://www.palantir.com/docs/foundry/workshop/concepts-variables",
+      "etiqueta": "Workshop • Core concepts • Variables • Palantir",
+      "tipo": "docs",
+      "acceso": "publico"
+    },
+    "VERTEX": {
+      "url": "https://www.palantir.com/docs/foundry/vertex/overview",
+      "etiqueta": "Vertex • Overview • Palantir",
+      "tipo": "docs",
+      "acceso": "publico"
+    },
+    "WEBHOOK": {
+      "url": "https://www.palantir.com/docs/foundry/data-connection/webhooks-overview",
+      "etiqueta": "Data Connection • Webhooks • Overview • Palantir",
+      "tipo": "docs",
+      "acceso": "publico"
+    },
+    "WORK": {
+      "url": "https://www.palantir.com/docs/foundry/workshop/getting-started",
+      "etiqueta": "Workshop • Getting started • Palantir",
+      "tipo": "docs",
+      "acceso": "publico"
+    }
+  },
+  "cursos": {
+    "C-01": {
+      "url": "https://missing.csail.mit.edu/2020/index.html",
+      "etiqueta": "MIT Missing Semester, 2020",
+      "tipo": "curso",
+      "acceso": "publico",
+      "honestidad": "Selección de unidades; no equivale a haber completado el curso"
+    },
+    "C-02": {
+      "url": "https://cs61a.org/fa26/projects/cats/",
+      "etiqueta": "Berkeley CS61A: Cats",
+      "tipo": "curso",
+      "acceso": "publico",
+      "honestidad": "Selección de unidades; no equivale a haber completado el curso"
+    },
+    "C-03": {
+      "url": "https://sp25.datastructur.es/projects/",
+      "etiqueta": "Berkeley CS61B, Spring 2025: proyectos",
+      "tipo": "curso",
+      "acceso": "publico",
+      "honestidad": "Selección de unidades; no equivale a haber completado el curso"
+    },
+    "C-04": {
+      "url": "https://ocw.mit.edu/courses/6-006-introduction-to-algorithms-spring-2020/pages/assignments/",
+      "etiqueta": "MIT 6.006, Spring 2020: assignments",
+      "tipo": "curso",
+      "acceso": "publico",
+      "honestidad": "Selección de unidades; no equivale a haber completado el curso"
+    },
+    "C-05": {
+      "url": "https://ocw.mit.edu/courses/6-042j-mathematics-for-computer-science-fall-2010/pages/assignments/",
+      "etiqueta": "MIT 6.042J, Fall 2010: assignments",
+      "tipo": "curso",
+      "acceso": "publico",
+      "honestidad": "Selección de unidades; no equivale a haber completado el curso"
+    },
+    "C-06": {
+      "url": "https://ocw.mit.edu/ans7870/6/6.005/s16/",
+      "etiqueta": "MIT 6.005 Software Construction, Spring 2016",
+      "tipo": "curso",
+      "acceso": "publico",
+      "honestidad": "Selección de unidades; no equivale a haber completado el curso"
+    },
+    "C-07": {
+      "url": "https://pages.cs.wisc.edu/~remzi/OSTEP/",
+      "etiqueta": "Operating Systems: Three Easy Pieces",
+      "tipo": "curso",
+      "acceso": "publico",
+      "honestidad": "Selección de unidades; no equivale a haber completado el curso"
+    },
+    "C-08": {
+      "url": "https://cs61c.org/fa26/",
+      "etiqueta": "Berkeley CS61C, Fall 2026",
+      "tipo": "curso",
+      "acceso": "publico",
+      "honestidad": "Selección de unidades; no equivale a haber completado el curso"
+    },
+    "C-09": {
+      "url": "https://cs144.github.io/",
+      "etiqueta": "Stanford CS144",
+      "tipo": "curso",
+      "acceso": "publico",
+      "honestidad": "Selección de unidades; no equivale a haber completado el curso"
+    },
+    "C-10": {
+      "url": "https://15445.courses.cs.cmu.edu/spring2025/assignments.html",
+      "etiqueta": "CMU 15-445/645, Spring 2025: assignments",
+      "tipo": "curso",
+      "acceso": "publico",
+      "honestidad": "Selección de unidades; no equivale a haber completado el curso"
+    },
+    "C-11": {
+      "url": "https://pdos.csail.mit.edu/6.5840/schedule.html",
+      "etiqueta": "MIT 6.5840: calendario",
+      "tipo": "curso",
+      "acceso": "publico",
+      "honestidad": "Selección de unidades; no equivale a haber completado el curso"
+    },
+    "C-12": {
+      "url": "https://ocw.mit.edu/courses/6-041sc-probabilistic-systems-analysis-and-applied-probability-fall-2013/",
+      "etiqueta": "MIT 6.041SC, Fall 2013",
+      "tipo": "curso",
+      "acceso": "publico",
+      "honestidad": "Selección de unidades; no equivale a haber completado el curso"
+    },
+    "C-13": {
+      "url": "https://ocw.mit.edu/courses/18-06-linear-algebra-spring-2010/video_galleries/video-lectures/",
+      "etiqueta": "MIT 18.06, Spring 2010: videos",
+      "tipo": "curso",
+      "acceso": "publico",
+      "honestidad": "Selección de unidades; no equivale a haber completado el curso"
+    },
+    "C-14": {
+      "url": "https://sre.google/workbook/implementing-slos/",
+      "etiqueta": "Google SRE Workbook",
+      "tipo": "curso",
+      "acceso": "publico",
+      "honestidad": "Selección de unidades; no equivale a haber completado el curso"
+    },
+    "C-15": {
+      "url": "https://portswigger.net/web-security/learning-paths/",
+      "etiqueta": "PortSwigger Web Security Academy",
+      "tipo": "curso",
+      "acceso": "publico",
+      "honestidad": "Selección de unidades; no equivale a haber completado el curso"
+    },
+    "C-16": {
+      "url": "https://learn.palantir.com/",
+      "etiqueta": "Palantir Learning",
+      "tipo": "curso",
+      "acceso": "cuenta",
+      "honestidad": "Selección de unidades; no equivale a haber completado el curso"
+    },
+    "C-17": {
+      "url": "https://www.ontologize.com/tutorials",
+      "etiqueta": "Ontologize: tutoriales",
+      "tipo": "curso",
+      "acceso": "publico",
+      "honestidad": "Selección de unidades; no equivale a haber completado el curso"
+    },
+    "C-18": {
+      "url": "https://www.palantir.com/docs/foundry",
+      "etiqueta": "Palantir: documentación",
+      "tipo": "curso",
+      "acceso": "publico",
+      "honestidad": "Selección de unidades; no equivale a haber completado el curso"
+    }
+  },
+  "lecturas": [
+    {
+      "clave": "FDE",
+      "lectura": "A Day in the Life…",
+      "url": "https://blog.palantir.com/a-day-in-the-life-of-a-palantir-forward-deployed-software-engineer-45ef2de257b1",
+      "pregunta": "¿Cómo se combinan ingeniería, aprendizaje del dominio y trabajo con usuarios?",
+      "produccion": "Comparar con una decisión propia y señalar diferencias de contexto."
+    },
+    {
+      "clave": "DEV",
+      "lectura": "Dev Versus Delta",
+      "url": "https://blog.palantir.com/dev-versus-delta-demystifying-engineering-roles-at-palantir-ad44c2a6e87",
+      "pregunta": "¿Cuándo crear capacidad reutilizable y cuándo configurar una solución específica?",
+      "produccion": "ADR con costo de oportunidad y criterio para generalizar."
+    },
+    {
+      "clave": "DELTA",
+      "lectura": "Who Wants to be a Delta?",
+      "url": "https://blog.palantir.com/who-wants-to-be-a-delta-8d2ea948035",
+      "pregunta": "¿Qué exige hacerse responsable de un resultado?",
+      "produccion": "Memo de un fracaso y las acciones que sí dependían de ti."
+    },
+    {
+      "clave": "END",
+      "lectura": "Building End-to-End",
+      "url": "https://blog.palantir.com/building-end-to-end-e3a8349aee70",
+      "pregunta": "¿Dónde se pierde información al dividir un problema entre equipos?",
+      "produccion": "Mapa del handoff y propuesta de un ciclo de feedback."
+    },
+    {
+      "clave": "ARCH",
+      "lectura": "The Ontology System",
+      "url": "https://www.palantir.com/docs/foundry/architecture-center/ontology-system",
+      "pregunta": "¿Por qué conectar datos, lógica, acciones y seguridad?",
+      "produccion": "Diseñar un caso donde un grafo descriptivo por sí solo no resuelva la operación."
+    },
+    {
+      "clave": "USE",
+      "lectura": "Use Case Lifecycle",
+      "url": "https://www.palantir.com/docs/foundry/use-case-life-cycle/overview",
+      "pregunta": "¿Qué diferencia una iniciativa tecnológica de una mejora concreta para un usuario?",
+      "produccion": "Definición y prueba de valor de tu primera vertical."
+    }
+  ],
+  "videos": [
+    {
+      "clave": "OSDKVID",
+      "recurso": "Building with Palantir AIP: the Ontology Software Development Kit",
+      "url": "https://www.youtube.com/watch?v=vSJ5H00V7Es",
+      "uso": "P3-04; seguir la conexión entre objeto, código y aplicación.",
+      "celdas": [
+        "P3-04"
+      ],
+      "rutas": [],
+      "estado": "Título y URL localizados; no se verificó el contenido audiovisual ni timestamps.",
+      "honestidad": "Video no revisado"
+    },
+    {
+      "clave": "LOGICVID",
+      "recurso": "Building with Palantir AIP: Logic Tools for RAG/OAG",
+      "url": "https://www.youtube.com/watch?v=TOsgyjJuQVc",
+      "uso": "P4-03; observar cómo se compone recuperación y lógica.",
+      "celdas": [
+        "P4-03"
+      ],
+      "rutas": [],
+      "estado": "Título y URL localizados; pendiente revisión del video completo.",
+      "honestidad": "Video no revisado"
+    },
+    {
+      "clave": "TUTORIAL",
+      "recurso": "Ontologize: Deep dive, building your first pipeline",
+      "url": "https://www.ontologize.com/tutorials",
+      "uso": "P1-02; acompañamiento visual y reconstrucción independiente.",
+      "celdas": [
+        "P1-02"
+      ],
+      "rutas": [],
+      "estado": "Tutorial anunciado en la página del proveedor; URL individual y segmentos pendientes.",
+      "honestidad": "Video no revisado"
+    },
+    {
+      "clave": "TUTORIAL",
+      "recurso": "Ontologize: Using an AIP Logic Function in a Notepad Template",
+      "url": "https://www.ontologize.com/tutorials",
+      "uso": "Integración opcional tras P4-02.",
+      "celdas": [
+        "P4-02"
+      ],
+      "rutas": [],
+      "estado": "Título visible en el catálogo; revisión audiovisual pendiente.",
+      "honestidad": "Video no revisado"
+    },
+    {
+      "clave": "TUTORIAL",
+      "recurso": "Ontologize: Securing PII data in Foundry",
+      "url": "https://www.ontologize.com/tutorials",
+      "uso": "P2-07/P5-06; comparar controles mostrados con documentación vigente.",
+      "celdas": [
+        "P2-07",
+        "P5-06"
+      ],
+      "rutas": [],
+      "estado": "Catálogo verificado; debe contrastarse nomenclatura y versión.",
+      "honestidad": "Video no revisado"
+    },
+    {
+      "clave": "DB",
+      "recurso": "CMU 15-445: modelo relacional, SQL, índices, joins y ejecución",
+      "url": "https://15445.courses.cs.cmu.edu/fall2026/schedule.html",
+      "uso": "S1; seleccionar clase según laguna diagnosticada.",
+      "celdas": [],
+      "rutas": [
+        "S1"
+      ],
+      "estado": "El calendario contiene enlaces a videos y notas. No todos los videos de clases futuras están publicados al corte.",
+      "honestidad": "Video no revisado"
+    },
+    {
+      "clave": "SPEED",
+      "recurso": "Palantir Learning: Speedrun AIP",
+      "url": "https://learn.palantir.com/speedrun-your-e2e-aip-workflow",
+      "uso": "F0-08 y revisión de verticales.",
+      "celdas": [
+        "F0-08"
+      ],
+      "rutas": [],
+      "estado": "Enlace confirmado desde documentación oficial; acceso automatizado al curso bloqueado por 403.",
+      "honestidad": "Video no revisado"
+    }
+  ],
+  "papers": [
+    {
+      "titulo": "The Google File System",
+      "url": "https://research.google/pubs/the-google-file-system/",
+      "pregunta": "¿Cómo cambian los requisitos de almacenamiento al asumir fallas de componentes?",
+      "trabajo": "Dibujo de metadatos/datos y simulación de fallo; identifica supuestos que no aplican a tu servicio."
+    },
+    {
+      "titulo": "Dynamo, Amazon Science",
+      "url": "https://www.amazon.science/publications/dynamo-amazons-highly-available-key-value-store",
+      "pregunta": "¿Qué compromisos aparecen cuando se prioriza disponibilidad?",
+      "trabajo": "Historial de versiones concurrentes y política de reconciliación. Dynamo del paper y DynamoDB actual no se tratan como equivalentes."
+    },
+    {
+      "titulo": "Spanner",
+      "url": "https://research.google/pubs/spanner-googles-globally-distributed-database-2/",
+      "pregunta": "¿Cómo se conectan tiempo, replicación y transacciones globales?",
+      "trabajo": "Explica qué garantiza cada mecanismo y qué no puede suponerse en una app ordinaria."
+    },
+    {
+      "titulo": "Raft: laboratorio y paper enlazado",
+      "url": "https://pdos.csail.mit.edu/6.5840/labs/lab-raft1.html",
+      "pregunta": "¿Cómo preservar acuerdo sobre un log bajo fallas?",
+      "trabajo": "Implementación según el lab, historial y análisis de falla; profundidad SWE."
+    },
+    {
+      "titulo": "AWS: retries e idempotencia",
+      "url": "https://aws.amazon.com/builders-library/making-retries-safe-with-idempotent-APIs/",
+      "pregunta": "¿Qué hacer cuando el resultado de una petición es desconocido?",
+      "trabajo": "Servicio con idempotencia y reconciliación; separar transporte de efectos."
+    },
+    {
+      "titulo": "Google: SLOs",
+      "url": "https://sre.google/workbook/implementing-slos/",
+      "pregunta": "¿Qué nivel de servicio necesita el usuario y cómo se mide?",
+      "trabajo": "Indicador, objetivo y regla de respuesta ante degradación."
+    },
+    {
+      "titulo": "Palantir: solution design",
+      "url": "https://www.palantir.com/docs/foundry/use-case-life-cycle/solution-design",
+      "pregunta": "¿Cómo pasar de necesidades de usuarios a componentes implementables?",
+      "trabajo": "Modelo de objetos, estados, enriquecimientos e interfaces para un caso original."
+    }
+  ]
+}

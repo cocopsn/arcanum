@@ -1,0 +1,63 @@
+{
+  "head": "0098936",
+  "worldVars": {
+    "itc": {
+      "--accent": "#3f74e8",
+      "--accent-2": "#e8c36a",
+      "--world-glow": "rgba(63, 116, 232, 0.55)",
+      "--world-bg": "#080d20",
+      "--world-bg-2": "#0d1733",
+      "--world-fog": "#161d34"
+    },
+    "fred": {
+      "--accent": "#f0a23c",
+      "--accent-2": "#86a2b2",
+      "--world-glow": "rgba(240, 162, 60, 0.5)",
+      "--world-bg": "#0a0e12",
+      "--world-bg-2": "#10181e",
+      "--world-fog": "#1a232a"
+    },
+    "competitiva": {
+      "--accent": "#ff2e48",
+      "--accent-2": "#ff8a1e",
+      "--world-glow": "rgba(255, 46, 72, 0.55)",
+      "--world-bg": "#130408",
+      "--world-bg-2": "#230910",
+      "--world-fog": "#2a1117"
+    },
+    "aleman": {
+      "--accent": "#4f9d7a",
+      "--accent-2": "#b8b2a0",
+      "--world-glow": "rgba(79, 157, 122, 0.45)",
+      "--world-bg": "#0a110d",
+      "--world-bg-2": "#0f1a14",
+      "--world-fog": "#19211b"
+    },
+    "oa": {
+      "--accent": "#ff9900",
+      "--accent-2": "#7fa3c0",
+      "--world-glow": "rgba(255, 153, 0, 0.5)",
+      "--world-bg": "#120c04",
+      "--world-bg-2": "#1d1408",
+      "--world-fog": "#241c11"
+    },
+    "default": {
+      "--accent": "#7c8db0",
+      "--accent-2": "#cbb486",
+      "--world-glow": "rgba(124, 141, 176, 0.4)",
+      "--world-bg": "#0a0c12",
+      "--world-bg-2": "#11141d",
+      "--world-fog": "#1a1e29"
+    }
+  },
+  "slugByTitle": {
+    "ITC": "itc",
+    "FrED Factory": "fred",
+    "Alemán": "aleman",
+    "Competitiva (ICPC)": "competitiva",
+    "OA Amazon": "oa",
+    "Amoxtli": "default",
+    "Ciberseguridad": "default",
+    "zz sin mundo": "default"
+  }
+}

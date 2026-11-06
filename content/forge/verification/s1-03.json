@@ -1,0 +1,33 @@
+{
+ "v": 1,
+ "code": "S1-03",
+ "sha10": "0cf6632df9",
+ "versiones": {
+  "python": "3.12.10",
+  "sqlite": "3.49.1",
+  "node": "v24.22.1"
+ },
+ "items": [
+  {
+   "id": "s1-03-contra-primera-posicion",
+   "tipo": "contraejemplo",
+   "lenguaje": "javascript",
+   "resultado": "sin-verificar",
+   "ms": 0,
+   "detalle": "sin arnés scripts/forge/bank-check/contraejemplo.py"
+  },
+  {
+   "id": "s1-03-sql-ventana",
+   "tipo": "sql",
+   "lenguaje": "sql",
+   "resultado": "paso",
+   "ms": 84
+  }
+ ],
+ "resumen": {
+  "ejecutables": 2,
+  "cubiertos": 1,
+  "fallidos": 0,
+  "sin_verificar": 1
+ }
+}

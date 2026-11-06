@@ -1,5 +1,7 @@
 import {
   compareEvents,
+  ENTREGA_KEYS,
+  type EntregaKey,
   type ArcanumEvent,
   type GoalUpsertedPayload,
   type ModuleUpsertedPayload,
@@ -23,6 +25,16 @@ import {
   type NodeNature,
   type NodePart,
 } from "@/core/event";
+import {
+  FORGE_FAILURE_MODES,
+  FORGE_GOAL_ID,
+  asForgeVerdict,
+  forgeKindOpens,
+  forgeVerdictPasses,
+  type ForgeFailureMode,
+  type ForgeVerdictFields,
+} from "@/core/forge-verdict";
+import { evidenceDataForRm, validEvidence, type EvidenceRecordedPayload } from "@/core/evidence";
 import { parseWikilinks } from "@/core/wikilink";
 import { wouldCreateCycle } from "@/core/roadmap";
 import { ARCANUM_CONFIG } from "@/core/config";
@@ -51,6 +63,8 @@ import type {
   GateRM,
   MissionRM,
   PendingAiRM,
+  EvidenceRM,
+  ForgeVerdictRM,
 } from "@/core/read-model";
 
 const TZ = ARCANUM_CONFIG.tz;
@@ -141,6 +155,53 @@ interface Acc {
   missions: Map<string, MissionRM>;
   /** offline AI queue: queueId → pending (+ resolved flag); assemble drops the resolved */
   aiQueue: Map<string, PendingAiRM & { resolved: boolean }>;
+  /** Engineering Forge: evidence.recorded in fold order (append-only) */
+  evidence: EvidenceRM[];
+  /** Engineering Forge: structured verdicts in fold order (append-only) */
+  forgeVerdicts: ForgeVerdictRM[];
+  /** Engineering Forge: latest native verdict per cell */
+  nativeGates: Map<string, GateRM>;
+}
+
+const FAILURE_MODES = new Set<string>(FORGE_FAILURE_MODES);
+
+/** The derivation-facing entry of a verdict. `apoyo` that is not one of the two values reads as
+ *  "con_apoyo" (never claims independence); such a verdict can't pass anyway (forgeVerdictPasses checks it). */
+function forgeVerdictEntry(
+  moduleId: string,
+  f: ForgeVerdictFields,
+  fromAi: boolean,
+  passed: boolean,
+  scope: "local" | "nativa",
+  e: ArcanumEvent,
+  queueId: unknown,
+): ForgeVerdictRM {
+  return {
+    moduleId,
+    source: fromAi ? "ai" : "heuristic",
+    passed: passed && fromAi,
+    failureMode: typeof f.failureMode === "string" && FAILURE_MODES.has(f.failureMode) ? (f.failureMode as ForgeFailureMode) : null,
+    scope,
+    apoyo: f.apoyo === "independiente" ? "independiente" : "con_apoyo",
+    kind: f.kind,
+    ts: e.ts,
+    eventId: e.id,
+    queueId: typeof queueId === "string" && queueId ? queueId : null,
+  };
+}
+
+/** `entrega` is kept only when it is an object with EXACTLY the 9 keys of §16, all strings. */
+function validEntrega(x: unknown): Record<EntregaKey, string> | null {
+  if (!x || typeof x !== "object" || Array.isArray(x)) return null;
+  const o = x as Record<string, unknown>;
+  const keys = Object.keys(o);
+  if (keys.length !== ENTREGA_KEYS.length) return null;
+  const out = {} as Record<EntregaKey, string>;
+  for (const k of ENTREGA_KEYS) {
+    if (typeof o[k] !== "string") return null;
+    out[k] = o[k] as string;
+  }
+  return out;
 }
 
 function applyDomain(acc: Acc, e: ArcanumEvent): void {
@@ -390,29 +451,79 @@ function applyDomain(acc: Acc, e: ArcanumEvent): void {
       const id = e.module_id;
       if (!id) return;
       const p = e.payload as unknown as GateEvaluatedPayload;
-      const passed = p.passed === true;
-      acc.gates.set(id, {
-        moduleId: id,
-        passed,
-        score: typeof p.score === "number" && Number.isFinite(p.score) ? p.score : null,
-        summary: typeof p.summary === "string" ? p.summary : "",
-        feedback: typeof p.feedback === "string" ? p.feedback : "",
-        source: p.source === "ai" ? "ai" : "heuristic",
-        provider: typeof p.provider === "string" ? p.provider : null,
-        questions: Array.isArray(p.questions) ? p.questions.map(String) : [],
-        ts: e.ts,
-      });
-      // gatePassed is MONOTONIC — once the cell's gate is passed it stays open
-      // (a later re-evaluation can't re-seal what was already demonstrated).
+      const mod = acc.modules.get(id);
       // 🔴 SECOND LOCK (audit F3): the gate opens ONLY on a verdict whose source is a real AI
       // evaluator. Every production writer already stamps source:"ai" (use-actions.ts:82,102,122,128
       // — all four behind `if (ai)`), and there is NO exit-gate heuristic by design. Requiring it here
       // means a hand-crafted or replayed {passed:true, source:"heuristic"} event cannot open a cell:
       // the invariant now lives in the FOLD, not only in the call sites that mint the event.
-      const fromRealEvaluator = p.source === "ai";
-      const mod = acc.modules.get(id);
-      if (mod && passed && fromRealEvaluator && !mod.gatePassed) acc.modules.set(id, { ...mod, gatePassed: true });
-      // if this verdict RESOLVES a queued offline submission, drop it from the pending queue.
+      const fromAi = p.source === "ai";
+      // ENGINEERING FORGE (design §7.4) — the fold is the rule that rules. In a Forge cell a verdict without
+      // Forge fields opens nothing, and neither does one whose kind can't open (retention, diagnosis, an
+      // unknown kind). Elsewhere a verdict that carries Forge fields must pass the same rule; one without
+      // them behaves exactly as before.
+      const isForge = mod?.goalId === FORGE_GOAL_ID;
+      const effective =
+        p.passed === true &&
+        (isForge ? forgeVerdictPasses(p.forge) && forgeKindOpens(p.forge) : p.forge === undefined || forgeVerdictPasses(p.forge));
+      const fv = asForgeVerdict(p.forge);
+      const resolveQueue = () => {
+        // if this verdict RESOLVES a queued offline submission, drop it from the pending queue.
+        if (typeof p.queueId === "string") {
+          const q = acc.aiQueue.get(p.queueId);
+          if (q) acc.aiQueue.set(p.queueId, { ...q, resolved: true });
+        }
+      };
+      const gateRm = (passed: boolean): GateRM => ({
+        moduleId: id,
+        passed,
+        score: typeof p.score === "number" && Number.isFinite(p.score) ? p.score : null,
+        summary: typeof p.summary === "string" ? p.summary : "",
+        feedback: typeof p.feedback === "string" ? p.feedback : "",
+        source: fromAi ? "ai" : "heuristic",
+        provider: typeof p.provider === "string" ? p.provider : null,
+        questions: Array.isArray(p.questions) ? p.questions.map(String) : [],
+        ts: e.ts,
+        ...(fv ? { forge: fv } : {}),
+      });
+      // NATIVE branch (RF-V7): recorded, shown, never opens. It does not touch gates nor gatePassed.
+      const rawForge: unknown = p.forge;
+      const isNative = !!rawForge && typeof rawForge === "object" && (rawForge as Record<string, unknown>).scope === "nativa";
+      if (isNative) {
+        const nativeOk = fromAi && fv !== null && fv.nativePassed === true && forgeVerdictPasses(fv) && forgeKindOpens(fv);
+        acc.nativeGates.set(id, gateRm(nativeOk));
+        if (fv) acc.forgeVerdicts.push(forgeVerdictEntry(id, fv, fromAi, nativeOk, "nativa", e, p.queueId));
+        resolveQueue();
+        return;
+      }
+      acc.gates.set(id, gateRm(effective));
+      if (fv) acc.forgeVerdicts.push(forgeVerdictEntry(id, fv, fromAi, effective, "local", e, p.queueId));
+      // gatePassed is MONOTONIC — once the cell's gate is passed it stays open
+      // (a later re-evaluation can't re-seal what was already demonstrated). A diagnostic cell (Forge
+      // D1–D8) has no compuerta: nothing opens it.
+      if (mod && effective && fromAi && mod.kind !== "diagnostic" && !mod.gatePassed) acc.modules.set(id, { ...mod, gatePassed: true });
+      resolveQueue();
+      return;
+    }
+    case "evidence.recorded": {
+      // ENGINEERING FORGE (design §7.4): a record of work. It NEVER touches gatePassed, mastery, streak or XP.
+      if (!validEvidence(e)) return;
+      const id = e.module_id!;
+      const p = e.payload as unknown as EvidenceRecordedPayload;
+      acc.evidence.push({
+        id: e.id,
+        moduleId: id,
+        goalId: e.goal_id,
+        itemId: p.itemId,
+        type: p.type,
+        phase: p.phase,
+        outcome: p.outcome,
+        data: evidenceDataForRm(p.data),
+        source: p.source,
+        provider: typeof p.provider === "string" ? p.provider : null,
+        passed: p.verdict !== undefined && p.verdict !== null ? p.source === "ai" && p.outcome === "aprobado" && forgeVerdictPasses(p.verdict) : null,
+        ts: e.ts,
+      });
       if (typeof p.queueId === "string") {
         const q = acc.aiQueue.get(p.queueId);
         if (q) acc.aiQueue.set(p.queueId, { ...q, resolved: true });
@@ -423,7 +534,7 @@ function applyDomain(acc: Acc, e: ArcanumEvent): void {
       const id = e.module_id;
       const p = e.payload as unknown as AiQueuedPayload;
       if (!id || typeof p.queueId !== "string" || !p.queueId) return;
-      const kind = p.kind === "mission" ? "mission" : "gate";
+      const kind = p.kind === "mission" ? "mission" : p.kind === "forge" ? "forge" : "gate";
       // idempotent: a replayed ai.queued keeps the first (never a duplicate pending)
       if (!acc.aiQueue.has(p.queueId)) {
         acc.aiQueue.set(p.queueId, { queueId: p.queueId, kind, moduleId: id, goalId: e.goal_id, input: p.input ?? {}, ts: e.ts, resolved: false });
@@ -434,11 +545,16 @@ function applyDomain(acc: Acc, e: ArcanumEvent): void {
       const id = e.module_id;
       if (!id) return;
       const p = e.payload as unknown as MissionSubmittedPayload;
+      // Engineering Forge (additive): the 9-section entrega and the declared support, only when valid.
+      const entrega = validEntrega(p.entrega);
+      const apoyo = p.apoyo === "independiente" || p.apoyo === "con_apoyo" ? p.apoyo : null;
       // latest evidence per cell wins (fold order = ts order) — durable proof of work
       acc.missions.set(id, {
         moduleId: id,
         notes: typeof p.notes === "string" ? p.notes : "",
         ts: e.ts,
+        ...(entrega ? { entrega } : {}),
+        ...(apoyo ? { apoyo } : {}),
       });
       return;
     }
@@ -508,6 +624,9 @@ function emptyAcc(): Acc {
     gates: new Map(),
     missions: new Map(),
     aiQueue: new Map(),
+    evidence: [],
+    forgeVerdicts: [],
+    nativeGates: new Map(),
   };
 }
 
@@ -532,6 +651,10 @@ function accFromModel(prev: ReadModel): Acc {
     missions: new Map(prev.missions.map((m) => [m.moduleId, m])),
     // resolved pendings are dropped from pendingAi → the carried queue is all-unresolved
     aiQueue: new Map(prev.pendingAi.map((p) => [p.queueId, { ...p, resolved: false }])),
+    // Engineering Forge: append-only lists (same order as a rebuild) and a last-per-cell map
+    evidence: [...(prev.evidence ?? [])],
+    forgeVerdicts: [...(prev.forgeVerdicts ?? [])],
+    nativeGates: new Map((prev.nativeGates ?? []).map((g) => [g.moduleId, g])),
   };
 }
 
@@ -581,6 +704,9 @@ function assemble(
     gates: [...acc.gates.values()],
     missions: [...acc.missions.values()],
     pendingAi: [...acc.aiQueue.values()].filter((x) => !x.resolved).map(({ resolved, ...p }) => { void resolved; return p; }),
+    evidence: [...acc.evidence],
+    forgeVerdicts: [...acc.forgeVerdicts],
+    nativeGates: [...acc.nativeGates.values()],
     qualifiedDays,
     stats: {
       totalXp: acc.totalXp,

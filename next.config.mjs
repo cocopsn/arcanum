@@ -1,4 +1,6 @@
 import withSerwistInit from "@serwist/next";
+import { ForgeChunkMapPlugin } from "./scripts/forge/forge-chunk-map.mjs";
+import { buildCsp } from "./src/lib/csp.mjs";
 
 const withSerwist = withSerwistInit({
   swSrc: "src/app/sw.ts",
@@ -16,29 +18,14 @@ const withSerwist = withSerwistInit({
   // navigation type "reload"). Sync + the AI queue already have their own gentle `online`
   // listeners — nothing here needs a reload to use the network again.
   reloadOnOnline: false,
+  // Precache ONLY the icons from public/: public/atlas/** and public/forge/** (Atlas data, Forge books) are
+  // loaded on demand and must never enter the install download (Forge design §6.6, CA-57).
+  globPublicPatterns: ["icons/**/*"],
 });
 
-// Content-Security-Policy — defense-in-depth for a PUBLIC-repo app that executes learner code. The code
-// runner NEEDS 'unsafe-eval' (new Function) + blob workers + Pyodide from jsdelivr, so script/worker are
-// necessarily permissive; the meaningful restriction is connect-src (egress) scoped to self + Supabase +
-// the Pyodide CDN, so learner code cannot exfiltrate to an arbitrary host. Worker-level storage isolation
-// is enforced separately in js-runner/py-runner (WORKER_SHIELD); CSP does not gate same-origin IndexedDB.
-const CSP = [
-  "default-src 'self'",
-  "base-uri 'self'",
-  "object-src 'none'",
-  "frame-ancestors 'none'",
-  "script-src 'self' 'unsafe-inline' 'unsafe-eval' 'wasm-unsafe-eval' blob: https://cdn.jsdelivr.net",
-  "worker-src 'self' blob:",
-  "style-src 'self' 'unsafe-inline'",
-  "img-src 'self' data: blob:",
-  "font-src 'self' data:",
-  "connect-src 'self' blob: data: https://*.supabase.co wss://*.supabase.co https://cdn.jsdelivr.net",
-  // media-src does NOT fall back gracefully for the audiobook's silent data: WAV anchor (audio focus /
-  // lock-screen controls): without this line it falls to default-src 'self' and the <audio> is blocked.
-  "media-src 'self' data: blob:",
-  "manifest-src 'self'",
-].join("; ");
+// Content-Security-Policy — the single source is src/lib/csp.mjs (Forge design §12.1). VideoEmbed and the figure
+// paragraph of BookReader check URLs against the same origin lists; everything else relies on this header alone.
+const CSP = buildCsp();
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -47,8 +34,10 @@ const nextConfig = {
     return [{ source: "/:path*", headers: [{ key: "Content-Security-Policy", value: CSP }] }];
   },
   // import seed books (content/books/*.md) as RAW strings so they bundle offline (no CDN, no fs).
-  webpack: (config) => {
+  webpack: (config, { isServer, dev }) => {
     config.module.rules.push({ test: /\.md$/, type: "asset/source" });
+    // Forge: .next/forge-chunks.json from the module graph, production client build only (budget-report, §6.7).
+    if (!isServer && !dev) config.plugins.push(new ForgeChunkMapPlugin());
     return config;
   },
 };

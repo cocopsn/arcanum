@@ -186,6 +186,123 @@ To add content: write the `.md`, drop it in the right folder, (for a bank) add i
   a shipped event id, so a live device and a fresh install converge to the identical DAG. See
   `buildOperativoSeed` / `buildOperativoExtension` in `seed.ts` for the pattern.
 
+## 6. Engineering Forge — content contracts (frozen in Phase 0)
+
+Source of truth: `.agents/tasks/arcanum-forge/design.md` §6.2, §9.2, §9.3, §13.1, §18.2 (plus obligation M1 of the
+orchestrator's D6). Code: `src/lib/exercises-md.ts`, `src/forge/bank/**`, `src/lib/exercises-validate.ts`,
+`src/forge/content/book-rules.ts`. Tests: `exercises-md-compat`, `exercises-md-forge`, `bank-pending`,
+`bank-seed-trust`, `src/forge/__tests__/{books,banks,phase0-contracts}.test.*`.
+
+### 6.1 Banks: `content/forge/exercises/<código>.md`
+
+Same frontmatter as §2 (`kind: exercises`, `module_id` = the cell UUID). Each `## <title>` block has a preamble and
+`###` subsections. Recognized preamble lines (all removed from the statement): `type:`, `tiempo:`, `id:`, `rol:` and the
+type's own lines. Common rules:
+
+- `id:` is **mandatory** in the 16 Forge types (optional in `code`, `choice`, `production`): `^[a-z0-9][a-z0-9-]{1,63}$`,
+  unique in the bank. The exercise id becomes `${module_id}:${id}` (`:${lang}` appended for `code`) and `id` is the
+  evidence `itemId`. Without `id:` the old positional id stays (the 39 existing banks parse identically).
+- `rol:` = `practica` (default) · `recuperacion` · `prediccion` · `transferencia`.
+- All-or-nothing: one malformed block rejects the bank; the reason names the exercise and the field
+  (`explainExercisesMd`). JSON goes in ` ```json ` fences, code in fences with its language (`javascript`, `python`,
+  `sql`, `text`). `####` exists only inside `### Mutantes`. A repeated section or preamble line rejects.
+
+| `type:` | Own lines | Mandatory `###` sections (optional in parentheses) |
+|---|---|---|
+| `prediccion` | (`escala:` 2-5 increasing ints in [50,100], default `50 70 90`) | Opciones (≥ 2, exactly one `[x]`), Justificación |
+| `desvanecido` | `lang:` when there is a template | Pasos (numbered), Plantilla (regions `# <paso N>`…`# </paso N>` / `// <paso N>`…), Casos, Niveles (`- N: a, b`), Rúbrica (if any step is prose) |
+| `historial` | `modo: traza\|fallas`; traza: `objetivo: violar\|proteger`, (`chequeo: final\|cada-paso`) | traza: Estado, Actores (≤ 3 actors, ≤ 14 steps), Invariante (`text`), Referencia, Protocolos (only and always with `proteger`, ≥ 2). fallas: Firma, Arnés (`arnes(calendario)`), Calendarios, Solución, Ingenua |
+| `mutantes` | `minimo:` | Firma, Referencia, Mutantes (`#### <id>` or `#### <id> · crítico`, one js fence each), Casos dorados, Formato de casos |
+| `contraejemplo` | — | Firma, Precondición (`function pre`), Casi correcta, Referencia, Testigo, (Comparador `function same`), (Invariante `function prop`) |
+| `senal` | `semilla:` | Patrones (≥ 3), Ítems (JSON ≥ 3 `{ enunciado, patron, senal }`) |
+| `entrevista` | `fases: preguntas N, estructuracion N, defensa N` | Personas, Hechos (≤ 30, texto ≤ 400, `revela_si` when `oculto`), Entregable, Rúbrica. **No `### Variación`**: the variation is the bank's `giro` |
+| `expediente` | — | Pasada 2, Pasada 3, Rúbrica |
+| `retencion` | `dias:` 1-120, `variante_de:` (item id or `mision`), `forma: defensa\|codigo` | defensa: Rúbrica. codigo: Firma, Casos, Solución |
+| `giro` | — | Rúbrica (the statement is the twist) |
+| `sql` | `orden: si\|no` | Esquema, Datos, Fixtures (each fence starts `-- fixture: <nombre>`, unique), Solución, Ingenua |
+| `ontologia` | — | Decisiones (≥ 2), Referencia (an `OntologyModel`, `src/forge/bank/types/ontologia.ts`), Rúbrica, (Fuentes), (Exigencias) |
+| `forense` | `corte:` (fixed ISO instant) | Esquema, Datos, Pipeline (`-- paso: <id>`), Invariantes, Mentiras, Corrección, Control de referencia, (Datos limpios) |
+| `permisos` | — | Modelo (usuarios, grupos, roles, markings, recursos), Preguntas (≥ 6), Solución |
+| `recuperacion` | `corte:` | Corpus (≤ 40, texto ≤ 4,000), Preguntas, Clave, Contradicciones, Inyección |
+| `gameday` | — | Línea de tiempo (≤ 200), Causas, Acciones, Clave, Rúbrica |
+
+**`code` extension (RF-E1, optional):** `### Generador` (fences per language with `generate(seed)` returning the
+arguments) together with `### Casos generados` (JSON `[{ "semilla", "esperado" }]`), and `### Comprobador` (fences per
+language with `check(args, salida, esperado)`). A language without a generator fence has no generated cases. The parser
+only reads them; in the seed they are trusted (bank-check ran them) and at import a bank with generated cases is
+rejected until the worker harness `__run_generated(seed)` exists.
+
+**Route banks** (F0-F2, S1-S2, P1-P5, SW1-SW4, A1-A2; content rule CA-77, `banks.test.ts`): ≥ 6 items, ≥ 1 with
+`rol: prediccion` or `recuperacion`, exactly 1 `giro` with an explicit `rol: transferencia`, `id:` in all, ≤ 48 KiB.
+
+### 6.2 Ingestion checks (`src/lib/exercises-validate.ts`)
+
+```ts
+interface BankCheckContext { source: "seed" | "import"; jsRun: ExecRunner; pyRun?: ExecRunner }
+type BankCheck   = (item, ctx) => Promise<{ ok: true } | { ok: false; errors: string[] } | { disponible: false }>;
+type BankCheckJs = (item, ctx) => Promise<{ ok: true } | { ok: false; errors: string[] }>;
+type BankCheckPy = (item, ctx & { pyRun }) => Promise<{ ok: true } | { ok: false; errors: string[] }>;
+interface BankCheckModule {
+  check: BankCheck;                                    // data only; NEVER executes (its ctx.jsRun refuses: M1)
+  js?: { needs(item): boolean; check: BankCheckJs };   // author JS (reference, mutants, naive): import only, Worker
+  py?: { needs(item): boolean; check: BankCheckPy };   // Python and SQL: import only, Pyodide
+}
+```
+
+- `src/forge/bank/check/registry.ts` maps each of the 16 types to `() => import("./<tipo>")` — never a static import.
+  `validateBank` loads only the types a bank brings. A check chunk that does not load → the bank is not saved
+  (`missingCheck`, «no descargado · requiere conexión una vez»).
+- **Seed trust + M1 (one rule, in `validateBank` only).** In the seed (`saveExerciseBank(md, { source: "seed" })`) no
+  author code of the 16 types runs: not `js`, not `py`, and `check` cannot execute. Those steps are verified by
+  `scripts/forge/bank-check.mjs` into `content/forge/verification/<código>.json` (`sha10` of the `.md`; items with
+  `resultado`), and only a run whose `sha10` matches makes a bank «Verificado». At import, `js` and `py` run only with
+  the caller's runners (`runJs` Worker, `runPy`); without them the bank is rejected, never run on the main thread.
+- **Pending rule.** A check answering `{ disponible: false }` (a Phase-0 stub) leaves its item **pending**: accepted
+  without validation, stored in `ExerciseBankRow.pendientes`, never returned by `loadBankForModule`. A real check that
+  fails still rejects the whole bank. Real checks shipped in Phase 0: `giro`, `expediente`, `entrevista`, `gameday`,
+  `recuperacion`, `senal`, `prediccion`; the other 9 are stubs that their owner branch replaces file by file.
+- `banks.test.ts` fails on a current verification that records `resultado: "fallo"`; with `FORGE_BANKS_STRICT=1` it
+  also fails when a bank with executable author steps has no current run.
+
+### 6.3 Books: `content/forge/books/<código>.md`
+
+`parseBook` contract plus `estado` in the frontmatter (never `verificado` by hand) and `module_id: forge-<código>`. `##`
+sections «Ejemplo trabajado», «Contraejemplo», «Diagrama» (with a ` ```text ` fence), a connections, a questions and a
+sources section, and ≥ 1 explanation section; every explanation section, and every section naming a product
+(`PRODUCT_NAMES`), has ≥ 1 link of the allowed list. **Video:** a paragraph with only
+`[label](https://www.youtube.com/watch?v=<11 chars> "video")` or `(https://youtu.be/<id> "video")`, id in `videos.json`.
+**Figure:** a paragraph with only `![alt ≤ 30 words](<image of that docs page> "figura <https://www.palantir.com/docs/…>")`.
+**Other book:** `[text](#libro:<handle>)`, resolving to an existing book. No BOM. The F1-03 book never contains the text
+of a hidden fact of its interview. `books.test.ts` applies these rules; zero books is green, and a rule whose data source
+is not merged yet (maestro, catalog, Atlas, videos) is reported as pending, not failed.
+
+### 6.4 Authoring state and publication
+
+- `estado` in a book's frontmatter is `autorado` at most; nobody writes `verificado` by hand. The app derives the
+  state per cell (`src/forge/model/authoring.ts`): «Especificado» with a complete ficha; «Autorado» with a valid
+  book and bank (SD: book + expediente; X and D: statement + deliverable); «Verificado» only when every executable
+  item has a passing bank-check run with the current `sha10` **and** the bank has no pending items.
+- `books-publish` (`pnpm forge:publish`) copies books and banks and writes `book-index.json` and `bank-index.json`;
+  it runs before `dev`, `build`, `test` and `typecheck`.
+- Links in books use only allowed hosts (docs, build, the master's URLs); learn and certification appear only as
+  outgoing «requiere cuenta» links. Videos are youtube-nocookie embeds labelled «no revisado»; figures come from
+  the cited page's images in the Atlas. `#libro:` links point to another world's book by anchor.
+
+### 6.5 State at integration (2026-11-06)
+
+- **128 books and 128 banks** across F0-F2, P1-P4, S1-S2, SW1-SW4, A1-A2 and SD-01 to SD-12, with their
+  verification files. `bank-check --all`: 0 failures; 21 banks keep items «sin verificar» for types without a
+  harness. The strict gate passes.
+- **Without book or bank («Libro pendiente», state «Especificado»):** P5-01 to P5-08. D1-D8 and X01-X24 are
+  statement + deliverable cells and have no book by design.
+- **Types with their stub** («aún no está disponible en esta versión», never offered): runners `contraejemplo`,
+  `desvanecido`, `forense`, `gameday`, `mutantes`, `retencion`; flows `diagnostico`, `entrevista`, `expediente`,
+  `gameday`, `proyecto`. Ingestion checks still on the shared stub: `contraejemplo`, `desvanecido`, `forense`,
+  `mutantes`, `retencion`; banks that use them are accepted with those items pending and stay «Autorado» at most.
+- **Interactive types:** `ontologia` (Ontology Forge), `sql`, `historial` (mode `traza`; mode `fallas` keeps the
+  pending text), `permisos`, `recuperacion`,
+  `prediccion`, `senal`, plus the mission flow (`ForgeMission`), whose verdicts queue until the Edge is deployed.
+
 ---
 
 See also: [ARCHITECTURE.md](ARCHITECTURE.md) · [README.md](README.md) · [SECURITY.md](SECURITY.md).

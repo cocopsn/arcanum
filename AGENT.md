@@ -115,3 +115,20 @@ POST $KEE_ENDPOINT   (Authorization: Bearer $KEE_API_KEY  — opcional)
 | Prompt + modelo | `supabase/functions/ai-router/index.ts` (acción `tutor`) |
 | UI (borrador→nota) | `src/ui/subject/TutorSheet.tsx` |
 | Evaluador adversarial (Bloque 5, mismo espíritu) | `src/core/evaluation.ts`, acción `evaluate` |
+
+## Engineering Forge: acciones de `ai-router`
+
+Acciones en el código de la función: `ocr`, `sleep`, `evaluate`, `tutor`, `lesson`, `gate`, `interrogate` y
+`forge_judge` (8). El diseño contaba 9 con `forge_interview`, que **no está implementada** en esta versión: la
+entrevista lo dice y no ofrece veredicto.
+
+- **`forge_judge`.** Recibe el contexto que arma `buildForgeJudgeContext` (entrega, giro, apoyo y evidencia local) y
+  responde JSON con `capabilities` (0-4 por esencial), `critical` (`id`, `passed`), `failureMode`, `questions`,
+  `passed`, `summary` y `feedback`. La función valida la petición antes de llamar a un proveedor (400, nunca 503)
+  y el pliegue aplica la regla de §8.1 del diseño a lo que llega. Contrato Kee: el mismo sobre que
+  `gate`, con esos campos en la respuesta.
+- **Candado de `lesson` y `tutor` (§10.10).** Toda acción que recibe texto del alumno lo envuelve con una etiqueta
+  antes y un recordatorio después, para que el modelo lo trate como dato y no como instrucción. Ninguna acción
+  interpola texto del alumno fuera de esa tabla de candados. `src/lib/ai-router-locks.test.ts` lo cubre, con
+  red-checks para `lesson`, `tutor` y una acción extra.
+- **Estado.** En el repo, **no desplegada** (DEPLOY.md §2.1, AF3).
