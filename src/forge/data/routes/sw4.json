@@ -53,6 +53,17 @@
         "defensa": "Muestra tests de la edición y un limite que los tests no prueban.",
         "variante": "Explica evicción, referencias y acceso concurrente usando casos pequenos propios."
       },
+      "gate": {
+        "pregunta": "Muestra tests de la edición y un limite que los tests no prueban.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Sistemas ≥ 3: Explica evicción, referencias y acceso concurrente usando casos pequenos propios.",
+          "Comunicación ≥ 3: Explica evicción, referencias y acceso concurrente usando casos pequenos propios.",
+          "Correctitud (condición crítica): Muestra tests de la edición y un limite que los tests no prueban.",
+          "Autorización (condición crítica): Explica evicción, referencias y acceso concurrente usando casos pequenos propios."
+        ]
+      },
       "capacidades": [
         "sistemas",
         "comunicacion"
@@ -102,6 +113,18 @@
         "mision": "Completa el proyecto B+Tree de la misma edición y código base.",
         "defensa": "Defiende estructura, busqueda y conservacion de invariantes ante cambios.",
         "variante": "Trabaja splits, merges y accesos concurrentes segun el alcance del enunciado."
+      },
+      "gate": {
+        "pregunta": "Defiende estructura, busqueda y conservacion de invariantes ante cambios.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Sistemas ≥ 3: Trabaja splits, merges y accesos concurrentes segun el alcance del enunciado.",
+          "Abstracción ≥ 3: Implementar un índice manteniendo sus invariantes estructurales.",
+          "Datos ≥ 3: Implementar un índice manteniendo sus invariantes estructurales.",
+          "Autorización (condición crítica): Trabaja splits, merges y accesos concurrentes segun el alcance del enunciado.",
+          "Consistencia (condición crítica): Trabaja splits, merges y accesos concurrentes segun el alcance del enunciado."
+        ]
       },
       "capacidades": [
         "sistemas",
@@ -154,6 +177,17 @@
         "mision": "Realiza el proyecto de ejecución de la edición o una seleccion declarada.",
         "defensa": "Explica el plan, el costo dominante y los límites de tu medición.",
         "variante": "Compara joins y distribuciones de datos con resultado identico."
+      },
+      "gate": {
+        "pregunta": "Explica el plan, el costo dominante y los límites de tu medición.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Sistemas ≥ 3: Realiza el proyecto de ejecución de la edición o una seleccion declarada.",
+          "Datos ≥ 3: Compara joins y distribuciones de datos con resultado identico.",
+          "Producto ≥ 3: Relacionar operadores y planes con trabajo real del sistema.",
+          "Correctitud (condición crítica): Explica el plan, el costo dominante y los límites de tu medición."
+        ]
       },
       "capacidades": [
         "sistemas",
@@ -209,6 +243,17 @@
         "defensa": "No confundir ausencia de un race report con correccion transaccional.",
         "variante": "Incluye abortos y reintentos; conserva los tests originales del curso."
       },
+      "gate": {
+        "pregunta": "No confundir ausencia de un race report con correccion transaccional.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Sistemas ≥ 3: Trabaja el proyecto de concurrencia y reproduce historiales adversariales.",
+          "Responsabilidad ≥ 3: Trabaja el proyecto de concurrencia y reproduce historiales adversariales.",
+          "Correctitud (condición crítica): conserva los tests originales del curso.",
+          "Consistencia (condición crítica): Evitar anomalías declarando el nivel de aislamiento que se implementa."
+        ]
+      },
       "capacidades": [
         "sistemas",
         "responsabilidad"
@@ -259,6 +304,17 @@
         "defensa": "Explica el estado persistido o temporal y el efecto de ejecutar de nuevo una tarea.",
         "variante": "Ejecuta pruebas de fallas y presenta una traza de reasignacion."
       },
+      "gate": {
+        "pregunta": "Explica el estado persistido o temporal y el efecto de ejecutar de nuevo una tarea.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Sistemas ≥ 3: Coordinar tareas distribuidas sin asumir ejecución perfecta.",
+          "Comunicación ≥ 3: Explica el estado persistido o temporal y el efecto de ejecutar de nuevo una tarea.",
+          "Responsabilidad ≥ 3: Ejecuta pruebas de fallas y presenta una traza de reasignacion.",
+          "Correctitud (condición crítica): Ejecuta pruebas de fallas y presenta una traza de reasignacion."
+        ]
+      },
       "capacidades": [
         "sistemas",
         "comunicacion",
@@ -305,6 +361,17 @@
         "mision": "Recorre servidor KV, Raft y servicio sobre Raft en orden de la edición.",
         "defensa": "Distingue liderazgo, commit y aplicacion; explica cuando el sistema no progresa.",
         "variante": "Conserva evidencia de partición, reinicio y pruebas con detector de carreras."
+      },
+      "gate": {
+        "pregunta": "Distingue liderazgo, commit y aplicacion; explica cuando el sistema no progresa.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Sistemas ≥ 3: Implementar acuerdo y usarlo para un servicio replicado.",
+          "Comunicación ≥ 3: explica cuando el sistema no progresa.",
+          "Correctitud (condición crítica): Conserva evidencia de partición, reinicio y pruebas con detector de carreras.",
+          "Consistencia (condición crítica): Conserva evidencia de partición, reinicio y pruebas con detector de carreras."
+        ]
       },
       "capacidades": [
         "sistemas",
@@ -355,6 +422,17 @@
         "mision": "Completa el laboratorio particionado o proyecto final equivalente explicitamente declarado.",
         "defensa": "Defiende unicidad del responsable de cada shard y recuperación de una migración incompleta.",
         "variante": "Introduce movimientos de shards, controladores fallidos y clientes con configuración vieja."
+      },
+      "gate": {
+        "pregunta": "Defiende unicidad del responsable de cada shard y recuperación de una migración incompleta.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Sistemas ≥ 3: Completa el laboratorio particionado o proyecto final equivalente explicitamente declarado.",
+          "Producto ≥ 3: Introduce movimientos de shards, controladores fallidos y clientes con configuración vieja.",
+          "Responsabilidad ≥ 3: Defiende unicidad del responsable de cada shard y recuperación de una migración incompleta.",
+          "Recuperación (condición crítica): Defiende unicidad del responsable de cada shard y recuperación de una migración incompleta."
+        ]
       },
       "capacidades": [
         "sistemas",

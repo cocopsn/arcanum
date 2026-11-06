@@ -61,6 +61,18 @@
         "mision": "Construye conciliación de citas, equipos y capacidad con datos sintéticos.",
         "defensa": "El usuario decide, actúa y verifica el resultado; no basta un dashboard."
       },
+      "gate": {
+        "pregunta": "El usuario decide, actúa y verifica el resultado; no basta un dashboard.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Producto ≥ 3: El usuario decide, actúa y verifica el resultado;",
+          "Datos ≥ 3: Construye conciliación de citas, equipos y capacidad con datos sintéticos.",
+          "Correctitud (condición crítica): El usuario decide, actúa y verifica el resultado;",
+          "Identidad (condición crítica): Construye conciliación de citas, equipos y capacidad con datos sintéticos.",
+          "Aceptación del proyecto: no se generan reservas inválidas en la suite publicada y reservada; la consulta reproduce el estado después de la acción según garantías documentadas; las negativas de permisos pasan; la demo muestra un antes/después medido sobre el mismo dataset. Entrega README, evidencia de tests, video de cinco minutos, diagrama y ADR. Presupuesto inicial de 20–30 horas tras cubrir las bases."
+        ]
+      },
       "capacidades": [
         "producto",
         "datos"
@@ -81,6 +93,32 @@
           "rastro": "Construye conciliación de citas, equipos y capacidad con datos sintéticos."
         }
       ],
+      "proyecto": {
+        "n": 1,
+        "titulo": "Auctorum Clinic Operations",
+        "campos": [
+          {
+            "etiqueta": "Brief inicial deliberadamente incompleto",
+            "texto": "“La clínica tiene huecos en agenda y pacientes esperando; necesitamos una pantalla para arreglarlo”. Tu primera tarea no es programar la pantalla: es descubrir qué significa esperar, dónde se pierde capacidad y qué puede cambiar cada operador."
+          },
+          {
+            "etiqueta": "Se entrega al alumno",
+            "texto": "500 citas sintéticas, 30 días de disponibilidad, 12 equipos/consultorios, dos catálogos de servicios con IDs distintos, duplicados y cambios de última hora. Las inconsistencias vienen etiquetadas solo en el paquete del evaluador."
+          },
+          {
+            "etiqueta": "Construcción requerida",
+            "texto": "conciliación; objetos de cita, recurso, servicio y orden; vista de conflictos; acción de reasignación; historial de decisiones; indicador de capacidad aprovechada frente a un baseline. Ninguna función realiza recomendaciones clínicas."
+          },
+          {
+            "etiqueta": "Incidentes",
+            "texto": "llegan dos solicitudes sobre el mismo recurso; la fuente cambia tras una edición del operador; se cancela una acción a mitad de un recorrido de UI; el usuario pierde acceso a un área."
+          },
+          {
+            "etiqueta": "Aceptación",
+            "texto": "no se generan reservas inválidas en la suite publicada y reservada; la consulta reproduce el estado después de la acción según garantías documentadas; las negativas de permisos pasan; la demo muestra un antes/después medido sobre el mismo dataset. Entrega README, evidencia de tests, video de cinco minutos, diagrama y ADR. Presupuesto inicial de 20–30 horas tras cubrir las bases."
+          }
+        ]
+      },
       "naturaleza": {
         "valor": "a_mano"
       },
@@ -122,6 +160,18 @@
         "mision": "Conecta eventos de una planta simulada a un flujo de mantenimiento.",
         "defensa": "Maneja datos tardíos, sensores ruidosos y repetición de alertas."
       },
+      "gate": {
+        "pregunta": "Maneja datos tardíos, sensores ruidosos y repetición de alertas.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Producto ≥ 3: Conecta eventos de una planta simulada a un flujo de mantenimiento.",
+          "Sistemas ≥ 3: FrED maintenance.",
+          "Datos ≥ 3: Maneja datos tardíos, sensores ruidosos y repetición de alertas.",
+          "Correctitud (condición crítica): Maneja datos tardíos, sensores ruidosos y repetición de alertas.",
+          "Aceptación del proyecto: replay determinista para la parte determinista; no crear alertas duplicadas bajo el mismo incidente; señalizar datos obsoletos; comparar falsos positivos y falsos negativos sobre etiquetas conocidas. Un sensor normal no prueba que la máquina esté sana. Entrega runbook y reporte de una falla inyectada. Presupuesto: 20–35 horas."
+        ]
+      },
       "capacidades": [
         "producto",
         "sistemas",
@@ -139,6 +189,28 @@
           "rastro": "Maneja datos tardíos, sensores ruidosos y repetición de alertas."
         }
       ],
+      "proyecto": {
+        "n": 2,
+        "titulo": "FrED Maintenance Control",
+        "campos": [
+          {
+            "etiqueta": "Brief",
+            "texto": "“La línea se detiene y nadie sabe qué alerta atender primero”. Inicia entrevistando a un operador simulado y define el costo de detenerse, de ignorar una falla y de crear una falsa alarma."
+          },
+          {
+            "etiqueta": "Inputs",
+            "texto": "tres sensores simulados, muestreo nominal de 1 Hz, diez activos, catálogo de mantenimiento y stream con duplicados, retrasos, unidades incompatibles y pérdidas. Esta tasa es del laboratorio y no una capacidad garantizada de Foundry."
+          },
+          {
+            "etiqueta": "Construcción",
+            "texto": "ingestión; normalización de unidades y tiempo; series; detección baseline antes de ML; objeto de incidente; asignación de responsable; acción de reconocer y cerrar; recuperación de un stream interrumpido. La simulación no controla maquinaria física."
+          },
+          {
+            "etiqueta": "Aceptación",
+            "texto": "replay determinista para la parte determinista; no crear alertas duplicadas bajo el mismo incidente; señalizar datos obsoletos; comparar falsos positivos y falsos negativos sobre etiquetas conocidas. Un sensor normal no prueba que la máquina esté sana. Entrega runbook y reporte de una falla inyectada. Presupuesto: 20–35 horas."
+          }
+        ]
+      },
       "naturaleza": {
         "valor": "a_mano"
       },
@@ -180,6 +252,19 @@
         "mision": "Extrae, recupera y revisa evidencia documental antes de crear una acción.",
         "defensa": "Debe abstenerse sin evidencia suficiente y conservar trazabilidad."
       },
+      "gate": {
+        "pregunta": "Debe abstenerse sin evidencia suficiente y conservar trazabilidad.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Producto ≥ 3: Extrae, recupera y revisa evidencia documental antes de crear una acción.",
+          "Comunicación ≥ 3: Extrae, recupera y revisa evidencia documental antes de crear una acción.",
+          "Responsabilidad ≥ 3: Extrae, recupera y revisa evidencia documental antes de crear una acción.",
+          "Trazabilidad (condición crítica): Debe abstenerse sin evidencia suficiente y conservar trazabilidad.",
+          "Recuperación (condición crítica): Extrae, recupera y revisa evidencia documental antes de crear una acción.",
+          "Aceptación del proyecto: ningún write crítico sin precondiciones y revisión requerida; todas las citas comprobadas apuntan al soporte correcto; reporte separado de extracción, retrieval y generación; abstenciones contabilizadas; resultados publicados y reservados con costos y tamaño de muestra. No se afirma significación estadística con un set pequeño. Presupuesto: 25–40 horas."
+        ]
+      },
       "capacidades": [
         "producto",
         "comunicacion",
@@ -202,6 +287,28 @@
           "rastro": "Extrae, recupera y revisa evidencia documental antes de crear una acción."
         }
       ],
+      "proyecto": {
+        "n": 3,
+        "titulo": "Evidence-to-Action con AIP",
+        "campos": [
+          {
+            "etiqueta": "Brief",
+            "texto": "“Tenemos documentos y queremos un agente que los entienda”. Debes convertirlo en una tarea concreta: proponer una actualización de orden respaldada por cláusulas y campos localizables."
+          },
+          {
+            "etiqueta": "Inputs",
+            "texto": "60 documentos sintéticos de formatos variados; algunos contienen contradicciones, fechas vencidas, tablas y texto que intenta dar instrucciones al asistente. La versión reservada incluye documentos no usados para ajustar prompts."
+          },
+          {
+            "etiqueta": "Construcción",
+            "texto": "extracción con evidencia; registro de versión; recuperación; respuesta con citas; propuesta de acción estructurada; revisión humana; permisos; observabilidad y costo por tarea. Comparar baseline determinista, modelo A y modelo B cuando estén disponibles. No comparar proveedores indisponibles con cifras inventadas."
+          },
+          {
+            "etiqueta": "Aceptación",
+            "texto": "ningún write crítico sin precondiciones y revisión requerida; todas las citas comprobadas apuntan al soporte correcto; reporte separado de extracción, retrieval y generación; abstenciones contabilizadas; resultados publicados y reservados con costos y tamaño de muestra. No se afirma significación estadística con un set pequeño. Presupuesto: 25–40 horas."
+          }
+        ]
+      },
       "naturaleza": {
         "valor": "a_mano"
       },
@@ -236,6 +343,17 @@
         "mision": "Asigna recursos escasos y resuelve conflictos al cambiar restricciones.",
         "defensa": "Evita doble reserva y explica cuándo deja de servir tu optimizador."
       },
+      "gate": {
+        "pregunta": "Evita doble reserva y explica cuándo deja de servir tu optimizador.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Producto ≥ 3: Asigna recursos escasos y resuelve conflictos al cambiar restricciones.",
+          "Comunicación ≥ 3: Evita doble reserva y explica cuándo deja de servir tu optimizador.",
+          "Correctitud (condición crítica): Evita doble reserva y explica cuándo deja de servir tu optimizador.",
+          "Aceptación del proyecto: restricciones duras verificadas por código independiente; métrica de calidad frente al baseline; informe de casos inviables; reconciliación de efectos externos; defensa sobre cuándo abandonar la heurística. Presupuesto: 25–40 horas."
+        ]
+      },
       "capacidades": [
         "producto",
         "comunicacion"
@@ -251,6 +369,28 @@
           "rastro": "Evita doble reserva y explica cuándo deja de servir tu optimizador."
         }
       ],
+      "proyecto": {
+        "n": 4,
+        "titulo": "Logistics Disruption Desk",
+        "campos": [
+          {
+            "etiqueta": "Brief",
+            "texto": "“Un retraso afecta varias entregas; reasigna recursos”. Puedes elegir aeronaves de carga simuladas o vehículos, pero no cambiar el problema a un simple CRUD."
+          },
+          {
+            "etiqueta": "Inputs",
+            "texto": "100 órdenes, 15 recursos, ventanas de tiempo, capacidades y dos fuentes de estado que discrepan. Después de tu primera demo se introduce un recurso fuera de servicio y una prioridad comercial nueva."
+          },
+          {
+            "etiqueta": "Construcción",
+            "texto": "modelo de restricciones; solución baseline; asignación y replaneación; comparación de escenarios sin asumir que una función legacy está disponible; acciones con control de concurrencia; simulador de sistema externo que a veces confirma y a veces deja resultado desconocido."
+          },
+          {
+            "etiqueta": "Aceptación",
+            "texto": "restricciones duras verificadas por código independiente; métrica de calidad frente al baseline; informe de casos inviables; reconciliación de efectos externos; defensa sobre cuándo abandonar la heurística. Presupuesto: 25–40 horas."
+          }
+        ]
+      },
       "naturaleza": {
         "valor": "a_mano"
       },
@@ -285,6 +425,16 @@
         "mision": "Recibe un caso ajeno a salud e industria; entrega una vertical en dos días de trabajo.",
         "defensa": "Pregunta antes de asumir y mide una mejora frente a un baseline."
       },
+      "gate": {
+        "pregunta": "Pregunta antes de asumir y mide una mejora frente a un baseline.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Producto ≥ 3: Recibe un caso ajeno a salud e industria; entrega una vertical en dos días de trabajo.",
+          "Correctitud (condición crítica): Pregunta antes de asumir y mide una mejora frente a un baseline.",
+          "Aceptación del proyecto: preguntas iniciales registradas; hipótesis contrastable; una vertical que opere; límites conocidos; demo comprensible; un cambio de requisito absorbido sin reescribir todo. El uso de IA es permitido en construcción y se audita; la defensa posterior es independiente."
+        ]
+      },
       "capacidades": [
         "producto"
       ],
@@ -298,6 +448,24 @@
           "rastro": "Pregunta antes de asumir y mide una mejora frente a un baseline."
         }
       ],
+      "proyecto": {
+        "n": 5,
+        "titulo": "Dominio desconocido, primera vertical",
+        "campos": [
+          {
+            "etiqueta": "Brief reservado hasta iniciar",
+            "texto": "Ejemplos de familia: desperdicio alimentario, reparaciones de equipos compartidos o incidencias de un campus. No se permite elegir salud o industria para esta prueba de transferencia."
+          },
+          {
+            "etiqueta": "Restricción",
+            "texto": "dos jornadas de trabajo de 6–8 horas, con pausas. El evaluador introduce una ambigüedad de identidad, una fuente rota y un usuario que cambia de opinión. Se evalúa la priorización; no cuántas pantallas lograste fabricar."
+          },
+          {
+            "etiqueta": "Aceptación",
+            "texto": "preguntas iniciales registradas; hipótesis contrastable; una vertical que opere; límites conocidos; demo comprensible; un cambio de requisito absorbido sin reescribir todo. El uso de IA es permitido en construcción y se audita; la defensa posterior es independiente."
+          }
+        ]
+      },
       "naturaleza": {
         "valor": "mixto",
         "rastro": "El uso de IA es permitido en construcción y se audita; la defensa posterior es independiente.",
@@ -350,6 +518,17 @@
         "mision": "Otra persona intenta romper y operar uno de tus proyectos sin tu ayuda.",
         "defensa": "Recupera el sistema y corrige el runbook a partir de fallas observadas."
       },
+      "gate": {
+        "pregunta": "Recupera el sistema y corrige el runbook a partir de fallas observadas.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Producto ≥ 3: Otra persona intenta romper y operar uno de tus proyectos sin tu ayuda.",
+          "Responsabilidad ≥ 3: Recupera el sistema y corrige el runbook a partir de fallas observadas.",
+          "Recuperación (condición crítica): Recupera el sistema y corrige el runbook a partir de fallas observadas.",
+          "Aceptación del proyecto: detectar y localizar; preservar datos y decisiones; recuperar o compensar; comunicar impacto y límites; actualizar el runbook con lo aprendido. Cerrar con revisión de diseño y postmortem sin culpas. Presupuesto: 12–20 horas."
+        ]
+      },
       "capacidades": [
         "producto",
         "responsabilidad"
@@ -365,6 +544,24 @@
           "rastro": "Recupera el sistema y corrige el runbook a partir de fallas observadas."
         }
       ],
+      "proyecto": {
+        "n": 6,
+        "titulo": "Operación, handoff y game day",
+        "campos": [
+          {
+            "etiqueta": "",
+            "texto": "Selecciona uno de los proyectos anteriores. Otra persona lo instala o utiliza siguiendo solo tu documentación. Si no hay observador humano, una ejecución automatizada desde entorno limpio verifica reproducibilidad, pero no sustituye la prueba de usabilidad humana."
+          },
+          {
+            "etiqueta": "Incidentes",
+            "texto": "fuente obsoleta; duplicación de evento; permiso insuficiente; servicio externo lento; cambio incompatible de esquema; modelo que produce una respuesta bien formada pero incorrecta. Se elige un subconjunto sin anunciarlo."
+          },
+          {
+            "etiqueta": "Aceptación",
+            "texto": "detectar y localizar; preservar datos y decisiones; recuperar o compensar; comunicar impacto y límites; actualizar el runbook con lo aprendido. Cerrar con revisión de diseño y postmortem sin culpas. Presupuesto: 12–20 horas."
+          }
+        ]
+      },
       "naturaleza": {
         "valor": "a_mano"
       },
@@ -405,6 +602,16 @@
         ],
         "mision": "Completa coding, aprendizaje, descomposición, diseño y defensa de proyecto.",
         "defensa": "Formato de práctica propio; no se presenta como proceso oficial de contratación."
+      },
+      "gate": {
+        "pregunta": "Formato de práctica propio; no se presenta como proceso oficial de contratación.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Producto ≥ 3: Completa coding, aprendizaje, descomposición, diseño y defensa de proyecto.",
+          "Comunicación ≥ 3: no se presenta como proceso oficial de contratación.",
+          "Correctitud (condición crítica): Formato de práctica propio; no se presenta como proceso oficial de contratación."
+        ]
       },
       "capacidades": [
         "producto",
@@ -463,6 +670,16 @@
         ],
         "mision": "Defiende un proyecto desconocido y vuelve a resolver dos tareas semanas después.",
         "defensa": "Tres evaluaciones independientes sin fallas críticas y evidencia de retención."
+      },
+      "gate": {
+        "pregunta": "Tres evaluaciones independientes sin fallas críticas y evidencia de retención.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Producto ≥ 3: Defiende un proyecto desconocido y vuelve a resolver dos tareas semanas después.",
+          "Responsabilidad ≥ 3: Tres evaluaciones independientes sin fallas críticas y evidencia de retención.",
+          "Correctitud (condición crítica): Tres evaluaciones independientes sin fallas críticas y evidencia de retención."
+        ]
       },
       "capacidades": [
         "producto",

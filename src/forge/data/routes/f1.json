@@ -56,6 +56,16 @@
         "mision": "Escribe un memo sobre autonomía, ownership y resultados; incluye objeciones.",
         "defensa": "Defiende dónde la visión funciona y dónde exige límites o adaptación."
       },
+      "gate": {
+        "pregunta": "Defiende dónde la visión funciona y dónde exige límites o adaptación.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Producto ≥ 3: Escribe un memo sobre autonomía, ownership y resultados; incluye objeciones.",
+          "Comunicación ≥ 3: Escribe un memo sobre autonomía, ownership y resultados;",
+          "Correctitud (condición crítica): Defiende dónde la visión funciona y dónde exige límites o adaptación."
+        ]
+      },
       "capacidades": [
         "producto",
         "comunicacion"
@@ -105,6 +115,15 @@
         "mision": "Simula 20 minutos con un operador y registra preguntas y contradicciones.",
         "defensa": "Separa lo observado, lo reportado, lo inferido y lo aún desconocido."
       },
+      "gate": {
+        "pregunta": "Separa lo observado, lo reportado, lo inferido y lo aún desconocido.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Producto ≥ 3: Simula 20 minutos con un operador y registra preguntas y contradicciones.",
+          "Correctitud (condición crítica): Separa lo observado, lo reportado, lo inferido y lo aún desconocido."
+        ]
+      },
       "capacidades": [
         "producto"
       ],
@@ -144,6 +163,15 @@
         ],
         "mision": "Convierte un pedido vago en decisiones, entidades, acciones y restricciones.",
         "defensa": "Propón el experimento más barato que pueda refutar tu hipótesis."
+      },
+      "gate": {
+        "pregunta": "Propón el experimento más barato que pueda refutar tu hipótesis.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Producto ≥ 3: Convierte un pedido vago en decisiones, entidades, acciones y restricciones.",
+          "Correctitud (condición crítica): Propón el experimento más barato que pueda refutar tu hipótesis."
+        ]
       },
       "capacidades": [
         "producto"
@@ -191,6 +219,16 @@
         ],
         "mision": "Elige una vertical que entregue valor antes de completar toda la plataforma.",
         "defensa": "Explica qué pospones, qué riesgo aceptas y qué señal cambiaría el plan."
+      },
+      "gate": {
+        "pregunta": "Explica qué pospones, qué riesgo aceptas y qué señal cambiaría el plan.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Producto ≥ 3: Priorizar y secuenciar.",
+          "Comunicación ≥ 3: Explica qué pospones, qué riesgo aceptas y qué señal cambiaría el plan.",
+          "Correctitud (condición crítica): Explica qué pospones, qué riesgo aceptas y qué señal cambiaría el plan."
+        ]
       },
       "capacidades": [
         "producto",
@@ -241,6 +279,16 @@
         "mision": "Recibe documentación nueva y entrega una integración acotada.",
         "defensa": "Haz explícitas tus dudas y verifica hipótesis con pruebas pequeñas."
       },
+      "gate": {
+        "pregunta": "Haz explícitas tus dudas y verifica hipótesis con pruebas pequeñas.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Producto ≥ 3: Recibe documentación nueva y entrega una integración acotada.",
+          "Comunicación ≥ 3: Recibe documentación nueva y entrega una integración acotada.",
+          "Correctitud (condición crítica): Haz explícitas tus dudas y verifica hipótesis con pruebas pequeñas."
+        ]
+      },
       "capacidades": [
         "producto",
         "comunicacion"
@@ -289,6 +337,16 @@
         ],
         "mision": "Graba una demo de 5 minutos y una defensa de 15 minutos en inglés.",
         "defensa": "Responde una objeción comercial y una técnica con evidencia distinta."
+      },
+      "gate": {
+        "pregunta": "Responde una objeción comercial y una técnica con evidencia distinta.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Producto ≥ 3: Graba una demo de 5 minutos y una defensa de 15 minutos en inglés.",
+          "Comunicación ≥ 3: Demos y comunicación en inglés.",
+          "Correctitud (condición crítica): Responde una objeción comercial y una técnica con evidencia distinta."
+        ]
       },
       "capacidades": [
         "producto",
@@ -342,6 +400,17 @@
         "mision": "Comunica un incidente, presenta alternativas y lidera un análisis causal.",
         "defensa": "Asume responsabilidad sin ocultar incertidumbre ni culpar al usuario."
       },
+      "gate": {
+        "pregunta": "Asume responsabilidad sin ocultar incertidumbre ni culpar al usuario.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Producto ≥ 3: Asume responsabilidad sin ocultar incertidumbre ni culpar al usuario.",
+          "Comunicación ≥ 3: Comunica un incidente, presenta alternativas y lidera un análisis causal.",
+          "Responsabilidad ≥ 3: Incidentes y desacuerdo profesional.",
+          "Recuperación (condición crítica): Incidentes y desacuerdo profesional."
+        ]
+      },
       "capacidades": [
         "producto",
         "comunicacion",
@@ -392,6 +461,15 @@
         ],
         "mision": "Prepara tres casos propios con decisiones, límites y resultados medidos.",
         "defensa": "Distingue tu contribución individual y demuestra una ocasión en que cambiaste de opinión."
+      },
+      "gate": {
+        "pregunta": "Distingue tu contribución individual y demuestra una ocasión en que cambiaste de opinión.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Producto ≥ 3: Prepara tres casos propios con decisiones, límites y resultados medidos.",
+          "Correctitud (condición crítica): Distingue tu contribución individual y demuestra una ocasión en que cambiaste de opinión."
+        ]
       },
       "capacidades": [
         "producto"

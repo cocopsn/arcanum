@@ -122,6 +122,10 @@ const CAP_STEMS = [
   ["comunicacion", /explica|comunica|\bdemo\b|presenta|\bmemo\b|redacta|handoff|documenta|en inglés/i],
   ["responsabilidad", /incidente|postmortem|rollback|recupera|fall[ao]s?\b|reproduc|monitore|operación real/i],
 ];
+const CAP_LABEL = {
+  algoritmos: "Algoritmos", abstraccion: "Abstracción", sistemas: "Sistemas", datos: "Datos", ia: "IA",
+  producto: "Producto", comunicacion: "Comunicación", responsabilidad: "Responsabilidad",
+};
 const ROUTE_PRIMARY = {
   F0: "producto", A1: "algoritmos", A2: "algoritmos", S1: "datos", S2: "sistemas",
   P1: "datos", P2: "abstraccion", P3: "producto", P4: "ia", P5: "responsabilidad",
@@ -344,6 +348,75 @@ function proyecto5Text(lines) {
   return sec.slice(s, e < 0 ? undefined : e).join("\n");
 }
 
+/** The value of a bold field line «**Etiqueta:** texto» anywhere in a section, or "". */
+function fieldIn(sec, label) {
+  const line = sec.find((l) => l.startsWith(`**${label}:**`));
+  return line ? line.slice(label.length + 5).trim() : "";
+}
+
+/** Blocks «### <heading>» of a section, each as ordered fields [{ etiqueta, texto, items? }] (verbatim). A line
+ *  «**Etiqueta:** texto» opens a field; «**Frase.** resto» opens one labelled with the bold sentence; a numbered
+ *  or bulleted list joins the previous field as items; any other paragraph is a field without label. */
+function blocks(sec, headingRe) {
+  const out = [];
+  let cur = null;
+  for (const raw of sec) {
+    const line = raw.replace(/\s+$/, "");
+    const h = line.match(headingRe);
+    if (h) {
+      cur = { heading: line.replace(/^#+\s*/, ""), m: h, campos: [] };
+      out.push(cur);
+      continue;
+    }
+    if (!cur || !line.trim()) continue;
+    if (/^#{2,3} /.test(line)) {
+      cur = null;
+      continue;
+    }
+    let m;
+    if ((m = line.match(/^\*\*([^*]+?):\*\*\s*(.*)$/))) cur.campos.push({ etiqueta: m[1].trim(), texto: m[2].trim() });
+    else if ((m = line.match(/^\*\*([^*]+?)\.\*\*\s*(.*)$/))) cur.campos.push({ etiqueta: m[1].trim(), texto: m[2].trim() });
+    else if ((m = line.match(/^\s*(?:\d+\.|[-*])\s+(.*)$/)) && cur.campos.length) {
+      const last = cur.campos[cur.campos.length - 1];
+      (last.items ??= []).push(m[1].trim());
+    } else cur.campos.push({ etiqueta: "", texto: line.trim() });
+  }
+  return out;
+}
+
+function parseProjects(lines) {
+  const sec = sectionLines(lines, "10");
+  const intro = sec.find((l) => l.trim() && !l.startsWith("#"))?.trim() ?? "";
+  const list = blocks(sec, /^### Proyecto (\d) · (.+)$/).map((b) => ({
+    code: `F2-0${b.m[1]}`,
+    n: Number(b.m[1]),
+    titulo: b.m[2].trim(),
+    campos: b.campos,
+  }));
+  if (list.length !== 6) fail("§10", `se esperaban 6 proyectos, hay ${list.length}`);
+  return { intro, proyectos: list };
+}
+
+function parsePilots(lines) {
+  const sec = sectionLines(lines, "11");
+  const list = blocks(sec, /^### ([A-Z]{1,2}\d-\d{2}) · (.+)$/).map((b) => ({ code: b.m[1], titulo: b.m[2].trim(), campos: b.campos }));
+  if (list.map((p) => p.code).join(",") !== "P2-06,S2-02,F1-03") fail("§11", "los pilotos no son P2-06, S2-02 y F1-03");
+  return list;
+}
+
+/** Markdown table rows of a section whose first cell matches, split into trimmed cells. */
+function rowsOf(sec, re) {
+  return sec.filter((l) => l.startsWith("|") && !/^\|\s*-/.test(l) && re.test(l)).map((l) => l.split("|").slice(1, -1).map((c) => c.trim()));
+}
+
+/** A whole section «## NN.» as verbatim markdown (for the read-only guides). */
+function sectionMarkdown(lines, nn) {
+  const start = lines.findIndex((l) => l.startsWith(`## ${nn}.`));
+  let end = lines.findIndex((l, i) => i > start && /^## \d\d\./.test(l));
+  if (end < 0) end = lines.length;
+  return { titulo: lines[start].replace(/^## \d\d\.\s*/, "").trim(), markdown: lines.slice(start + 1, end).join("\n").trim() };
+}
+
 // ── Assembly ──────────────────────────────────────────────────────────────────────────────────────────────
 function capabilitiesFor(routeCode, fieldsInOrder, mision) {
   const caps = [];
@@ -412,6 +485,20 @@ export function extract(maestroText) {
   const sds = parseExpedientes(lines);
   const catalog = parseCatalog(lines);
   const p5 = proyecto5Text(lines);
+  const projects = parseProjects(lines);
+  const pilots = parsePilots(lines);
+  const sec13 = sectionLines(lines, "13");
+  const dAplicacion = fieldIn(sec13, "Aplicación");
+  const dSalida = fieldIn(sec13, "Salida del diagnóstico");
+  if (!dAplicacion || !dSalida) fail("§13", "falta «Aplicación» o «Salida del diagnóstico»");
+  const sec08 = sectionLines(lines, "08");
+  const sdPlantilla = fieldIn(sec08, "Plantilla exigida a cada expediente");
+  const sdPasadas = fieldIn(sec08, "Tres pasadas");
+  if (!sdPlantilla || !sdPasadas) fail("§08", "falta la plantilla o las tres pasadas");
+  const sec05 = sectionLines(lines, "05").join("\n");
+  const escala = sec05.match(/Escala de rúbrica inicial:[^\n]*?bajo cambio\./)?.[0];
+  const regla = sec05.match(/Para aprobar una misión se exige[^\n]*?declaradas\./)?.[0];
+  if (!escala || !regla) fail("§05", "falta la escala de rúbrica o la regla de aprobación");
 
   // counts (§5.1): 124 route cells / 8 / 24 / 12
   const routeCells = [...routes.values()].reduce((n, r) => n + r.cells.length, 0);
@@ -475,8 +562,9 @@ export function extract(maestroText) {
         pushCell(d.code, `${d.code} · ${d.title}`, "diagnostico", {
           urls,
           fuentes: links(d.enunciado).map(sourceRef),
-          ficha: { foco: d.title, fuentes: links(d.enunciado).map(sourceRef), mision: d.enunciado, defensa: d.enunciado },
-          d: { minutos: d.minutos, enunciado: d.enunciado },
+          // the protocol of §13 («Aplicación») is what the learner must respect before checking
+          ficha: { foco: d.title, fuentes: links(d.enunciado).map(sourceRef), mision: d.enunciado, defensa: dAplicacion },
+          d: { minutos: d.minutos, enunciado: d.enunciado, aplicacion: dAplicacion, salida: dSalida },
           authoredIn: urls.length ? undefined : "Programa integral §13, autoría propia",
         });
       }
@@ -501,7 +589,14 @@ export function extract(maestroText) {
           urls: uniq(fuentes.map((f) => f.url)),
           fuentes,
           ficha: { foco: s.title, fuentes, mision: s.decision, defensa: s.entregable },
-          sd: { decision: s.decision, claves: s.claves, entregable: s.entregable, inspiradoEnCatalogo: s.inspiradoEnCatalogo },
+          sd: {
+            decision: s.decision,
+            claves: s.claves,
+            entregable: s.entregable,
+            inspiradoEnCatalogo: s.inspiradoEnCatalogo,
+            plantilla: sdPlantilla,
+            pasadas: sdPasadas,
+          },
         });
       }
     } else {
@@ -557,17 +652,38 @@ export function extract(maestroText) {
       const flujo = flujoFor(c.code);
       const fieldsInOrder = [c.ficha.foco, c.ficha.resultado, c.ficha.mision, c.ficha.defensa, c.ficha.variante];
       const { caps, rastro } = capabilitiesFor(code, fieldsInOrder, c.ficha.mision);
+      const criticas = criticasFor(fieldsInOrder, c.ficha.defensa);
+      const compuerta = compuertaFor(flujo);
+      const proyecto = projects.proyectos.find((p) => p.code === c.code);
+      // the compuerta's question and rubric, assembled ONLY from the master program: the defence of the fiche
+      // (X: «Entregable y condición de defensa»; SD: its deliverable), the scale and the approval rule of §05, the
+      // literal trace of each essential capability and critical condition, and the project's acceptance (§10).
+      const gate =
+        compuerta === null
+          ? undefined
+          : {
+              pregunta: c.ficha.defensa,
+              rubrica: [
+                regla,
+                escala,
+                ...caps.map((k) => `${CAP_LABEL[k]} ≥ 3: ${rastro[k]}`),
+                ...criticas.map((k) => `${k.texto} (condición crítica): ${k.rastro}`),
+                ...(proyecto ? proyecto.campos.filter((f) => /^Aceptación/.test(f.etiqueta)).map((f) => `Aceptación del proyecto: ${f.texto}`) : []),
+              ],
+            };
       outCells.push({
         code: c.code,
         id,
         title: c.title,
         cls: c.cls,
         flujo,
-        compuerta: compuertaFor(flujo),
+        compuerta,
         ficha: c.ficha,
+        ...(gate ? { gate } : {}),
         capacidades: caps,
         rastroCapacidades: rastro,
-        criticas: criticasFor(fieldsInOrder, c.ficha.defensa),
+        criticas,
+        ...(proyecto ? { proyecto: { n: proyecto.n, titulo: proyecto.titulo, campos: proyecto.campos } } : {}),
         naturaleza: nat ? { valor: nat.valor, rastro: nat.rastro, parts: nat.parts } : { valor: "a_mano" },
         alcance: alcanceFor(c.code),
         ...(REQUIRE_ENGLISH.has(c.code) ? { requireEnglish: true } : {}),
@@ -581,7 +697,63 @@ export function extract(maestroText) {
     routeData[slug] = { v: 1, slug, code, name, family, header, cells: outCells, maestro_sha10: sha10 };
   }
   if (seen.size !== 168) fail("total", `se esperaban 168 celdas, hay ${seen.size}`);
-  return { sha10, spinePaths, spineCells, meta, routeData, maestroUrls, catalog };
+
+  // ── catalog.json (§5.8): the keys of §20 and C-01…C-18, the 7 video rows and 6 readings of §12, the papers of §08
+  const keyRef = (k) => {
+    const hit = catalog.keys.get(k);
+    if (!hit) fail(`[${k}]`, "la clave citada no resuelve en §20");
+    return hit;
+  };
+  const claves = {};
+  for (const [k, v] of [...catalog.keys].sort(([a], [b]) => (a < b ? -1 : 1))) claves[k] = { url: v.url, etiqueta: v.etiqueta, tipo: tipoFor(v.url, k), acceso: accesoFor(v.url) };
+  const cursos = {};
+  for (const [k, v] of [...catalog.courses].sort(([a], [b]) => (a < b ? -1 : 1))) {
+    cursos[k] = { url: v.url, etiqueta: v.etiqueta, tipo: "curso", acceso: accesoFor(v.url), honestidad: "Selección de unidades; no equivale a haber completado el curso" };
+  }
+  const sec12 = sectionLines(lines, "12");
+  const iLect = sec12.findIndex((l) => l.startsWith("### Lecturas de oficio"));
+  const iVid = sec12.findIndex((l) => l.startsWith("### Video"));
+  const bracketKey = (s) => s.match(/\[([A-Z0-9-]+)\]\s*$/)?.[1] ?? null;
+  const CELL_CODE_RE = /\b(?:SW[1-4]|[FASP]\d)-\d{2}\b/g;
+  const ROUTE_CODE_RE = /\b(?:SW[1-4]|[FASP]\d)\b(?!-)/g;
+  const lecturas = rowsOf(sec12.slice(iLect, iVid), /\]\s*\|/).map(([lectura, pregunta, produccion]) => {
+    const k = bracketKey(lectura);
+    return { clave: k, lectura: lectura.replace(/\s*\[[A-Z0-9-]+\]\s*$/, ""), url: k ? keyRef(k).url : null, pregunta, produccion };
+  });
+  const videos = rowsOf(sec12.slice(iVid), /\]\s*\|/).map(([recurso, uso, estado]) => {
+    const k = bracketKey(recurso);
+    return {
+      clave: k,
+      recurso: recurso.replace(/\s*\[[A-Z0-9-]+\]\s*$/, ""),
+      url: k ? keyRef(k).url : null,
+      uso,
+      celdas: uniq(uso.match(CELL_CODE_RE) ?? []),
+      rutas: uniq((uso.replace(CELL_CODE_RE, "").match(ROUTE_CODE_RE)) ?? []),
+      estado,
+      honestidad: "Video no revisado",
+    };
+  });
+  if (lecturas.length !== 6) fail("§12", `se esperaban 6 lecturas de oficio, hay ${lecturas.length}`);
+  if (videos.length !== 7) fail("§12", `se esperaban 7 filas de video, hay ${videos.length}`);
+  const papers = rowsOf(sec08, /^\|\s*\[/).map(([lectura, pregunta, trabajo]) => {
+    const l = links(lectura)[0];
+    return { titulo: l?.label ?? lectura, url: l?.url ?? null, pregunta, trabajo };
+  });
+  if (papers.length !== 7) fail("§08", `se esperaban 7 lecturas originales, hay ${papers.length}`);
+  const catalogOut = { maestro_sha10: sha10, claves, cursos, lecturas, videos, papers };
+
+  // ── projects.json (§10), pilots.json (§11), guias.json (§04, §07, §14, §15: read-only guides, RF-C11)
+  const projectsOut = { maestro_sha10: sha10, intro: projects.intro, proyectos: projects.proyectos };
+  const pilotsOut = { maestro_sha10: sha10, pilotos: pilots };
+  const guiasOut = {
+    maestro_sha10: sha10,
+    guias: ["04", "07", "14", "15"].map((nn) => ({ seccion: nn, ...sectionMarkdown(lines, nn) })),
+  };
+  // nothing derived from the certifications.ontologize.com entries of §21 may be written (design §5.1)
+  for (const [name, obj] of Object.entries({ catalogOut, projectsOut, pilotsOut, guiasOut, routeData })) {
+    if (JSON.stringify(obj).includes("certifications.ontologize.com")) fail(name, "contiene una entrada de certifications.ontologize.com");
+  }
+  return { sha10, spinePaths, spineCells, meta, routeData, maestroUrls, catalog, catalogOut, projectsOut, pilotsOut, guiasOut };
 }
 
 // ── Writers ───────────────────────────────────────────────────────────────────────────────────────────────
@@ -647,6 +819,10 @@ function main(argv) {
   files.set(join(ROOT, "src", "lib", "spines-forge.ts"), renderSpinesForge(x));
   for (const [slug, data] of Object.entries(x.routeData)) files.set(join(ROOT, "src", "forge", "data", "routes", `${slug}.json`), json(data));
   files.set(join(ROOT, "src", "forge", "data", "maestro-urls.json"), json({ maestro_sha10: x.sha10, urls: sortKeys(x.maestroUrls) }));
+  files.set(join(ROOT, "src", "forge", "data", "catalog.json"), json(x.catalogOut));
+  files.set(join(ROOT, "src", "forge", "data", "projects.json"), json(x.projectsOut));
+  files.set(join(ROOT, "src", "forge", "data", "pilots.json"), json(x.pilotsOut));
+  files.set(join(ROOT, "src", "forge", "data", "guias.json"), json(x.guiasOut));
   let diff = 0;
   for (const [file, content] of files) {
     const prev = existsSync(file) ? readFileSync(file, "utf8") : null;

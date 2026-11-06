@@ -46,6 +46,18 @@
         "mision": "Asignar equipo y horario sin doble reserva; dos operadores compiten.",
         "defensa": "Esquema, invariantes, historial de carrera y solución comprobable."
       },
+      "gate": {
+        "pregunta": "Esquema, invariantes, historial de carrera y solución comprobable.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Sistemas ≥ 3: Asignar equipo y horario sin doble reserva; dos operadores compiten.",
+          "Abstracción ≥ 3: Esquema, invariantes, historial de carrera y solución comprobable.",
+          "Producto ≥ 3: dos operadores compiten.",
+          "Consistencia (condición crítica): Esquema, invariantes, historial de carrera y solución comprobable.",
+          "Trazabilidad (condición crítica): Esquema, invariantes, historial de carrera y solución comprobable."
+        ]
+      },
       "capacidades": [
         "sistemas",
         "abstraccion",
@@ -81,7 +93,9 @@
           "USE"
         ],
         "entregable": "Esquema, invariantes, historial de carrera y solución comprobable.",
-        "inspiradoEnCatalogo": false
+        "inspiradoEnCatalogo": false,
+        "plantilla": "problema y usuario; requisitos funcionales; requisitos no funcionales con números y supuestos; límites del sistema; esquema/objetos; contratos de API/eventos; invariantes; camino de lectura; camino de escritura; consistencia; fallas y recuperación; permisos; observabilidad; capacidad/costo; alternativa descartada; plan de migración; experimento de validación; ADR de una página. No se exige dibujar microservicios si una aplicación simple resuelve el problema.",
+        "pasadas": "diseño simple correcto → demanda o restricción nueva → incidente. La evaluación verifica que el alumno sepa qué cambiar y qué preservar. Consenso o replicación solo aparecen cuando el caso los justifica."
       }
     },
     {
@@ -119,6 +133,15 @@
         "mision": "Cumplir ventanas, stock y restricciones de entrega. Inspirado en el título del catálogo atribuido a Palantir.",
         "defensa": "Modelo de pedidos, máquina de estados y reasignación con compensación."
       },
+      "gate": {
+        "pregunta": "Modelo de pedidos, máquina de estados y reasignación con compensación.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Sistemas ≥ 3: Cumplir ventanas, stock y restricciones de entrega. Inspirado en el título del catálogo atribuido a Palantir.",
+          "Recuperación (condición crítica): Modelo de pedidos, máquina de estados y reasignación con compensación."
+        ]
+      },
       "capacidades": [
         "sistemas"
       ],
@@ -147,7 +170,9 @@
           "ACTION"
         ],
         "entregable": "Modelo de pedidos, máquina de estados y reasignación con compensación.",
-        "inspiradoEnCatalogo": true
+        "inspiradoEnCatalogo": true,
+        "plantilla": "problema y usuario; requisitos funcionales; requisitos no funcionales con números y supuestos; límites del sistema; esquema/objetos; contratos de API/eventos; invariantes; camino de lectura; camino de escritura; consistencia; fallas y recuperación; permisos; observabilidad; capacidad/costo; alternativa descartada; plan de migración; experimento de validación; ADR de una página. No se exige dibujar microservicios si una aplicación simple resuelve el problema.",
+        "pasadas": "diseño simple correcto → demanda o restricción nueva → incidente. La evaluación verifica que el alumno sepa qué cambiar y qué preservar. Consenso o replicación solo aparecen cuando el caso los justifica."
       }
     },
     {
@@ -185,6 +210,16 @@
         "mision": "Resolver recursos escasos al introducir mantenimiento y retrasos. Inspirado en el catálogo.",
         "defensa": "Grafo de restricciones, baseline, heurística y límites del algoritmo."
       },
+      "gate": {
+        "pregunta": "Grafo de restricciones, baseline, heurística y límites del algoritmo.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Sistemas ≥ 3: Resolver recursos escasos al introducir mantenimiento y retrasos. Inspirado en el catálogo.",
+          "Algoritmos ≥ 3: Grafo de restricciones, baseline, heurística y límites del algoritmo.",
+          "Correctitud (condición crítica): Grafo de restricciones, baseline, heurística y límites del algoritmo."
+        ]
+      },
       "capacidades": [
         "sistemas",
         "algoritmos"
@@ -215,7 +250,9 @@
           "ONTO"
         ],
         "entregable": "Grafo de restricciones, baseline, heurística y límites del algoritmo.",
-        "inspiradoEnCatalogo": true
+        "inspiradoEnCatalogo": true,
+        "plantilla": "problema y usuario; requisitos funcionales; requisitos no funcionales con números y supuestos; límites del sistema; esquema/objetos; contratos de API/eventos; invariantes; camino de lectura; camino de escritura; consistencia; fallas y recuperación; permisos; observabilidad; capacidad/costo; alternativa descartada; plan de migración; experimento de validación; ADR de una página. No se exige dibujar microservicios si una aplicación simple resuelve el problema.",
+        "pasadas": "diseño simple correcto → demanda o restricción nueva → incidente. La evaluación verifica que el alumno sepa qué cambiar y qué preservar. Consenso o replicación solo aparecen cuando el caso los justifica."
       }
     },
     {
@@ -253,6 +290,16 @@
         "mision": "Detectar, deduplicar y resolver alertas sin tormenta de avisos.",
         "defensa": "Pipeline de eventos, clave de deduplicación, estados y política de escalada."
       },
+      "gate": {
+        "pregunta": "Pipeline de eventos, clave de deduplicación, estados y política de escalada.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Sistemas ≥ 3: Detectar, deduplicar y resolver alertas sin tormenta de avisos.",
+          "Datos ≥ 3: Pipeline de eventos, clave de deduplicación, estados y política de escalada.",
+          "Identidad (condición crítica): Detectar, deduplicar y resolver alertas sin tormenta de avisos."
+        ]
+      },
       "capacidades": [
         "sistemas",
         "datos"
@@ -281,7 +328,9 @@
           "RETRY"
         ],
         "entregable": "Pipeline de eventos, clave de deduplicación, estados y política de escalada.",
-        "inspiradoEnCatalogo": false
+        "inspiradoEnCatalogo": false,
+        "plantilla": "problema y usuario; requisitos funcionales; requisitos no funcionales con números y supuestos; límites del sistema; esquema/objetos; contratos de API/eventos; invariantes; camino de lectura; camino de escritura; consistencia; fallas y recuperación; permisos; observabilidad; capacidad/costo; alternativa descartada; plan de migración; experimento de validación; ADR de una página. No se exige dibujar microservicios si una aplicación simple resuelve el problema.",
+        "pasadas": "diseño simple correcto → demanda o restricción nueva → incidente. La evaluación verifica que el alumno sepa qué cambiar y qué preservar. Consenso o replicación solo aparecen cuando el caso los justifica."
       }
     },
     {
@@ -319,6 +368,16 @@
         "mision": "Mantener una proyección ante replays, deletes y eventos tardíos.",
         "defensa": "Contrato del evento, offsets/checkpoints, reconstrucción y reconciliación."
       },
+      "gate": {
+        "pregunta": "Contrato del evento, offsets/checkpoints, reconstrucción y reconciliación.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Sistemas ≥ 3: Mantener una proyección ante replays, deletes y eventos tardíos.",
+          "Abstracción ≥ 3: Contrato del evento, offsets/checkpoints, reconstrucción y reconciliación.",
+          "Recuperación (condición crítica): Contrato del evento, offsets/checkpoints, reconstrucción y reconciliación."
+        ]
+      },
       "capacidades": [
         "sistemas",
         "abstraccion"
@@ -347,7 +406,9 @@
           "DIST"
         ],
         "entregable": "Contrato del evento, offsets/checkpoints, reconstrucción y reconciliación.",
-        "inspiradoEnCatalogo": false
+        "inspiradoEnCatalogo": false,
+        "plantilla": "problema y usuario; requisitos funcionales; requisitos no funcionales con números y supuestos; límites del sistema; esquema/objetos; contratos de API/eventos; invariantes; camino de lectura; camino de escritura; consistencia; fallas y recuperación; permisos; observabilidad; capacidad/costo; alternativa descartada; plan de migración; experimento de validación; ADR de una página. No se exige dibujar microservicios si una aplicación simple resuelve el problema.",
+        "pasadas": "diseño simple correcto → demanda o restricción nueva → incidente. La evaluación verifica que el alumno sepa qué cambiar y qué preservar. Consenso o replicación solo aparecen cuando el caso los justifica."
       }
     },
     {
@@ -385,6 +446,18 @@
         "mision": "Recuperar evidencia pertinente con permisos y fuentes contradictorias.",
         "defensa": "Estrategia de ingestión/chunking, criterios de búsqueda y evaluación reservada."
       },
+      "gate": {
+        "pregunta": "Estrategia de ingestión/chunking, criterios de búsqueda y evaluación reservada.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Sistemas ≥ 3: Recuperar evidencia pertinente con permisos y fuentes contradictorias.",
+          "Comunicación ≥ 3: Conocimiento documental",
+          "Responsabilidad ≥ 3: Recuperar evidencia pertinente con permisos y fuentes contradictorias.",
+          "Autorización (condición crítica): Recuperar evidencia pertinente con permisos y fuentes contradictorias.",
+          "Recuperación (condición crítica): Recuperar evidencia pertinente con permisos y fuentes contradictorias."
+        ]
+      },
       "capacidades": [
         "sistemas",
         "comunicacion",
@@ -420,7 +493,9 @@
           "SEC"
         ],
         "entregable": "Estrategia de ingestión/chunking, criterios de búsqueda y evaluación reservada.",
-        "inspiradoEnCatalogo": false
+        "inspiradoEnCatalogo": false,
+        "plantilla": "problema y usuario; requisitos funcionales; requisitos no funcionales con números y supuestos; límites del sistema; esquema/objetos; contratos de API/eventos; invariantes; camino de lectura; camino de escritura; consistencia; fallas y recuperación; permisos; observabilidad; capacidad/costo; alternativa descartada; plan de migración; experimento de validación; ADR de una página. No se exige dibujar microservicios si una aplicación simple resuelve el problema.",
+        "pasadas": "diseño simple correcto → demanda o restricción nueva → incidente. La evaluación verifica que el alumno sepa qué cambiar y qué preservar. Consenso o replicación solo aparecen cuando el caso los justifica."
       }
     },
     {
@@ -458,6 +533,16 @@
         "mision": "Sobrevivir a timeout cuando el ERP sí aplicó el cambio.",
         "defensa": "Clave idempotente, estado pendiente, reconciliador y pruebas de duplicados."
       },
+      "gate": {
+        "pregunta": "Clave idempotente, estado pendiente, reconciliador y pruebas de duplicados.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Sistemas ≥ 3: Sobrevivir a timeout cuando el ERP sí aplicó el cambio.",
+          "Correctitud (condición crítica): Clave idempotente, estado pendiente, reconciliador y pruebas de duplicados.",
+          "Identidad (condición crítica): Clave idempotente, estado pendiente, reconciliador y pruebas de duplicados."
+        ]
+      },
       "capacidades": [
         "sistemas"
       ],
@@ -489,7 +574,9 @@
           "CONSIST"
         ],
         "entregable": "Clave idempotente, estado pendiente, reconciliador y pruebas de duplicados.",
-        "inspiradoEnCatalogo": false
+        "inspiradoEnCatalogo": false,
+        "plantilla": "problema y usuario; requisitos funcionales; requisitos no funcionales con números y supuestos; límites del sistema; esquema/objetos; contratos de API/eventos; invariantes; camino de lectura; camino de escritura; consistencia; fallas y recuperación; permisos; observabilidad; capacidad/costo; alternativa descartada; plan de migración; experimento de validación; ADR de una página. No se exige dibujar microservicios si una aplicación simple resuelve el problema.",
+        "pasadas": "diseño simple correcto → demanda o restricción nueva → incidente. La evaluación verifica que el alumno sepa qué cambiar y qué preservar. Consenso o replicación solo aparecen cuando el caso los justifica."
       }
     },
     {
@@ -527,6 +614,17 @@
         "mision": "Contexto, identidad y actualizaciones a varios operadores. Inspirado en el catálogo.",
         "defensa": "APIs, orden de mensajes, consistencia y límites de retención."
       },
+      "gate": {
+        "pregunta": "APIs, orden de mensajes, consistencia y límites de retención.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Sistemas ≥ 3: Contexto, identidad y actualizaciones a varios operadores. Inspirado en el catálogo.",
+          "Producto ≥ 3: Contexto, identidad y actualizaciones a varios operadores.",
+          "Identidad (condición crítica): Contexto, identidad y actualizaciones a varios operadores.",
+          "Consistencia (condición crítica): APIs, orden de mensajes, consistencia y límites de retención."
+        ]
+      },
       "capacidades": [
         "sistemas",
         "producto"
@@ -562,7 +660,9 @@
           "EVENTS"
         ],
         "entregable": "APIs, orden de mensajes, consistencia y límites de retención.",
-        "inspiradoEnCatalogo": true
+        "inspiradoEnCatalogo": true,
+        "plantilla": "problema y usuario; requisitos funcionales; requisitos no funcionales con números y supuestos; límites del sistema; esquema/objetos; contratos de API/eventos; invariantes; camino de lectura; camino de escritura; consistencia; fallas y recuperación; permisos; observabilidad; capacidad/costo; alternativa descartada; plan de migración; experimento de validación; ADR de una página. No se exige dibujar microservicios si una aplicación simple resuelve el problema.",
+        "pasadas": "diseño simple correcto → demanda o restricción nueva → incidente. La evaluación verifica que el alumno sepa qué cambiar y qué preservar. Consenso o replicación solo aparecen cuando el caso los justifica."
       }
     },
     {
@@ -593,6 +693,17 @@
         "mision": "Comparar prompts/modelos sin contaminación del conjunto reservado.",
         "defensa": "Dataset versionado, evaluadores, costo, varianza y criterio de promoción."
       },
+      "gate": {
+        "pregunta": "Dataset versionado, evaluadores, costo, varianza y criterio de promoción.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Sistemas ≥ 3: Comparar prompts/modelos sin contaminación del conjunto reservado.",
+          "Datos ≥ 3: Dataset versionado, evaluadores, costo, varianza y criterio de promoción.",
+          "IA ≥ 3: Comparar prompts/modelos sin contaminación del conjunto reservado.",
+          "Correctitud (condición crítica): Dataset versionado, evaluadores, costo, varianza y criterio de promoción."
+        ]
+      },
       "capacidades": [
         "sistemas",
         "datos",
@@ -622,7 +733,9 @@
           "SLO"
         ],
         "entregable": "Dataset versionado, evaluadores, costo, varianza y criterio de promoción.",
-        "inspiradoEnCatalogo": false
+        "inspiradoEnCatalogo": false,
+        "plantilla": "problema y usuario; requisitos funcionales; requisitos no funcionales con números y supuestos; límites del sistema; esquema/objetos; contratos de API/eventos; invariantes; camino de lectura; camino de escritura; consistencia; fallas y recuperación; permisos; observabilidad; capacidad/costo; alternativa descartada; plan de migración; experimento de validación; ADR de una página. No se exige dibujar microservicios si una aplicación simple resuelve el problema.",
+        "pasadas": "diseño simple correcto → demanda o restricción nueva → incidente. La evaluación verifica que el alumno sepa qué cambiar y qué preservar. Consenso o replicación solo aparecen cuando el caso los justifica."
       }
     },
     {
@@ -660,6 +773,17 @@
         "mision": "Compartir recursos manteniendo restricciones al derivar datos.",
         "defensa": "Matriz de acceso y pruebas negativas de lectura, acción y salida."
       },
+      "gate": {
+        "pregunta": "Matriz de acceso y pruebas negativas de lectura, acción y salida.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Sistemas ≥ 3: Compartir recursos manteniendo restricciones al derivar datos.",
+          "Datos ≥ 3: Compartir recursos manteniendo restricciones al derivar datos.",
+          "Correctitud (condición crítica): Matriz de acceso y pruebas negativas de lectura, acción y salida.",
+          "Autorización (condición crítica): Acceso multiárea"
+        ]
+      },
       "capacidades": [
         "sistemas",
         "datos"
@@ -693,7 +817,9 @@
           "SECRES"
         ],
         "entregable": "Matriz de acceso y pruebas negativas de lectura, acción y salida.",
-        "inspiradoEnCatalogo": false
+        "inspiradoEnCatalogo": false,
+        "plantilla": "problema y usuario; requisitos funcionales; requisitos no funcionales con números y supuestos; límites del sistema; esquema/objetos; contratos de API/eventos; invariantes; camino de lectura; camino de escritura; consistencia; fallas y recuperación; permisos; observabilidad; capacidad/costo; alternativa descartada; plan de migración; experimento de validación; ADR de una página. No se exige dibujar microservicios si una aplicación simple resuelve el problema.",
+        "pasadas": "diseño simple correcto → demanda o restricción nueva → incidente. La evaluación verifica que el alumno sepa qué cambiar y qué preservar. Consenso o replicación solo aparecen cuando el caso los justifica."
       }
     },
     {
@@ -731,6 +857,17 @@
         "mision": "Sesiones durables, revisión humana y fallas de herramientas.",
         "defensa": "Máquina de estados, historial, cancelación y continuidad entre participantes."
       },
+      "gate": {
+        "pregunta": "Máquina de estados, historial, cancelación y continuidad entre participantes.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Sistemas ≥ 3: Sesiones durables, revisión humana y fallas de herramientas.",
+          "IA ≥ 3: Plataforma de agentes",
+          "Responsabilidad ≥ 3: Sesiones durables, revisión humana y fallas de herramientas.",
+          "Trazabilidad (condición crítica): Máquina de estados, historial, cancelación y continuidad entre participantes."
+        ]
+      },
       "capacidades": [
         "sistemas",
         "ia",
@@ -761,7 +898,9 @@
           "CUSTOM"
         ],
         "entregable": "Máquina de estados, historial, cancelación y continuidad entre participantes.",
-        "inspiradoEnCatalogo": false
+        "inspiradoEnCatalogo": false,
+        "plantilla": "problema y usuario; requisitos funcionales; requisitos no funcionales con números y supuestos; límites del sistema; esquema/objetos; contratos de API/eventos; invariantes; camino de lectura; camino de escritura; consistencia; fallas y recuperación; permisos; observabilidad; capacidad/costo; alternativa descartada; plan de migración; experimento de validación; ADR de una página. No se exige dibujar microservicios si una aplicación simple resuelve el problema.",
+        "pasadas": "diseño simple correcto → demanda o restricción nueva → incidente. La evaluación verifica que el alumno sepa qué cambiar y qué preservar. Consenso o replicación solo aparecen cuando el caso los justifica."
       }
     },
     {
@@ -799,6 +938,17 @@
         "mision": "Cambiar esquema y aplicación manteniendo operación.",
         "defensa": "Plan de rollout, compatibilidad, verificación y rollback o compensación."
       },
+      "gate": {
+        "pregunta": "Plan de rollout, compatibilidad, verificación y rollback o compensación.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Sistemas ≥ 3: Cambiar esquema y aplicación manteniendo operación.",
+          "Responsabilidad ≥ 3: Plan de rollout, compatibilidad, verificación y rollback o compensación.",
+          "Correctitud (condición crítica): Plan de rollout, compatibilidad, verificación y rollback o compensación.",
+          "Recuperación (condición crítica): Plan de rollout, compatibilidad, verificación y rollback o compensación."
+        ]
+      },
       "capacidades": [
         "sistemas",
         "responsabilidad"
@@ -832,7 +982,9 @@
           "APOLLO"
         ],
         "entregable": "Plan de rollout, compatibilidad, verificación y rollback o compensación.",
-        "inspiradoEnCatalogo": false
+        "inspiradoEnCatalogo": false,
+        "plantilla": "problema y usuario; requisitos funcionales; requisitos no funcionales con números y supuestos; límites del sistema; esquema/objetos; contratos de API/eventos; invariantes; camino de lectura; camino de escritura; consistencia; fallas y recuperación; permisos; observabilidad; capacidad/costo; alternativa descartada; plan de migración; experimento de validación; ADR de una página. No se exige dibujar microservicios si una aplicación simple resuelve el problema.",
+        "pasadas": "diseño simple correcto → demanda o restricción nueva → incidente. La evaluación verifica que el alumno sepa qué cambiar y qué preservar. Consenso o replicación solo aparecen cuando el caso los justifica."
       }
     }
   ],

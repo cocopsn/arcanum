@@ -50,6 +50,16 @@
         "mision": "Modela una decisión operativa con objetos y propiedades mínimos.",
         "defensa": "Justifica cada objeto por una pregunta o acción del usuario."
       },
+      "gate": {
+        "pregunta": "Justifica cada objeto por una pregunta o acción del usuario.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Abstracción ≥ 3: Modela una decisión operativa con objetos y propiedades mínimos.",
+          "Producto ≥ 3: Modela una decisión operativa con objetos y propiedades mínimos.",
+          "Correctitud (condición crítica): Justifica cada objeto por una pregunta o acción del usuario."
+        ]
+      },
       "capacidades": [
         "abstraccion",
         "producto"
@@ -92,6 +102,15 @@
         "mision": "Conecta órdenes, personas sintéticas y activos con cardinalidades explícitas.",
         "defensa": "Resuelve identidades duplicadas y relaciones muchos-a-muchos sin perder historia."
       },
+      "gate": {
+        "pregunta": "Resuelve identidades duplicadas y relaciones muchos-a-muchos sin perder historia.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Abstracción ≥ 3: Conecta órdenes, personas sintéticas y activos con cardinalidades explícitas.",
+          "Identidad (condición crítica): Links e identidad."
+        ]
+      },
       "capacidades": [
         "abstraccion"
       ],
@@ -131,6 +150,16 @@
         ],
         "mision": "Define una interfaz de activo operativo y dos implementaciones distintas.",
         "defensa": "Explica qué comparte significado y qué no debes abstraer."
+      },
+      "gate": {
+        "pregunta": "Explica qué comparte significado y qué no debes abstraer.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Abstracción ≥ 3: Define una interfaz de activo operativo y dos implementaciones distintas.",
+          "Comunicación ≥ 3: Explica qué comparte significado y qué no debes abstraer.",
+          "Correctitud (condición crítica): Explica qué comparte significado y qué no debes abstraer."
+        ]
       },
       "capacidades": [
         "abstraccion",
@@ -181,6 +210,16 @@
         "mision": "Sigue un cambio desde su datasource hasta el objeto consultable.",
         "defensa": "Diferencia persistencia, indexación, materialización y lectura."
       },
+      "gate": {
+        "pregunta": "Diferencia persistencia, indexación, materialización y lectura.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Abstracción ≥ 3: Sigue un cambio desde su datasource hasta el objeto consultable.",
+          "Datos ≥ 3: Sigue un cambio desde su datasource hasta el objeto consultable.",
+          "Correctitud (condición crítica): Diferencia persistencia, indexación, materialización y lectura."
+        ]
+      },
       "capacidades": [
         "abstraccion",
         "datos"
@@ -230,6 +269,15 @@
         "mision": "Construye una acción de reasignación con parámetros y rechazos claros.",
         "defensa": "Prueba que una UI alternativa no permite saltarse la regla."
       },
+      "gate": {
+        "pregunta": "Prueba que una UI alternativa no permite saltarse la regla.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Abstracción ≥ 3: Construye una acción de reasignación con parámetros y rechazos claros.",
+          "Correctitud (condición crítica): Prueba que una UI alternativa no permite saltarse la regla."
+        ]
+      },
       "capacidades": [
         "abstraccion"
       ],
@@ -276,6 +324,18 @@
         ],
         "mision": "Reproduce dos reasignaciones concurrentes y un fallo de webhook.",
         "defensa": "Distingue atomicidad de los edits y efectos externos que requieren reconciliación."
+      },
+      "gate": {
+        "pregunta": "Distingue atomicidad de los edits y efectos externos que requieren reconciliación.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Abstracción ≥ 3: Reproduce dos reasignaciones concurrentes y un fallo de webhook.",
+          "Sistemas ≥ 3: Edits, concurrencia y efectos externos.",
+          "Responsabilidad ≥ 3: Reproduce dos reasignaciones concurrentes y un fallo de webhook.",
+          "Consistencia (condición crítica): Edits, concurrencia y efectos externos.",
+          "Recuperación (condición crítica): Distingue atomicidad de los edits y efectos externos que requieren reconciliación."
+        ]
       },
       "capacidades": [
         "abstraccion",
@@ -333,6 +393,17 @@
         "mision": "Construye una matriz de usuarios, objetos, propiedades y acciones.",
         "defensa": "Demuestra qué controles filtran una lectura y cuáles propagan restricciones."
       },
+      "gate": {
+        "pregunta": "Demuestra qué controles filtran una lectura y cuáles propagan restricciones.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Abstracción ≥ 3: Construye una matriz de usuarios, objetos, propiedades y acciones.",
+          "Datos ≥ 3: Permisos de recursos y datos.",
+          "Producto ≥ 3: Construye una matriz de usuarios, objetos, propiedades y acciones.",
+          "Autorización (condición crítica): Permisos de recursos y datos."
+        ]
+      },
       "capacidades": [
         "abstraccion",
         "datos",
@@ -383,6 +454,18 @@
         ],
         "mision": "Entrega el modelo y una demo de decisiones con historial y recuperación.",
         "defensa": "Defiende un cambio de dominio sin confundir la Ontology con tablas renombradas."
+      },
+      "gate": {
+        "pregunta": "Defiende un cambio de dominio sin confundir la Ontology con tablas renombradas.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Abstracción ≥ 3: Contrato de dominio operativo.",
+          "Datos ≥ 3: Defiende un cambio de dominio sin confundir la Ontology con tablas renombradas.",
+          "Comunicación ≥ 3: Entrega el modelo y una demo de decisiones con historial y recuperación.",
+          "Trazabilidad (condición crítica): Entrega el modelo y una demo de decisiones con historial y recuperación.",
+          "Recuperación (condición crítica): Entrega el modelo y una demo de decisiones con historial y recuperación."
+        ]
       },
       "capacidades": [
         "abstraccion",

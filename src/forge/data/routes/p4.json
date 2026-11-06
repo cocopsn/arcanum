@@ -51,6 +51,15 @@
         "mision": "Compara regla, búsqueda, modelo predictivo y LLM para un mismo problema.",
         "defensa": "Defiende por qué una parte concreta no necesita IA."
       },
+      "gate": {
+        "pregunta": "Defiende por qué una parte concreta no necesita IA.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "IA ≥ 3: Elegir el papel de la IA.",
+          "Correctitud (condición crítica): Defiende por qué una parte concreta no necesita IA."
+        ]
+      },
       "capacidades": [
         "ia"
       ],
@@ -90,6 +99,16 @@
         ],
         "mision": "Construye una función con salida estructurada y errores explícitos.",
         "defensa": "Muestra entradas inválidas y límites de lo que puede concluir el modelo."
+      },
+      "gate": {
+        "pregunta": "Muestra entradas inválidas y límites de lo que puede concluir el modelo.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "IA ≥ 3: AIP Logic con contrato.",
+          "Abstracción ≥ 3: AIP Logic con contrato.",
+          "Correctitud (condición crítica): Muestra entradas inválidas y límites de lo que puede concluir el modelo."
+        ]
       },
       "capacidades": [
         "ia",
@@ -147,6 +166,17 @@
         "mision": "Construye preguntas respondibles, sin evidencia y con documentos contradictorios.",
         "defensa": "Relaciona cada afirmación con evidencia y reconoce abstención correcta."
       },
+      "gate": {
+        "pregunta": "Relaciona cada afirmación con evidencia y reconoce abstención correcta.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "IA ≥ 3: Construye preguntas respondibles, sin evidencia y con documentos contradictorios.",
+          "Responsabilidad ≥ 3: Recuperación y citas verificables.",
+          "Correctitud (condición crítica): Recuperación y citas verificables.",
+          "Recuperación (condición crítica): Recuperación y citas verificables."
+        ]
+      },
       "capacidades": [
         "ia",
         "responsabilidad"
@@ -201,6 +231,16 @@
         "mision": "Construye un asistente que consulta datos y propone una acción revisable.",
         "defensa": "Distingue conversación, lectura y autoridad para modificar operaciones."
       },
+      "gate": {
+        "pregunta": "Distingue conversación, lectura y autoridad para modificar operaciones.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "IA ≥ 3: Construye un asistente que consulta datos y propone una acción revisable.",
+          "Datos ≥ 3: Construye un asistente que consulta datos y propone una acción revisable.",
+          "Correctitud (condición crítica): Distingue conversación, lectura y autoridad para modificar operaciones."
+        ]
+      },
       "capacidades": [
         "ia",
         "datos"
@@ -242,6 +282,15 @@
         ],
         "mision": "Compara dos versiones sobre un conjunto fijo y otro reservado de evaluación.",
         "defensa": "Separa optimizar contra ejemplos conocidos de mejorar generalización."
+      },
+      "gate": {
+        "pregunta": "Separa optimizar contra ejemplos conocidos de mejorar generalización.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "IA ≥ 3: Compara dos versiones sobre un conjunto fijo y otro reservado de evaluación.",
+          "Correctitud (condición crítica): Separa optimizar contra ejemplos conocidos de mejorar generalización."
+        ]
       },
       "capacidades": [
         "ia"
@@ -290,6 +339,15 @@
         "mision": "Construye una sesión con contexto tipado, eventos y revisión humana.",
         "defensa": "Demuestra cómo continúa el trabajo sin duplicar la acción tras una interrupción."
       },
+      "gate": {
+        "pregunta": "Demuestra cómo continúa el trabajo sin duplicar la acción tras una interrupción.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "IA ≥ 3: Construye una sesión con contexto tipado, eventos y revisión humana.",
+          "Correctitud (condición crítica): Demuestra cómo continúa el trabajo sin duplicar la acción tras una interrupción."
+        ]
+      },
       "capacidades": [
         "ia"
       ],
@@ -336,6 +394,16 @@
         ],
         "mision": "Instrumenta decisiones, herramientas, pausas y límites de ejecución.",
         "defensa": "Reconstruye una falla desde el historial y limita acciones repetidas."
+      },
+      "gate": {
+        "pregunta": "Reconstruye una falla desde el historial y limita acciones repetidas.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "IA ≥ 3: Instrumenta decisiones, herramientas, pausas y límites de ejecución.",
+          "Responsabilidad ≥ 3: Reconstruye una falla desde el historial y limita acciones repetidas.",
+          "Trazabilidad (condición crítica): Reconstruye una falla desde el historial y limita acciones repetidas."
+        ]
       },
       "capacidades": [
         "ia",
@@ -392,6 +460,17 @@
         ],
         "mision": "Entrega un workflow con permisos, costos medidos y regresión probada.",
         "defensa": "No aprueba si una acción crítica se ejecuta fuera de las precondiciones."
+      },
+      "gate": {
+        "pregunta": "No aprueba si una acción crítica se ejecuta fuera de las precondiciones.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "IA ≥ 3: Agente operacional evaluado.",
+          "Abstracción ≥ 3: No aprueba si una acción crítica se ejecuta fuera de las precondiciones.",
+          "Producto ≥ 3: Entrega un workflow con permisos, costos medidos y regresión probada.",
+          "Autorización (condición crítica): Entrega un workflow con permisos, costos medidos y regresión probada."
+        ]
       },
       "capacidades": [
         "ia",

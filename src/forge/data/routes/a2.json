@@ -49,6 +49,15 @@
         "mision": "Completa un set mixto inédito y registra hipótesis, errores y tiempos.",
         "defensa": "Reconoce el patrón desde restricciones; no desde el nombre de la empresa."
       },
+      "gate": {
+        "pregunta": "Reconoce el patrón desde restricciones; no desde el nombre de la empresa.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Algoritmos ≥ 3: Completa un set mixto inédito y registra hipótesis, errores y tiempos.",
+          "Correctitud (condición crítica): Reconoce el patrón desde restricciones; no desde el nombre de la empresa."
+        ]
+      },
       "capacidades": [
         "algoritmos"
       ],
@@ -95,6 +104,17 @@
         ],
         "mision": "Resuelve dos problemas independientes con tests de bordes.",
         "defensa": "Explica un enfoque inicial incorrecto y el dato que te hizo descartarlo."
+      },
+      "gate": {
+        "pregunta": "Explica un enfoque inicial incorrecto y el dato que te hizo descartarlo.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Algoritmos ≥ 3: Resuelve dos problemas independientes con tests de bordes.",
+          "Datos ≥ 3: Explica un enfoque inicial incorrecto y el dato que te hizo descartarlo.",
+          "Comunicación ≥ 3: Explica un enfoque inicial incorrecto y el dato que te hizo descartarlo.",
+          "Correctitud (condición crítica): Resuelve dos problemas independientes con tests de bordes."
+        ]
       },
       "capacidades": [
         "algoritmos",
@@ -147,6 +167,15 @@
         "mision": "Resuelve conectividad, dependencias y un problema de estado expandido.",
         "defensa": "Justifica visitados, complejidad y comportamiento en grafos desconectados."
       },
+      "gate": {
+        "pregunta": "Justifica visitados, complejidad y comportamiento en grafos desconectados.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Algoritmos ≥ 3: Árboles y grafos cronometrados.",
+          "Correctitud (condición crítica): Justifica visitados, complejidad y comportamiento en grafos desconectados."
+        ]
+      },
       "capacidades": [
         "algoritmos"
       ],
@@ -193,6 +222,18 @@
         ],
         "mision": "Construye agregaciones, joins y consultas sobre historial de estados.",
         "defensa": "Defiende nulos, duplicados, clientes sin eventos y zona horaria."
+      },
+      "gate": {
+        "pregunta": "Defiende nulos, duplicados, clientes sin eventos y zona horaria.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Algoritmos ≥ 3: Construye agregaciones, joins y consultas sobre historial de estados.",
+          "Datos ≥ 3: SQL técnico.",
+          "Producto ≥ 3: Defiende nulos, duplicados, clientes sin eventos y zona horaria.",
+          "Identidad (condición crítica): Defiende nulos, duplicados, clientes sin eventos y zona horaria.",
+          "Trazabilidad (condición crítica): Construye agregaciones, joins y consultas sobre historial de estados."
+        ]
       },
       "capacidades": [
         "algoritmos",
@@ -243,6 +284,15 @@
         "mision": "Aprende una pequeña DSL que se te entrega al iniciar y extiéndela.",
         "defensa": "Aplica una regla nueva sin romper las anteriores; haz preguntas útiles."
       },
+      "gate": {
+        "pregunta": "Aplica una regla nueva sin romper las anteriores; haz preguntas útiles.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Algoritmos ≥ 3: Aprende una pequeña DSL que se te entrega al iniciar y extiéndela.",
+          "Correctitud (condición crítica): Aplica una regla nueva sin romper las anteriores; haz preguntas útiles."
+        ]
+      },
       "capacidades": [
         "algoritmos"
       ],
@@ -289,6 +339,18 @@
         ],
         "mision": "Localiza y corrige tres bugs sembrados con límites explícitos al asistente.",
         "defensa": "Aporta diff, reproducciones y tests; demuestra que comprendiste el parche."
+      },
+      "gate": {
+        "pregunta": "Aporta diff, reproducciones y tests; demuestra que comprendiste el parche.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Algoritmos ≥ 3: Localiza y corrige tres bugs sembrados con límites explícitos al asistente.",
+          "IA ≥ 3: Repo-debug con IA autorizada.",
+          "Responsabilidad ≥ 3: Aporta diff, reproducciones y tests;",
+          "Correctitud (condición crítica): Aporta diff, reproducciones y tests;",
+          "Autorización (condición crítica): Repo-debug con IA autorizada."
+        ]
       },
       "capacidades": [
         "algoritmos",
@@ -350,6 +412,16 @@
         "mision": "Resuelve frente a un observador explicando supuestos y verificaciones.",
         "defensa": "Corrige un error sin ocultarlo ni perder la estructura del razonamiento."
       },
+      "gate": {
+        "pregunta": "Corrige un error sin ocultarlo ni perder la estructura del razonamiento.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Algoritmos ≥ 3: Resuelve frente a un observador explicando supuestos y verificaciones.",
+          "Comunicación ≥ 3: Live coding y comunicación.",
+          "Correctitud (condición crítica): Resuelve frente a un observador explicando supuestos y verificaciones."
+        ]
+      },
       "capacidades": [
         "algoritmos",
         "comunicacion"
@@ -398,6 +470,16 @@
         ],
         "mision": "Completa una sesión con coding, SQL, debug y preguntas de transferencia.",
         "defensa": "Aprueba corrección, defensa y manejo de tiempo en tres sets independientes."
+      },
+      "gate": {
+        "pregunta": "Aprueba corrección, defensa y manejo de tiempo en tres sets independientes.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Algoritmos ≥ 3: Completa una sesión con coding, SQL, debug y preguntas de transferencia.",
+          "Datos ≥ 3: Completa una sesión con coding, SQL, debug y preguntas de transferencia.",
+          "Correctitud (condición crítica): Aprueba corrección, defensa y manejo de tiempo en tres sets independientes."
+        ]
       },
       "capacidades": [
         "algoritmos",

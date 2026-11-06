@@ -44,6 +44,17 @@
         "mision": "Integra dos fuentes sintéticas con dueños, llaves, esquema y cadencia.",
         "defensa": "Explica el fallo de cada fuente y qué dato no debes tratar como verdad."
       },
+      "gate": {
+        "pregunta": "Explica el fallo de cada fuente y qué dato no debes tratar como verdad.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Datos ≥ 3: Explica el fallo de cada fuente y qué dato no debes tratar como verdad.",
+          "Abstracción ≥ 3: Fuentes, syncs y contratos.",
+          "Comunicación ≥ 3: Explica el fallo de cada fuente y qué dato no debes tratar como verdad.",
+          "Correctitud (condición crítica): Explica el fallo de cada fuente y qué dato no debes tratar como verdad."
+        ]
+      },
       "capacidades": [
         "datos",
         "abstraccion",
@@ -87,6 +98,16 @@
         ],
         "mision": "Construye joins, normalización y agregaciones con linaje explicable.",
         "defensa": "Detecta multiplicación silenciosa de registros y reglas ocultas en la limpieza."
+      },
+      "gate": {
+        "pregunta": "Detecta multiplicación silenciosa de registros y reglas ocultas en la limpieza.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Datos ≥ 3: Pipeline Builder con significado.",
+          "Comunicación ≥ 3: Construye joins, normalización y agregaciones con linaje explicable.",
+          "Trazabilidad (condición crítica): Construye joins, normalización y agregaciones con linaje explicable."
+        ]
       },
       "capacidades": [
         "datos",
@@ -137,6 +158,16 @@
         "mision": "Reproduce la lógica crítica en transformaciones con tests sobre fixtures.",
         "defensa": "Separa lógica de dominio del adaptador de plataforma."
       },
+      "gate": {
+        "pregunta": "Separa lógica de dominio del adaptador de plataforma.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Datos ≥ 3: Transformaciones en Python.",
+          "Responsabilidad ≥ 3: Reproduce la lógica crítica en transformaciones con tests sobre fixtures.",
+          "Correctitud (condición crítica): Reproduce la lógica crítica en transformaciones con tests sobre fixtures."
+        ]
+      },
       "capacidades": [
         "datos",
         "responsabilidad"
@@ -185,6 +216,16 @@
         ],
         "mision": "Compara salida incremental contra reconstrucción completa con datos adversariales.",
         "defensa": "Explica cuándo snapshots, updates o deletes invalidan tus supuestos."
+      },
+      "gate": {
+        "pregunta": "Explica cuándo snapshots, updates o deletes invalidan tus supuestos.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Datos ≥ 3: Compara salida incremental contra reconstrucción completa con datos adversariales.",
+          "Comunicación ≥ 3: Explica cuándo snapshots, updates o deletes invalidan tus supuestos.",
+          "Correctitud (condición crítica): Explica cuándo snapshots, updates o deletes invalidan tus supuestos."
+        ]
       },
       "capacidades": [
         "datos",
@@ -235,6 +276,16 @@
         "mision": "Define checks de frescura, unicidad, nulos y coherencia; siembra fallas.",
         "defensa": "Distingue un build exitoso de datos suficientemente confiables para actuar."
       },
+      "gate": {
+        "pregunta": "Distingue un build exitoso de datos suficientemente confiables para actuar.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Datos ≥ 3: Distingue un build exitoso de datos suficientemente confiables para actuar.",
+          "Responsabilidad ≥ 3: siembra fallas.",
+          "Correctitud (condición crítica): Distingue un build exitoso de datos suficientemente confiables para actuar."
+        ]
+      },
       "capacidades": [
         "datos",
         "responsabilidad"
@@ -283,6 +334,17 @@
         ],
         "mision": "Mide el recorrido desde publicación hasta disponibilidad para el usuario.",
         "defensa": "Atribuye retrasos al componente correcto y documenta lo que no mediste."
+      },
+      "gate": {
+        "pregunta": "Atribuye retrasos al componente correcto y documenta lo que no mediste.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Datos ≥ 3: Mide el recorrido desde publicación hasta disponibilidad para el usuario.",
+          "Sistemas ≥ 3: Streaming y latencia de extremo a extremo.",
+          "Producto ≥ 3: Mide el recorrido desde publicación hasta disponibilidad para el usuario.",
+          "Correctitud (condición crítica): Atribuye retrasos al componente correcto y documenta lo que no mediste."
+        ]
       },
       "capacidades": [
         "datos",
@@ -334,6 +396,15 @@
         ],
         "mision": "Extrae entidades de documentos sintéticos con evidencia y casos difíciles.",
         "defensa": "No inventes campos faltantes; rastrea cada dato hasta el documento de origen."
+      },
+      "gate": {
+        "pregunta": "No inventes campos faltantes; rastrea cada dato hasta el documento de origen.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Datos ≥ 3: rastrea cada dato hasta el documento de origen.",
+          "Correctitud (condición crítica): No inventes campos faltantes; rastrea cada dato hasta el documento de origen."
+        ]
       },
       "capacidades": [
         "datos"
@@ -388,6 +459,18 @@
         ],
         "mision": "Entrega contrato, pipeline, tests, monitoreo y manual de recuperación.",
         "defensa": "Otro usuario debe poder diagnosticar un dato incorrecto usando tu evidencia."
+      },
+      "gate": {
+        "pregunta": "Otro usuario debe poder diagnosticar un dato incorrecto usando tu evidencia.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Datos ≥ 3: Entrega contrato, pipeline, tests, monitoreo y manual de recuperación.",
+          "Abstracción ≥ 3: Entrega contrato, pipeline, tests, monitoreo y manual de recuperación.",
+          "Producto ≥ 3: Otro usuario debe poder diagnosticar un dato incorrecto usando tu evidencia.",
+          "Correctitud (condición crítica): Entrega contrato, pipeline, tests, monitoreo y manual de recuperación.",
+          "Recuperación (condición crítica): Entrega contrato, pipeline, tests, monitoreo y manual de recuperación."
+        ]
       },
       "capacidades": [
         "datos",

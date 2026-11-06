@@ -24,6 +24,16 @@
         "mision": "Deque con historial aleatorio",
         "defensa": "Comparación contra referencia simple; explicar amortización y fronteras."
       },
+      "gate": {
+        "pregunta": "Comparación contra referencia simple; explicar amortización y fronteras.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Algoritmos ≥ 3: explicar amortización y fronteras.",
+          "Comunicación ≥ 3: explicar amortización y fronteras.",
+          "Trazabilidad (condición crítica): Deque con historial aleatorio"
+        ]
+      },
       "capacidades": [
         "algoritmos",
         "comunicacion"
@@ -63,6 +73,16 @@
         "fuentes": [],
         "mision": "Conciliación con identidad ambigua",
         "defensa": "Resultado más tabla de casos sin resolución; distinguir ambigüedad de dato faltante."
+      },
+      "gate": {
+        "pregunta": "Resultado más tabla de casos sin resolución; distinguir ambigüedad de dato faltante.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Algoritmos ≥ 3: Conciliación con identidad ambigua",
+          "Datos ≥ 3: Resultado más tabla de casos sin resolución;",
+          "Identidad (condición crítica): Conciliación con identidad ambigua"
+        ]
       },
       "capacidades": [
         "algoritmos",
@@ -104,6 +124,16 @@
         "mision": "Detección de ciclos con explicación",
         "defensa": "Devolver un ciclo concreto, no solo un booleano; analizar complejidad."
       },
+      "gate": {
+        "pregunta": "Devolver un ciclo concreto, no solo un booleano; analizar complejidad.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Algoritmos ≥ 3: analizar complejidad.",
+          "Comunicación ≥ 3: Detección de ciclos con explicación",
+          "Correctitud (condición crítica): Devolver un ciclo concreto, no solo un booleano; analizar complejidad."
+        ]
+      },
       "capacidades": [
         "algoritmos",
         "comunicacion"
@@ -144,6 +174,15 @@
         "mision": "Agenda ponderada",
         "defensa": "Obtener un subconjunto no superpuesto de valor máximo y justificar recurrencia."
       },
+      "gate": {
+        "pregunta": "Obtener un subconjunto no superpuesto de valor máximo y justificar recurrencia.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Algoritmos ≥ 3: Obtener un subconjunto no superpuesto de valor máximo y justificar recurrencia.",
+          "Correctitud (condición crítica): Obtener un subconjunto no superpuesto de valor máximo y justificar recurrencia."
+        ]
+      },
       "capacidades": [
         "algoritmos"
       ],
@@ -181,6 +220,17 @@
         "fuentes": [],
         "mision": "Motor de reglas extensible",
         "defensa": "Contrato y parser pequeño; añadir un operador sin cambiar reglas anteriores."
+      },
+      "gate": {
+        "pregunta": "Contrato y parser pequeño; añadir un operador sin cambiar reglas anteriores.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Algoritmos ≥ 3: Motor de reglas extensible",
+          "Abstracción ≥ 3: Contrato y parser pequeño;",
+          "Producto ≥ 3: añadir un operador sin cambiar reglas anteriores.",
+          "Correctitud (condición crítica): Contrato y parser pequeño; añadir un operador sin cambiar reglas anteriores."
+        ]
       },
       "capacidades": [
         "algoritmos",
@@ -224,6 +274,15 @@
         "mision": "API compatible bajo evolución",
         "defensa": "Dos consumidores de versiones distintas y migración comprobable."
       },
+      "gate": {
+        "pregunta": "Dos consumidores de versiones distintas y migración comprobable.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Algoritmos ≥ 3: API compatible bajo evolución",
+          "Correctitud (condición crítica): Dos consumidores de versiones distintas y migración comprobable."
+        ]
+      },
       "capacidades": [
         "algoritmos"
       ],
@@ -261,6 +320,15 @@
         "fuentes": [],
         "mision": "Cola con cancelación",
         "defensa": "Semántica explícita de pendiente, tomado y completado; manejar shutdown."
+      },
+      "gate": {
+        "pregunta": "Semántica explícita de pendiente, tomado y completado; manejar shutdown.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Algoritmos ≥ 3: Cola con cancelación",
+          "Correctitud (condición crítica): Semántica explícita de pendiente, tomado y completado; manejar shutdown."
+        ]
       },
       "capacidades": [
         "algoritmos"
@@ -300,6 +368,15 @@
         "mision": "Diagnóstico de contención",
         "defensa": "Perfil antes/después y corrección que preserve resultados."
       },
+      "gate": {
+        "pregunta": "Perfil antes/después y corrección que preserve resultados.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Algoritmos ≥ 3: Diagnóstico de contención",
+          "Correctitud (condición crítica): Perfil antes/después y corrección que preserve resultados."
+        ]
+      },
       "capacidades": [
         "algoritmos"
       ],
@@ -337,6 +414,17 @@
         "fuentes": [],
         "mision": "Doble reserva",
         "defensa": "Historial concurrente y solución que preserve la restricción compartida."
+      },
+      "gate": {
+        "pregunta": "Historial concurrente y solución que preserve la restricción compartida.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Algoritmos ≥ 3: Doble reserva",
+          "Sistemas ≥ 3: Historial concurrente y solución que preserve la restricción compartida.",
+          "Consistencia (condición crítica): Historial concurrente y solución que preserve la restricción compartida.",
+          "Trazabilidad (condición crítica): Historial concurrente y solución que preserve la restricción compartida."
+        ]
       },
       "capacidades": [
         "algoritmos",
@@ -383,6 +471,17 @@
         "mision": "Índice bajo carga sesgada",
         "defensa": "Benchmark reproducible; defender carga, distribución y memoria."
       },
+      "gate": {
+        "pregunta": "Benchmark reproducible; defender carga, distribución y memoria.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Algoritmos ≥ 3: Índice bajo carga sesgada",
+          "Sistemas ≥ 3: defender carga, distribución y memoria.",
+          "Datos ≥ 3: Índice bajo carga sesgada",
+          "Trazabilidad (condición crítica): Benchmark reproducible;"
+        ]
+      },
       "capacidades": [
         "algoritmos",
         "sistemas",
@@ -425,6 +524,16 @@
         "mision": "Consumidor con replay",
         "defensa": "Estado idéntico tras duplicados y reinicio; explicar cuándo hay efectos externos."
       },
+      "gate": {
+        "pregunta": "Estado idéntico tras duplicados y reinicio; explicar cuándo hay efectos externos.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Algoritmos ≥ 3: Consumidor con replay",
+          "Comunicación ≥ 3: explicar cuándo hay efectos externos.",
+          "Identidad (condición crítica): Estado idéntico tras duplicados y reinicio;"
+        ]
+      },
       "capacidades": [
         "algoritmos",
         "comunicacion"
@@ -465,6 +574,15 @@
         "mision": "Resultado remoto desconocido",
         "defensa": "Registrar incertidumbre y reconciliar sin duplicar la operación lógica."
       },
+      "gate": {
+        "pregunta": "Registrar incertidumbre y reconciliar sin duplicar la operación lógica.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Algoritmos ≥ 3: Resultado remoto desconocido",
+          "Recuperación (condición crítica): Registrar incertidumbre y reconciliar sin duplicar la operación lógica."
+        ]
+      },
       "capacidades": [
         "algoritmos"
       ],
@@ -502,6 +620,18 @@
         "fuentes": [],
         "mision": "Cache que sirve datos obsoletos",
         "defensa": "Elegir política por riesgo del usuario; probar invalidación y degradación."
+      },
+      "gate": {
+        "pregunta": "Elegir política por riesgo del usuario; probar invalidación y degradación.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Algoritmos ≥ 3: Cache que sirve datos obsoletos",
+          "Datos ≥ 3: Cache que sirve datos obsoletos",
+          "Producto ≥ 3: Elegir política por riesgo del usuario;",
+          "Correctitud (condición crítica): probar invalidación y degradación.",
+          "Recuperación (condición crítica): probar invalidación y degradación."
+        ]
       },
       "capacidades": [
         "algoritmos",
@@ -550,6 +680,17 @@
         "mision": "Hot partition",
         "defensa": "Reproducir skew y explicar el costo de tu estrategia de reparto."
       },
+      "gate": {
+        "pregunta": "Reproducir skew y explicar el costo de tu estrategia de reparto.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Algoritmos ≥ 3: Hot partition",
+          "Comunicación ≥ 3: Reproducir skew y explicar el costo de tu estrategia de reparto.",
+          "Responsabilidad ≥ 3: Reproducir skew y explicar el costo de tu estrategia de reparto.",
+          "Correctitud (condición crítica): Reproducir skew y explicar el costo de tu estrategia de reparto."
+        ]
+      },
       "capacidades": [
         "algoritmos",
         "comunicacion",
@@ -592,6 +733,16 @@
         "mision": "Pipeline que pasa pero miente",
         "defensa": "Detectar join multiplicador o fuente vieja con controles independientes."
       },
+      "gate": {
+        "pregunta": "Detectar join multiplicador o fuente vieja con controles independientes.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Algoritmos ≥ 3: Pipeline que pasa pero miente",
+          "Datos ≥ 3: Pipeline que pasa pero miente",
+          "Correctitud (condición crítica): Detectar join multiplicador o fuente vieja con controles independientes."
+        ]
+      },
       "capacidades": [
         "algoritmos",
         "datos"
@@ -632,6 +783,15 @@
         "mision": "Objeto editado contra datasource",
         "defensa": "Mostrar la regla de conflicto configurada y sus efectos, sin asumir defaults."
       },
+      "gate": {
+        "pregunta": "Mostrar la regla de conflicto configurada y sus efectos, sin asumir defaults.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Algoritmos ≥ 3: Objeto editado contra datasource",
+          "Correctitud (condición crítica): Mostrar la regla de conflicto configurada y sus efectos, sin asumir defaults."
+        ]
+      },
       "capacidades": [
         "algoritmos"
       ],
@@ -670,6 +830,15 @@
         "mision": "UI con selección que cambia",
         "defensa": "Evitar aplicar una acción al objeto equivocado durante una actualización."
       },
+      "gate": {
+        "pregunta": "Evitar aplicar una acción al objeto equivocado durante una actualización.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Algoritmos ≥ 3: UI con selección que cambia",
+          "Correctitud (condición crítica): Evitar aplicar una acción al objeto equivocado durante una actualización."
+        ]
+      },
       "capacidades": [
         "algoritmos"
       ],
@@ -707,6 +876,16 @@
         "fuentes": [],
         "mision": "Herramienta de IA autorizada",
         "defensa": "Probar parámetros, permisos y condiciones de acción de extremo a extremo."
+      },
+      "gate": {
+        "pregunta": "Probar parámetros, permisos y condiciones de acción de extremo a extremo.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Algoritmos ≥ 3: Herramienta de IA autorizada",
+          "IA ≥ 3: Herramienta de IA autorizada",
+          "Autorización (condición crítica): Herramienta de IA autorizada"
+        ]
       },
       "capacidades": [
         "algoritmos",
@@ -748,6 +927,15 @@
         "mision": "Retrieval con contradicciones",
         "defensa": "Evidencia de citas y abstención; separar error de búsqueda y de generación."
       },
+      "gate": {
+        "pregunta": "Evidencia de citas y abstención; separar error de búsqueda y de generación.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Algoritmos ≥ 3: Retrieval con contradicciones",
+          "Correctitud (condición crítica): Evidencia de citas y abstención; separar error de búsqueda y de generación."
+        ]
+      },
       "capacidades": [
         "algoritmos"
       ],
@@ -785,6 +973,15 @@
         "fuentes": [],
         "mision": "Evaluación que sobreajusta",
         "defensa": "Mantener un set reservado y mostrar dónde la mejora aparente no generaliza."
+      },
+      "gate": {
+        "pregunta": "Mantener un set reservado y mostrar dónde la mejora aparente no generaliza.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Algoritmos ≥ 3: Evaluación que sobreajusta",
+          "Correctitud (condición crítica): Mantener un set reservado y mostrar dónde la mejora aparente no generaliza."
+        ]
       },
       "capacidades": [
         "algoritmos"
@@ -824,6 +1021,15 @@
         "mision": "Documento de diseño impugnado",
         "defensa": "Defender o reemplazar la arquitectura ante una alternativa más simple."
       },
+      "gate": {
+        "pregunta": "Defender o reemplazar la arquitectura ante una alternativa más simple.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Algoritmos ≥ 3: Documento de diseño impugnado",
+          "Correctitud (condición crítica): Defender o reemplazar la arquitectura ante una alternativa más simple."
+        ]
+      },
       "capacidades": [
         "algoritmos"
       ],
@@ -861,6 +1067,16 @@
         "fuentes": [],
         "mision": "Usuario y sponsor discrepan",
         "defensa": "Formular decisiones distintas y acordar una primera entrega medible."
+      },
+      "gate": {
+        "pregunta": "Formular decisiones distintas y acordar una primera entrega medible.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Algoritmos ≥ 3: Usuario y sponsor discrepan",
+          "Producto ≥ 3: Usuario y sponsor discrepan",
+          "Correctitud (condición crítica): Formular decisiones distintas y acordar una primera entrega medible."
+        ]
       },
       "capacidades": [
         "algoritmos",
@@ -902,6 +1118,16 @@
         "mision": "Toma de control de código ajeno",
         "defensa": "Reproducir, parchear y revisar un bug sin regenerar el repositorio."
       },
+      "gate": {
+        "pregunta": "Reproducir, parchear y revisar un bug sin regenerar el repositorio.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Algoritmos ≥ 3: Toma de control de código ajeno",
+          "Responsabilidad ≥ 3: Reproducir, parchear y revisar un bug sin regenerar el repositorio.",
+          "Correctitud (condición crítica): Reproducir, parchear y revisar un bug sin regenerar el repositorio."
+        ]
+      },
       "capacidades": [
         "algoritmos",
         "responsabilidad"
@@ -941,6 +1167,16 @@
         "fuentes": [],
         "mision": "Handoff en entorno limpio",
         "defensa": "Otra persona ejecuta tu proyecto; corregir lo que la documentación omitió."
+      },
+      "gate": {
+        "pregunta": "Otra persona ejecuta tu proyecto; corregir lo que la documentación omitió.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Algoritmos ≥ 3: Handoff en entorno limpio",
+          "Comunicación ≥ 3: Handoff en entorno limpio",
+          "Correctitud (condición crítica): Otra persona ejecuta tu proyecto; corregir lo que la documentación omitió."
+        ]
       },
       "capacidades": [
         "algoritmos",

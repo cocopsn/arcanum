@@ -51,6 +51,15 @@
         "mision": "Estima carga, almacenamiento, latencia y disponibilidad para alertas de planta.",
         "defensa": "Declara supuestos y muestra qué número cambiaría la arquitectura."
       },
+      "gate": {
+        "pregunta": "Declara supuestos y muestra qué número cambiaría la arquitectura.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Sistemas ≥ 3: Estima carga, almacenamiento, latencia y disponibilidad para alertas de planta.",
+          "Correctitud (condición crítica): Declara supuestos y muestra qué número cambiaría la arquitectura."
+        ]
+      },
       "capacidades": [
         "sistemas"
       ],
@@ -97,6 +106,16 @@
         ],
         "mision": "Construye un worker que sobreviva a duplicados y timeout tras completar una operación.",
         "defensa": "Demuestra por qué timeout no equivale a operación fallida."
+      },
+      "gate": {
+        "pregunta": "Demuestra por qué timeout no equivale a operación fallida.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Sistemas ≥ 3: Colas, reintentos e idempotencia.",
+          "Identidad (condición crítica): Construye un worker que sobreviva a duplicados y timeout tras completar una operación.",
+          "Consistencia (condición crítica): Colas, reintentos e idempotencia."
+        ]
       },
       "capacidades": [
         "sistemas"
@@ -149,6 +168,17 @@
         ],
         "mision": "Traza historiales de lecturas y escrituras sobre dos réplicas.",
         "defensa": "Escoge la garantía según la decisión del usuario y sus consecuencias."
+      },
+      "gate": {
+        "pregunta": "Escoge la garantía según la decisión del usuario y sus consecuencias.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Sistemas ≥ 3: Replicación y consistencia.",
+          "Producto ≥ 3: Escoge la garantía según la decisión del usuario y sus consecuencias.",
+          "Consistencia (condición crítica): Replicación y consistencia.",
+          "Trazabilidad (condición crítica): Traza historiales de lecturas y escrituras sobre dos réplicas."
+        ]
       },
       "capacidades": [
         "sistemas",
@@ -204,6 +234,17 @@
         "mision": "Diseña particionamiento y mide un hot key con carga sintética.",
         "defensa": "Explica invalidación, sesgo, balance y degradación bajo sobrecarga."
       },
+      "gate": {
+        "pregunta": "Explica invalidación, sesgo, balance y degradación bajo sobrecarga.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Sistemas ≥ 3: Particiones, hotspots y cachés.",
+          "Comunicación ≥ 3: Explica invalidación, sesgo, balance y degradación bajo sobrecarga.",
+          "Correctitud (condición crítica): Explica invalidación, sesgo, balance y degradación bajo sobrecarga.",
+          "Recuperación (condición crítica): Explica invalidación, sesgo, balance y degradación bajo sobrecarga."
+        ]
+      },
       "capacidades": [
         "sistemas",
         "comunicacion"
@@ -258,6 +299,16 @@
         "mision": "Procesa eventos repetidos y fuera de orden con reconstrucción verificable.",
         "defensa": "Distingue event time y processing time; especifica reparación y límites."
       },
+      "gate": {
+        "pregunta": "Distingue event time y processing time; especifica reparación y límites.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Sistemas ≥ 3: Procesa eventos repetidos y fuera de orden con reconstrucción verificable.",
+          "Datos ≥ 3: CDC, streams y datos tardíos.",
+          "Correctitud (condición crítica): Procesa eventos repetidos y fuera de orden con reconstrucción verificable."
+        ]
+      },
       "capacidades": [
         "sistemas",
         "datos"
@@ -307,6 +358,16 @@
         "mision": "Implementa una simulación de elección de líder y analiza fallas parciales.",
         "defensa": "Separa elección, replicación y commit; no prometas consistencia sin un modelo."
       },
+      "gate": {
+        "pregunta": "Separa elección, replicación y commit; no prometas consistencia sin un modelo.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Sistemas ≥ 3: Consenso y transacciones distribuidas.",
+          "Responsabilidad ≥ 3: Implementa una simulación de elección de líder y analiza fallas parciales.",
+          "Consistencia (condición crítica): Consenso y transacciones distribuidas."
+        ]
+      },
       "capacidades": [
         "sistemas",
         "responsabilidad"
@@ -355,6 +416,18 @@
         ],
         "mision": "Diseña ingestión documental, retrieval, caché y evaluación con presupuesto.",
         "defensa": "Distingue error de búsqueda, error del modelo, permiso y dato desactualizado."
+      },
+      "gate": {
+        "pregunta": "Distingue error de búsqueda, error del modelo, permiso y dato desactualizado.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Sistemas ≥ 3: Diseña ingestión documental, retrieval, caché y evaluación con presupuesto.",
+          "Datos ≥ 3: Distingue error de búsqueda, error del modelo, permiso y dato desactualizado.",
+          "IA ≥ 3: Diseño de sistemas de recuperación e IA.",
+          "Autorización (condición crítica): Distingue error de búsqueda, error del modelo, permiso y dato desactualizado.",
+          "Recuperación (condición crítica): Diseño de sistemas de recuperación e IA."
+        ]
       },
       "capacidades": [
         "sistemas",
@@ -411,6 +484,16 @@
         ],
         "mision": "Defiende un diseño 45 minutos; recibe un cambio de escala y una caída regional.",
         "defensa": "Replantea trade-offs con números y preserva invariantes prioritarios."
+      },
+      "gate": {
+        "pregunta": "Replantea trade-offs con números y preserva invariantes prioritarios.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Sistemas ≥ 3: Defiende un diseño 45 minutos; recibe un cambio de escala y una caída regional.",
+          "Abstracción ≥ 3: Replantea trade-offs con números y preserva invariantes prioritarios.",
+          "Correctitud (condición crítica): Replantea trade-offs con números y preserva invariantes prioritarios."
+        ]
       },
       "capacidades": [
         "sistemas",

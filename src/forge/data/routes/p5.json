@@ -44,6 +44,17 @@
         "mision": "Cambia pipeline, objeto y aplicación en una rama y ensaya el merge.",
         "defensa": "Distingue aislar desarrollo de promover versiones entre entornos."
       },
+      "gate": {
+        "pregunta": "Distingue aislar desarrollo de promover versiones entre entornos.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Responsabilidad ≥ 3: Cambia pipeline, objeto y aplicación en una rama y ensaya el merge.",
+          "Datos ≥ 3: Cambia pipeline, objeto y aplicación en una rama y ensaya el merge.",
+          "Producto ≥ 3: Branching del workflow completo.",
+          "Correctitud (condición crítica): Distingue aislar desarrollo de promover versiones entre entornos."
+        ]
+      },
       "capacidades": [
         "responsabilidad",
         "datos",
@@ -88,6 +99,17 @@
         "mision": "Explora un flujo integrado de definiciones, funciones y frontend.",
         "defensa": "Documenta disponibilidad y límites actuales antes de depender de la función."
       },
+      "gate": {
+        "pregunta": "Documenta disponibilidad y límites actuales antes de depender de la función.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Responsabilidad ≥ 3: Explora un flujo integrado de definiciones, funciones y frontend.",
+          "Abstracción ≥ 3: SuperRepo y Ontology como código.",
+          "Comunicación ≥ 3: Documenta disponibilidad y límites actuales antes de depender de la función.",
+          "Correctitud (condición crítica): Documenta disponibilidad y límites actuales antes de depender de la función."
+        ]
+      },
       "capacidades": [
         "responsabilidad",
         "abstraccion",
@@ -131,6 +153,16 @@
         ],
         "mision": "Empaqueta una solución y especifica sus dependencias y configuración.",
         "defensa": "Explica qué puede diferir al instalarla en otro entorno."
+      },
+      "gate": {
+        "pregunta": "Explica qué puede diferir al instalarla en otro entorno.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Responsabilidad ≥ 3: Empaqueta una solución y especifica sus dependencias y configuración.",
+          "Comunicación ≥ 3: Explica qué puede diferir al instalarla en otro entorno.",
+          "Correctitud (condición crítica): Explica qué puede diferir al instalarla en otro entorno."
+        ]
       },
       "capacidades": [
         "responsabilidad",
@@ -188,6 +220,17 @@
         "mision": "Integra un servicio contenedorizado con timeouts y contrato de recursos.",
         "defensa": "Escoge modo de ejecución por patrón de carga y requisitos."
       },
+      "gate": {
+        "pregunta": "Escoge modo de ejecución por patrón de carga y requisitos.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Responsabilidad ≥ 3: Integra un servicio contenedorizado con timeouts y contrato de recursos.",
+          "Abstracción ≥ 3: Integra un servicio contenedorizado con timeouts y contrato de recursos.",
+          "Sistemas ≥ 3: Integra un servicio contenedorizado con timeouts y contrato de recursos.",
+          "Recuperación (condición crítica): Integra un servicio contenedorizado con timeouts y contrato de recursos."
+        ]
+      },
       "capacidades": [
         "responsabilidad",
         "abstraccion",
@@ -239,6 +282,16 @@
         "mision": "Compara un modelo simple con un baseline y documenta degradación.",
         "defensa": "Relaciona calidad del modelo con decisiones y costo de errores."
       },
+      "gate": {
+        "pregunta": "Relaciona calidad del modelo con decisiones y costo de errores.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Responsabilidad ≥ 3: Compara un modelo simple con un baseline y documenta degradación.",
+          "Comunicación ≥ 3: Compara un modelo simple con un baseline y documenta degradación.",
+          "Recuperación (condición crítica): Compara un modelo simple con un baseline y documenta degradación."
+        ]
+      },
       "capacidades": [
         "responsabilidad",
         "comunicacion"
@@ -287,6 +340,17 @@
         ],
         "mision": "Prueba usuarios con distintos permisos incluyendo outputs de modelos.",
         "defensa": "Comprueba límites tras lecturas, funciones, exportaciones y acciones."
+      },
+      "gate": {
+        "pregunta": "Comprueba límites tras lecturas, funciones, exportaciones y acciones.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Responsabilidad ≥ 3: Prueba usuarios con distintos permisos incluyendo outputs de modelos.",
+          "Producto ≥ 3: Prueba usuarios con distintos permisos incluyendo outputs de modelos.",
+          "Correctitud (condición crítica): Prueba usuarios con distintos permisos incluyendo outputs de modelos.",
+          "Autorización (condición crítica): Seguridad de extremo a extremo."
+        ]
       },
       "capacidades": [
         "responsabilidad",
@@ -349,6 +413,15 @@
         "mision": "Define indicadores y presupuesto; provoca una falla y registra detección.",
         "defensa": "Distingue disponibilidad, frescura, exactitud y costo por tarea útil."
       },
+      "gate": {
+        "pregunta": "Distingue disponibilidad, frescura, exactitud y costo por tarea útil.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Responsabilidad ≥ 3: provoca una falla y registra detección.",
+          "Correctitud (condición crítica): Distingue disponibilidad, frescura, exactitud y costo por tarea útil."
+        ]
+      },
       "capacidades": [
         "responsabilidad"
       ],
@@ -402,6 +475,15 @@
         ],
         "mision": "Ensaya release, rollback o compensación y recuperación con runbook.",
         "defensa": "Justifica alcance de Apollo; no lo confundas con todas las promociones Foundry."
+      },
+      "gate": {
+        "pregunta": "Justifica alcance de Apollo; no lo confundas con todas las promociones Foundry.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Responsabilidad ≥ 3: Ensaya release, rollback o compensación y recuperación con runbook.",
+          "Recuperación (condición crítica): Ensaya release, rollback o compensación y recuperación con runbook."
+        ]
       },
       "capacidades": [
         "responsabilidad"

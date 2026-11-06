@@ -46,6 +46,10 @@ export interface DiagnosticTask {
   minutos: number;
   /** the full statement of §13, verbatim */
   enunciado: string;
+  /** «Aplicación» of §13 (two sessions, first pass without AI, record before checking), verbatim */
+  aplicacion?: string;
+  /** «Salida del diagnóstico» of §13 (eight observations, no global score), verbatim */
+  salida?: string;
 }
 
 export interface RetoData {
@@ -60,6 +64,17 @@ export interface ExpedienteCase {
   claves: string[];
   entregable: string;
   inspiradoEnCatalogo: boolean;
+  /** «Plantilla exigida a cada expediente» of §08, verbatim */
+  plantilla?: string;
+  /** «Tres pasadas» of §08, verbatim */
+  pasadas?: string;
+}
+
+/** A field of a §10 project or a §11 pilot, verbatim («**Etiqueta:** texto»; lists become items). */
+export interface MaestroField {
+  etiqueta: string;
+  texto: string;
+  items?: string[];
 }
 
 export interface ForgeCellData {
@@ -78,6 +93,13 @@ export interface ForgeCellData {
     transferencia?: string;
     variante?: string;
   };
+  /** the compuerta's question and rubric, only when compuerta !== null. Assembled ONLY from the master program:
+   *  the fiche's defence (X: deliverable and defence condition; SD: its deliverable), the approval rule and the
+   *  scale of §05, the literal trace of each essential capability and critical condition, and (F2) the project's
+   *  acceptance of §10. */
+  gate?: { pregunta: string; rubrica: string[] };
+  /** F2-01…F2-06: the project of §10, verbatim (brief, inputs, construction, incidents, acceptance…) */
+  proyecto?: { n: number; titulo: string; campos: MaestroField[] };
   /** essential capabilities, ≥ 1 */
   capacidades: ForgeCapability[];
   /** one literal phrase of the fiche per declared capability */

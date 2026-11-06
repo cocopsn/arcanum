@@ -42,6 +42,17 @@
         "mision": "Prueba correctitud y costo de búsqueda binaria e insertion sort.",
         "defensa": "Explica por qué tu invariante basta y ofrece un contraejemplo a uno incorrecto."
       },
+      "gate": {
+        "pregunta": "Explica por qué tu invariante basta y ofrece un contraejemplo a uno incorrecto.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Algoritmos ≥ 3: Complejidad, invariantes y cotas.",
+          "Abstracción ≥ 3: Complejidad, invariantes y cotas.",
+          "Comunicación ≥ 3: Explica por qué tu invariante basta y ofrece un contraejemplo a uno incorrecto.",
+          "Correctitud (condición crítica): Prueba correctitud y costo de búsqueda binaria e insertion sort."
+        ]
+      },
       "capacidades": [
         "algoritmos",
         "abstraccion",
@@ -93,6 +104,15 @@
         "mision": "Implementa deduplicación y conciliación de eventos sin perder multiplicidades.",
         "defensa": "Distingue identidad de igualdad, costo esperado y peor caso."
       },
+      "gate": {
+        "pregunta": "Distingue identidad de igualdad, costo esperado y peor caso.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Algoritmos ≥ 3: Implementa deduplicación y conciliación de eventos sin perder multiplicidades.",
+          "Identidad (condición crítica): Implementa deduplicación y conciliación de eventos sin perder multiplicidades."
+        ]
+      },
       "capacidades": [
         "algoritmos"
       ],
@@ -139,6 +159,15 @@
         ],
         "mision": "Procesa una secuencia con ventana móvil y cola monótona.",
         "defensa": "Justifica por qué cada elemento entra y sale una cantidad acotada de veces."
+      },
+      "gate": {
+        "pregunta": "Justifica por qué cada elemento entra y sale una cantidad acotada de veces.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Algoritmos ≥ 3: Procesa una secuencia con ventana móvil y cola monótona.",
+          "Correctitud (condición crítica): Justifica por qué cada elemento entra y sale una cantidad acotada de veces."
+        ]
       },
       "capacidades": [
         "algoritmos"
@@ -187,6 +216,17 @@
         "mision": "Implementa un BST y deriva el límite de altura de un AVL.",
         "defensa": "Explica cuándo un árbol degenerado destruye la complejidad prometida."
       },
+      "gate": {
+        "pregunta": "Explica cuándo un árbol degenerado destruye la complejidad prometida.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Algoritmos ≥ 3: Explica cuándo un árbol degenerado destruye la complejidad prometida.",
+          "Datos ≥ 3: Árboles e índices.",
+          "Comunicación ≥ 3: Explica cuándo un árbol degenerado destruye la complejidad prometida.",
+          "Correctitud (condición crítica): Explica cuándo un árbol degenerado destruye la complejidad prometida."
+        ]
+      },
       "capacidades": [
         "algoritmos",
         "datos",
@@ -231,6 +271,16 @@
         "mision": "Construye una cola de prioridades para trabajos de mantenimiento.",
         "defensa": "Defiende heap frente a ordenar todo y explica desempates y starvation."
       },
+      "gate": {
+        "pregunta": "Defiende heap frente a ordenar todo y explica desempates y starvation.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Algoritmos ≥ 3: Heaps, scheduling y Top-K.",
+          "Comunicación ≥ 3: Defiende heap frente a ordenar todo y explica desempates y starvation.",
+          "Correctitud (condición crítica): Defiende heap frente a ordenar todo y explica desempates y starvation."
+        ]
+      },
       "capacidades": [
         "algoritmos",
         "comunicacion"
@@ -273,6 +323,15 @@
         "mision": "Modela dependencias de órdenes; detecta ciclos y construye un orden válido.",
         "defensa": "Define nodo y arista; demuestra por qué el algoritmo termina y qué costo tiene."
       },
+      "gate": {
+        "pregunta": "Define nodo y arista; demuestra por qué el algoritmo termina y qué costo tiene.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Algoritmos ≥ 3: Grafos, BFS, DFS y dependencias.",
+          "Correctitud (condición crítica): Define nodo y arista; demuestra por qué el algoritmo termina y qué costo tiene."
+        ]
+      },
       "capacidades": [
         "algoritmos"
       ],
@@ -313,6 +372,15 @@
         "mision": "Resuelve asignación de recursos con dos enfoques y un caso adversarial.",
         "defensa": "Deriva cuándo el greedy es correcto y cuándo necesitas otro método."
       },
+      "gate": {
+        "pregunta": "Deriva cuándo el greedy es correcto y cuándo necesitas otro método.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Algoritmos ≥ 3: Resuelve asignación de recursos con dos enfoques y un caso adversarial.",
+          "Correctitud (condición crítica): Deriva cuándo el greedy es correcto y cuándo necesitas otro método."
+        ]
+      },
       "capacidades": [
         "algoritmos"
       ],
@@ -352,6 +420,15 @@
         ],
         "mision": "Resuelve una asignación con restricciones; escribe estado y transición antes del código.",
         "defensa": "Cambia una restricción y reconstruye la recurrencia sin memorizar la solución."
+      },
+      "gate": {
+        "pregunta": "Cambia una restricción y reconstruye la recurrencia sin memorizar la solución.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Algoritmos ≥ 3: Cambia una restricción y reconstruye la recurrencia sin memorizar la solución.",
+          "Correctitud (condición crítica): Cambia una restricción y reconstruye la recurrencia sin memorizar la solución."
+        ]
       },
       "capacidades": [
         "algoritmos"

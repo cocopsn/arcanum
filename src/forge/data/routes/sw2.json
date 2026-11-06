@@ -51,6 +51,17 @@
         "defensa": "Reconstruye dónde vive cada dato y quién puede modificarlo.",
         "variante": "Prueba accesos fuera de rango, vida util inválida y alias."
       },
+      "gate": {
+        "pregunta": "Reconstruye dónde vive cada dato y quién puede modificarlo.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Sistemas ≥ 3: Relacionar objetos de programa con memoria, ownership y acceso.",
+          "Datos ≥ 3: Reconstruye dónde vive cada dato y quién puede modificarlo.",
+          "Correctitud (condición crítica): Construye un componente pequeño con asignación/liberación explícitas y verificación de errores.",
+          "Autorización (condición crítica): Relacionar objetos de programa con memoria, ownership y acceso."
+        ]
+      },
       "capacidades": [
         "sistemas",
         "datos"
@@ -100,6 +111,17 @@
         "mision": "Implementa un lanzador de trabajos con entrada/salida y codigos de terminación.",
         "defensa": "Explica recursos, limpieza, observacion del fallo y límites del aislamiento.",
         "variante": "Un hijo falla, uno queda colgado y otro genera mucha salida."
+      },
+      "gate": {
+        "pregunta": "Explica recursos, limpieza, observacion del fallo y límites del aislamiento.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Sistemas ≥ 3: Implementa un lanzador de trabajos con entrada/salida y codigos de terminación.",
+          "Comunicación ≥ 3: Explica recursos, limpieza, observacion del fallo y límites del aislamiento.",
+          "Responsabilidad ≥ 3: Explica recursos, limpieza, observacion del fallo y límites del aislamiento.",
+          "Consistencia (condición crítica): Explica recursos, limpieza, observacion del fallo y límites del aislamiento."
+        ]
       },
       "capacidades": [
         "sistemas",
@@ -154,6 +176,18 @@
         "mision": "Construye una cola acotada de productores/consumidores con cierre explícito.",
         "defensa": "Defiende ausencia de espera incorrecta y analiza una ejecución adversarial.",
         "variante": "Reproduce cierre concurrente, cola llena y consumidor lento."
+      },
+      "gate": {
+        "pregunta": "Defiende ausencia de espera incorrecta y analiza una ejecución adversarial.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Sistemas ≥ 3: Preservar invariantes con ejecuciones concurrentes.",
+          "Abstracción ≥ 3: Preservar invariantes con ejecuciones concurrentes.",
+          "Responsabilidad ≥ 3: Reproduce cierre concurrente, cola llena y consumidor lento.",
+          "Correctitud (condición crítica): Defiende ausencia de espera incorrecta y analiza una ejecución adversarial.",
+          "Consistencia (condición crítica): Preservar invariantes con ejecuciones concurrentes."
+        ]
       },
       "capacidades": [
         "sistemas",
@@ -214,6 +248,16 @@
         "defensa": "Explica que garantiza la correccion y que depende del scheduler.",
         "variante": "Cambia el orden de adquisición y agrega timeout/cancelación."
       },
+      "gate": {
+        "pregunta": "Explica que garantiza la correccion y que depende del scheduler.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Sistemas ≥ 3: Cambia el orden de adquisición y agrega timeout/cancelación.",
+          "Comunicación ≥ 3: Siembra un deadlock entre dos recursos y presenta una estrategia de prevención.",
+          "Recuperación (condición crítica): Cambia el orden de adquisición y agrega timeout/cancelación."
+        ]
+      },
       "capacidades": [
         "sistemas",
         "comunicacion"
@@ -266,6 +310,16 @@
         "defensa": "Distingue la hipótesis causal de una correlacion en tus mediciones.",
         "variante": "Introduce una carga que supera el conjunto de trabajo de cache."
       },
+      "gate": {
+        "pregunta": "Distingue la hipótesis causal de una correlacion en tus mediciones.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Sistemas ≥ 3: Conectar patrones de acceso con rendimiento medido.",
+          "Datos ≥ 3: Compara dos recorridos sobre datos crecientes y registra memoria y tiempo.",
+          "Autorización (condición crítica): Conectar patrones de acceso con rendimiento medido."
+        ]
+      },
       "capacidades": [
         "sistemas",
         "datos"
@@ -317,6 +371,17 @@
         "mision": "Diseña un registro persistente pequeño y un protocolo de recuperación.",
         "defensa": "Declara supuestos sobre atomicidad y durabilidad; no extrapoles al hardware sin comprobar.",
         "variante": "Interrumpe escrituras en varios puntos y vuelve a cargar el estado."
+      },
+      "gate": {
+        "pregunta": "Declara supuestos sobre atomicidad y durabilidad; no extrapoles al hardware sin comprobar.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Sistemas ≥ 3: Diseña un registro persistente pequeño y un protocolo de recuperación.",
+          "Responsabilidad ≥ 3: Distinguir guardar un archivo de conservar un estado consistente tras un fallo.",
+          "Consistencia (condición crítica): Distinguir guardar un archivo de conservar un estado consistente tras un fallo.",
+          "Trazabilidad (condición crítica): Diseña un registro persistente pequeño y un protocolo de recuperación."
+        ]
       },
       "capacidades": [
         "sistemas",
@@ -381,6 +446,17 @@
         "mision": "Entrega perfil, baseline y mejora sobre una carga reproducible.",
         "defensa": "Defiende el experimento y un escenario dónde la optimización deja de ayudar.",
         "variante": "Cambia distribución de inputs, concurrencia y tamanos."
+      },
+      "gate": {
+        "pregunta": "Defiende el experimento y un escenario dónde la optimización deja de ayudar.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Sistemas ≥ 3: Cambia distribución de inputs, concurrencia y tamanos.",
+          "Responsabilidad ≥ 3: Entrega perfil, baseline y mejora sobre una carga reproducible.",
+          "Correctitud (condición crítica): Optimizar el cuello de botella medido conservando correctitud.",
+          "Consistencia (condición crítica): Cambia distribución de inputs, concurrencia y tamanos."
+        ]
       },
       "capacidades": [
         "sistemas",

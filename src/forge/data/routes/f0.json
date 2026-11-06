@@ -61,6 +61,16 @@
         "mision": "Redacta qué decisión operativa cambia tu proyecto y para quién.",
         "defensa": "Distingue entregar una feature, desplegar una plataforma y mejorar un resultado."
       },
+      "gate": {
+        "pregunta": "Distingue entregar una feature, desplegar una plataforma y mejorar un resultado.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Producto ≥ 3: El trabajo FDE y el resultado del usuario.",
+          "Comunicación ≥ 3: Redacta qué decisión operativa cambia tu proyecto y para quién.",
+          "Correctitud (condición crítica): Distingue entregar una feature, desplegar una plataforma y mejorar un resultado."
+        ]
+      },
       "capacidades": [
         "producto",
         "comunicacion"
@@ -117,6 +127,17 @@
         "mision": "Resuelve un problema de arrays, una consulta SQL, un bug de API y un diseño breve.",
         "defensa": "Explica cada decisión; identifica tus lagunas sin ocultarlas con herramientas."
       },
+      "gate": {
+        "pregunta": "Explica cada decisión; identifica tus lagunas sin ocultarlas con herramientas.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Producto ≥ 3: Resuelve un problema de arrays, una consulta SQL, un bug de API y un diseño breve.",
+          "Datos ≥ 3: Resuelve un problema de arrays, una consulta SQL, un bug de API y un diseño breve.",
+          "Comunicación ≥ 3: Explica cada decisión;",
+          "Correctitud (condición crítica): Explica cada decisión; identifica tus lagunas sin ocultarlas con herramientas."
+        ]
+      },
       "capacidades": [
         "producto",
         "datos",
@@ -160,6 +181,18 @@
         ],
         "mision": "Construye un conciliador de CSV con validación y reporte reproducible.",
         "defensa": "Justifica estructuras, mutabilidad y costo; procesa entradas vacías o corruptas."
+      },
+      "gate": {
+        "pregunta": "Justifica estructuras, mutabilidad y costo; procesa entradas vacías o corruptas.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Producto ≥ 3: Construye un conciliador de CSV con validación y reporte reproducible.",
+          "Datos ≥ 3: Construye un conciliador de CSV con validación y reporte reproducible.",
+          "Responsabilidad ≥ 3: Construye un conciliador de CSV con validación y reporte reproducible.",
+          "Correctitud (condición crítica): Construye un conciliador de CSV con validación y reporte reproducible.",
+          "Trazabilidad (condición crítica): Construye un conciliador de CSV con validación y reporte reproducible."
+        ]
       },
       "capacidades": [
         "producto",
@@ -217,6 +250,16 @@
         "mision": "Define tipos de órdenes, estados y errores; implementa validadores de frontera.",
         "defensa": "Demuestra cómo separas validación en runtime de garantías del compilador."
       },
+      "gate": {
+        "pregunta": "Demuestra cómo separas validación en runtime de garantías del compilador.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Producto ≥ 3: Define tipos de órdenes, estados y errores; implementa validadores de frontera.",
+          "Abstracción ≥ 3: TypeScript y contratos.",
+          "Correctitud (condición crítica): implementa validadores de frontera."
+        ]
+      },
       "capacidades": [
         "producto",
         "abstraccion"
@@ -265,6 +308,17 @@
         ],
         "mision": "Entrega una corrección mínima desde un test fallido y una revisión de cambios.",
         "defensa": "Reproduce el bug antes de corregirlo y explica por qué el test lo detecta."
+      },
+      "gate": {
+        "pregunta": "Reproduce el bug antes de corregirlo y explica por qué el test lo detecta.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Producto ≥ 3: Entrega una corrección mínima desde un test fallido y una revisión de cambios.",
+          "Comunicación ≥ 3: Reproduce el bug antes de corregirlo y explica por qué el test lo detecta.",
+          "Responsabilidad ≥ 3: Reproduce el bug antes de corregirlo y explica por qué el test lo detecta.",
+          "Correctitud (condición crítica): Git, pruebas y depuración."
+        ]
       },
       "capacidades": [
         "producto",
@@ -316,6 +370,17 @@
         ],
         "mision": "Construye un consumidor con timeout, cancelación y concurrencia acotada.",
         "defensa": "Predice qué ocurre si la dependencia se congela o devuelve resultados parciales."
+      },
+      "gate": {
+        "pregunta": "Predice qué ocurre si la dependencia se congela o devuelve resultados parciales.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Producto ≥ 3: Construye un consumidor con timeout, cancelación y concurrencia acotada.",
+          "Sistemas ≥ 3: HTTP, concurrencia y límites.",
+          "Consistencia (condición crítica): HTTP, concurrencia y límites.",
+          "Recuperación (condición crítica): Construye un consumidor con timeout, cancelación y concurrencia acotada."
+        ]
       },
       "capacidades": [
         "producto",
@@ -378,6 +443,17 @@
         "mision": "Dibuja un workflow de una orden desde su origen hasta la acción externa.",
         "defensa": "Ubica datos, lógica, acción y seguridad; señala qué no sabes del interior propietario."
       },
+      "gate": {
+        "pregunta": "Ubica datos, lógica, acción y seguridad; señala qué no sabes del interior propietario.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Producto ≥ 3: Dibuja un workflow de una orden desde su origen hasta la acción externa.",
+          "Datos ≥ 3: Ubica datos, lógica, acción y seguridad;",
+          "IA ≥ 3: Mapa Foundry, AIP y Apollo.",
+          "Autorización (condición crítica): Ubica datos, lógica, acción y seguridad;"
+        ]
+      },
       "capacidades": [
         "producto",
         "datos",
@@ -428,6 +504,17 @@
         ],
         "mision": "Construye un flujo mínimo: dato, objeto, decisión, acción y evidencia.",
         "defensa": "Repite la demo desde datos iniciales y explica qué parte fue práctica local o nativa."
+      },
+      "gate": {
+        "pregunta": "Repite la demo desde datos iniciales y explica qué parte fue práctica local o nativa.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Producto ≥ 3: Construye un flujo mínimo: dato, objeto, decisión, acción y evidencia.",
+          "Datos ≥ 3: dato, objeto, decisión, acción y evidencia.",
+          "Comunicación ≥ 3: Repite la demo desde datos iniciales y explica qué parte fue práctica local o nativa.",
+          "Correctitud (condición crítica): Repite la demo desde datos iniciales y explica qué parte fue práctica local o nativa."
+        ]
       },
       "capacidades": [
         "producto",

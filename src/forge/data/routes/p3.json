@@ -43,6 +43,15 @@
         "mision": "Construye una bandeja de trabajo con contexto, decisión y acción.",
         "defensa": "Justifica qué debe ver primero un operador bajo presión."
       },
+      "gate": {
+        "pregunta": "Justifica qué debe ver primero un operador bajo presión.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Producto ≥ 3: Justifica qué debe ver primero un operador bajo presión.",
+          "Correctitud (condición crítica): Justifica qué debe ver primero un operador bajo presión."
+        ]
+      },
       "capacidades": [
         "producto"
       ],
@@ -89,6 +98,17 @@
         ],
         "mision": "Implementa selección, filtros y navegación sin estados inconsistentes.",
         "defensa": "Reproduce un cambio de selección durante una actualización de datos."
+      },
+      "gate": {
+        "pregunta": "Reproduce un cambio de selección durante una actualización de datos.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Producto ≥ 3: Implementa selección, filtros y navegación sin estados inconsistentes.",
+          "Datos ≥ 3: Reproduce un cambio de selección durante una actualización de datos.",
+          "Responsabilidad ≥ 3: Reproduce un cambio de selección durante una actualización de datos.",
+          "Consistencia (condición crítica): Implementa selección, filtros y navegación sin estados inconsistentes."
+        ]
       },
       "capacidades": [
         "producto",
@@ -141,6 +161,15 @@
         "mision": "Implementa una regla no trivial con entradas, errores y pruebas claras.",
         "defensa": "Compara alternativas de lenguaje y runtime según soporte real."
       },
+      "gate": {
+        "pregunta": "Compara alternativas de lenguaje y runtime según soporte real.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Producto ≥ 3: Implementa una regla no trivial con entradas, errores y pruebas claras.",
+          "Correctitud (condición crítica): Implementa una regla no trivial con entradas, errores y pruebas claras."
+        ]
+      },
       "capacidades": [
         "producto"
       ],
@@ -187,6 +216,18 @@
         ],
         "mision": "Construye una aplicación TypeScript que consulta objetos y ejecuta una acción.",
         "defensa": "Explica identidad del usuario, autenticación y permisos efectivos."
+      },
+      "gate": {
+        "pregunta": "Explica identidad del usuario, autenticación y permisos efectivos.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Producto ≥ 3: OSDK y cliente tipado.",
+          "Datos ≥ 3: Construye una aplicación TypeScript que consulta objetos y ejecuta una acción.",
+          "Comunicación ≥ 3: Explica identidad del usuario, autenticación y permisos efectivos.",
+          "Identidad (condición crítica): Explica identidad del usuario, autenticación y permisos efectivos.",
+          "Autorización (condición crítica): Explica identidad del usuario, autenticación y permisos efectivos."
+        ]
       },
       "capacidades": [
         "producto",
@@ -236,6 +277,16 @@
         ],
         "mision": "Prueba el cliente con mocks y añade una comprobación contra una instancia.",
         "defensa": "No presentes el mock como evidencia de autorización real."
+      },
+      "gate": {
+        "pregunta": "No presentes el mock como evidencia de autorización real.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Producto ≥ 3: Prueba el cliente con mocks y añade una comprobación contra una instancia.",
+          "Correctitud (condición crítica): Tests con OSDK.",
+          "Autorización (condición crítica): No presentes el mock como evidencia de autorización real."
+        ]
       },
       "capacidades": [
         "producto"
@@ -296,6 +347,18 @@
         "mision": "Configura condición, efecto y recuperación; introduce una condición que rebota.",
         "defensa": "Controla repeticiones, concurrencia y escaladas sin loops de acciones."
       },
+      "gate": {
+        "pregunta": "Controla repeticiones, concurrencia y escaladas sin loops de acciones.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Producto ≥ 3: Configura condición, efecto y recuperación; introduce una condición que rebota.",
+          "Sistemas ≥ 3: Controla repeticiones, concurrencia y escaladas sin loops de acciones.",
+          "Responsabilidad ≥ 3: Configura condición, efecto y recuperación;",
+          "Consistencia (condición crítica): Controla repeticiones, concurrencia y escaladas sin loops de acciones.",
+          "Recuperación (condición crítica): Configura condición, efecto y recuperación;"
+        ]
+      },
       "capacidades": [
         "producto",
         "sistemas",
@@ -352,6 +415,16 @@
         "mision": "Construye una vista de fallas con eventos y series de sensores sintéticos.",
         "defensa": "Separa correlación temporal de evidencia causal."
       },
+      "gate": {
+        "pregunta": "Separa correlación temporal de evidencia causal.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Producto ≥ 3: Construye una vista de fallas con eventos y series de sensores sintéticos.",
+          "Responsabilidad ≥ 3: Construye una vista de fallas con eventos y series de sensores sintéticos.",
+          "Correctitud (condición crítica): Separa correlación temporal de evidencia causal."
+        ]
+      },
       "capacidades": [
         "producto",
         "responsabilidad"
@@ -400,6 +473,16 @@
         ],
         "mision": "Entrega una demo a un usuario; observa errores y corrige el flujo.",
         "defensa": "Mide una tarea completada y redacta un handoff que otro pueda seguir."
+      },
+      "gate": {
+        "pregunta": "Mide una tarea completada y redacta un handoff que otro pueda seguir.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Producto ≥ 3: Entrega una demo a un usuario;",
+          "Comunicación ≥ 3: Entrega una demo a un usuario;",
+          "Correctitud (condición crítica): Mide una tarea completada y redacta un handoff que otro pueda seguir."
+        ]
       },
       "capacidades": [
         "producto",

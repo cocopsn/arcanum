@@ -22,17 +22,17 @@
         "foco": "Intervalos ponderados",
         "fuentes": [],
         "mision": "Implementa `best_schedule(jobs)` en Python. Cada trabajo tiene `id`, inicio, fin y recompensa entera no negativa. Intervalos semiabiertos `[inicio, fin)`: terminar a la misma hora en que otro empieza es compatible. Requiere `inicio < fin`; IDs únicos. Devuelve el valor máximo y una lista de IDs compatible; si hay empate, cualquier conjunto óptimo es válido. Hasta 100,000 trabajos. Explica complejidad y construye un caso donde ordenar solo por recompensa falla.\n\nEjemplo publicado de este diagnóstico: A=(0,3,6), B=(1,2,4), C=(2,4,4), D=(4,6,7). Valor óptimo 15; una respuesta es `[B,C,D]`. Para lista vacía: valor 0 y lista vacía. No se entrega aquí la solución algorítmica.",
-        "defensa": "Implementa `best_schedule(jobs)` en Python. Cada trabajo tiene `id`, inicio, fin y recompensa entera no negativa. Intervalos semiabiertos `[inicio, fin)`: terminar a la misma hora en que otro empieza es compatible. Requiere `inicio < fin`; IDs únicos. Devuelve el valor máximo y una lista de IDs compatible; si hay empate, cualquier conjunto óptimo es válido. Hasta 100,000 trabajos. Explica complejidad y construye un caso donde ordenar solo por recompensa falla.\n\nEjemplo publicado de este diagnóstico: A=(0,3,6), B=(1,2,4), C=(2,4,4), D=(4,6,7). Valor óptimo 15; una respuesta es `[B,C,D]`. Para lista vacía: valor 0 y lista vacía. No se entrega aquí la solución algorítmica."
+        "defensa": "repartir en dos sesiones, sin preparar estos problemas con anterioridad. Primera pasada sin IA; segunda pasada con documentación cuando se indique. Registrar resultado, tiempo, ayuda, dudas y confianza antes de comprobar. No enviar soluciones solo por memoria de un problema parecido."
       },
       "capacidades": [
         "algoritmos",
-        "comunicacion",
-        "responsabilidad"
+        "sistemas",
+        "ia"
       ],
       "rastroCapacidades": {
         "algoritmos": "Intervalos ponderados",
-        "comunicacion": "Explica complejidad y construye un caso donde ordenar solo por recompensa falla.",
-        "responsabilidad": "Explica complejidad y construye un caso donde ordenar solo por recompensa falla."
+        "sistemas": "No enviar soluciones solo por memoria de un problema parecido.",
+        "ia": "Primera pasada sin IA;"
       },
       "criticas": [
         {
@@ -48,7 +48,9 @@
       "etiquetas": [],
       "d": {
         "minutos": 45,
-        "enunciado": "Implementa `best_schedule(jobs)` en Python. Cada trabajo tiene `id`, inicio, fin y recompensa entera no negativa. Intervalos semiabiertos `[inicio, fin)`: terminar a la misma hora en que otro empieza es compatible. Requiere `inicio < fin`; IDs únicos. Devuelve el valor máximo y una lista de IDs compatible; si hay empate, cualquier conjunto óptimo es válido. Hasta 100,000 trabajos. Explica complejidad y construye un caso donde ordenar solo por recompensa falla.\n\nEjemplo publicado de este diagnóstico: A=(0,3,6), B=(1,2,4), C=(2,4,4), D=(4,6,7). Valor óptimo 15; una respuesta es `[B,C,D]`. Para lista vacía: valor 0 y lista vacía. No se entrega aquí la solución algorítmica."
+        "enunciado": "Implementa `best_schedule(jobs)` en Python. Cada trabajo tiene `id`, inicio, fin y recompensa entera no negativa. Intervalos semiabiertos `[inicio, fin)`: terminar a la misma hora en que otro empieza es compatible. Requiere `inicio < fin`; IDs únicos. Devuelve el valor máximo y una lista de IDs compatible; si hay empate, cualquier conjunto óptimo es válido. Hasta 100,000 trabajos. Explica complejidad y construye un caso donde ordenar solo por recompensa falla.\n\nEjemplo publicado de este diagnóstico: A=(0,3,6), B=(1,2,4), C=(2,4,4), D=(4,6,7). Valor óptimo 15; una respuesta es `[B,C,D]`. Para lista vacía: valor 0 y lista vacía. No se entrega aquí la solución algorítmica.",
+        "aplicacion": "repartir en dos sesiones, sin preparar estos problemas con anterioridad. Primera pasada sin IA; segunda pasada con documentación cuando se indique. Registrar resultado, tiempo, ayuda, dudas y confianza antes de comprobar. No enviar soluciones solo por memoria de un problema parecido.",
+        "salida": "no se obtiene una puntuación global engañosa. Se registran ocho observaciones y se decide qué bloques convalidar, qué reforzar y dónde empezar presión temporal. El seguimiento exige recibir tus evidencias; no se deduce tu nivel exacto de la lista de proyectos que has realizado."
       }
     },
     {
@@ -62,7 +64,7 @@
         "foco": "Contrato y pruebas",
         "fuentes": [],
         "mision": "Diseña `reserve(resource_id, start, end, request_id)` para reservas semiabiertas. Incluye restricciones, igualdad de solicitudes, qué ocurre si se reutiliza una clave con payload distinto y cómo expresa resultado desconocido. Produce ocho tests con particiones significativas y un historial concurrente que rompería una implementación ingenua. No es necesario implementar un servicio completo en este diagnóstico.",
-        "defensa": "Diseña `reserve(resource_id, start, end, request_id)` para reservas semiabiertas. Incluye restricciones, igualdad de solicitudes, qué ocurre si se reutiliza una clave con payload distinto y cómo expresa resultado desconocido. Produce ocho tests con particiones significativas y un historial concurrente que rompería una implementación ingenua. No es necesario implementar un servicio completo en este diagnóstico."
+        "defensa": "repartir en dos sesiones, sin preparar estos problemas con anterioridad. Primera pasada sin IA; segunda pasada con documentación cuando se indique. Registrar resultado, tiempo, ayuda, dudas y confianza antes de comprobar. No enviar soluciones solo por memoria de un problema parecido."
       },
       "capacidades": [
         "algoritmos",
@@ -93,7 +95,9 @@
       "etiquetas": [],
       "d": {
         "minutos": 30,
-        "enunciado": "Diseña `reserve(resource_id, start, end, request_id)` para reservas semiabiertas. Incluye restricciones, igualdad de solicitudes, qué ocurre si se reutiliza una clave con payload distinto y cómo expresa resultado desconocido. Produce ocho tests con particiones significativas y un historial concurrente que rompería una implementación ingenua. No es necesario implementar un servicio completo en este diagnóstico."
+        "enunciado": "Diseña `reserve(resource_id, start, end, request_id)` para reservas semiabiertas. Incluye restricciones, igualdad de solicitudes, qué ocurre si se reutiliza una clave con payload distinto y cómo expresa resultado desconocido. Produce ocho tests con particiones significativas y un historial concurrente que rompería una implementación ingenua. No es necesario implementar un servicio completo en este diagnóstico.",
+        "aplicacion": "repartir en dos sesiones, sin preparar estos problemas con anterioridad. Primera pasada sin IA; segunda pasada con documentación cuando se indique. Registrar resultado, tiempo, ayuda, dudas y confianza antes de comprobar. No enviar soluciones solo por memoria de un problema parecido.",
+        "salida": "no se obtiene una puntuación global engañosa. Se registran ocho observaciones y se decide qué bloques convalidar, qué reforzar y dónde empezar presión temporal. El seguimiento exige recibir tus evidencias; no se deduce tu nivel exacto de la lista de proyectos que has realizado."
       }
     },
     {
@@ -107,17 +111,17 @@
         "foco": "SQL de operaciones",
         "fuentes": [],
         "mision": "Tablas: `resources(id)`, `jobs(id,resource_id,created_at)` y `events(id,job_id,status,ts)`. Para una fecha de corte, devuelve todos los recursos y el número de sus trabajos cuyo último evento hasta ese instante tiene estado `open`. Desempata eventos con el mismo `ts` por mayor `id`. Los trabajos sin eventos no cuentan como abiertos. Incluye recursos con cero. Explica por qué un join directo puede contar varias veces un trabajo.",
-        "defensa": "Tablas: `resources(id)`, `jobs(id,resource_id,created_at)` y `events(id,job_id,status,ts)`. Para una fecha de corte, devuelve todos los recursos y el número de sus trabajos cuyo último evento hasta ese instante tiene estado `open`. Desempata eventos con el mismo `ts` por mayor `id`. Los trabajos sin eventos no cuentan como abiertos. Incluye recursos con cero. Explica por qué un join directo puede contar varias veces un trabajo."
+        "defensa": "repartir en dos sesiones, sin preparar estos problemas con anterioridad. Primera pasada sin IA; segunda pasada con documentación cuando se indique. Registrar resultado, tiempo, ayuda, dudas y confianza antes de comprobar. No enviar soluciones solo por memoria de un problema parecido."
       },
       "capacidades": [
         "algoritmos",
-        "datos",
-        "comunicacion"
+        "sistemas",
+        "datos"
       ],
       "rastroCapacidades": {
         "algoritmos": "Tablas: `resources(id)`, `jobs(id,resource_id,created_at)` y `events(id,job_id,status,ts)`. Para una fecha de corte, devuelve todos los recursos y el número de sus trabajos cuyo último evento hasta ese instante tiene estado `open`. Desempata eventos con el mismo `ts` por mayor `id`. Los trabajos sin eventos no cuentan como abiertos. Incluye recursos con cero. Explica por qué un join directo puede contar varias veces un trabajo.",
-        "datos": "SQL de operaciones",
-        "comunicacion": "Explica por qué un join directo puede contar varias veces un trabajo."
+        "sistemas": "No enviar soluciones solo por memoria de un problema parecido.",
+        "datos": "SQL de operaciones"
       },
       "criticas": [
         {
@@ -133,7 +137,9 @@
       "etiquetas": [],
       "d": {
         "minutos": 30,
-        "enunciado": "Tablas: `resources(id)`, `jobs(id,resource_id,created_at)` y `events(id,job_id,status,ts)`. Para una fecha de corte, devuelve todos los recursos y el número de sus trabajos cuyo último evento hasta ese instante tiene estado `open`. Desempata eventos con el mismo `ts` por mayor `id`. Los trabajos sin eventos no cuentan como abiertos. Incluye recursos con cero. Explica por qué un join directo puede contar varias veces un trabajo."
+        "enunciado": "Tablas: `resources(id)`, `jobs(id,resource_id,created_at)` y `events(id,job_id,status,ts)`. Para una fecha de corte, devuelve todos los recursos y el número de sus trabajos cuyo último evento hasta ese instante tiene estado `open`. Desempata eventos con el mismo `ts` por mayor `id`. Los trabajos sin eventos no cuentan como abiertos. Incluye recursos con cero. Explica por qué un join directo puede contar varias veces un trabajo.",
+        "aplicacion": "repartir en dos sesiones, sin preparar estos problemas con anterioridad. Primera pasada sin IA; segunda pasada con documentación cuando se indique. Registrar resultado, tiempo, ayuda, dudas y confianza antes de comprobar. No enviar soluciones solo por memoria de un problema parecido.",
+        "salida": "no se obtiene una puntuación global engañosa. Se registran ocho observaciones y se decide qué bloques convalidar, qué reforzar y dónde empezar presión temporal. El seguimiento exige recibir tus evidencias; no se deduce tu nivel exacto de la lista de proyectos que has realizado."
       }
     },
     {
@@ -147,7 +153,7 @@
         "foco": "Leer y corregir código",
         "fuentes": [],
         "mision": "La función debe contar IDs de eventos únicos para los que exista al menos un registro con `ok=True`. Un registro fallido previo no debe ocultar un éxito posterior. La entrada está en memoria; no existe concurrencia en esta función. Corrige con el menor cambio razonable y entrega tests de repetición, fallo seguido de éxito y éxito repetido.\n\n```python\ndef count_successful(events):\n    seen = set()\n    successes = 0\n    for event in events:\n        if event['id'] in seen:\n            continue\n        seen.add(event['id'])\n        if event['ok']:\n            successes += 1\n    return successes\n```\n\nCaso: `[{'id':'a','ok':False},{'id':'a','ok':True},{'id':'a','ok':True},{'id':'b','ok':True}]` debe devolver 2. Defender el contrato importa tanto como localizar la línea defectuosa.",
-        "defensa": "La función debe contar IDs de eventos únicos para los que exista al menos un registro con `ok=True`. Un registro fallido previo no debe ocultar un éxito posterior. La entrada está en memoria; no existe concurrencia en esta función. Corrige con el menor cambio razonable y entrega tests de repetición, fallo seguido de éxito y éxito repetido.\n\n```python\ndef count_successful(events):\n    seen = set()\n    successes = 0\n    for event in events:\n        if event['id'] in seen:\n            continue\n        seen.add(event['id'])\n        if event['ok']:\n            successes += 1\n    return successes\n```\n\nCaso: `[{'id':'a','ok':False},{'id':'a','ok':True},{'id':'a','ok':True},{'id':'b','ok':True}]` debe devolver 2. Defender el contrato importa tanto como localizar la línea defectuosa."
+        "defensa": "repartir en dos sesiones, sin preparar estos problemas con anterioridad. Primera pasada sin IA; segunda pasada con documentación cuando se indique. Registrar resultado, tiempo, ayuda, dudas y confianza antes de comprobar. No enviar soluciones solo por memoria de un problema parecido."
       },
       "capacidades": [
         "algoritmos",
@@ -178,7 +184,9 @@
       "etiquetas": [],
       "d": {
         "minutos": 25,
-        "enunciado": "La función debe contar IDs de eventos únicos para los que exista al menos un registro con `ok=True`. Un registro fallido previo no debe ocultar un éxito posterior. La entrada está en memoria; no existe concurrencia en esta función. Corrige con el menor cambio razonable y entrega tests de repetición, fallo seguido de éxito y éxito repetido.\n\n```python\ndef count_successful(events):\n    seen = set()\n    successes = 0\n    for event in events:\n        if event['id'] in seen:\n            continue\n        seen.add(event['id'])\n        if event['ok']:\n            successes += 1\n    return successes\n```\n\nCaso: `[{'id':'a','ok':False},{'id':'a','ok':True},{'id':'a','ok':True},{'id':'b','ok':True}]` debe devolver 2. Defender el contrato importa tanto como localizar la línea defectuosa."
+        "enunciado": "La función debe contar IDs de eventos únicos para los que exista al menos un registro con `ok=True`. Un registro fallido previo no debe ocultar un éxito posterior. La entrada está en memoria; no existe concurrencia en esta función. Corrige con el menor cambio razonable y entrega tests de repetición, fallo seguido de éxito y éxito repetido.\n\n```python\ndef count_successful(events):\n    seen = set()\n    successes = 0\n    for event in events:\n        if event['id'] in seen:\n            continue\n        seen.add(event['id'])\n        if event['ok']:\n            successes += 1\n    return successes\n```\n\nCaso: `[{'id':'a','ok':False},{'id':'a','ok':True},{'id':'a','ok':True},{'id':'b','ok':True}]` debe devolver 2. Defender el contrato importa tanto como localizar la línea defectuosa.",
+        "aplicacion": "repartir en dos sesiones, sin preparar estos problemas con anterioridad. Primera pasada sin IA; segunda pasada con documentación cuando se indique. Registrar resultado, tiempo, ayuda, dudas y confianza antes de comprobar. No enviar soluciones solo por memoria de un problema parecido.",
+        "salida": "no se obtiene una puntuación global engañosa. Se registran ocho observaciones y se decide qué bloques convalidar, qué reforzar y dónde empezar presión temporal. El seguimiento exige recibir tus evidencias; no se deduce tu nivel exacto de la lista de proyectos que has realizado."
       }
     },
     {
@@ -192,17 +200,17 @@
         "foco": "Fallo parcial",
         "fuentes": [],
         "mision": "El sistema externo confirma internamente una orden pero la respuesta se pierde. El proceso local se reinicia. Dibuja qué estado persististe, cómo evitas una segunda operación lógica y cómo averiguas el resultado. Declara qué cambia si el proveedor no admite idempotency keys ni consulta por referencia. No hay una respuesta universal; se evalúan supuestos y límites.",
-        "defensa": "El sistema externo confirma internamente una orden pero la respuesta se pierde. El proceso local se reinicia. Dibuja qué estado persististe, cómo evitas una segunda operación lógica y cómo averiguas el resultado. Declara qué cambia si el proveedor no admite idempotency keys ni consulta por referencia. No hay una respuesta universal; se evalúan supuestos y límites."
+        "defensa": "repartir en dos sesiones, sin preparar estos problemas con anterioridad. Primera pasada sin IA; segunda pasada con documentación cuando se indique. Registrar resultado, tiempo, ayuda, dudas y confianza antes de comprobar. No enviar soluciones solo por memoria de un problema parecido."
       },
       "capacidades": [
         "algoritmos",
-        "datos",
-        "responsabilidad"
+        "sistemas",
+        "datos"
       ],
       "rastroCapacidades": {
         "algoritmos": "El sistema externo confirma internamente una orden pero la respuesta se pierde. El proceso local se reinicia. Dibuja qué estado persististe, cómo evitas una segunda operación lógica y cómo averiguas el resultado. Declara qué cambia si el proveedor no admite idempotency keys ni consulta por referencia. No hay una respuesta universal; se evalúan supuestos y límites.",
-        "datos": "Declara qué cambia si el proveedor no admite idempotency keys ni consulta por referencia.",
-        "responsabilidad": "Fallo parcial"
+        "sistemas": "No enviar soluciones solo por memoria de un problema parecido.",
+        "datos": "Declara qué cambia si el proveedor no admite idempotency keys ni consulta por referencia."
       },
       "criticas": [
         {
@@ -223,7 +231,9 @@
       "etiquetas": [],
       "d": {
         "minutos": 20,
-        "enunciado": "El sistema externo confirma internamente una orden pero la respuesta se pierde. El proceso local se reinicia. Dibuja qué estado persististe, cómo evitas una segunda operación lógica y cómo averiguas el resultado. Declara qué cambia si el proveedor no admite idempotency keys ni consulta por referencia. No hay una respuesta universal; se evalúan supuestos y límites."
+        "enunciado": "El sistema externo confirma internamente una orden pero la respuesta se pierde. El proceso local se reinicia. Dibuja qué estado persististe, cómo evitas una segunda operación lógica y cómo averiguas el resultado. Declara qué cambia si el proveedor no admite idempotency keys ni consulta por referencia. No hay una respuesta universal; se evalúan supuestos y límites.",
+        "aplicacion": "repartir en dos sesiones, sin preparar estos problemas con anterioridad. Primera pasada sin IA; segunda pasada con documentación cuando se indique. Registrar resultado, tiempo, ayuda, dudas y confianza antes de comprobar. No enviar soluciones solo por memoria de un problema parecido.",
+        "salida": "no se obtiene una puntuación global engañosa. Se registran ocho observaciones y se decide qué bloques convalidar, qué reforzar y dónde empezar presión temporal. El seguimiento exige recibir tus evidencias; no se deduce tu nivel exacto de la lista de proyectos que has realizado."
       }
     },
     {
@@ -237,23 +247,23 @@
         "foco": "Discovery",
         "fuentes": [],
         "mision": "Brief: “Necesitamos un chatbot para que mantenimiento trabaje más rápido”. Entrega diez preguntas priorizadas y explica qué decisión de implementación depende de las tres primeras. Después define una primera vertical y una métrica de éxito. Todavía no elijas un modelo de lenguaje.",
-        "defensa": "Brief: “Necesitamos un chatbot para que mantenimiento trabaje más rápido”. Entrega diez preguntas priorizadas y explica qué decisión de implementación depende de las tres primeras. Después define una primera vertical y una métrica de éxito. Todavía no elijas un modelo de lenguaje."
+        "defensa": "repartir en dos sesiones, sin preparar estos problemas con anterioridad. Primera pasada sin IA; segunda pasada con documentación cuando se indique. Registrar resultado, tiempo, ayuda, dudas y confianza antes de comprobar. No enviar soluciones solo por memoria de un problema parecido."
       },
       "capacidades": [
         "algoritmos",
-        "ia",
-        "producto"
+        "sistemas",
+        "ia"
       ],
       "rastroCapacidades": {
         "algoritmos": "Brief: “Necesitamos un chatbot para que mantenimiento trabaje más rápido”. Entrega diez preguntas priorizadas y explica qué decisión de implementación depende de las tres primeras. Después define una primera vertical y una métrica de éxito. Todavía no elijas un modelo de lenguaje.",
-        "ia": "Todavía no elijas un modelo de lenguaje.",
-        "producto": "Discovery"
+        "sistemas": "No enviar soluciones solo por memoria de un problema parecido.",
+        "ia": "Todavía no elijas un modelo de lenguaje."
       },
       "criticas": [
         {
           "id": "correctitud",
           "texto": "Correctitud",
-          "rastro": "Brief: “Necesitamos un chatbot para que mantenimiento trabaje más rápido”. Entrega diez preguntas priorizadas y explica qué decisión de implementación depende de las tres primeras. Después define una primera vertical y una métrica de éxito. Todavía no elijas un modelo de lenguaje."
+          "rastro": "repartir en dos sesiones, sin preparar estos problemas con anterioridad. Primera pasada sin IA; segunda pasada con documentación cuando se indique. Registrar resultado, tiempo, ayuda, dudas y confianza antes de comprobar. No enviar soluciones solo por memoria de un problema parecido."
         }
       ],
       "naturaleza": {
@@ -263,7 +273,9 @@
       "etiquetas": [],
       "d": {
         "minutos": 20,
-        "enunciado": "Brief: “Necesitamos un chatbot para que mantenimiento trabaje más rápido”. Entrega diez preguntas priorizadas y explica qué decisión de implementación depende de las tres primeras. Después define una primera vertical y una métrica de éxito. Todavía no elijas un modelo de lenguaje."
+        "enunciado": "Brief: “Necesitamos un chatbot para que mantenimiento trabaje más rápido”. Entrega diez preguntas priorizadas y explica qué decisión de implementación depende de las tres primeras. Después define una primera vertical y una métrica de éxito. Todavía no elijas un modelo de lenguaje.",
+        "aplicacion": "repartir en dos sesiones, sin preparar estos problemas con anterioridad. Primera pasada sin IA; segunda pasada con documentación cuando se indique. Registrar resultado, tiempo, ayuda, dudas y confianza antes de comprobar. No enviar soluciones solo por memoria de un problema parecido.",
+        "salida": "no se obtiene una puntuación global engañosa. Se registran ocho observaciones y se decide qué bloques convalidar, qué reforzar y dónde empezar presión temporal. El seguimiento exige recibir tus evidencias; no se deduce tu nivel exacto de la lista de proyectos que has realizado."
       }
     },
     {
@@ -277,15 +289,17 @@
         "foco": "Aprender una regla nueva",
         "fuentes": [],
         "mision": "Se entrega esta pequeña semántica: una operación `set(k,v)` escribe un valor; `add(k,n)` suma un entero y falla si la clave falta; `begin` abre una transacción no anidable; `abort` descarta sus cambios; `commit` los conserva. Fuera de una transacción, cambios aplican inmediatamente. Define el estado mínimo e implementa un evaluador para una lista de operaciones. Indica cómo se reportan operaciones inválidas sin dejar estado parcial. Extensión reservada al momento de evaluar: cambiar una regla y agregar casos nuevos.",
-        "defensa": "Se entrega esta pequeña semántica: una operación `set(k,v)` escribe un valor; `add(k,n)` suma un entero y falla si la clave falta; `begin` abre una transacción no anidable; `abort` descarta sus cambios; `commit` los conserva. Fuera de una transacción, cambios aplican inmediatamente. Define el estado mínimo e implementa un evaluador para una lista de operaciones. Indica cómo se reportan operaciones inválidas sin dejar estado parcial. Extensión reservada al momento de evaluar: cambiar una regla y agregar casos nuevos."
+        "defensa": "repartir en dos sesiones, sin preparar estos problemas con anterioridad. Primera pasada sin IA; segunda pasada con documentación cuando se indique. Registrar resultado, tiempo, ayuda, dudas y confianza antes de comprobar. No enviar soluciones solo por memoria de un problema parecido."
       },
       "capacidades": [
         "algoritmos",
-        "responsabilidad"
+        "sistemas",
+        "ia"
       ],
       "rastroCapacidades": {
         "algoritmos": "Se entrega esta pequeña semántica: una operación `set(k,v)` escribe un valor; `add(k,n)` suma un entero y falla si la clave falta; `begin` abre una transacción no anidable; `abort` descarta sus cambios; `commit` los conserva. Fuera de una transacción, cambios aplican inmediatamente. Define el estado mínimo e implementa un evaluador para una lista de operaciones. Indica cómo se reportan operaciones inválidas sin dejar estado parcial. Extensión reservada al momento de evaluar: cambiar una regla y agregar casos nuevos.",
-        "responsabilidad": "`add(k,n)` suma un entero y falla si la clave falta;"
+        "sistemas": "No enviar soluciones solo por memoria de un problema parecido.",
+        "ia": "Primera pasada sin IA;"
       },
       "criticas": [
         {
@@ -301,7 +315,9 @@
       "etiquetas": [],
       "d": {
         "minutos": 25,
-        "enunciado": "Se entrega esta pequeña semántica: una operación `set(k,v)` escribe un valor; `add(k,n)` suma un entero y falla si la clave falta; `begin` abre una transacción no anidable; `abort` descarta sus cambios; `commit` los conserva. Fuera de una transacción, cambios aplican inmediatamente. Define el estado mínimo e implementa un evaluador para una lista de operaciones. Indica cómo se reportan operaciones inválidas sin dejar estado parcial. Extensión reservada al momento de evaluar: cambiar una regla y agregar casos nuevos."
+        "enunciado": "Se entrega esta pequeña semántica: una operación `set(k,v)` escribe un valor; `add(k,n)` suma un entero y falla si la clave falta; `begin` abre una transacción no anidable; `abort` descarta sus cambios; `commit` los conserva. Fuera de una transacción, cambios aplican inmediatamente. Define el estado mínimo e implementa un evaluador para una lista de operaciones. Indica cómo se reportan operaciones inválidas sin dejar estado parcial. Extensión reservada al momento de evaluar: cambiar una regla y agregar casos nuevos.",
+        "aplicacion": "repartir en dos sesiones, sin preparar estos problemas con anterioridad. Primera pasada sin IA; segunda pasada con documentación cuando se indique. Registrar resultado, tiempo, ayuda, dudas y confianza antes de comprobar. No enviar soluciones solo por memoria de un problema parecido.",
+        "salida": "no se obtiene una puntuación global engañosa. Se registran ocho observaciones y se decide qué bloques convalidar, qué reforzar y dónde empezar presión temporal. El seguimiento exige recibir tus evidencias; no se deduce tu nivel exacto de la lista de proyectos que has realizado."
       }
     },
     {
@@ -323,21 +339,23 @@
           }
         ],
         "mision": "Lee la sección inicial de [Palantir Solution Design](https://www.palantir.com/docs/foundry/use-case-life-cycle/solution-design). Cierra el texto. Explica en inglés cómo pasarías de un pedido operacional a un sistema concreto, usando un caso propio diferente al ejemplo de la fuente. Luego compara tu reconstrucción con la lectura e identifica dos omisiones.",
-        "defensa": "Lee la sección inicial de [Palantir Solution Design](https://www.palantir.com/docs/foundry/use-case-life-cycle/solution-design). Cierra el texto. Explica en inglés cómo pasarías de un pedido operacional a un sistema concreto, usando un caso propio diferente al ejemplo de la fuente. Luego compara tu reconstrucción con la lectura e identifica dos omisiones."
+        "defensa": "repartir en dos sesiones, sin preparar estos problemas con anterioridad. Primera pasada sin IA; segunda pasada con documentación cuando se indique. Registrar resultado, tiempo, ayuda, dudas y confianza antes de comprobar. No enviar soluciones solo por memoria de un problema parecido."
       },
       "capacidades": [
         "algoritmos",
-        "comunicacion"
+        "sistemas",
+        "ia"
       ],
       "rastroCapacidades": {
         "algoritmos": "Lee la sección inicial de [Palantir Solution Design](https://www.palantir.com/docs/foundry/use-case-life-cycle/solution-design). Cierra el texto. Explica en inglés cómo pasarías de un pedido operacional a un sistema concreto, usando un caso propio diferente al ejemplo de la fuente. Luego compara tu reconstrucción con la lectura e identifica dos omisiones.",
-        "comunicacion": "Explica en inglés cómo pasarías de un pedido operacional a un sistema concreto, usando un caso propio diferente al ejemplo de la fuente."
+        "sistemas": "No enviar soluciones solo por memoria de un problema parecido.",
+        "ia": "Primera pasada sin IA;"
       },
       "criticas": [
         {
           "id": "correctitud",
           "texto": "Correctitud",
-          "rastro": "Lee la sección inicial de [Palantir Solution Design](https://www.palantir.com/docs/foundry/use-case-life-cycle/solution-design). Cierra el texto. Explica en inglés cómo pasarías de un pedido operacional a un sistema concreto, usando un caso propio diferente al ejemplo de la fuente. Luego compara tu reconstrucción con la lectura e identifica dos omisiones."
+          "rastro": "repartir en dos sesiones, sin preparar estos problemas con anterioridad. Primera pasada sin IA; segunda pasada con documentación cuando se indique. Registrar resultado, tiempo, ayuda, dudas y confianza antes de comprobar. No enviar soluciones solo por memoria de un problema parecido."
         }
       ],
       "naturaleza": {
@@ -348,7 +366,9 @@
       "etiquetas": [],
       "d": {
         "minutos": 30,
-        "enunciado": "Lee la sección inicial de [Palantir Solution Design](https://www.palantir.com/docs/foundry/use-case-life-cycle/solution-design). Cierra el texto. Explica en inglés cómo pasarías de un pedido operacional a un sistema concreto, usando un caso propio diferente al ejemplo de la fuente. Luego compara tu reconstrucción con la lectura e identifica dos omisiones."
+        "enunciado": "Lee la sección inicial de [Palantir Solution Design](https://www.palantir.com/docs/foundry/use-case-life-cycle/solution-design). Cierra el texto. Explica en inglés cómo pasarías de un pedido operacional a un sistema concreto, usando un caso propio diferente al ejemplo de la fuente. Luego compara tu reconstrucción con la lectura e identifica dos omisiones.",
+        "aplicacion": "repartir en dos sesiones, sin preparar estos problemas con anterioridad. Primera pasada sin IA; segunda pasada con documentación cuando se indique. Registrar resultado, tiempo, ayuda, dudas y confianza antes de comprobar. No enviar soluciones solo por memoria de un problema parecido.",
+        "salida": "no se obtiene una puntuación global engañosa. Se registran ocho observaciones y se decide qué bloques convalidar, qué reforzar y dónde empezar presión temporal. El seguimiento exige recibir tus evidencias; no se deduce tu nivel exacto de la lista de proyectos que has realizado."
       }
     }
   ],

@@ -45,6 +45,16 @@
         "defensa": "Explica una decisión que pertenece al contrato y otra que debe quedar como detalle interno.",
         "variante": "Deriva particiones de entrada y un caso que el contrato no deberia aceptar."
       },
+      "gate": {
+        "pregunta": "Explica una decisión que pertenece al contrato y otra que debe quedar como detalle interno.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Abstracción ≥ 3: Diseñar el contrato de una operación de reserva antes de implementarla.",
+          "Comunicación ≥ 3: Explica una decisión que pertenece al contrato y otra que debe quedar como detalle interno.",
+          "Correctitud (condición crítica): Explica una decisión que pertenece al contrato y otra que debe quedar como detalle interno."
+        ]
+      },
       "capacidades": [
         "abstraccion",
         "comunicacion"
@@ -96,6 +106,16 @@
         "mision": "Implementa un conjunto ordenado y documenta función de abstraccion e invariante.",
         "defensa": "Demuestra preservacion del invariante tras cada operación publica.",
         "variante": "Introduce una representación inválida y un alias mutable que intente romperla."
+      },
+      "gate": {
+        "pregunta": "Demuestra preservacion del invariante tras cada operación publica.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Abstracción ≥ 3: Implementa un conjunto ordenado y documenta función de abstraccion e invariante.",
+          "Comunicación ≥ 3: Separar lo que representa una estructura de como lo guarda.",
+          "Correctitud (condición crítica): Demuestra preservacion del invariante tras cada operación publica."
+        ]
       },
       "capacidades": [
         "abstraccion",
@@ -149,6 +169,17 @@
         "defensa": "Justifica que propiedad detecta el error y que tipo de bug podria escapar.",
         "variante": "Reduce una secuencia que falla al caso más pequeño que puedas explicar."
       },
+      "gate": {
+        "pregunta": "Justifica que propiedad detecta el error y que tipo de bug podria escapar.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Abstracción ≥ 3: Compara una estructura contra una referencia simple con secuencias reproducibles.",
+          "Comunicación ≥ 3: Reduce una secuencia que falla al caso más pequeño que puedas explicar.",
+          "Responsabilidad ≥ 3: Compara una estructura contra una referencia simple con secuencias reproducibles.",
+          "Trazabilidad (condición crítica): Compara una estructura contra una referencia simple con secuencias reproducibles."
+        ]
+      },
       "capacidades": [
         "abstraccion",
         "comunicacion",
@@ -195,6 +226,17 @@
         "mision": "Añade versionado e igualdad a objetos de dominio sin romper consumidores.",
         "defensa": "Explica diferencias entre identidad, equivalencia de valor y compatibilidad.",
         "variante": "Prueba claves mutables y objetos distintos con el mismo contenido."
+      },
+      "gate": {
+        "pregunta": "Explica diferencias entre identidad, equivalencia de valor y compatibilidad.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Abstracción ≥ 3: Añade versionado e igualdad a objetos de dominio sin romper consumidores.",
+          "Comunicación ≥ 3: Explica diferencias entre identidad, equivalencia de valor y compatibilidad.",
+          "Correctitud (condición crítica): Prueba claves mutables y objetos distintos con el mismo contenido.",
+          "Identidad (condición crítica): Definir identidad, igualdad y compatibilidad de una API."
+        ]
       },
       "capacidades": [
         "abstraccion",
@@ -253,6 +295,15 @@
         "defensa": "Extiende el lenguaje frente al evaluador manteniendo comportamiento anterior.",
         "variante": "Agrega precedencia, entradas malformadas y una operación nueva."
       },
+      "gate": {
+        "pregunta": "Extiende el lenguaje frente al evaluador manteniendo comportamiento anterior.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Abstracción ≥ 3: Implementa una DSL de reglas con árbol de sintaxis, validación y evaluación.",
+          "Correctitud (condición crítica): Implementa una DSL de reglas con árbol de sintaxis, validación y evaluación."
+        ]
+      },
       "capacidades": [
         "abstraccion"
       ],
@@ -302,6 +353,17 @@
         "mision": "Reproduce un bug de un repositorio y entrega un parche pequeño con test de regresión.",
         "defensa": "Explica la causa, el alcance y por que no elegiste una reescritura.",
         "variante": "Revisa un parche alternativo que pasa tests pero cambia un contrato."
+      },
+      "gate": {
+        "pregunta": "Explica la causa, el alcance y por que no elegiste una reescritura.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Abstracción ≥ 3: Revisa un parche alternativo que pasa tests pero cambia un contrato.",
+          "Comunicación ≥ 3: Explica la causa, el alcance y por que no elegiste una reescritura.",
+          "Responsabilidad ≥ 3: Reproduce un bug de un repositorio y entrega un parche pequeño con test de regresión.",
+          "Correctitud (condición crítica): Reproduce un bug de un repositorio y entrega un parche pequeño con test de regresión."
+        ]
       },
       "capacidades": [
         "abstraccion",
@@ -356,6 +418,16 @@
         "mision": "Entrega una biblioteca o servicio con API, ejemplos, errores estables y migración.",
         "defensa": "Defiende extensibilidad, coste de soporte y que decidiste no abstraer.",
         "variante": "Un consumidor nuevo intenta integrarse usando solo la documentación."
+      },
+      "gate": {
+        "pregunta": "Defiende extensibilidad, coste de soporte y que decidiste no abstraer.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Abstracción ≥ 3: Entrega una biblioteca o servicio con API, ejemplos, errores estables y migración.",
+          "Comunicación ≥ 3: Un consumidor nuevo intenta integrarse usando solo la documentación.",
+          "Correctitud (condición crítica): Defiende extensibilidad, coste de soporte y que decidiste no abstraer."
+        ]
       },
       "capacidades": [
         "abstraccion",

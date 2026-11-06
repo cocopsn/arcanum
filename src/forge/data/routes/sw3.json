@@ -44,6 +44,16 @@
         "defensa": "Demuestra el contrato con trazas pequenas y pruebas del laboratorio.",
         "variante": "Analiza vacio, capacidad agotada, cierre y lecturas parciales."
       },
+      "gate": {
+        "pregunta": "Demuestra el contrato con trazas pequenas y pruebas del laboratorio.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Sistemas ≥ 3: Completa el checkpoint 0 de CS144 de la edición fijada.",
+          "Abstracción ≥ 3: Demuestra el contrato con trazas pequenas y pruebas del laboratorio.",
+          "Correctitud (condición crítica): Demuestra el contrato con trazas pequenas y pruebas del laboratorio."
+        ]
+      },
       "capacidades": [
         "sistemas",
         "abstraccion"
@@ -88,6 +98,17 @@
         "mision": "Completa el checkpoint 1 de CS144 y explica su estado interno.",
         "defensa": "Justifica memoria, progreso y comportamiento de cada borde.",
         "variante": "Prueba solapamientos, duplicados y fragmentos fuera de ventana."
+      },
+      "gate": {
+        "pregunta": "Justifica memoria, progreso y comportamiento de cada borde.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Sistemas ≥ 3: Justifica memoria, progreso y comportamiento de cada borde.",
+          "Comunicación ≥ 3: Completa el checkpoint 1 de CS144 y explica su estado interno.",
+          "Correctitud (condición crítica): Justifica memoria, progreso y comportamiento de cada borde.",
+          "Identidad (condición crítica): Prueba solapamientos, duplicados y fragmentos fuera de ventana."
+        ]
       },
       "capacidades": [
         "sistemas",
@@ -138,6 +159,17 @@
         "mision": "Continua la secuencia de checkpoints de TCP conforme a su edición.",
         "defensa": "Explica que garantiza el transporte y por que una reserva aun necesita invariantes.",
         "variante": "Analiza pérdida, retransmisión y cierre sin mezclar pasos de ediciones distintas."
+      },
+      "gate": {
+        "pregunta": "Explica que garantiza el transporte y por que una reserva aun necesita invariantes.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Sistemas ≥ 3: Continua la secuencia de checkpoints de TCP conforme a su edición.",
+          "Abstracción ≥ 3: Explica que garantiza el transporte y por que una reserva aun necesita invariantes.",
+          "Comunicación ≥ 3: Explica que garantiza el transporte y por que una reserva aun necesita invariantes.",
+          "Correctitud (condición crítica): Explica que garantiza el transporte y por que una reserva aun necesita invariantes."
+        ]
       },
       "capacidades": [
         "sistemas",
@@ -192,6 +224,17 @@
         "mision": "Implementa endpoints de recursos y prueba acceso entre usuarios diferentes.",
         "defensa": "Demuestra controles en servidor y distingue autenticación de autorización.",
         "variante": "Utiliza laboratorios de access control de PortSwigger como practica separada."
+      },
+      "gate": {
+        "pregunta": "Demuestra controles en servidor y distingue autenticación de autorización.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Sistemas ≥ 3: Implementa endpoints de recursos y prueba acceso entre usuarios diferentes.",
+          "Producto ≥ 3: Implementa endpoints de recursos y prueba acceso entre usuarios diferentes.",
+          "Correctitud (condición crítica): Implementa endpoints de recursos y prueba acceso entre usuarios diferentes.",
+          "Autorización (condición crítica): Implementa endpoints de recursos y prueba acceso entre usuarios diferentes."
+        ]
       },
       "capacidades": [
         "sistemas",
@@ -250,6 +293,17 @@
         "defensa": "Explica dónde se libera cada recurso y como eliges límites con datos.",
         "variante": "Introduce sobrecarga, clientes desconectados y dependencias que no terminan."
       },
+      "gate": {
+        "pregunta": "Explica dónde se libera cada recurso y como eliges límites con datos.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Sistemas ≥ 3: Construye un servicio con cola acotada y propagacion de cancelación.",
+          "Datos ≥ 3: Explica dónde se libera cada recurso y como eliges límites con datos.",
+          "Producto ≥ 3: Limitar trabajo cuando una dependencia o un usuario es lento.",
+          "Correctitud (condición crítica): Explica dónde se libera cada recurso y como eliges límites con datos."
+        ]
+      },
       "capacidades": [
         "sistemas",
         "datos",
@@ -303,6 +357,17 @@
         "mision": "Implementa solicitud idempotente con clave/payload y reconciliación.",
         "defensa": "Declara dónde termina tu garantía y que sucede con un proveedor sin deduplicacion.",
         "variante": "Falla despues de aplicar el efecto y antes de responder."
+      },
+      "gate": {
+        "pregunta": "Declara dónde termina tu garantía y que sucede con un proveedor sin deduplicacion.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Sistemas ≥ 3: Implementa solicitud idempotente con clave/payload y reconciliación.",
+          "Responsabilidad ≥ 3: Falla despues de aplicar el efecto y antes de responder.",
+          "Identidad (condición crítica): Declara dónde termina tu garantía y que sucede con un proveedor sin deduplicacion.",
+          "Consistencia (condición crítica): Implementa solicitud idempotente con clave/payload y reconciliación."
+        ]
       },
       "capacidades": [
         "sistemas",
@@ -360,6 +425,18 @@
         "mision": "Entrega trazas, métricas, logs y un runbook para una tarea concreta.",
         "defensa": "Distingue disponibilidad, latencia, exactitud y frescura del dato.",
         "variante": "Otra persona diagnostica una falla sin que expliques el sistema en vivo."
+      },
+      "gate": {
+        "pregunta": "Distingue disponibilidad, latencia, exactitud y frescura del dato.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Sistemas ≥ 3: Distingue disponibilidad, latencia, exactitud y frescura del dato.",
+          "Datos ≥ 3: Distingue disponibilidad, latencia, exactitud y frescura del dato.",
+          "Responsabilidad ≥ 3: Operar un servicio con indicadores utiles y procedimiento de recuperación.",
+          "Correctitud (condición crítica): Distingue disponibilidad, latencia, exactitud y frescura del dato.",
+          "Recuperación (condición crítica): Operar un servicio con indicadores utiles y procedimiento de recuperación."
+        ]
       },
       "capacidades": [
         "sistemas",
