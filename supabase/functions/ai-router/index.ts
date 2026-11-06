@@ -5,20 +5,21 @@
 // this authenticated with its JWT.
 //
 // Provider priority is CONFIG (the array), not hardcode. DEFAULT = Azure AI
-// Foundry (GPT-5.6) PRIMARY, OpenAI (gpt-4o-mini) as FALLBACK, Kee (the
+// Foundry (GPT-6.1) PRIMARY, OpenAI (gpt-4o-mini) as FALLBACK, Kee (the
 // learner's own RAG agent) as the last resort. We do NOT depend on Kee: if it
 // is unconfigured it simply throws and the router has already answered via
 // Azure/OpenAI. `anthropic` stays implemented but OFF the default chain —
 // reachable only via an explicit `providers` override. Fallback logic mirrors
 // src/core/ai-router.ts (tested).
 //
-// ── Azure AI Foundry (GPT-5.6) ──────────────────────────────────────────────
+// ── Azure AI Foundry (GPT-6.1) ──────────────────────────────────────────────
 // Resource admin-8008-resource (West US 3). Two deployments, mapped by WORKLOAD:
-//   · gpt-5.6-sol   → the GATES / adversarial judges (gate, interrogate,
-//                     evaluate): depth of judgement matters, a weak model lets
-//                     gaming through.
-//   · gpt-5.6-terra → high-volume micro-tasks (lesson, tutor, sleep, ocr).
-// GPT-5 family API quirks handled centrally in `azureChat`: `max_completion_tokens`
+//   · gpt-6.1-sol   → the GATES / adversarial judges (gate, interrogate,
+//                     evaluate, forge_judge): depth of judgement matters, a weak
+//                     model lets gaming through.
+//   · gpt-6.1-terra → high-volume micro-tasks (lesson, tutor, sleep, ocr). Both
+//                     accept image input (verified 2026-11-06 with a real PNG).
+// GPT-5/6 family API quirks handled centrally in `azureChat`: `max_completion_tokens`
 // (NOT `max_tokens`), NO `temperature`/`top_p`/penalties, and the token budget
 // must cover REASONING tokens, so Azure budgets are raised vs the OpenAI path.
 // The model travels in the URL (deployment name), not the body.
@@ -28,16 +29,31 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 const PROVIDER_PRIORITY = ["azure", "openai", "kee"] as const;
 
 // Which Foundry deployment serves each action. Gates → sol, volume → terra.
-const AZURE_DEPLOYMENTS: Record<string, "gpt-5.6-sol" | "gpt-5.6-terra"> = {
-  gate: "gpt-5.6-sol",
-  interrogate: "gpt-5.6-sol",
-  evaluate: "gpt-5.6-sol",
-  forge_judge: "gpt-5.6-sol",
-  lesson: "gpt-5.6-terra",
-  tutor: "gpt-5.6-terra",
-  sleep: "gpt-5.6-terra",
-  ocr: "gpt-5.6-terra",
+const AZURE_DEPLOYMENTS: Record<string, "gpt-6.1-sol" | "gpt-6.1-terra"> = {
+  gate: "gpt-6.1-sol",
+  interrogate: "gpt-6.1-sol",
+  evaluate: "gpt-6.1-sol",
+  forge_judge: "gpt-6.1-sol",
+  lesson: "gpt-6.1-terra",
+  tutor: "gpt-6.1-terra",
+  sleep: "gpt-6.1-terra",
+  ocr: "gpt-6.1-terra",
 };
+
+/**
+ * A model score → [0,1], fail-closed and NEVER inflating. The prompts ask for 0–1, but a model can drift to a
+ * 0–100 percentage (gpt-6.1-sol answered `100` to an unscaled prompt on 2026-11-06): a percentage is rescaled
+ * instead of being clamped to a perfect 1. Anything else out of range is 0. A missing/non-numeric score stays
+ * NaN, so the callers' existing «no measurable score» sentinels keep working.
+ */
+function normScore(raw: unknown): number {
+  const n = Number(raw);
+  if (raw === null || raw === undefined || raw === "" || !Number.isFinite(n)) return NaN;
+  if (n < 0) return 0;
+  if (n <= 1) return n;
+  if (n <= 100) return n / 100;
+  return 0;
+}
 
 // ── Azure chat-completions transport (GPT-5.6) ──────────────────────────────
 // ONE place that knows the Foundry URL shape, auth header, and GPT-5 parameter
@@ -449,7 +465,7 @@ async function gate(
     try {
       const m = text.match(/\{[\s\S]*\}/);
       const o = JSON.parse(m ? m[0] : text);
-      const score = Number(o.score);
+      const score = normScore(o.score);
       return {
         passed: o.passed === true,
         score: Number.isFinite(score) ? Math.max(0, Math.min(1, score)) : 0,
@@ -489,7 +505,7 @@ async function gate(
   }
   if (provider === "kee") {
     const j = await keeCall("gate", { context });
-    const score = Number(j.score);
+    const score = normScore(j.score);
     return {
       passed: j.passed === true,
       score: Number.isFinite(score) ? Math.max(0, Math.min(1, score)) : 0,
@@ -593,7 +609,7 @@ async function interrogate(
     try {
       const m = text.match(/\{[\s\S]*\}/);
       const o = JSON.parse(m ? m[0] : text);
-      const score = Number(o.score);
+      const score = normScore(o.score);
       return {
         questions: Array.isArray(o.questions) ? o.questions.map(String) : [],
         passed: o.passed === true,
@@ -634,7 +650,7 @@ async function interrogate(
   }
   if (provider === "kee") {
     const j = await keeCall("interrogate", { context });
-    const score = Number(j.score);
+    const score = normScore(j.score);
     return {
       questions: Array.isArray(j.questions) ? j.questions.map(String) : [],
       passed: j.passed === true,
@@ -686,7 +702,7 @@ async function lesson(
       const m = text.match(/\{[\s\S]*\}/);
       const o = JSON.parse(m ? m[0] : text);
       if (isGrade) {
-        const score = Number(o.score);
+        const score = normScore(o.score);
         const understood = o.understood === true;
         // An UNDERSTOOD step with no measurable score is NOT a 0 — it's a non-grade. Null it (sentinel)
         // so the run never reinforces/advances on an un-measured pass nor drags the average down with a 0.
@@ -747,7 +763,7 @@ async function lesson(
   if (provider === "kee") {
     const j = await keeCall("lesson", { context });
     if (isGrade) {
-      const score = Number(j.score);
+      const score = normScore(j.score);
       const understood = j.understood === true;
       if (understood && !Number.isFinite(score)) return { error: "grade-parse-failed" };
       return {
@@ -892,7 +908,8 @@ async function forge_judge(provider: string, context: ForgeJudgeInput): Promise<
     const capabilities: Record<string, number> = {};
     for (const c of context.essential) {
       const n = Number(capsIn[c]);
-      capabilities[c] = Number.isFinite(n) ? Math.max(0, Math.min(4, Math.round(n))) : 0;
+      // Out of the 0–4 scale (e.g. a 0–10 or 0–100 drift) fails closed to 0 — clamping would turn an 8 into a passing 4.
+      capabilities[c] = Number.isFinite(n) && n >= 0 && n <= 4.5 ? Math.round(n) : 0;
     }
     const critIn = Array.isArray(o.critical) ? (o.critical as { id?: unknown; passed?: unknown }[]) : [];
     const critical = context.critical.map((k) => ({ id: k.id, passed: critIn.some((x) => x && x.id === k.id && x.passed === true) }));

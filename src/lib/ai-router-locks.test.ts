@@ -76,9 +76,25 @@ export function orderFindings(source: string): string[] {
 /** forge_judge is served by sol, and a missing deployment throws instead of silently using terra. */
 export function deploymentFindings(source: string): string[] {
   const out: string[] = [];
-  if (!/forge_judge: "gpt-5\.6-sol"/.test(source)) out.push("la acción forge_judge no tiene despliegue Azure en sol");
-  if (source.includes('?? "gpt-5.6-terra"')) out.push("azureChat cae a terra en silencio");
+  if (!/forge_judge: "gpt-[\d.]+-sol"/.test(source)) out.push("la acción forge_judge no tiene despliegue Azure en sol");
+  if (/\?\? "gpt-[\d.]+-terra"/.test(source)) out.push("azureChat cae a terra en silencio");
   return out;
+}
+
+/** Every verdict parse reads the model score through normScore (never a raw Number that clamps a percentage to 1). */
+export function scoreFindings(source: string): string[] {
+  const out: string[] = [];
+  if (/const score = Number\((o|j)\.score\)/.test(source)) out.push("un veredicto lee el score crudo y una escala 0-100 se infla a 1");
+  if ((source.match(/const score = normScore\((o|j)\.score\)/g) ?? []).length < 6) out.push("faltan parseos de veredicto con normScore");
+  if (/Math\.max\(0, Math\.min\(4, Math\.round\(n\)\)\)/.test(source)) out.push("forge_judge recorta a 4 una capacidad fuera de escala");
+  return out;
+}
+
+/** The real normScore of the Edge, evaluated from its own source text (the Edge is Deno code, not importable here). */
+function loadNormScore(source: string): (raw: unknown) => number {
+  const m = source.match(/function normScore\(raw: unknown\): number \{([\s\S]*?)\n\}/);
+  if (!m) throw new Error("normScore no existe en ai-router");
+  return new Function("raw", m[1]) as (raw: unknown) => number;
 }
 
 describe("ai-router — the anti-injection lock table (§10.10)", () => {
@@ -88,6 +104,41 @@ describe("ai-router — the anti-injection lock table (§10.10)", () => {
 
   it("the deployment map has forge_judge on sol and azureChat never falls back to terra in silence", () => {
     expect(deploymentFindings(src)).toEqual([]);
+  });
+
+  it("model scores out of scale never inflate a verdict (normScore in every parse; capabilities fail closed)", () => {
+    expect(scoreFindings(src)).toEqual([]);
+    const normScore = loadNormScore(src);
+    expect(normScore(0.7)).toBe(0.7);
+    expect(normScore(1)).toBe(1);
+    expect(normScore(85)).toBeCloseTo(0.85);
+    expect(normScore(100)).toBe(1);
+    expect(normScore(250)).toBe(0);
+    expect(normScore(-3)).toBe(0);
+    expect(Number.isNaN(normScore(undefined))).toBe(true);
+    expect(Number.isNaN(normScore("x"))).toBe(true);
+  });
+
+  it("red-check: a parse back on Number(o.score) → «un veredicto lee el score crudo y una escala 0-100 se infla a 1»", () => {
+    const mutated = src.replace("const score = normScore(o.score);", "const score = Number(o.score);");
+    expect(mutated).not.toBe(src);
+    expect(scoreFindings(mutated)).toContain("un veredicto lee el score crudo y una escala 0-100 se infla a 1");
+  });
+
+  it("red-check: normScore clamping instead of rescaling → 85 would read as a perfect 1", () => {
+    const mutated = src.replace("if (n <= 100) return n / 100;", "if (n <= 100) return 1;");
+    expect(mutated).not.toBe(src);
+    expect(loadNormScore(mutated)(85)).toBe(1);
+    expect(loadNormScore(src)(85)).toBeCloseTo(0.85);
+  });
+
+  it("red-check: capabilities clamped to 4 again → «forge_judge recorta a 4 una capacidad fuera de escala»", () => {
+    const mutated = src.replace(
+      "capabilities[c] = Number.isFinite(n) && n >= 0 && n <= 4.5 ? Math.round(n) : 0;",
+      "capabilities[c] = Number.isFinite(n) ? Math.max(0, Math.min(4, Math.round(n))) : 0;",
+    );
+    expect(mutated).not.toBe(src);
+    expect(scoreFindings(mutated)).toContain("forge_judge recorta a 4 una capacidad fuera de escala");
   });
 
   it("forge_judge validates its input BEFORE routing to a provider (400, never a 503)", () => {
@@ -143,10 +194,10 @@ describe("ai-router — the anti-injection lock table (§10.10)", () => {
   });
 
   it("red-check: forge_judge removed from AZURE_DEPLOYMENTS → «la acción forge_judge no tiene despliegue Azure en sol»", () => {
-    const mutated = src.replace('  forge_judge: "gpt-5.6-sol",\n', "").replace('  forge_judge: "gpt-5.6-sol",\r\n', "");
+    const mutated = src.replace('  forge_judge: "gpt-6.1-sol",\n', "").replace('  forge_judge: "gpt-6.1-sol",\r\n', "");
     expect(mutated).not.toBe(src);
     expect(deploymentFindings(mutated)).toContain("la acción forge_judge no tiene despliegue Azure en sol");
-    expect(deploymentFindings(src.replace("AZURE_DEPLOYMENTS[action];", 'AZURE_DEPLOYMENTS[action] ?? "gpt-5.6-terra";'))).toContain("azureChat cae a terra en silencio");
+    expect(deploymentFindings(src.replace("AZURE_DEPLOYMENTS[action];", 'AZURE_DEPLOYMENTS[action] ?? "gpt-6.1-terra";'))).toContain("azureChat cae a terra en silencio");
   });
 
   it("red-check: an arrow transport interpolating ${context.notes} → «leak interpola texto del alumno fuera de la tabla de candados»", () => {
