@@ -1,0 +1,40 @@
+{
+ "v": 1,
+ "code": "A1-02",
+ "sha10": "7c7bd17172",
+ "versiones": {
+  "python": "3.12.10",
+  "sqlite": "3.49.1",
+  "node": "v24.22.1"
+ },
+ "items": [
+  {
+   "id": "a1-02-forense-dedupe",
+   "tipo": "forense",
+   "lenguaje": "sql",
+   "resultado": "sin-verificar",
+   "ms": 0,
+   "detalle": "sin arnés scripts/forge/bank-check/forense.py"
+  },
+  {
+   "id": "a1-02-code-conciliar",
+   "tipo": "code",
+   "lenguaje": "javascript",
+   "resultado": "paso",
+   "ms": 3
+  },
+  {
+   "id": "a1-02-code-conciliar",
+   "tipo": "code",
+   "lenguaje": "python",
+   "resultado": "paso",
+   "ms": 65
+  }
+ ],
+ "resumen": {
+  "ejecutables": 3,
+  "cubiertos": 2,
+  "fallidos": 0,
+  "sin_verificar": 1
+ }
+}

@@ -1,0 +1,46 @@
+{
+ "v": 1,
+ "code": "A2-05",
+ "sha10": "7ee4fc6d1c",
+ "versiones": {
+  "python": "3.12.10",
+  "sqlite": "3.49.1",
+  "node": "v24.22.1"
+ },
+ "items": [
+  {
+   "id": "a2-05-code-base",
+   "tipo": "code",
+   "lenguaje": "javascript",
+   "resultado": "paso",
+   "ms": 5
+  },
+  {
+   "id": "a2-05-code-base",
+   "tipo": "code",
+   "lenguaje": "python",
+   "resultado": "paso",
+   "ms": 82
+  },
+  {
+   "id": "a2-05-code-traspaso",
+   "tipo": "code",
+   "lenguaje": "javascript",
+   "resultado": "paso",
+   "ms": 4
+  },
+  {
+   "id": "a2-05-code-traspaso",
+   "tipo": "code",
+   "lenguaje": "python",
+   "resultado": "paso",
+   "ms": 76
+  }
+ ],
+ "resumen": {
+  "ejecutables": 4,
+  "cubiertos": 4,
+  "fallidos": 0,
+  "sin_verificar": 0
+ }
+}
