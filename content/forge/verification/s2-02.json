@@ -1,0 +1,33 @@
+{
+ "v": 1,
+ "code": "S2-02",
+ "sha10": "f808cfbacc",
+ "versiones": {
+  "python": "3.12.10",
+  "sqlite": "3.49.1",
+  "node": "v24.22.1"
+ },
+ "items": [
+  {
+   "id": "s202-lab-escalera",
+   "tipo": "historial",
+   "lenguaje": "javascript",
+   "resultado": "sin-verificar",
+   "ms": 0,
+   "detalle": "sin arnés scripts/forge/bank-check/historial.py"
+  },
+  {
+   "id": "s202-code-presupuesto",
+   "tipo": "code",
+   "lenguaje": "javascript",
+   "resultado": "paso",
+   "ms": 3
+  }
+ ],
+ "resumen": {
+  "ejecutables": 2,
+  "cubiertos": 1,
+  "fallidos": 0,
+  "sin_verificar": 1
+ }
+}
