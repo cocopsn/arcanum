@@ -13,14 +13,14 @@
    "tipo": "code",
    "lenguaje": "javascript",
    "resultado": "paso",
-   "ms": 3
+   "ms": 28
   },
   {
    "id": "codigo-en-ciclo",
    "tipo": "code",
    "lenguaje": "python",
    "resultado": "paso",
-   "ms": 56
+   "ms": 113
   }
  ],
  "resumen": {

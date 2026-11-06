@@ -13,14 +13,14 @@
    "tipo": "code",
    "lenguaje": "javascript",
    "resultado": "paso",
-   "ms": 3
+   "ms": 143
   },
   {
    "id": "codigo-simular-cola",
    "tipo": "code",
    "lenguaje": "python",
    "resultado": "paso",
-   "ms": 63
+   "ms": 188
   }
  ],
  "resumen": {

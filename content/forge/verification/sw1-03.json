@@ -21,14 +21,14 @@
    "tipo": "code",
    "lenguaje": "javascript",
    "resultado": "paso",
-   "ms": 3
+   "ms": 174
   },
   {
    "id": "codigo-modelo-lru",
    "tipo": "code",
    "lenguaje": "python",
    "resultado": "paso",
-   "ms": 66
+   "ms": 120
   }
  ],
  "resumen": {

@@ -13,14 +13,14 @@
    "tipo": "code",
    "lenguaje": "javascript",
    "resultado": "paso",
-   "ms": 5
+   "ms": 846
   },
   {
    "id": "codigo-evaluar-aritmetica",
    "tipo": "code",
    "lenguaje": "python",
    "resultado": "paso",
-   "ms": 68
+   "ms": 380
   },
   {
    "id": "contraejemplo-asociatividad",

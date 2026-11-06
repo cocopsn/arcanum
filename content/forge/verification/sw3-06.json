@@ -13,14 +13,14 @@
    "tipo": "code",
    "lenguaje": "javascript",
    "resultado": "paso",
-   "ms": 8
+   "ms": 223
   },
   {
    "id": "codigo-registro-claves",
    "tipo": "code",
    "lenguaje": "python",
    "resultado": "paso",
-   "ms": 93
+   "ms": 245
   }
  ],
  "resumen": {

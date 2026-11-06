@@ -21,14 +21,14 @@
    "tipo": "code",
    "lenguaje": "javascript",
    "resultado": "paso",
-   "ms": 8
+   "ms": 62
   },
   {
    "id": "codigo-clave-canonica",
    "tipo": "code",
    "lenguaje": "python",
    "resultado": "paso",
-   "ms": 85
+   "ms": 114
   }
  ],
  "resumen": {

@@ -13,14 +13,14 @@
    "tipo": "code",
    "lenguaje": "javascript",
    "resultado": "paso",
-   "ms": 3
+   "ms": 119
   },
   {
    "id": "codigo-coordinador",
    "tipo": "code",
    "lenguaje": "python",
    "resultado": "paso",
-   "ms": 63
+   "ms": 155
   }
  ],
  "resumen": {

@@ -13,14 +13,14 @@
    "tipo": "code",
    "lenguaje": "javascript",
    "resultado": "paso",
-   "ms": 3
+   "ms": 326
   },
   {
    "id": "codigo-presupuesto-error",
    "tipo": "code",
    "lenguaje": "python",
    "resultado": "paso",
-   "ms": 65
+   "ms": 240
   }
  ],
  "resumen": {
