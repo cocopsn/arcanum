@@ -14,7 +14,7 @@
    "lenguaje": "javascript",
    "resultado": "sin-verificar",
    "ms": 0,
-   "detalle": "sin arn├⌐s scripts/forge/bank-check/mutantes.py"
+   "detalle": "sin arnés scripts/forge/bank-check/mutantes.py"
   },
   {
    "id": "codigo-modelo-lru",
@@ -28,7 +28,7 @@
    "tipo": "code",
    "lenguaje": "python",
    "resultado": "paso",
-   "ms": 62
+   "ms": 66
   }
  ],
  "resumen": {

@@ -20,7 +20,7 @@
    "tipo": "code",
    "lenguaje": "python",
    "resultado": "paso",
-   "ms": 65
+   "ms": 68
   },
   {
    "id": "contraejemplo-asociatividad",
@@ -28,7 +28,7 @@
    "lenguaje": "javascript",
    "resultado": "sin-verificar",
    "ms": 0,
-   "detalle": "sin arn├⌐s scripts/forge/bank-check/contraejemplo.py"
+   "detalle": "sin arnés scripts/forge/bank-check/contraejemplo.py"
   }
  ],
  "resumen": {

@@ -13,14 +13,14 @@
    "tipo": "code",
    "lenguaje": "javascript",
    "resultado": "paso",
-   "ms": 3
+   "ms": 4
   },
   {
    "id": "codigo-paginar",
    "tipo": "code",
    "lenguaje": "python",
    "resultado": "paso",
-   "ms": 66
+   "ms": 63
   }
  ],
  "resumen": {

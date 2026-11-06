@@ -14,21 +14,21 @@
    "lenguaje": "javascript",
    "resultado": "sin-verificar",
    "ms": 0,
-   "detalle": "sin arn├⌐s scripts/forge/bank-check/contraejemplo.py"
+   "detalle": "sin arnés scripts/forge/bank-check/contraejemplo.py"
   },
   {
    "id": "codigo-clave-canonica",
    "tipo": "code",
    "lenguaje": "javascript",
    "resultado": "paso",
-   "ms": 3
+   "ms": 8
   },
   {
    "id": "codigo-clave-canonica",
    "tipo": "code",
    "lenguaje": "python",
    "resultado": "paso",
-   "ms": 64
+   "ms": 85
   }
  ],
  "resumen": {

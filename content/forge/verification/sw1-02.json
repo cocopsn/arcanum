@@ -14,7 +14,7 @@
    "lenguaje": "javascript",
    "resultado": "sin-verificar",
    "ms": 0,
-   "detalle": "sin arn├⌐s scripts/forge/bank-check/contraejemplo.py"
+   "detalle": "sin arnés scripts/forge/bank-check/contraejemplo.py"
   },
   {
    "id": "codigo-abstraer-deque",
@@ -28,7 +28,7 @@
    "tipo": "code",
    "lenguaje": "python",
    "resultado": "paso",
-   "ms": 71
+   "ms": 57
   }
  ],
  "resumen": {

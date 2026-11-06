@@ -13,14 +13,14 @@
    "tipo": "code",
    "lenguaje": "javascript",
    "resultado": "paso",
-   "ms": 5
+   "ms": 3
   },
   {
    "id": "codigo-siguiente-version",
    "tipo": "code",
    "lenguaje": "python",
    "resultado": "paso",
-   "ms": 69
+   "ms": 55
   },
   {
    "id": "contraejemplo-version-texto",
@@ -28,7 +28,7 @@
    "lenguaje": "javascript",
    "resultado": "sin-verificar",
    "ms": 0,
-   "detalle": "sin arn├⌐s scripts/forge/bank-check/contraejemplo.py"
+   "detalle": "sin arnés scripts/forge/bank-check/contraejemplo.py"
   }
  ],
  "resumen": {
