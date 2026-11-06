@@ -95,7 +95,9 @@ describe("lazy check registry", () => {
 
 describe("honest stubs", () => {
   it("ai-port queues with the honest message and never mints", async () => {
-    expect(await submitForgeVerdict({ cellCode: "P2-06", kind: "mision", scope: "local" })).toEqual({ estado: "en-cola", motivo: STUB_QUEUE_MOTIVO });
+    // Phase 1 (e3-ia) replaced the stub: without the app's log bound there is nothing to queue on, and it never mints.
+    expect((await submitForgeVerdict({ cellCode: "P2-06", kind: "mision", scope: "local" })).estado).not.toBe("acunado");
+    expect(STUB_QUEUE_MOTIVO).toBe("el evaluador desplegado todavía no tiene la acción Forge");
     expect((await askSimulatedUser({ cellCode: "F1-03", itemId: "x", fase: "preguntas", question: "¿?" })).estado).toBe("sin-ia");
   });
   it("loaders answer «no descargado» or null, never a fabricated book, bank or route", async () => {
