@@ -21,14 +21,14 @@
    "tipo": "code",
    "lenguaje": "javascript",
    "resultado": "paso",
-   "ms": 352
+   "ms": 4
   },
   {
    "id": "s202-code-presupuesto",
    "tipo": "code",
    "lenguaje": "python",
    "resultado": "paso",
-   "ms": 174
+   "ms": 75
   }
  ],
  "resumen": {

@@ -9,37 +9,51 @@
  },
  "items": [
   {
+   "id": "p206-desv-version",
+   "tipo": "desvanecido",
+   "lenguaje": "javascript",
+   "resultado": "paso",
+   "ms": 25
+  },
+  {
    "id": "p206-bug-version",
    "tipo": "code",
    "lenguaje": "javascript",
    "resultado": "paso",
-   "ms": 421
+   "ms": 7
   },
   {
    "id": "p206-bug-version",
    "tipo": "code",
    "lenguaje": "python",
    "resultado": "paso",
-   "ms": 504
+   "ms": 325
   },
   {
    "id": "p206-bug-writeback",
    "tipo": "code",
    "lenguaje": "javascript",
    "resultado": "paso",
-   "ms": 52
+   "ms": 6
   },
   {
    "id": "p206-bug-writeback",
    "tipo": "code",
    "lenguaje": "python",
    "resultado": "paso",
-   "ms": 146
+   "ms": 86
+  },
+  {
+   "id": "p206-ret-timeout",
+   "tipo": "retencion",
+   "lenguaje": "javascript",
+   "resultado": "paso",
+   "ms": 5
   }
  ],
  "resumen": {
-  "ejecutables": 4,
-  "cubiertos": 4,
+  "ejecutables": 6,
+  "cubiertos": 6,
   "fallidos": 0,
   "sin_verificar": 0
  }
