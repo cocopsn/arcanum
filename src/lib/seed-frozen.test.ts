@@ -99,3 +99,36 @@ describe("seed freeze — the OA block", () => {
     expect(sha, "OA block mutated: an OA seed event changed (id/ts/payload)").toBe(OA_FROZEN_SHA256);
   });
 });
+
+// FORGE BLOCK FREEZE (Engineering Forge, design §4.5 step 4 and §19.2). The Forge block (src/forge/seed.ts: 1 goal,
+// 19 paths, 168 cells, 108 edges) is frozen by its OWN fingerprint, with its OWN predicate: isForgeEvent above is the
+// skip helper of the older fingerprints, so a later appended block can be excluded here without touching it. Same
+// line format and id order as the blocks above. Captured on main 8f9d723 (merge of PR #1, the commit served in
+// production), 2026-11-06, after the production probe passed: written with empty values, run red twice (count, then
+// hash, read from the failure), fixed, run green (the three runs in .agents/tasks/arcanum-forge/forge-fingerprint.txt).
+// Never updated.
+const FORGE_FROZEN_COUNT = 296;
+const FORGE_FROZEN_SHA256 = "9b3d4954c6eb53715b34a1317cc778948ae0de18ab64a7b39d5f841b8e60e723";
+
+function isForgeBlockEvent(e: (typeof SEED_EVENTS)[number]): boolean {
+  if (e.goal_id === FORGE_GOAL_ID_FROZEN || e.id.startsWith(FORGE_EVENT_PREFIX)) return true;
+  if (e.module_id?.startsWith(FORGE_CELL_PREFIX)) return true;
+  const p = e.payload as Record<string, unknown>;
+  if (e.type === "roadmap.edge.upserted") {
+    const from = typeof p.from === "string" ? p.from : "";
+    const to = typeof p.to === "string" ? p.to : "";
+    if (from.startsWith(FORGE_CELL_PREFIX) || to.startsWith(FORGE_CELL_PREFIX)) return true;
+  }
+  return false;
+}
+
+describe("seed freeze — the Forge block", () => {
+  it("the Forge block is frozen by its own fingerprint", () => {
+    const lines = SEED_EVENTS.filter(isForgeBlockEvent)
+      .sort((a, b) => (a.id < b.id ? -1 : a.id > b.id ? 1 : 0))
+      .map((e) => `${e.id}|${e.ts}|${e.type}|${e.goal_id ?? ""}|${e.module_id ?? ""}|${JSON.stringify(e.payload)}`);
+    expect(lines.length, "Forge block mutated: the Forge seed block gained or lost events").toBe(FORGE_FROZEN_COUNT);
+    const sha = createHash("sha256").update(lines.join("\n")).digest("hex");
+    expect(sha, "Forge block mutated: a Forge seed event changed (id/ts/payload)").toBe(FORGE_FROZEN_SHA256);
+  });
+});
