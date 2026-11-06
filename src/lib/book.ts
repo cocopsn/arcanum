@@ -18,6 +18,9 @@ export interface BookMeta {
   generatedBy: string;
   version: string;
   readingMinutes: number | null;
+  /** `estado` frontmatter key (authoring state declared by the author, e.g. «autorado»); "" when absent. The app
+   *  never derives «Verificado» from it (src/forge/model/authoring.ts reads the bank-check runs, §5.7). */
+  estado: string;
 }
 
 export type SectionKind = "prologue" | "core" | "connections" | "synthesis" | "questions" | "sources";
@@ -98,6 +101,7 @@ function parseFrontmatter(fm: string): BookMeta {
     generatedBy: get.generated_by ?? "",
     version: get.version ?? "",
     readingMinutes: Number.isFinite(minutes) ? minutes : null,
+    estado: (get.estado ?? "").trim(),
   };
 }
 
