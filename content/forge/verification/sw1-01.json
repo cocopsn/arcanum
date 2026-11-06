@@ -21,14 +21,14 @@
    "tipo": "code",
    "lenguaje": "javascript",
    "resultado": "paso",
-   "ms": 7
+   "ms": 5
   },
   {
    "id": "codigo-validar-solicitud",
    "tipo": "code",
    "lenguaje": "python",
    "resultado": "paso",
-   "ms": 146
+   "ms": 185
   }
  ],
  "resumen": {
