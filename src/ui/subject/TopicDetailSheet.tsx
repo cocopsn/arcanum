@@ -27,6 +27,14 @@ import { NATURE_STANCE } from "@/lib/gate";
 import { contentForModule } from "@/lib/subject-content";
 import { saveResume } from "@/lib/resume";
 import { modesFor, defaultMode, type DurationMode } from "@/lib/learning-modes";
+import dynamic from "next/dynamic";
+import { isForgeCellId } from "@/forge/ids";
+
+// lazy: none of the Forge expediente lands in the page chunk (design §6.4)
+const ForgeCellPanel = dynamic(() => import("@/forge/ui/ForgeCellPanel").then((m) => m.ForgeCellPanel), {
+  ssr: false,
+  loading: () => <p className="mt-3 text-[12px] text-text-muted">Cargando el expediente…</p>,
+});
 
 const STATUS_LABEL = { sealed: "Sellado", available: "Disponible", started: "En curso", completed: "Completado" } as const;
 
@@ -171,6 +179,9 @@ export function TopicDetailSheet({
             ×
           </button>
         </div>
+
+        {/* ── Engineering Forge: the cell's expediente from its route fiche (lazy; design §14.5) ── */}
+        {isForgeCellId(moduleId) && <ForgeCellPanel moduleId={moduleId} />}
 
         {/* ── NATURE — structural: it decides which gate you'll face (defend vs. direct+audit) ── */}
         {(() => {
