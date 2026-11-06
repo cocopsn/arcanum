@@ -1,7 +1,7 @@
 {
  "v": 1,
  "code": "F1-02",
- "sha10": "e8a364eaaf",
+ "sha10": "0c845404a2",
  "versiones": {
   "python": "3.12.10",
   "sqlite": "3.49.1",
