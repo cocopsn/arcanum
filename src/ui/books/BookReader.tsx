@@ -16,6 +16,19 @@ import { AudioAnchor } from "@/lib/audio-anchor";
 import { bindAudiobookMediaSession, setAudiobookMetadata, setAudiobookPlaybackState } from "@/lib/media-session";
 import { saveResume } from "@/lib/resume";
 import { audio, type AudioConfig } from "@/lib/audio";
+import dynamic from "next/dynamic";
+import { isAllowedImageUrl } from "@/lib/csp.mjs";
+
+// the video facade (and its catalogue, videos.json) loads only when a book actually has a video paragraph
+const LazyVideoEmbed = dynamic(() => import("@/ui/media/VideoEmbed").then((m) => m.VideoEmbed), {
+  ssr: false,
+  loading: () => <div className="my-4 w-full border border-line" style={{ aspectRatio: "16 / 9", minHeight: 200 }} />,
+});
+/** The YouTube id of a book video link, only for the two exact forms of §13.1 (no other parameters); else null. */
+function youtubeIdFromHref(href: string): string | null {
+  const m = /^https:\/\/(?:www\.)?youtube\.com\/watch\?v=([A-Za-z0-9_-]{11})$/.exec(href) ?? /^https:\/\/youtu\.be\/([A-Za-z0-9_-]{11})$/.exec(href);
+  return m ? m[1]! : null;
+}
 
 // The mini-book reader: full-screen, reading typography (EB Garamond body via .book-prose), tinted by the
 // spine's WORLD, with a navigable TOC, the "pregunta raíz" up top, offline-highlighted code, and a visually-
@@ -23,7 +36,7 @@ import { audio, type AudioConfig } from "@/lib/audio";
 // mastery — reading/listening are Phase-1 input (passive absorption), not a demonstration. The AUDIOBOOK
 // (Escuchar) reads the book with the device's offline voices; code is announced, never read literally.
 
-const MD = {
+export const MD = {
   pre: ({ children }: { children?: React.ReactNode }) => <>{children}</>,
   code: ({ className, children }: { className?: string; children?: React.ReactNode }) => {
     const m = /language-(\w+)/.exec(className ?? "");
@@ -32,7 +45,75 @@ const MD = {
   a: ({ href, children }: { href?: string; children?: React.ReactNode }) => (
     <a href={href} target="_blank" rel="noreferrer noopener">{children}</a>
   ),
+  // VIDEO and FIGURE paragraphs (Forge design §13.1, §13.3; additive: no current book uses either title). A paragraph
+  // whose ONLY child is a link titled "video" becomes the video facade; one whose only child is an image titled
+  // "figura <docs page>" becomes an attributed figure. Rendered INSTEAD of the <p> (no <figure> inside a <p>).
+  p: ({ node, children }: { node?: MdNode; children?: React.ReactNode }) => {
+    const only = soleChild(node);
+    if (only?.tagName === "a" && only.properties?.title === "video") {
+      const href = String(only.properties?.href ?? "");
+      const label = textOf(only) || href;
+      const id = youtubeIdFromHref(href);
+      if (id) return <LazyVideoEmbed id={id} label={label} href={href} />;
+      return (
+        <p>
+          {children} <span className="text-[12px] text-text-muted">· video externo</span>
+        </p>
+      );
+    }
+    if (only?.tagName === "img" && String(only.properties?.title ?? "").startsWith("figura ")) {
+      const src = String(only.properties?.src ?? "");
+      const alt = String(only.properties?.alt ?? "");
+      const page = String(only.properties?.title ?? "").slice("figura ".length).trim();
+      return <FigureImage src={src} alt={alt} page={page} />;
+    }
+    return <p>{children}</p>;
+  },
 };
+
+type MdNode = { type?: string; tagName?: string; value?: string; properties?: Record<string, unknown>; children?: MdNode[] };
+/** the paragraph's only element child, ignoring whitespace text; null if there is anything else */
+function soleChild(node: MdNode | undefined): MdNode | null {
+  const kids = (node?.children ?? []).filter((c) => !(c.type === "text" && !(c.value ?? "").trim()));
+  return kids.length === 1 && kids[0]!.type === "element" ? kids[0]! : null;
+}
+function textOf(n: MdNode): string {
+  if (n.type === "text") return n.value ?? "";
+  return (n.children ?? []).map(textOf).join("").trim();
+}
+function isDocsPage(url: string): boolean {
+  try {
+    const u = new URL(url);
+    return u.protocol === "https:" && (u.hostname === "www.palantir.com" || u.hostname === "palantir.com") && u.pathname.startsWith("/docs/");
+  } catch {
+    return false;
+  }
+}
+/** An attributed docs figure; never an <img> to an origin the CSP does not allow (then: alt + link). */
+function FigureImage({ src, alt, page }: { src: string; alt: string; page: string }) {
+  if (!isAllowedImageUrl(src) || !isDocsPage(page)) {
+    return (
+      <p>
+        {alt}{" "}
+        <a href={isDocsPage(page) ? page : src} target="_blank" rel="noreferrer noopener">
+          (ver la imagen en su fuente)
+        </a>
+      </p>
+    );
+  }
+  return (
+    <figure className="forge-figure my-4" tabIndex={0}>
+      {/* eslint-disable-next-line @next/next/no-img-element -- third-party docs figure, CSP-allowed origin, no optimizer */}
+      <img src={src} alt={alt} loading="lazy" decoding="async" referrerPolicy="no-referrer" className="h-auto max-w-full border border-line" />
+      <figcaption className="mt-1 text-[11px] text-text-muted">
+        Imagen: Palantir Technologies Inc. ·{" "}
+        <a href={page} target="_blank" rel="noreferrer noopener">
+          página de origen
+        </a>
+      </figcaption>
+    </figure>
+  );
+}
 
 export function BookReader({ book, onClose }: { book: BookRow; onClose: () => void }) {
   const parsed = useMemo(() => parseBook(book.md), [book.md]);
