@@ -13,35 +13,35 @@
    "tipo": "desvanecido",
    "lenguaje": "javascript",
    "resultado": "paso",
-   "ms": 16
+   "ms": 3
   },
   {
    "id": "a1-08-code-monedas",
    "tipo": "code",
+   "lenguaje": "javascript",
+   "resultado": "paso",
+   "ms": 2
+  },
+  {
+   "id": "a1-08-code-monedas",
+   "tipo": "code",
+   "lenguaje": "python",
+   "resultado": "paso",
+   "ms": 64
+  },
+  {
+   "id": "a1-08-ret-formas",
+   "tipo": "retencion",
    "lenguaje": "javascript",
    "resultado": "paso",
    "ms": 4
   },
   {
-   "id": "a1-08-code-monedas",
-   "tipo": "code",
-   "lenguaje": "python",
-   "resultado": "paso",
-   "ms": 119
-  },
-  {
-   "id": "a1-08-ret-formas",
-   "tipo": "retencion",
-   "lenguaje": "javascript",
-   "resultado": "paso",
-   "ms": 5
-  },
-  {
    "id": "a1-08-ret-formas",
    "tipo": "retencion",
    "lenguaje": "python",
    "resultado": "paso",
-   "ms": 104
+   "ms": 69
   }
  ],
  "resumen": {

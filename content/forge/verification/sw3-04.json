@@ -13,14 +13,14 @@
    "tipo": "code",
    "lenguaje": "javascript",
    "resultado": "paso",
-   "ms": 5
+   "ms": 4
   },
   {
    "id": "codigo-puede",
    "tipo": "code",
    "lenguaje": "python",
    "resultado": "paso",
-   "ms": 77
+   "ms": 44
   }
  ],
  "resumen": {

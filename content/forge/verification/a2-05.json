@@ -13,28 +13,28 @@
    "tipo": "code",
    "lenguaje": "javascript",
    "resultado": "paso",
-   "ms": 5
+   "ms": 3
   },
   {
    "id": "a2-05-code-base",
    "tipo": "code",
    "lenguaje": "python",
    "resultado": "paso",
-   "ms": 171
+   "ms": 51
   },
   {
    "id": "a2-05-code-traspaso",
    "tipo": "code",
    "lenguaje": "javascript",
    "resultado": "paso",
-   "ms": 9
+   "ms": 2
   },
   {
    "id": "a2-05-code-traspaso",
    "tipo": "code",
    "lenguaje": "python",
    "resultado": "paso",
-   "ms": 88
+   "ms": 53
   }
  ],
  "resumen": {

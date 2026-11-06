@@ -13,14 +13,14 @@
    "tipo": "code",
    "lenguaje": "javascript",
    "resultado": "paso",
-   "ms": 215
+   "ms": 3
   },
   {
    "id": "agrupar-identidades",
    "tipo": "code",
    "lenguaje": "python",
    "resultado": "paso",
-   "ms": 279
+   "ms": 56
   }
  ],
  "resumen": {

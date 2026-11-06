@@ -13,14 +13,14 @@
    "tipo": "code",
    "lenguaje": "javascript",
    "resultado": "paso",
-   "ms": 426
+   "ms": 3
   },
   {
    "id": "validar-reasignacion",
    "tipo": "code",
    "lenguaje": "python",
    "resultado": "paso",
-   "ms": 298
+   "ms": 84
   }
  ],
  "resumen": {

@@ -13,35 +13,35 @@
    "tipo": "code",
    "lenguaje": "javascript",
    "resultado": "paso",
-   "ms": 147
+   "ms": 3
   },
   {
    "id": "a2-08-code-frecuentes",
    "tipo": "code",
    "lenguaje": "python",
    "resultado": "paso",
-   "ms": 259
+   "ms": 51
   },
   {
    "id": "a2-08-sql-categorias",
    "tipo": "sql",
    "lenguaje": "sql",
    "resultado": "paso",
-   "ms": 160
+   "ms": 70
   },
   {
    "id": "a2-08-code-mediana",
    "tipo": "code",
    "lenguaje": "javascript",
    "resultado": "paso",
-   "ms": 4
+   "ms": 6
   },
   {
    "id": "a2-08-code-mediana",
    "tipo": "code",
    "lenguaje": "python",
    "resultado": "paso",
-   "ms": 88
+   "ms": 68
   }
  ],
  "resumen": {

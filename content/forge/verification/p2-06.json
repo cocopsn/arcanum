@@ -13,42 +13,42 @@
    "tipo": "desvanecido",
    "lenguaje": "javascript",
    "resultado": "paso",
-   "ms": 25
+   "ms": 2
   },
   {
    "id": "p206-bug-version",
    "tipo": "code",
    "lenguaje": "javascript",
    "resultado": "paso",
-   "ms": 7
+   "ms": 2
   },
   {
    "id": "p206-bug-version",
    "tipo": "code",
    "lenguaje": "python",
    "resultado": "paso",
-   "ms": 325
+   "ms": 96
   },
   {
    "id": "p206-bug-writeback",
    "tipo": "code",
    "lenguaje": "javascript",
    "resultado": "paso",
-   "ms": 6
+   "ms": 3
   },
   {
    "id": "p206-bug-writeback",
    "tipo": "code",
    "lenguaje": "python",
    "resultado": "paso",
-   "ms": 86
+   "ms": 52
   },
   {
    "id": "p206-ret-timeout",
    "tipo": "retencion",
    "lenguaje": "javascript",
    "resultado": "paso",
-   "ms": 5
+   "ms": 3
   }
  ],
  "resumen": {

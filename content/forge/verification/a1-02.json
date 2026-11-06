@@ -13,7 +13,7 @@
    "tipo": "desvanecido",
    "lenguaje": "javascript",
    "resultado": "paso",
-   "ms": 235
+   "ms": 2
   },
   {
    "id": "a1-02-forense-dedupe",
@@ -28,14 +28,14 @@
    "tipo": "code",
    "lenguaje": "javascript",
    "resultado": "paso",
-   "ms": 241
+   "ms": 2
   },
   {
    "id": "a1-02-code-conciliar",
    "tipo": "code",
    "lenguaje": "python",
    "resultado": "paso",
-   "ms": 171
+   "ms": 49
   }
  ],
  "resumen": {

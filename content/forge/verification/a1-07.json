@@ -13,7 +13,7 @@
    "tipo": "desvanecido",
    "lenguaje": "javascript",
    "resultado": "paso",
-   "ms": 6
+   "ms": 3
   },
   {
    "id": "a1-07-contra-corto",
@@ -28,14 +28,14 @@
    "tipo": "code",
    "lenguaje": "javascript",
    "resultado": "paso",
-   "ms": 5
+   "ms": 2
   },
   {
    "id": "a1-07-code-dijkstra",
    "tipo": "code",
    "lenguaje": "python",
    "resultado": "paso",
-   "ms": 137
+   "ms": 51
   },
   {
    "id": "a1-07-mut-greedy",

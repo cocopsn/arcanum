@@ -13,21 +13,21 @@
    "tipo": "desvanecido",
    "lenguaje": "javascript",
    "resultado": "paso",
-   "ms": 8
+   "ms": 4
   },
   {
    "id": "a1-05-code-topk",
    "tipo": "code",
    "lenguaje": "javascript",
    "resultado": "paso",
-   "ms": 25
+   "ms": 5
   },
   {
    "id": "a1-05-code-topk",
    "tipo": "code",
    "lenguaje": "python",
    "resultado": "paso",
-   "ms": 139
+   "ms": 56
   }
  ],
  "resumen": {

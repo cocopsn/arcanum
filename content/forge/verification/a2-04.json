@@ -13,14 +13,14 @@
    "tipo": "sql",
    "lenguaje": "sql",
    "resultado": "paso",
-   "ms": 131
+   "ms": 64
   },
   {
    "id": "a2-04-sql-vigente",
    "tipo": "sql",
    "lenguaje": "sql",
    "resultado": "paso",
-   "ms": 113
+   "ms": 58
   }
  ],
  "resumen": {

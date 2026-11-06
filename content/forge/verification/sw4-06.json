@@ -13,14 +13,14 @@
    "tipo": "code",
    "lenguaje": "javascript",
    "resultado": "paso",
-   "ms": 7
+   "ms": 3
   },
   {
    "id": "codigo-indice-comprometido",
    "tipo": "code",
    "lenguaje": "python",
    "resultado": "paso",
-   "ms": 95
+   "ms": 50
   }
  ],
  "resumen": {

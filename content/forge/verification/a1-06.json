@@ -13,35 +13,35 @@
    "tipo": "desvanecido",
    "lenguaje": "javascript",
    "resultado": "paso",
-   "ms": 19
+   "ms": 3
   },
   {
    "id": "a1-06-code-ciclo",
    "tipo": "code",
    "lenguaje": "javascript",
    "resultado": "paso",
-   "ms": 20
+   "ms": 2
   },
   {
    "id": "a1-06-code-ciclo",
    "tipo": "code",
    "lenguaje": "python",
    "resultado": "paso",
-   "ms": 147
+   "ms": 47
   },
   {
    "id": "a1-06-ret-menor-orden",
    "tipo": "retencion",
    "lenguaje": "javascript",
    "resultado": "paso",
-   "ms": 16
+   "ms": 2
   },
   {
    "id": "a1-06-ret-menor-orden",
    "tipo": "retencion",
    "lenguaje": "python",
    "resultado": "paso",
-   "ms": 103
+   "ms": 47
   }
  ],
  "resumen": {

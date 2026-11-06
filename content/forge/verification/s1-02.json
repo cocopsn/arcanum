@@ -12,23 +12,21 @@
    "id": "s1-02-sql-sin-inflar",
    "tipo": "sql",
    "lenguaje": "sql",
-   "resultado": "sin-verificar",
-   "ms": 0,
-   "detalle": "sin arnés scripts/forge/bank-check/sql.py"
+   "resultado": "paso",
+   "ms": 63
   },
   {
    "id": "s1-02-sql-sin-pago",
    "tipo": "sql",
    "lenguaje": "sql",
-   "resultado": "sin-verificar",
-   "ms": 0,
-   "detalle": "sin arnés scripts/forge/bank-check/sql.py"
+   "resultado": "paso",
+   "ms": 71
   }
  ],
  "resumen": {
   "ejecutables": 2,
-  "cubiertos": 0,
+  "cubiertos": 2,
   "fallidos": 0,
-  "sin_verificar": 2
+  "sin_verificar": 0
  }
 }

@@ -13,14 +13,14 @@
    "tipo": "code",
    "lenguaje": "javascript",
    "resultado": "paso",
-   "ms": 3
+   "ms": 4
   },
   {
    "id": "codigo-receptor-tcp",
    "tipo": "code",
    "lenguaje": "python",
    "resultado": "paso",
-   "ms": 75
+   "ms": 69
   }
  ],
  "resumen": {

@@ -13,42 +13,42 @@
    "tipo": "code",
    "lenguaje": "javascript",
    "resultado": "paso",
-   "ms": 8
+   "ms": 3
   },
   {
    "id": "a2-02-code-k-distintos",
    "tipo": "code",
    "lenguaje": "python",
    "resultado": "paso",
-   "ms": 108
+   "ms": 49
   },
   {
    "id": "a2-02-code-duplicado",
    "tipo": "code",
    "lenguaje": "javascript",
    "resultado": "paso",
-   "ms": 5
+   "ms": 2
   },
   {
    "id": "a2-02-code-duplicado",
    "tipo": "code",
    "lenguaje": "python",
    "resultado": "paso",
-   "ms": 105
+   "ms": 46
   },
   {
    "id": "a2-02-ret-sin-repetir",
    "tipo": "retencion",
    "lenguaje": "javascript",
    "resultado": "paso",
-   "ms": 6
+   "ms": 2
   },
   {
    "id": "a2-02-ret-sin-repetir",
    "tipo": "retencion",
    "lenguaje": "python",
    "resultado": "paso",
-   "ms": 133
+   "ms": 46
   }
  ],
  "resumen": {

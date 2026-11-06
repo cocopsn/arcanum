@@ -13,7 +13,7 @@
    "tipo": "desvanecido",
    "lenguaje": "javascript",
    "resultado": "paso",
-   "ms": 416
+   "ms": 3
   },
   {
    "id": "a1-01-contra-primera",
@@ -28,14 +28,14 @@
    "tipo": "code",
    "lenguaje": "javascript",
    "resultado": "paso",
-   "ms": 132
+   "ms": 6
   },
   {
    "id": "a1-01-code-inversiones",
    "tipo": "code",
    "lenguaje": "python",
    "resultado": "paso",
-   "ms": 545
+   "ms": 151
   },
   {
    "id": "a1-01-mut-frontera",

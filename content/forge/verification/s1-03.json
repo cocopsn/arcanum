@@ -20,15 +20,14 @@
    "id": "s1-03-sql-ventana",
    "tipo": "sql",
    "lenguaje": "sql",
-   "resultado": "sin-verificar",
-   "ms": 0,
-   "detalle": "sin arnés scripts/forge/bank-check/sql.py"
+   "resultado": "paso",
+   "ms": 84
   }
  ],
  "resumen": {
   "ejecutables": 2,
-  "cubiertos": 0,
+  "cubiertos": 1,
   "fallidos": 0,
-  "sin_verificar": 2
+  "sin_verificar": 1
  }
 }

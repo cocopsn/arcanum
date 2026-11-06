@@ -13,14 +13,14 @@
    "tipo": "code",
    "lenguaje": "javascript",
    "resultado": "paso",
-   "ms": 141
+   "ms": 3
   },
   {
    "id": "auditar-pasos",
    "tipo": "code",
    "lenguaje": "python",
    "resultado": "paso",
-   "ms": 176
+   "ms": 81
   },
   {
    "id": "forense-inventario",

@@ -13,14 +13,14 @@
    "tipo": "code",
    "lenguaje": "javascript",
    "resultado": "paso",
-   "ms": 197
+   "ms": 3
   },
   {
    "id": "compuerta-aprobacion",
    "tipo": "code",
    "lenguaje": "python",
    "resultado": "paso",
-   "ms": 229
+   "ms": 85
   }
  ],
  "resumen": {

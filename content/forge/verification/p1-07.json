@@ -13,14 +13,14 @@
    "tipo": "code",
    "lenguaje": "javascript",
    "resultado": "paso",
-   "ms": 155
+   "ms": 2
   },
   {
    "id": "verificar-evidencia",
    "tipo": "code",
    "lenguaje": "python",
    "resultado": "paso",
-   "ms": 588
+   "ms": 51
   }
  ],
  "resumen": {

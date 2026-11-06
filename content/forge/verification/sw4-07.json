@@ -13,14 +13,14 @@
    "tipo": "code",
    "lenguaje": "javascript",
    "resultado": "paso",
-   "ms": 142
+   "ms": 3
   },
   {
    "id": "codigo-rebalancear",
    "tipo": "code",
    "lenguaje": "python",
    "resultado": "paso",
-   "ms": 216
+   "ms": 51
   }
  ],
  "resumen": {
