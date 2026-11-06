@@ -76,7 +76,7 @@ describe("lazy check registry", () => {
       const paths = [...src.matchAll(/import\("(\.\/[^"]+)"\)/g)].map((m) => m[1]!);
       for (const p of new Set(paths)) expect(paths.filter((x) => x === p), `${rel}: ${p} no está a la vez en el registro y en sus cargadores`).toHaveLength(2);
     }
-  });
+  }, 60_000); // imports every real runner and flow of Phase 1: under a full parallel run it passes the 5 s default
   it("check/registry.ts never imports a check statically", () => {
     const src = readFileSync(join(process.cwd(), "src", "forge", "bank", "check", "registry.ts"), "utf8");
     const staticImports = src.split("\n").filter((l) => /^\s*import\s/.test(l) && !/^\s*import\s+type\s/.test(l));
