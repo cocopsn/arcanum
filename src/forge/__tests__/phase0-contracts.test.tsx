@@ -76,7 +76,7 @@ describe("lazy check registry", () => {
       const paths = [...src.matchAll(/import\("(\.\/[^"]+)"\)/g)].map((m) => m[1]!);
       for (const p of new Set(paths)) expect(paths.filter((x) => x === p), `${rel}: ${p} no está a la vez en el registro y en sus cargadores`).toHaveLength(2);
     }
-  });
+  }, 30_000); // dynamic import() of every runner and flow: slow under the full parallel suite
   it("check/registry.ts never imports a check statically", () => {
     const src = readFileSync(join(process.cwd(), "src", "forge", "bank", "check", "registry.ts"), "utf8");
     const staticImports = src.split("\n").filter((l) => /^\s*import\s/.test(l) && !/^\s*import\s+type\s/.test(l));
@@ -101,7 +101,7 @@ describe("honest stubs", () => {
     expect((await submitForgeVerdict({ cellCode: "P2-06", kind: "mision", scope: "local" })).estado).not.toBe("acunado");
     expect(STUB_QUEUE_MOTIVO).toBe("el evaluador desplegado todavía no tiene la acción Forge");
     expect((await askSimulatedUser({ cellCode: "F1-03", itemId: "x", fase: "preguntas", question: "¿?" })).estado).toBe("sin-ia");
-  });
+  }, 30_000); // the port lazily imports use-actions when no runtime is bound
   it("loaders answer «no descargado» or null, never a fabricated book, bank or route", async () => {
     expect(await loadForgeRoute("p2")).toBeNull();
     expect(await loadForgeBookMd("P2-06")).toBeNull();
