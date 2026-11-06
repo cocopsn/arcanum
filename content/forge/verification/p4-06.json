@@ -13,14 +13,14 @@
    "tipo": "code",
    "lenguaje": "javascript",
    "resultado": "paso",
-   "ms": 2
+   "ms": 252
   },
   {
    "id": "reanudar-sin-duplicar",
    "tipo": "code",
    "lenguaje": "python",
    "resultado": "paso",
-   "ms": 122
+   "ms": 165
   }
  ],
  "resumen": {

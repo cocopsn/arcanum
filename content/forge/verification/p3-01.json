@@ -13,14 +13,14 @@
    "tipo": "code",
    "lenguaje": "javascript",
    "resultado": "paso",
-   "ms": 2
+   "ms": 12
   },
   {
    "id": "ordenar-bandeja",
    "tipo": "code",
    "lenguaje": "python",
    "resultado": "paso",
-   "ms": 79
+   "ms": 159
   }
  ],
  "resumen": {

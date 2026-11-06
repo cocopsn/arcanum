@@ -13,14 +13,14 @@
    "tipo": "code",
    "lenguaje": "javascript",
    "resultado": "paso",
-   "ms": 3
+   "ms": 91
   },
   {
    "id": "nucleo-cobro-neto",
    "tipo": "code",
    "lenguaje": "python",
    "resultado": "paso",
-   "ms": 87
+   "ms": 149
   },
   {
    "id": "fixtures-mutantes",

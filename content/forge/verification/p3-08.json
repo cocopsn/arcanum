@@ -13,14 +13,14 @@
    "tipo": "code",
    "lenguaje": "javascript",
    "resultado": "paso",
-   "ms": 2
+   "ms": 50
   },
   {
    "id": "medir-tarea",
    "tipo": "code",
    "lenguaje": "python",
    "resultado": "paso",
-   "ms": 105
+   "ms": 271
   }
  ],
  "resumen": {

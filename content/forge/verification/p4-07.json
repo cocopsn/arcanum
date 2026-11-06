@@ -13,14 +13,14 @@
    "tipo": "code",
    "lenguaje": "javascript",
    "resultado": "paso",
-   "ms": 151
+   "ms": 23
   },
   {
    "id": "limitar-llamadas",
    "tipo": "code",
    "lenguaje": "python",
    "resultado": "paso",
-   "ms": 320
+   "ms": 133
   }
  ],
  "resumen": {

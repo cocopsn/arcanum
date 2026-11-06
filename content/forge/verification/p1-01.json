@@ -13,14 +13,14 @@
    "tipo": "code",
    "lenguaje": "javascript",
    "resultado": "paso",
-   "ms": 22
+   "ms": 255
   },
   {
    "id": "contrato-lote",
    "tipo": "code",
    "lenguaje": "python",
    "resultado": "paso",
-   "ms": 173
+   "ms": 573
   }
  ],
  "resumen": {

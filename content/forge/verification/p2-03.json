@@ -13,14 +13,14 @@
    "tipo": "code",
    "lenguaje": "javascript",
    "resultado": "paso",
-   "ms": 10
+   "ms": 4
   },
   {
    "id": "cumple-interfaz",
    "tipo": "code",
    "lenguaje": "python",
    "resultado": "paso",
-   "ms": 90
+   "ms": 112
   }
  ],
  "resumen": {
