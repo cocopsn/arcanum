@@ -40,9 +40,23 @@ export const RUNNER_LOADERS: Record<RunnerType, Loader> = {
 
 const loading = () => createElement("p", { role: "status" }, "Cargando evaluación…");
 
-export const RUNNERS = Object.fromEntries(
-  (Object.keys(RUNNER_LOADERS) as RunnerType[]).map((t) => [t, dynamic(RUNNER_LOADERS[t], { ssr: false, loading })]),
-) as Record<RunnerType, ComponentType<RunnerProps>>;
+// Each entry writes its import() INSIDE the dynamic() call, the form next/dynamic documents (webpack maps the call to
+// its chunk). RUNNER_LOADERS repeats the same paths for the tests; webpack emits one chunk per module either way.
+export const RUNNERS: Record<RunnerType, ComponentType<RunnerProps>> = {
+  prediccion: dynamic(() => import("./PrediccionRunner"), { ssr: false, loading }),
+  desvanecido: dynamic(() => import("./DesvanecidoRunner"), { ssr: false, loading }),
+  historial: dynamic(() => import("./HistorialRunner"), { ssr: false, loading }),
+  mutantes: dynamic(() => import("./MutantesRunner"), { ssr: false, loading }),
+  contraejemplo: dynamic(() => import("./ContraejemploRunner"), { ssr: false, loading }),
+  senal: dynamic(() => import("./SenalRunner"), { ssr: false, loading }),
+  sql: dynamic(() => import("./SqlRunner"), { ssr: false, loading }),
+  retencion: dynamic(() => import("./RetencionRunner"), { ssr: false, loading }),
+  ontologia: dynamic(() => import("./OntologiaRunner"), { ssr: false, loading }),
+  forense: dynamic(() => import("./ForenseRunner"), { ssr: false, loading }),
+  permisos: dynamic(() => import("./PermisosRunner"), { ssr: false, loading }),
+  recuperacion: dynamic(() => import("./RecuperacionRunner"), { ssr: false, loading }),
+  gameday: dynamic(() => import("./GamedayRunner"), { ssr: false, loading }),
+};
 
 /** Whether an item is offered in the «Evaluaciones» list (retencion only in forma codigo). */
 export function isSelectable(item: ForgeBankItem): boolean {

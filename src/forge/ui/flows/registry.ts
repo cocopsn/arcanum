@@ -22,6 +22,14 @@ export const FLOW_LOADERS: Record<ForgeFlujo, Loader> = {
 
 const loading = () => createElement("p", { role: "status" }, "Cargando…");
 
-export const FLOWS = Object.fromEntries(
-  (Object.keys(FLOW_LOADERS) as ForgeFlujo[]).map((f) => [f, dynamic(FLOW_LOADERS[f], { ssr: false, loading })]),
-) as Record<ForgeFlujo, ComponentType<FlowProps>>;
+// Each entry writes its import() INSIDE the dynamic() call, the form next/dynamic documents. FLOW_LOADERS repeats the
+// same paths for the tests; webpack emits one chunk per module either way.
+export const FLOWS: Record<ForgeFlujo, ComponentType<FlowProps>> = {
+  mision: dynamic(() => import("./mision"), { ssr: false, loading }),
+  proyecto: dynamic(() => import("./proyecto"), { ssr: false, loading }),
+  entrevista: dynamic(() => import("./entrevista"), { ssr: false, loading }),
+  expediente: dynamic(() => import("./expediente"), { ssr: false, loading }),
+  ontologia: dynamic(() => import("./ontologia"), { ssr: false, loading }),
+  gameday: dynamic(() => import("./gameday"), { ssr: false, loading }),
+  diagnostico: dynamic(() => import("./diagnostico"), { ssr: false, loading }),
+};

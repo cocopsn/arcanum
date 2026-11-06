@@ -10,8 +10,8 @@ import { FORGE_TYPES } from "@/forge/bank/registry";
 import { STUB_QUEUE_MOTIVO, askSimulatedUser, submitForgeVerdict } from "@/forge/ai-port";
 import { ensureForgeBank, ensureForgeBook, loadForgeBankItems, loadForgeBookMd, loadForgeRoute } from "@/forge/loaders";
 import { MISCONFIGURED_TEXT, PENDING_TEXT, closingMount, missionConfigError } from "@/forge/ui/flow-contract";
-import { RUNNER_LOADERS, isSelectable } from "@/forge/ui/exercises/registry";
-import { FLOW_LOADERS } from "@/forge/ui/flows/registry";
+import { RUNNERS, RUNNER_LOADERS, isSelectable } from "@/forge/ui/exercises/registry";
+import { FLOWS, FLOW_LOADERS } from "@/forge/ui/flows/registry";
 import { project } from "@/core/projector";
 import SqlRunner from "@/forge/ui/exercises/SqlRunner";
 import ForgeMission from "@/forge/ui/flows/mision";
@@ -67,10 +67,15 @@ describe("lazy check registry", () => {
     for (const [t, load] of Object.entries(RUNNER_LOADERS)) expect(typeof (await load()).default, `el corredor de ${t} no carga`).toBe("function");
     for (const [f, load] of Object.entries(FLOW_LOADERS)) expect(typeof (await load()).default, `el flujo ${f} no carga`).toBe("function");
     expect(Object.keys(FLOW_LOADERS).sort()).toEqual(["diagnostico", "entrevista", "expediente", "gameday", "mision", "ontologia", "proyecto"]);
+    expect(Object.keys(RUNNERS).sort()).toEqual(Object.keys(RUNNER_LOADERS).sort());
+    expect(Object.keys(FLOWS).sort()).toEqual(Object.keys(FLOW_LOADERS).sort());
     for (const rel of ["ui/exercises/registry.ts", "ui/flows/registry.ts"]) {
       const src = readFileSync(join(process.cwd(), "src", "forge", ...rel.split("/")), "utf8");
       const local = src.split("\n").filter((l) => /^\s*import\s+(?!type\s).*from\s+"\.\//.test(l));
       expect(local, `${rel} importa un módulo de forma estática`).toEqual([]);
+      // every dynamic() entry and its test loader point to the same module
+      const paths = [...src.matchAll(/import\("(\.\/[^"]+)"\)/g)].map((m) => m[1]!);
+      for (const p of new Set(paths)) expect(paths.filter((x) => x === p), `${rel}: ${p} no está a la vez en el registro y en sus cargadores`).toHaveLength(2);
     }
   });
   it("check/registry.ts never imports a check statically", () => {
