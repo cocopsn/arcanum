@@ -1,7 +1,7 @@
 {
  "v": 1,
  "code": "A2-02",
- "sha10": "b4220665d3",
+ "sha10": "ee336b9793",
  "versiones": {
   "python": "3.12.10",
   "sqlite": "3.49.1",
@@ -13,28 +13,28 @@
    "tipo": "code",
    "lenguaje": "javascript",
    "resultado": "paso",
-   "ms": 4
+   "ms": 2
   },
   {
    "id": "a2-02-code-k-distintos",
    "tipo": "code",
    "lenguaje": "python",
    "resultado": "paso",
-   "ms": 69
+   "ms": 61
   },
   {
    "id": "a2-02-code-duplicado",
    "tipo": "code",
    "lenguaje": "javascript",
    "resultado": "paso",
-   "ms": 4
+   "ms": 5
   },
   {
    "id": "a2-02-code-duplicado",
    "tipo": "code",
    "lenguaje": "python",
    "resultado": "paso",
-   "ms": 126
+   "ms": 106
   }
  ],
  "resumen": {

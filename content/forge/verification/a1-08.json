@@ -1,7 +1,7 @@
 {
  "v": 1,
  "code": "A1-08",
- "sha10": "a8360b10d9",
+ "sha10": "9ca3160eb9",
  "versiones": {
   "python": "3.12.10",
   "sqlite": "3.49.1",
@@ -13,14 +13,14 @@
    "tipo": "code",
    "lenguaje": "javascript",
    "resultado": "paso",
-   "ms": 4
+   "ms": 3
   },
   {
    "id": "a1-08-code-monedas",
    "tipo": "code",
    "lenguaje": "python",
    "resultado": "paso",
-   "ms": 82
+   "ms": 60
   }
  ],
  "resumen": {
