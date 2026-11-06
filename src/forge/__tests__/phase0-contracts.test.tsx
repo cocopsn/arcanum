@@ -110,7 +110,7 @@ describe("honest stubs", () => {
     const { unmount } = render(<SqlRunner item={item!} cellCode="P1-02" cellId="x" readModel={project([])} onClose={() => {}} />);
     expect(screen.getByRole("status").textContent).toBe(PENDING_TEXT);
     unmount();
-    render(<ForgeMission cellCode="P2-06" cellId="x" route={{ v: 1, slug: "p2", code: "P2", name: "", family: "", header: { entrada: "", entradaRecomendada: [], evidencia: "", apoyo: [] }, cells: [] }} readModel={project([])} onClose={() => {}} />);
+    render(<ForgeMission cellCode="P2-06" cellId="x" route={{ v: 1, slug: "p2", maestro_sha10: "0000000000", code: "P2", name: "", family: "Plataforma Foundry/AIP", header: { entrada: "", entradaRecomendada: [], evidencia: "", apoyo: [] }, cells: [] }} readModel={project([])} onClose={() => {}} />);
     expect(screen.getByRole("status").textContent).toBe(PENDING_TEXT);
     expect(screen.queryByText(/Pedir veredicto/)).toBeNull();
   });
