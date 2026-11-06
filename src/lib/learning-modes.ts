@@ -1,6 +1,7 @@
 import type { ReadModel, ModuleRM } from "@/core/read-model";
 import type { ViewModel } from "@/core/present";
 import { cellById } from "@/lib/spines";
+import { isForgeCellId } from "@/forge/ids";
 
 // Nature-by-duration (the "never-empty-screen" rule): every cell offers up to THREE entry
 // modes by the time the learner has — heavy (the full directed mission), light (a short
@@ -23,8 +24,12 @@ export interface ModeAvailability {
 export function modesFor(m: ModuleRM, vm: ViewModel): ModeAvailability {
   const cell = cellById(m.id);
   return {
-    // heavy = a directed mission OR an authored exit gate (both are the full challenge loop)
-    heavy: (m.kind === "mission" && !!cell?.mission) || !!cell?.gate,
+    // heavy = a directed mission OR an authored exit gate (both are the full challenge loop). An Engineering
+    // Forge cell carries its mission in the lazy route data, so its mission/diagnostic kind is enough.
+    heavy:
+      (m.kind === "mission" && !!cell?.mission) ||
+      !!cell?.gate ||
+      (isForgeCellId(m.id) && (m.kind === "mission" || m.kind === "diagnostic")),
     light: (cell?.sourceUrls?.length ?? 0) > 0,
     review: vm.reviewQueue.length,
   };

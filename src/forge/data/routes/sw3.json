@@ -1,0 +1,473 @@
+{
+  "v": 1,
+  "slug": "sw3",
+  "code": "SW3",
+  "name": "SW3 · Redes y servicios confiables por construcción",
+  "family": "Profundidad SWE",
+  "header": {
+    "entrada": "B5 del recorrido; SW1-01 y SW2-03 para servicios concurrentes.",
+    "entradaRecomendada": [
+      "SW1-01",
+      "SW2-03"
+    ],
+    "evidencia": "",
+    "apoyo": [
+      {
+        "clave": "C-09",
+        "etiqueta": "Stanford CS144",
+        "url": "https://cs144.github.io/",
+        "tipo": "curso",
+        "acceso": "publico"
+      }
+    ]
+  },
+  "cells": [
+    {
+      "code": "SW3-01",
+      "id": "cf000000-0000-4000-8000-5357332d3031",
+      "title": "SW3-01 · Byte stream y buffers",
+      "cls": "ruta",
+      "flujo": "mision",
+      "compuerta": "mision",
+      "ficha": {
+        "resultado": "Construir un flujo de bytes con capacidad y cierre bien definidos.",
+        "fuentes": [
+          {
+            "clave": "C-09",
+            "etiqueta": "Stanford CS144",
+            "url": "https://cs144.github.io/",
+            "tipo": "curso",
+            "acceso": "publico"
+          }
+        ],
+        "mision": "Completa el checkpoint 0 de CS144 de la edición fijada.",
+        "defensa": "Demuestra el contrato con trazas pequenas y pruebas del laboratorio.",
+        "variante": "Analiza vacio, capacidad agotada, cierre y lecturas parciales."
+      },
+      "gate": {
+        "pregunta": "Demuestra el contrato con trazas pequenas y pruebas del laboratorio.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Sistemas ≥ 3: Completa el checkpoint 0 de CS144 de la edición fijada.",
+          "Abstracción ≥ 3: Demuestra el contrato con trazas pequenas y pruebas del laboratorio.",
+          "Correctitud (condición crítica): Demuestra el contrato con trazas pequenas y pruebas del laboratorio."
+        ]
+      },
+      "capacidades": [
+        "sistemas",
+        "abstraccion"
+      ],
+      "rastroCapacidades": {
+        "sistemas": "Completa el checkpoint 0 de CS144 de la edición fijada.",
+        "abstraccion": "Demuestra el contrato con trazas pequenas y pruebas del laboratorio."
+      },
+      "criticas": [
+        {
+          "id": "correctitud",
+          "texto": "Correctitud",
+          "rastro": "Demuestra el contrato con trazas pequenas y pruebas del laboratorio."
+        }
+      ],
+      "naturaleza": {
+        "valor": "a_mano"
+      },
+      "alcance": "local",
+      "etiquetas": [
+        "seleccion_curso"
+      ]
+    },
+    {
+      "code": "SW3-02",
+      "id": "cf000000-0000-4000-8000-5357332d3032",
+      "title": "SW3-02 · Reensamblado y orden",
+      "cls": "ruta",
+      "flujo": "mision",
+      "compuerta": "mision",
+      "ficha": {
+        "resultado": "Reconstruir información que llega fragmentada o fuera de orden.",
+        "fuentes": [
+          {
+            "clave": "C-09",
+            "etiqueta": "Stanford CS144",
+            "url": "https://cs144.github.io/",
+            "tipo": "curso",
+            "acceso": "publico"
+          }
+        ],
+        "mision": "Completa el checkpoint 1 de CS144 y explica su estado interno.",
+        "defensa": "Justifica memoria, progreso y comportamiento de cada borde.",
+        "variante": "Prueba solapamientos, duplicados y fragmentos fuera de ventana."
+      },
+      "gate": {
+        "pregunta": "Justifica memoria, progreso y comportamiento de cada borde.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Sistemas ≥ 3: Justifica memoria, progreso y comportamiento de cada borde.",
+          "Comunicación ≥ 3: Completa el checkpoint 1 de CS144 y explica su estado interno.",
+          "Correctitud (condición crítica): Justifica memoria, progreso y comportamiento de cada borde.",
+          "Identidad (condición crítica): Prueba solapamientos, duplicados y fragmentos fuera de ventana."
+        ]
+      },
+      "capacidades": [
+        "sistemas",
+        "comunicacion"
+      ],
+      "rastroCapacidades": {
+        "sistemas": "Justifica memoria, progreso y comportamiento de cada borde.",
+        "comunicacion": "Completa el checkpoint 1 de CS144 y explica su estado interno."
+      },
+      "criticas": [
+        {
+          "id": "correctitud",
+          "texto": "Correctitud",
+          "rastro": "Justifica memoria, progreso y comportamiento de cada borde."
+        },
+        {
+          "id": "identidad",
+          "texto": "Identidad",
+          "rastro": "Prueba solapamientos, duplicados y fragmentos fuera de ventana."
+        }
+      ],
+      "naturaleza": {
+        "valor": "a_mano"
+      },
+      "alcance": "local",
+      "etiquetas": [
+        "seleccion_curso"
+      ]
+    },
+    {
+      "code": "SW3-03",
+      "id": "cf000000-0000-4000-8000-5357332d3033",
+      "title": "SW3-03 · Transporte y límites de garantía",
+      "cls": "ruta",
+      "flujo": "mision",
+      "compuerta": "mision",
+      "ficha": {
+        "resultado": "Entender fiabilidad y control sin atribuirles garantías de negocio.",
+        "fuentes": [
+          {
+            "clave": "C-09",
+            "etiqueta": "Stanford CS144",
+            "url": "https://cs144.github.io/",
+            "tipo": "curso",
+            "acceso": "publico"
+          }
+        ],
+        "mision": "Continua la secuencia de checkpoints de TCP conforme a su edición.",
+        "defensa": "Explica que garantiza el transporte y por que una reserva aun necesita invariantes.",
+        "variante": "Analiza pérdida, retransmisión y cierre sin mezclar pasos de ediciones distintas."
+      },
+      "gate": {
+        "pregunta": "Explica que garantiza el transporte y por que una reserva aun necesita invariantes.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Sistemas ≥ 3: Continua la secuencia de checkpoints de TCP conforme a su edición.",
+          "Abstracción ≥ 3: Explica que garantiza el transporte y por que una reserva aun necesita invariantes.",
+          "Comunicación ≥ 3: Explica que garantiza el transporte y por que una reserva aun necesita invariantes.",
+          "Correctitud (condición crítica): Explica que garantiza el transporte y por que una reserva aun necesita invariantes."
+        ]
+      },
+      "capacidades": [
+        "sistemas",
+        "abstraccion",
+        "comunicacion"
+      ],
+      "rastroCapacidades": {
+        "sistemas": "Continua la secuencia de checkpoints de TCP conforme a su edición.",
+        "abstraccion": "Explica que garantiza el transporte y por que una reserva aun necesita invariantes.",
+        "comunicacion": "Explica que garantiza el transporte y por que una reserva aun necesita invariantes."
+      },
+      "criticas": [
+        {
+          "id": "correctitud",
+          "texto": "Correctitud",
+          "rastro": "Explica que garantiza el transporte y por que una reserva aun necesita invariantes."
+        }
+      ],
+      "naturaleza": {
+        "valor": "a_mano"
+      },
+      "alcance": "local",
+      "etiquetas": [
+        "seleccion_curso"
+      ]
+    },
+    {
+      "code": "SW3-04",
+      "id": "cf000000-0000-4000-8000-5357332d3034",
+      "title": "SW3-04 · HTTP, identidad y autorización",
+      "cls": "ruta",
+      "flujo": "mision",
+      "compuerta": "mision",
+      "ficha": {
+        "resultado": "Construir un servicio que compruebe autoridad para cada operación.",
+        "fuentes": [
+          {
+            "clave": "C-15",
+            "etiqueta": "PortSwigger Web Security Academy",
+            "url": "https://portswigger.net/web-security/learning-paths/",
+            "tipo": "curso",
+            "acceso": "publico"
+          },
+          {
+            "clave": "C-06",
+            "etiqueta": "MIT 6.005 Software Construction, Spring 2016",
+            "url": "https://ocw.mit.edu/ans7870/6/6.005/s16/",
+            "tipo": "curso",
+            "acceso": "publico"
+          }
+        ],
+        "mision": "Implementa endpoints de recursos y prueba acceso entre usuarios diferentes.",
+        "defensa": "Demuestra controles en servidor y distingue autenticación de autorización.",
+        "variante": "Utiliza laboratorios de access control de PortSwigger como practica separada."
+      },
+      "gate": {
+        "pregunta": "Demuestra controles en servidor y distingue autenticación de autorización.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Sistemas ≥ 3: Implementa endpoints de recursos y prueba acceso entre usuarios diferentes.",
+          "Producto ≥ 3: Implementa endpoints de recursos y prueba acceso entre usuarios diferentes.",
+          "Correctitud (condición crítica): Implementa endpoints de recursos y prueba acceso entre usuarios diferentes.",
+          "Autorización (condición crítica): Implementa endpoints de recursos y prueba acceso entre usuarios diferentes."
+        ]
+      },
+      "capacidades": [
+        "sistemas",
+        "producto"
+      ],
+      "rastroCapacidades": {
+        "sistemas": "Implementa endpoints de recursos y prueba acceso entre usuarios diferentes.",
+        "producto": "Implementa endpoints de recursos y prueba acceso entre usuarios diferentes."
+      },
+      "criticas": [
+        {
+          "id": "correctitud",
+          "texto": "Correctitud",
+          "rastro": "Implementa endpoints de recursos y prueba acceso entre usuarios diferentes."
+        },
+        {
+          "id": "autorizacion",
+          "texto": "Autorización",
+          "rastro": "Implementa endpoints de recursos y prueba acceso entre usuarios diferentes."
+        }
+      ],
+      "naturaleza": {
+        "valor": "a_mano"
+      },
+      "alcance": "local",
+      "etiquetas": [
+        "seleccion_curso"
+      ]
+    },
+    {
+      "code": "SW3-05",
+      "id": "cf000000-0000-4000-8000-5357332d3035",
+      "title": "SW3-05 · Deadlines, cancelación y backpressure",
+      "cls": "ruta",
+      "flujo": "mision",
+      "compuerta": "mision",
+      "ficha": {
+        "resultado": "Limitar trabajo cuando una dependencia o un usuario es lento.",
+        "fuentes": [
+          {
+            "clave": "C-14",
+            "etiqueta": "Google SRE Workbook",
+            "url": "https://sre.google/workbook/implementing-slos/",
+            "tipo": "curso",
+            "acceso": "publico"
+          },
+          {
+            "clave": "C-07",
+            "etiqueta": "Operating Systems: Three Easy Pieces",
+            "url": "https://pages.cs.wisc.edu/~remzi/OSTEP/",
+            "tipo": "curso",
+            "acceso": "publico"
+          }
+        ],
+        "mision": "Construye un servicio con cola acotada y propagacion de cancelación.",
+        "defensa": "Explica dónde se libera cada recurso y como eliges límites con datos.",
+        "variante": "Introduce sobrecarga, clientes desconectados y dependencias que no terminan."
+      },
+      "gate": {
+        "pregunta": "Explica dónde se libera cada recurso y como eliges límites con datos.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Sistemas ≥ 3: Construye un servicio con cola acotada y propagacion de cancelación.",
+          "Datos ≥ 3: Explica dónde se libera cada recurso y como eliges límites con datos.",
+          "Producto ≥ 3: Limitar trabajo cuando una dependencia o un usuario es lento.",
+          "Correctitud (condición crítica): Explica dónde se libera cada recurso y como eliges límites con datos."
+        ]
+      },
+      "capacidades": [
+        "sistemas",
+        "datos",
+        "producto"
+      ],
+      "rastroCapacidades": {
+        "sistemas": "Construye un servicio con cola acotada y propagacion de cancelación.",
+        "datos": "Explica dónde se libera cada recurso y como eliges límites con datos.",
+        "producto": "Limitar trabajo cuando una dependencia o un usuario es lento."
+      },
+      "criticas": [
+        {
+          "id": "correctitud",
+          "texto": "Correctitud",
+          "rastro": "Explica dónde se libera cada recurso y como eliges límites con datos."
+        }
+      ],
+      "naturaleza": {
+        "valor": "a_mano"
+      },
+      "alcance": "local",
+      "etiquetas": [
+        "seleccion_curso"
+      ]
+    },
+    {
+      "code": "SW3-06",
+      "id": "cf000000-0000-4000-8000-5357332d3036",
+      "title": "SW3-06 · Reintentos e idempotencia",
+      "cls": "ruta",
+      "flujo": "mision",
+      "compuerta": "mision",
+      "ficha": {
+        "resultado": "Preservar una operación lógica ante resultados desconocidos.",
+        "fuentes": [
+          {
+            "clave": "C-14",
+            "etiqueta": "Google SRE Workbook",
+            "url": "https://sre.google/workbook/implementing-slos/",
+            "tipo": "curso",
+            "acceso": "publico"
+          },
+          {
+            "clave": "C-11",
+            "etiqueta": "MIT 6.5840: calendario",
+            "url": "https://pdos.csail.mit.edu/6.5840/schedule.html",
+            "tipo": "curso",
+            "acceso": "publico"
+          }
+        ],
+        "mision": "Implementa solicitud idempotente con clave/payload y reconciliación.",
+        "defensa": "Declara dónde termina tu garantía y que sucede con un proveedor sin deduplicacion.",
+        "variante": "Falla despues de aplicar el efecto y antes de responder."
+      },
+      "gate": {
+        "pregunta": "Declara dónde termina tu garantía y que sucede con un proveedor sin deduplicacion.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Sistemas ≥ 3: Implementa solicitud idempotente con clave/payload y reconciliación.",
+          "Responsabilidad ≥ 3: Falla despues de aplicar el efecto y antes de responder.",
+          "Identidad (condición crítica): Declara dónde termina tu garantía y que sucede con un proveedor sin deduplicacion.",
+          "Consistencia (condición crítica): Implementa solicitud idempotente con clave/payload y reconciliación."
+        ]
+      },
+      "capacidades": [
+        "sistemas",
+        "responsabilidad"
+      ],
+      "rastroCapacidades": {
+        "sistemas": "Implementa solicitud idempotente con clave/payload y reconciliación.",
+        "responsabilidad": "Falla despues de aplicar el efecto y antes de responder."
+      },
+      "criticas": [
+        {
+          "id": "identidad",
+          "texto": "Identidad",
+          "rastro": "Declara dónde termina tu garantía y que sucede con un proveedor sin deduplicacion."
+        },
+        {
+          "id": "consistencia",
+          "texto": "Consistencia",
+          "rastro": "Implementa solicitud idempotente con clave/payload y reconciliación."
+        }
+      ],
+      "naturaleza": {
+        "valor": "a_mano"
+      },
+      "alcance": "local",
+      "etiquetas": [
+        "seleccion_curso"
+      ]
+    },
+    {
+      "code": "SW3-07",
+      "id": "cf000000-0000-4000-8000-5357332d3037",
+      "title": "SW3-07 · Servicio observable y recuperable",
+      "cls": "ruta",
+      "flujo": "mision",
+      "compuerta": "mision",
+      "ficha": {
+        "resultado": "Operar un servicio con indicadores utiles y procedimiento de recuperación.",
+        "fuentes": [
+          {
+            "clave": "C-14",
+            "etiqueta": "Google SRE Workbook",
+            "url": "https://sre.google/workbook/implementing-slos/",
+            "tipo": "curso",
+            "acceso": "publico"
+          },
+          {
+            "clave": "C-01",
+            "etiqueta": "MIT Missing Semester, 2020",
+            "url": "https://missing.csail.mit.edu/2020/index.html",
+            "tipo": "curso",
+            "acceso": "publico"
+          }
+        ],
+        "mision": "Entrega trazas, métricas, logs y un runbook para una tarea concreta.",
+        "defensa": "Distingue disponibilidad, latencia, exactitud y frescura del dato.",
+        "variante": "Otra persona diagnostica una falla sin que expliques el sistema en vivo."
+      },
+      "gate": {
+        "pregunta": "Distingue disponibilidad, latencia, exactitud y frescura del dato.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Sistemas ≥ 3: Distingue disponibilidad, latencia, exactitud y frescura del dato.",
+          "Datos ≥ 3: Distingue disponibilidad, latencia, exactitud y frescura del dato.",
+          "Responsabilidad ≥ 3: Operar un servicio con indicadores utiles y procedimiento de recuperación.",
+          "Correctitud (condición crítica): Distingue disponibilidad, latencia, exactitud y frescura del dato.",
+          "Recuperación (condición crítica): Operar un servicio con indicadores utiles y procedimiento de recuperación."
+        ]
+      },
+      "capacidades": [
+        "sistemas",
+        "datos",
+        "responsabilidad"
+      ],
+      "rastroCapacidades": {
+        "sistemas": "Distingue disponibilidad, latencia, exactitud y frescura del dato.",
+        "datos": "Distingue disponibilidad, latencia, exactitud y frescura del dato.",
+        "responsabilidad": "Operar un servicio con indicadores utiles y procedimiento de recuperación."
+      },
+      "criticas": [
+        {
+          "id": "correctitud",
+          "texto": "Correctitud",
+          "rastro": "Distingue disponibilidad, latencia, exactitud y frescura del dato."
+        },
+        {
+          "id": "recuperacion",
+          "texto": "Recuperación",
+          "rastro": "Operar un servicio con indicadores utiles y procedimiento de recuperación."
+        }
+      ],
+      "naturaleza": {
+        "valor": "a_mano"
+      },
+      "alcance": "local",
+      "etiquetas": [
+        "seleccion_curso"
+      ]
+    }
+  ],
+  "maestro_sha10": "38cbc7da42"
+}

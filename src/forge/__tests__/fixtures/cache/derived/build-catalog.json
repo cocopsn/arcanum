@@ -1,0 +1,43 @@
+{
+  "source": "fixture",
+  "entries": [
+    {
+      "url": "https://build.palantir.com/platform/00000000-0000-4000-8000-000000000001",
+      "title": "Fixture published example",
+      "description": { "text": "CANARIOPROSA build description", "attribution": "fixture" },
+      "state": "publicada",
+      "on_homepage": true,
+      "homepage_position": 1,
+      "content_type": ["dataEngineering"],
+      "install_mode": ["bootstrap"],
+      "outcome": null,
+      "splash_page": [],
+      "product_type": [],
+      "featured_flag": false,
+      "docs_links": ["https://palantir.com/docs/foundry/action-types/consistency-guarantees/", "https://palantir.com/docs/foundry/ontology/old-overview/"],
+      "youtube": [],
+      "aip_workflow_url": null,
+      "images": ["https://build.palantir.com/images/one.png", "https://build.palantir.com/images/one.png", "https://evil.example/x.png"],
+      "groups_tentative": []
+    },
+    {
+      "url": "https://build.palantir.com/platform/00000000-0000-4000-8000-000000000002",
+      "title": "Fixture tour",
+      "description": { "text": "CANARIOPROSA tour description", "attribution": "fixture" },
+      "state": "soft-404 (Page not found en /platform/<rid>)",
+      "on_homepage": false,
+      "homepage_position": null,
+      "content_type": [],
+      "install_mode": [],
+      "outcome": null,
+      "splash_page": [],
+      "product_type": [],
+      "featured_flag": false,
+      "docs_links": [],
+      "youtube": ["https://player.vimeo.com/video/804003285"],
+      "aip_workflow_url": null,
+      "images": [],
+      "groups_tentative": []
+    }
+  ]
+}

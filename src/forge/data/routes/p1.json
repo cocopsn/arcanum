@@ -1,0 +1,505 @@
+{
+  "v": 1,
+  "slug": "p1",
+  "code": "P1",
+  "name": "P1 · Foundry: datos confiables hasta la Ontology",
+  "family": "Plataforma Foundry/AIP",
+  "header": {
+    "entrada": "F0-08; S1-01; S2-05 para avance.",
+    "entradaRecomendada": [
+      "F0-08",
+      "S1-01",
+      "S2-05"
+    ],
+    "evidencia": "Contrato de datos, linaje, controles de calidad, reconstrucción y reporte de fallas.",
+    "apoyo": [
+      {
+        "clave": "C-17",
+        "etiqueta": "Ontologize: tutoriales",
+        "url": "https://www.ontologize.com/tutorials",
+        "tipo": "curso",
+        "acceso": "publico"
+      }
+    ]
+  },
+  "cells": [
+    {
+      "code": "P1-01",
+      "id": "cf000000-0000-4000-8000-0050312d3031",
+      "title": "P1-01 · Fuentes, syncs y contratos",
+      "cls": "ruta",
+      "flujo": "mision",
+      "compuerta": "mision",
+      "ficha": {
+        "foco": "Fuentes, syncs y contratos.",
+        "fuentes": [
+          {
+            "clave": "CONNECT",
+            "etiqueta": "Data Connection • Overview • Palantir",
+            "url": "https://www.palantir.com/docs/foundry/data-connection/overview",
+            "tipo": "docs",
+            "acceso": "publico"
+          }
+        ],
+        "mision": "Integra dos fuentes sintéticas con dueños, llaves, esquema y cadencia.",
+        "defensa": "Explica el fallo de cada fuente y qué dato no debes tratar como verdad."
+      },
+      "gate": {
+        "pregunta": "Explica el fallo de cada fuente y qué dato no debes tratar como verdad.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Datos ≥ 3: Explica el fallo de cada fuente y qué dato no debes tratar como verdad.",
+          "Abstracción ≥ 3: Fuentes, syncs y contratos.",
+          "Comunicación ≥ 3: Explica el fallo de cada fuente y qué dato no debes tratar como verdad.",
+          "Correctitud (condición crítica): Explica el fallo de cada fuente y qué dato no debes tratar como verdad."
+        ]
+      },
+      "capacidades": [
+        "datos",
+        "abstraccion",
+        "comunicacion"
+      ],
+      "rastroCapacidades": {
+        "datos": "Explica el fallo de cada fuente y qué dato no debes tratar como verdad.",
+        "abstraccion": "Fuentes, syncs y contratos.",
+        "comunicacion": "Explica el fallo de cada fuente y qué dato no debes tratar como verdad."
+      },
+      "criticas": [
+        {
+          "id": "correctitud",
+          "texto": "Correctitud",
+          "rastro": "Explica el fallo de cada fuente y qué dato no debes tratar como verdad."
+        }
+      ],
+      "naturaleza": {
+        "valor": "a_mano"
+      },
+      "alcance": "local+nativa",
+      "etiquetas": []
+    },
+    {
+      "code": "P1-02",
+      "id": "cf000000-0000-4000-8000-0050312d3032",
+      "title": "P1-02 · Pipeline Builder con significado",
+      "cls": "ruta",
+      "flujo": "mision",
+      "compuerta": "mision",
+      "ficha": {
+        "foco": "Pipeline Builder con significado.",
+        "fuentes": [
+          {
+            "clave": "PIPE",
+            "etiqueta": "Pipeline Builder • Overview • Palantir",
+            "url": "https://www.palantir.com/docs/foundry/pipeline-builder/overview",
+            "tipo": "docs",
+            "acceso": "publico"
+          }
+        ],
+        "mision": "Construye joins, normalización y agregaciones con linaje explicable.",
+        "defensa": "Detecta multiplicación silenciosa de registros y reglas ocultas en la limpieza."
+      },
+      "gate": {
+        "pregunta": "Detecta multiplicación silenciosa de registros y reglas ocultas en la limpieza.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Datos ≥ 3: Pipeline Builder con significado.",
+          "Comunicación ≥ 3: Construye joins, normalización y agregaciones con linaje explicable.",
+          "Trazabilidad (condición crítica): Construye joins, normalización y agregaciones con linaje explicable."
+        ]
+      },
+      "capacidades": [
+        "datos",
+        "comunicacion"
+      ],
+      "rastroCapacidades": {
+        "datos": "Pipeline Builder con significado.",
+        "comunicacion": "Construye joins, normalización y agregaciones con linaje explicable."
+      },
+      "criticas": [
+        {
+          "id": "trazabilidad",
+          "texto": "Trazabilidad",
+          "rastro": "Construye joins, normalización y agregaciones con linaje explicable."
+        }
+      ],
+      "naturaleza": {
+        "valor": "a_mano"
+      },
+      "alcance": "local+nativa",
+      "etiquetas": []
+    },
+    {
+      "code": "P1-03",
+      "id": "cf000000-0000-4000-8000-0050312d3033",
+      "title": "P1-03 · Transformaciones en Python",
+      "cls": "ruta",
+      "flujo": "mision",
+      "compuerta": "mision",
+      "ficha": {
+        "foco": "Transformaciones en Python.",
+        "fuentes": [
+          {
+            "clave": "PYTEST",
+            "etiqueta": "Python • Basic transforms • Unit tests • Palantir",
+            "url": "https://www.palantir.com/docs/foundry/transforms-python/unit-tests",
+            "tipo": "docs",
+            "acceso": "publico"
+          },
+          {
+            "clave": "INCR",
+            "etiqueta": "Python • Incremental transforms • Usage guide • Palantir",
+            "url": "https://www.palantir.com/docs/foundry/transforms-python/incremental-usage",
+            "tipo": "docs",
+            "acceso": "publico"
+          }
+        ],
+        "mision": "Reproduce la lógica crítica en transformaciones con tests sobre fixtures.",
+        "defensa": "Separa lógica de dominio del adaptador de plataforma."
+      },
+      "gate": {
+        "pregunta": "Separa lógica de dominio del adaptador de plataforma.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Datos ≥ 3: Transformaciones en Python.",
+          "Responsabilidad ≥ 3: Reproduce la lógica crítica en transformaciones con tests sobre fixtures.",
+          "Correctitud (condición crítica): Reproduce la lógica crítica en transformaciones con tests sobre fixtures."
+        ]
+      },
+      "capacidades": [
+        "datos",
+        "responsabilidad"
+      ],
+      "rastroCapacidades": {
+        "datos": "Transformaciones en Python.",
+        "responsabilidad": "Reproduce la lógica crítica en transformaciones con tests sobre fixtures."
+      },
+      "criticas": [
+        {
+          "id": "correctitud",
+          "texto": "Correctitud",
+          "rastro": "Reproduce la lógica crítica en transformaciones con tests sobre fixtures."
+        }
+      ],
+      "naturaleza": {
+        "valor": "a_mano"
+      },
+      "alcance": "local+nativa",
+      "etiquetas": []
+    },
+    {
+      "code": "P1-04",
+      "id": "cf000000-0000-4000-8000-0050312d3034",
+      "title": "P1-04 · Incremental frente a rebuild",
+      "cls": "ruta",
+      "flujo": "mision",
+      "compuerta": "mision",
+      "ficha": {
+        "foco": "Incremental frente a rebuild.",
+        "fuentes": [
+          {
+            "clave": "INCR",
+            "etiqueta": "Python • Incremental transforms • Usage guide • Palantir",
+            "url": "https://www.palantir.com/docs/foundry/transforms-python/incremental-usage",
+            "tipo": "docs",
+            "acceso": "publico"
+          },
+          {
+            "clave": "CDC",
+            "etiqueta": "Core concepts • Change data capture (CDC) • Palantir",
+            "url": "https://www.palantir.com/docs/foundry/data-integration/change-data-capture",
+            "tipo": "docs",
+            "acceso": "publico"
+          }
+        ],
+        "mision": "Compara salida incremental contra reconstrucción completa con datos adversariales.",
+        "defensa": "Explica cuándo snapshots, updates o deletes invalidan tus supuestos."
+      },
+      "gate": {
+        "pregunta": "Explica cuándo snapshots, updates o deletes invalidan tus supuestos.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Datos ≥ 3: Compara salida incremental contra reconstrucción completa con datos adversariales.",
+          "Comunicación ≥ 3: Explica cuándo snapshots, updates o deletes invalidan tus supuestos.",
+          "Correctitud (condición crítica): Explica cuándo snapshots, updates o deletes invalidan tus supuestos."
+        ]
+      },
+      "capacidades": [
+        "datos",
+        "comunicacion"
+      ],
+      "rastroCapacidades": {
+        "datos": "Compara salida incremental contra reconstrucción completa con datos adversariales.",
+        "comunicacion": "Explica cuándo snapshots, updates o deletes invalidan tus supuestos."
+      },
+      "criticas": [
+        {
+          "id": "correctitud",
+          "texto": "Correctitud",
+          "rastro": "Explica cuándo snapshots, updates o deletes invalidan tus supuestos."
+        }
+      ],
+      "naturaleza": {
+        "valor": "a_mano"
+      },
+      "alcance": "local+nativa",
+      "etiquetas": []
+    },
+    {
+      "code": "P1-05",
+      "id": "cf000000-0000-4000-8000-0050312d3035",
+      "title": "P1-05 · Calidad y señales operativas",
+      "cls": "ruta",
+      "flujo": "mision",
+      "compuerta": "mision",
+      "ficha": {
+        "foco": "Calidad y señales operativas.",
+        "fuentes": [
+          {
+            "clave": "DQ",
+            "etiqueta": "Pipeline Builder • Data expectations • Overview • Palantir",
+            "url": "https://www.palantir.com/docs/foundry/pipeline-builder/dataexpectations-overview",
+            "tipo": "docs",
+            "acceso": "publico"
+          },
+          {
+            "clave": "HEALTH",
+            "etiqueta": "Data Health • Palantir",
+            "url": "https://www.palantir.com/docs/foundry/observability/data-health",
+            "tipo": "docs",
+            "acceso": "publico"
+          }
+        ],
+        "mision": "Define checks de frescura, unicidad, nulos y coherencia; siembra fallas.",
+        "defensa": "Distingue un build exitoso de datos suficientemente confiables para actuar."
+      },
+      "gate": {
+        "pregunta": "Distingue un build exitoso de datos suficientemente confiables para actuar.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Datos ≥ 3: Distingue un build exitoso de datos suficientemente confiables para actuar.",
+          "Responsabilidad ≥ 3: siembra fallas.",
+          "Correctitud (condición crítica): Distingue un build exitoso de datos suficientemente confiables para actuar."
+        ]
+      },
+      "capacidades": [
+        "datos",
+        "responsabilidad"
+      ],
+      "rastroCapacidades": {
+        "datos": "Distingue un build exitoso de datos suficientemente confiables para actuar.",
+        "responsabilidad": "siembra fallas."
+      },
+      "criticas": [
+        {
+          "id": "correctitud",
+          "texto": "Correctitud",
+          "rastro": "Distingue un build exitoso de datos suficientemente confiables para actuar."
+        }
+      ],
+      "naturaleza": {
+        "valor": "a_mano"
+      },
+      "alcance": "local+nativa",
+      "etiquetas": []
+    },
+    {
+      "code": "P1-06",
+      "id": "cf000000-0000-4000-8000-0050312d3036",
+      "title": "P1-06 · Streaming y latencia de extremo a extremo",
+      "cls": "ruta",
+      "flujo": "mision",
+      "compuerta": "mision",
+      "ficha": {
+        "foco": "Streaming y latencia de extremo a extremo.",
+        "fuentes": [
+          {
+            "clave": "STREAM",
+            "etiqueta": "Resource guides • Streaming • Palantir",
+            "url": "https://www.palantir.com/docs/foundry/data-integration/streaming-guide",
+            "tipo": "docs",
+            "acceso": "publico"
+          },
+          {
+            "clave": "INDEX",
+            "etiqueta": "Indexing • Overview • Palantir",
+            "url": "https://www.palantir.com/docs/foundry/object-indexing/overview",
+            "tipo": "docs",
+            "acceso": "publico"
+          }
+        ],
+        "mision": "Mide el recorrido desde publicación hasta disponibilidad para el usuario.",
+        "defensa": "Atribuye retrasos al componente correcto y documenta lo que no mediste."
+      },
+      "gate": {
+        "pregunta": "Atribuye retrasos al componente correcto y documenta lo que no mediste.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Datos ≥ 3: Mide el recorrido desde publicación hasta disponibilidad para el usuario.",
+          "Sistemas ≥ 3: Streaming y latencia de extremo a extremo.",
+          "Producto ≥ 3: Mide el recorrido desde publicación hasta disponibilidad para el usuario.",
+          "Correctitud (condición crítica): Atribuye retrasos al componente correcto y documenta lo que no mediste."
+        ]
+      },
+      "capacidades": [
+        "datos",
+        "sistemas",
+        "producto"
+      ],
+      "rastroCapacidades": {
+        "datos": "Mide el recorrido desde publicación hasta disponibilidad para el usuario.",
+        "sistemas": "Streaming y latencia de extremo a extremo.",
+        "producto": "Mide el recorrido desde publicación hasta disponibilidad para el usuario."
+      },
+      "criticas": [
+        {
+          "id": "correctitud",
+          "texto": "Correctitud",
+          "rastro": "Atribuye retrasos al componente correcto y documenta lo que no mediste."
+        }
+      ],
+      "naturaleza": {
+        "valor": "a_mano"
+      },
+      "alcance": "local+nativa",
+      "etiquetas": []
+    },
+    {
+      "code": "P1-07",
+      "id": "cf000000-0000-4000-8000-0050312d3037",
+      "title": "P1-07 · Documentos, media y extracción",
+      "cls": "ruta",
+      "flujo": "mision",
+      "compuerta": "mision",
+      "ficha": {
+        "foco": "Documentos, media y extracción.",
+        "fuentes": [
+          {
+            "clave": "DOC",
+            "etiqueta": "AIP Document Intelligence • Overview • Palantir",
+            "url": "https://www.palantir.com/docs/foundry/document-intelligence/overview",
+            "tipo": "docs",
+            "acceso": "publico"
+          },
+          {
+            "clave": "MEDIA",
+            "etiqueta": "Core concepts • Media sets (unstructured data) • Palantir",
+            "url": "https://www.palantir.com/docs/foundry/data-integration/media-sets",
+            "tipo": "docs",
+            "acceso": "publico"
+          }
+        ],
+        "mision": "Extrae entidades de documentos sintéticos con evidencia y casos difíciles.",
+        "defensa": "No inventes campos faltantes; rastrea cada dato hasta el documento de origen."
+      },
+      "gate": {
+        "pregunta": "No inventes campos faltantes; rastrea cada dato hasta el documento de origen.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Datos ≥ 3: rastrea cada dato hasta el documento de origen.",
+          "Correctitud (condición crítica): No inventes campos faltantes; rastrea cada dato hasta el documento de origen."
+        ]
+      },
+      "capacidades": [
+        "datos"
+      ],
+      "rastroCapacidades": {
+        "datos": "rastrea cada dato hasta el documento de origen."
+      },
+      "criticas": [
+        {
+          "id": "correctitud",
+          "texto": "Correctitud",
+          "rastro": "No inventes campos faltantes; rastrea cada dato hasta el documento de origen."
+        }
+      ],
+      "naturaleza": {
+        "valor": "a_mano"
+      },
+      "alcance": "local+nativa",
+      "etiquetas": []
+    },
+    {
+      "code": "P1-08",
+      "id": "cf000000-0000-4000-8000-0050312d3038",
+      "title": "P1-08 · Data product defendible",
+      "cls": "ruta",
+      "flujo": "mision",
+      "compuerta": "mision",
+      "ficha": {
+        "foco": "Data product defendible.",
+        "fuentes": [
+          {
+            "clave": "CONNECT",
+            "etiqueta": "Data Connection • Overview • Palantir",
+            "url": "https://www.palantir.com/docs/foundry/data-connection/overview",
+            "tipo": "docs",
+            "acceso": "publico"
+          },
+          {
+            "clave": "DQ",
+            "etiqueta": "Pipeline Builder • Data expectations • Overview • Palantir",
+            "url": "https://www.palantir.com/docs/foundry/pipeline-builder/dataexpectations-overview",
+            "tipo": "docs",
+            "acceso": "publico"
+          },
+          {
+            "clave": "BRANCH",
+            "etiqueta": "Global Branching • Overview • Palantir",
+            "url": "https://www.palantir.com/docs/foundry/global-branching",
+            "tipo": "docs",
+            "acceso": "publico"
+          }
+        ],
+        "mision": "Entrega contrato, pipeline, tests, monitoreo y manual de recuperación.",
+        "defensa": "Otro usuario debe poder diagnosticar un dato incorrecto usando tu evidencia."
+      },
+      "gate": {
+        "pregunta": "Otro usuario debe poder diagnosticar un dato incorrecto usando tu evidencia.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Datos ≥ 3: Entrega contrato, pipeline, tests, monitoreo y manual de recuperación.",
+          "Abstracción ≥ 3: Entrega contrato, pipeline, tests, monitoreo y manual de recuperación.",
+          "Producto ≥ 3: Otro usuario debe poder diagnosticar un dato incorrecto usando tu evidencia.",
+          "Correctitud (condición crítica): Entrega contrato, pipeline, tests, monitoreo y manual de recuperación.",
+          "Recuperación (condición crítica): Entrega contrato, pipeline, tests, monitoreo y manual de recuperación."
+        ]
+      },
+      "capacidades": [
+        "datos",
+        "abstraccion",
+        "producto"
+      ],
+      "rastroCapacidades": {
+        "datos": "Entrega contrato, pipeline, tests, monitoreo y manual de recuperación.",
+        "abstraccion": "Entrega contrato, pipeline, tests, monitoreo y manual de recuperación.",
+        "producto": "Otro usuario debe poder diagnosticar un dato incorrecto usando tu evidencia."
+      },
+      "criticas": [
+        {
+          "id": "correctitud",
+          "texto": "Correctitud",
+          "rastro": "Entrega contrato, pipeline, tests, monitoreo y manual de recuperación."
+        },
+        {
+          "id": "recuperacion",
+          "texto": "Recuperación",
+          "rastro": "Entrega contrato, pipeline, tests, monitoreo y manual de recuperación."
+        }
+      ],
+      "naturaleza": {
+        "valor": "a_mano"
+      },
+      "alcance": "local+nativa",
+      "etiquetas": []
+    }
+  ],
+  "maestro_sha10": "38cbc7da42"
+}

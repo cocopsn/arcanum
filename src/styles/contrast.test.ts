@@ -34,3 +34,51 @@ describe("token contrast (WCAG AA legibility anchor)", () => {
     });
   }
 });
+
+// Engineering Forge (D4, design §14.2, CA-62): the monochrome scale, re-measured in both modes, and the proof that
+// what is measured is what the theme applies.
+function mix(hex: string, white: number): string {
+  const c = hex.replace("#", "");
+  const ch = [0, 2, 4].map((i) => parseInt(c.slice(i, i + 2), 16));
+  return "#" + ch.map((v) => Math.round(v + (255 - v) * white).toString(16).padStart(2, "0")).join("");
+}
+
+describe("Engineering Forge token contrast (D4, dark and light)", () => {
+  const dark = { surface: read("forge-surface"), raised: read("forge-surface-raised"), voidBg: read("forge-void") };
+  for (const tier of ["forge-text", "forge-text-muted", "forge-text-faint"]) {
+    it(`--${tier} clears 4.5:1 on --forge-surface, --forge-surface-raised and --forge-void`, () => {
+      const color = read(tier);
+      for (const [name, s] of [["--forge-surface", dark.surface], ["--forge-surface-raised", dark.raised], ["--forge-void", dark.voidBg]] as const) {
+        expect(ratio(color, s), `--${tier} no llega a 4.5:1 sobre ${name}`).toBeGreaterThanOrEqual(4.5);
+      }
+    });
+  }
+  it("--forge-control clears 3:1 on both dark surfaces (WCAG 1.4.11)", () => {
+    for (const s of [dark.surface, dark.raised]) expect(ratio(read("forge-control"), s)).toBeGreaterThanOrEqual(3);
+  });
+  it("--forge-text and --forge-text-muted clear 4.5:1 on the worst atmosphere (#1e2124 mixed 10 % with white)", () => {
+    const worst = mix(dark.surface, 0.1);
+    for (const tier of ["forge-text", "forge-text-muted"]) expect(ratio(read(tier), worst), `--${tier} sobre la atmósfera`).toBeGreaterThanOrEqual(4.5);
+  });
+  const light = [read("forge-light-bg"), read("forge-light-surface"), read("forge-light-surface-2")];
+  for (const tier of ["forge-light-text", "forge-light-text-muted", "forge-light-text-faint"]) {
+    it(`--${tier} clears 4.5:1 on the three light surfaces`, () => {
+      for (const s of light) expect(ratio(read(tier), s), `--${tier} no llega a 4.5:1 sobre ${s}`).toBeGreaterThanOrEqual(4.5);
+    });
+  }
+  it("--forge-light-control clears 3:1 on the three light surfaces", () => {
+    for (const s of light) expect(ratio(read("forge-light-control"), s)).toBeGreaterThanOrEqual(3);
+  });
+  it("the theme applies exactly the measured tokens (dark vars and light vars)", async () => {
+    const { SUBJECT_THEMES } = await import("@/lib/subject-themes");
+    const f = SUBJECT_THEMES.forge!;
+    expect(f.vars).toMatchObject({
+      "--text": "var(--forge-text)", "--text-muted": "var(--forge-text-muted)", "--text-faint": "var(--forge-text-faint)",
+      "--surface": "var(--forge-surface)", "--surface-raised": "var(--forge-surface-raised)",
+    });
+    expect(f.light?.vars).toMatchObject({
+      "--text": "var(--forge-light-text)", "--text-muted": "var(--forge-light-text-muted)", "--text-faint": "var(--forge-light-text-faint)",
+      "--surface": "var(--forge-light-bg)", "--surface-raised": "var(--forge-light-surface)",
+    });
+  });
+});

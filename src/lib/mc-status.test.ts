@@ -14,7 +14,7 @@ function mod(p: Partial<ModuleRM> & { id: string }): ModuleRM {
 }
 function rm(p: Partial<ReadModel>): ReadModel {
   const stats: Stats = { totalXp: 0, grade: "Scintilla", gradeIndex: 0, currentStreak: 0, longestStreak: 0, shields: 0, lastQualifiedDay: null } as Stats;
-  return { goals: [], paths: [], modules: [], edges: [], qualifiedDays: [], stats, reviewDue: [], notes: [], sleepCycles: [], obligations: [], canvas: { lastSyncTs: null, lastOkTs: null, cookieStale: false }, celebratedGrade: null, evaluations: [], gates: [], missions: [], pendingAi: [], cursor: null, ...p };
+  return { goals: [], paths: [], modules: [], edges: [], qualifiedDays: [], stats, reviewDue: [], notes: [], sleepCycles: [], obligations: [], canvas: { lastSyncTs: null, lastOkTs: null, cookieStale: false }, celebratedGrade: null, evaluations: [], gates: [], missions: [], pendingAi: [], evidence: [], forgeVerdicts: [], nativeGates: [], cursor: null, ...p };
 }
 const ev = (type: string, module_id: string | null, ts: number): ArcanumEvent => ({ id: type + ts, type: type as ArcanumEvent["type"], ts, device_id: "d", goal_id: null, module_id, payload: {}, v: 1 });
 
