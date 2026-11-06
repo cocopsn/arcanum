@@ -1,0 +1,707 @@
+{
+  "v": 1,
+  "slug": "f2",
+  "code": "F2",
+  "name": "F2 · Proyectos de campo y evaluaciones integradoras",
+  "family": "Oficio FDE",
+  "header": {
+    "entrada": "Puertas por proyecto; detalle más abajo.",
+    "entradaRecomendada": [],
+    "evidencia": "Paquete ejecutable/documentado, resultados medidos, demo y defensa de contribución propia.",
+    "apoyo": [
+      {
+        "clave": "C-16",
+        "etiqueta": "Palantir Learning",
+        "url": "https://learn.palantir.com/",
+        "tipo": "curso",
+        "acceso": "cuenta"
+      },
+      {
+        "clave": "C-17",
+        "etiqueta": "Ontologize: tutoriales",
+        "url": "https://www.ontologize.com/tutorials",
+        "tipo": "curso",
+        "acceso": "publico"
+      }
+    ]
+  },
+  "cells": [
+    {
+      "code": "F2-01",
+      "id": "cf000000-0000-4000-8000-0046322d3031",
+      "title": "F2-01 · Proyecto 1: clínica operativa",
+      "cls": "ruta",
+      "flujo": "proyecto",
+      "compuerta": "mision",
+      "ficha": {
+        "foco": "Proyecto 1: clínica operativa.",
+        "fuentes": [
+          {
+            "clave": "USE",
+            "etiqueta": "Use case lifecycle • Overview • Palantir",
+            "url": "https://www.palantir.com/docs/foundry/use-case-life-cycle/overview",
+            "tipo": "docs",
+            "acceso": "publico"
+          },
+          {
+            "clave": "ONTO",
+            "etiqueta": "Overview • Ontology • Palantir",
+            "url": "https://www.palantir.com/docs/foundry/ontology/overview",
+            "tipo": "docs",
+            "acceso": "publico"
+          },
+          {
+            "clave": "WORK",
+            "etiqueta": "Workshop • Getting started • Palantir",
+            "url": "https://www.palantir.com/docs/foundry/workshop/getting-started",
+            "tipo": "docs",
+            "acceso": "publico"
+          }
+        ],
+        "mision": "Construye conciliación de citas, equipos y capacidad con datos sintéticos.",
+        "defensa": "El usuario decide, actúa y verifica el resultado; no basta un dashboard."
+      },
+      "gate": {
+        "pregunta": "El usuario decide, actúa y verifica el resultado; no basta un dashboard.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Producto ≥ 3: El usuario decide, actúa y verifica el resultado;",
+          "Datos ≥ 3: Construye conciliación de citas, equipos y capacidad con datos sintéticos.",
+          "Correctitud (condición crítica): El usuario decide, actúa y verifica el resultado;",
+          "Identidad (condición crítica): Construye conciliación de citas, equipos y capacidad con datos sintéticos.",
+          "Aceptación del proyecto: no se generan reservas inválidas en la suite publicada y reservada; la consulta reproduce el estado después de la acción según garantías documentadas; las negativas de permisos pasan; la demo muestra un antes/después medido sobre el mismo dataset. Entrega README, evidencia de tests, video de cinco minutos, diagrama y ADR. Presupuesto inicial de 20–30 horas tras cubrir las bases."
+        ]
+      },
+      "capacidades": [
+        "producto",
+        "datos"
+      ],
+      "rastroCapacidades": {
+        "producto": "El usuario decide, actúa y verifica el resultado;",
+        "datos": "Construye conciliación de citas, equipos y capacidad con datos sintéticos."
+      },
+      "criticas": [
+        {
+          "id": "correctitud",
+          "texto": "Correctitud",
+          "rastro": "El usuario decide, actúa y verifica el resultado;"
+        },
+        {
+          "id": "identidad",
+          "texto": "Identidad",
+          "rastro": "Construye conciliación de citas, equipos y capacidad con datos sintéticos."
+        }
+      ],
+      "proyecto": {
+        "n": 1,
+        "titulo": "Auctorum Clinic Operations",
+        "campos": [
+          {
+            "etiqueta": "Brief inicial deliberadamente incompleto",
+            "texto": "“La clínica tiene huecos en agenda y pacientes esperando; necesitamos una pantalla para arreglarlo”. Tu primera tarea no es programar la pantalla: es descubrir qué significa esperar, dónde se pierde capacidad y qué puede cambiar cada operador."
+          },
+          {
+            "etiqueta": "Se entrega al alumno",
+            "texto": "500 citas sintéticas, 30 días de disponibilidad, 12 equipos/consultorios, dos catálogos de servicios con IDs distintos, duplicados y cambios de última hora. Las inconsistencias vienen etiquetadas solo en el paquete del evaluador."
+          },
+          {
+            "etiqueta": "Construcción requerida",
+            "texto": "conciliación; objetos de cita, recurso, servicio y orden; vista de conflictos; acción de reasignación; historial de decisiones; indicador de capacidad aprovechada frente a un baseline. Ninguna función realiza recomendaciones clínicas."
+          },
+          {
+            "etiqueta": "Incidentes",
+            "texto": "llegan dos solicitudes sobre el mismo recurso; la fuente cambia tras una edición del operador; se cancela una acción a mitad de un recorrido de UI; el usuario pierde acceso a un área."
+          },
+          {
+            "etiqueta": "Aceptación",
+            "texto": "no se generan reservas inválidas en la suite publicada y reservada; la consulta reproduce el estado después de la acción según garantías documentadas; las negativas de permisos pasan; la demo muestra un antes/después medido sobre el mismo dataset. Entrega README, evidencia de tests, video de cinco minutos, diagrama y ADR. Presupuesto inicial de 20–30 horas tras cubrir las bases."
+          }
+        ]
+      },
+      "naturaleza": {
+        "valor": "a_mano"
+      },
+      "alcance": "local+nativa",
+      "etiquetas": []
+    },
+    {
+      "code": "F2-02",
+      "id": "cf000000-0000-4000-8000-0046322d3032",
+      "title": "F2-02 · Proyecto 2: FrED maintenance",
+      "cls": "ruta",
+      "flujo": "proyecto",
+      "compuerta": "mision",
+      "ficha": {
+        "foco": "Proyecto 2: FrED maintenance.",
+        "fuentes": [
+          {
+            "clave": "TIME",
+            "etiqueta": "Time series • Overview • Palantir",
+            "url": "https://www.palantir.com/docs/foundry/time-series/time-series-overview",
+            "tipo": "docs",
+            "acceso": "publico"
+          },
+          {
+            "clave": "CDC",
+            "etiqueta": "Core concepts • Change data capture (CDC) • Palantir",
+            "url": "https://www.palantir.com/docs/foundry/data-integration/change-data-capture",
+            "tipo": "docs",
+            "acceso": "publico"
+          },
+          {
+            "clave": "AUTO",
+            "etiqueta": "Automate • Overview • Palantir",
+            "url": "https://www.palantir.com/docs/foundry/automate/overview",
+            "tipo": "docs",
+            "acceso": "publico"
+          }
+        ],
+        "mision": "Conecta eventos de una planta simulada a un flujo de mantenimiento.",
+        "defensa": "Maneja datos tardíos, sensores ruidosos y repetición de alertas."
+      },
+      "gate": {
+        "pregunta": "Maneja datos tardíos, sensores ruidosos y repetición de alertas.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Producto ≥ 3: Conecta eventos de una planta simulada a un flujo de mantenimiento.",
+          "Sistemas ≥ 3: FrED maintenance.",
+          "Datos ≥ 3: Maneja datos tardíos, sensores ruidosos y repetición de alertas.",
+          "Correctitud (condición crítica): Maneja datos tardíos, sensores ruidosos y repetición de alertas.",
+          "Aceptación del proyecto: replay determinista para la parte determinista; no crear alertas duplicadas bajo el mismo incidente; señalizar datos obsoletos; comparar falsos positivos y falsos negativos sobre etiquetas conocidas. Un sensor normal no prueba que la máquina esté sana. Entrega runbook y reporte de una falla inyectada. Presupuesto: 20–35 horas."
+        ]
+      },
+      "capacidades": [
+        "producto",
+        "sistemas",
+        "datos"
+      ],
+      "rastroCapacidades": {
+        "producto": "Conecta eventos de una planta simulada a un flujo de mantenimiento.",
+        "sistemas": "FrED maintenance.",
+        "datos": "Maneja datos tardíos, sensores ruidosos y repetición de alertas."
+      },
+      "criticas": [
+        {
+          "id": "correctitud",
+          "texto": "Correctitud",
+          "rastro": "Maneja datos tardíos, sensores ruidosos y repetición de alertas."
+        }
+      ],
+      "proyecto": {
+        "n": 2,
+        "titulo": "FrED Maintenance Control",
+        "campos": [
+          {
+            "etiqueta": "Brief",
+            "texto": "“La línea se detiene y nadie sabe qué alerta atender primero”. Inicia entrevistando a un operador simulado y define el costo de detenerse, de ignorar una falla y de crear una falsa alarma."
+          },
+          {
+            "etiqueta": "Inputs",
+            "texto": "tres sensores simulados, muestreo nominal de 1 Hz, diez activos, catálogo de mantenimiento y stream con duplicados, retrasos, unidades incompatibles y pérdidas. Esta tasa es del laboratorio y no una capacidad garantizada de Foundry."
+          },
+          {
+            "etiqueta": "Construcción",
+            "texto": "ingestión; normalización de unidades y tiempo; series; detección baseline antes de ML; objeto de incidente; asignación de responsable; acción de reconocer y cerrar; recuperación de un stream interrumpido. La simulación no controla maquinaria física."
+          },
+          {
+            "etiqueta": "Aceptación",
+            "texto": "replay determinista para la parte determinista; no crear alertas duplicadas bajo el mismo incidente; señalizar datos obsoletos; comparar falsos positivos y falsos negativos sobre etiquetas conocidas. Un sensor normal no prueba que la máquina esté sana. Entrega runbook y reporte de una falla inyectada. Presupuesto: 20–35 horas."
+          }
+        ]
+      },
+      "naturaleza": {
+        "valor": "a_mano"
+      },
+      "alcance": "local+nativa",
+      "etiquetas": []
+    },
+    {
+      "code": "F2-03",
+      "id": "cf000000-0000-4000-8000-0046322d3033",
+      "title": "F2-03 · Proyecto 3: documentos a decisiones",
+      "cls": "ruta",
+      "flujo": "proyecto",
+      "compuerta": "mision",
+      "ficha": {
+        "foco": "Proyecto 3: documentos a decisiones.",
+        "fuentes": [
+          {
+            "clave": "DOC",
+            "etiqueta": "AIP Document Intelligence • Overview • Palantir",
+            "url": "https://www.palantir.com/docs/foundry/document-intelligence/overview",
+            "tipo": "docs",
+            "acceso": "publico"
+          },
+          {
+            "clave": "RAG",
+            "etiqueta": "AIP Chatbot Studio • Retrieval context • Context types • Palantir",
+            "url": "https://www.palantir.com/docs/foundry/chatbot-studio/retrieval-context",
+            "tipo": "docs",
+            "acceso": "publico"
+          },
+          {
+            "clave": "EVAL",
+            "etiqueta": "AIP Evals • Evaluation suites for Logic functions • Palantir",
+            "url": "https://www.palantir.com/docs/foundry/aip-evals/getting-started",
+            "tipo": "docs",
+            "acceso": "publico"
+          }
+        ],
+        "mision": "Extrae, recupera y revisa evidencia documental antes de crear una acción.",
+        "defensa": "Debe abstenerse sin evidencia suficiente y conservar trazabilidad."
+      },
+      "gate": {
+        "pregunta": "Debe abstenerse sin evidencia suficiente y conservar trazabilidad.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Producto ≥ 3: Extrae, recupera y revisa evidencia documental antes de crear una acción.",
+          "Comunicación ≥ 3: Extrae, recupera y revisa evidencia documental antes de crear una acción.",
+          "Responsabilidad ≥ 3: Extrae, recupera y revisa evidencia documental antes de crear una acción.",
+          "Trazabilidad (condición crítica): Debe abstenerse sin evidencia suficiente y conservar trazabilidad.",
+          "Recuperación (condición crítica): Extrae, recupera y revisa evidencia documental antes de crear una acción.",
+          "Aceptación del proyecto: ningún write crítico sin precondiciones y revisión requerida; todas las citas comprobadas apuntan al soporte correcto; reporte separado de extracción, retrieval y generación; abstenciones contabilizadas; resultados publicados y reservados con costos y tamaño de muestra. No se afirma significación estadística con un set pequeño. Presupuesto: 25–40 horas."
+        ]
+      },
+      "capacidades": [
+        "producto",
+        "comunicacion",
+        "responsabilidad"
+      ],
+      "rastroCapacidades": {
+        "producto": "Extrae, recupera y revisa evidencia documental antes de crear una acción.",
+        "comunicacion": "Extrae, recupera y revisa evidencia documental antes de crear una acción.",
+        "responsabilidad": "Extrae, recupera y revisa evidencia documental antes de crear una acción."
+      },
+      "criticas": [
+        {
+          "id": "trazabilidad",
+          "texto": "Trazabilidad",
+          "rastro": "Debe abstenerse sin evidencia suficiente y conservar trazabilidad."
+        },
+        {
+          "id": "recuperacion",
+          "texto": "Recuperación",
+          "rastro": "Extrae, recupera y revisa evidencia documental antes de crear una acción."
+        }
+      ],
+      "proyecto": {
+        "n": 3,
+        "titulo": "Evidence-to-Action con AIP",
+        "campos": [
+          {
+            "etiqueta": "Brief",
+            "texto": "“Tenemos documentos y queremos un agente que los entienda”. Debes convertirlo en una tarea concreta: proponer una actualización de orden respaldada por cláusulas y campos localizables."
+          },
+          {
+            "etiqueta": "Inputs",
+            "texto": "60 documentos sintéticos de formatos variados; algunos contienen contradicciones, fechas vencidas, tablas y texto que intenta dar instrucciones al asistente. La versión reservada incluye documentos no usados para ajustar prompts."
+          },
+          {
+            "etiqueta": "Construcción",
+            "texto": "extracción con evidencia; registro de versión; recuperación; respuesta con citas; propuesta de acción estructurada; revisión humana; permisos; observabilidad y costo por tarea. Comparar baseline determinista, modelo A y modelo B cuando estén disponibles. No comparar proveedores indisponibles con cifras inventadas."
+          },
+          {
+            "etiqueta": "Aceptación",
+            "texto": "ningún write crítico sin precondiciones y revisión requerida; todas las citas comprobadas apuntan al soporte correcto; reporte separado de extracción, retrieval y generación; abstenciones contabilizadas; resultados publicados y reservados con costos y tamaño de muestra. No se afirma significación estadística con un set pequeño. Presupuesto: 25–40 horas."
+          }
+        ]
+      },
+      "naturaleza": {
+        "valor": "a_mano"
+      },
+      "alcance": "local+nativa",
+      "etiquetas": []
+    },
+    {
+      "code": "F2-04",
+      "id": "cf000000-0000-4000-8000-0046322d3034",
+      "title": "F2-04 · Proyecto 4: asignación logística",
+      "cls": "ruta",
+      "flujo": "proyecto",
+      "compuerta": "mision",
+      "ficha": {
+        "foco": "Proyecto 4: asignación logística.",
+        "fuentes": [
+          {
+            "clave": "OASD",
+            "etiqueta": "Índice comunitario de system design",
+            "url": "https://github.com/perixtar/Tech-OA-Interview-Questions/blob/master/formats/system-design.md",
+            "tipo": "otro",
+            "acceso": "publico"
+          },
+          {
+            "clave": "CONSIST",
+            "etiqueta": "Action types • Consistency and isolation • Palantir",
+            "url": "https://www.palantir.com/docs/foundry/action-types/consistency-guarantees",
+            "tipo": "docs",
+            "acceso": "publico"
+          }
+        ],
+        "mision": "Asigna recursos escasos y resuelve conflictos al cambiar restricciones.",
+        "defensa": "Evita doble reserva y explica cuándo deja de servir tu optimizador."
+      },
+      "gate": {
+        "pregunta": "Evita doble reserva y explica cuándo deja de servir tu optimizador.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Producto ≥ 3: Asigna recursos escasos y resuelve conflictos al cambiar restricciones.",
+          "Comunicación ≥ 3: Evita doble reserva y explica cuándo deja de servir tu optimizador.",
+          "Correctitud (condición crítica): Evita doble reserva y explica cuándo deja de servir tu optimizador.",
+          "Aceptación del proyecto: restricciones duras verificadas por código independiente; métrica de calidad frente al baseline; informe de casos inviables; reconciliación de efectos externos; defensa sobre cuándo abandonar la heurística. Presupuesto: 25–40 horas."
+        ]
+      },
+      "capacidades": [
+        "producto",
+        "comunicacion"
+      ],
+      "rastroCapacidades": {
+        "producto": "Asigna recursos escasos y resuelve conflictos al cambiar restricciones.",
+        "comunicacion": "Evita doble reserva y explica cuándo deja de servir tu optimizador."
+      },
+      "criticas": [
+        {
+          "id": "correctitud",
+          "texto": "Correctitud",
+          "rastro": "Evita doble reserva y explica cuándo deja de servir tu optimizador."
+        }
+      ],
+      "proyecto": {
+        "n": 4,
+        "titulo": "Logistics Disruption Desk",
+        "campos": [
+          {
+            "etiqueta": "Brief",
+            "texto": "“Un retraso afecta varias entregas; reasigna recursos”. Puedes elegir aeronaves de carga simuladas o vehículos, pero no cambiar el problema a un simple CRUD."
+          },
+          {
+            "etiqueta": "Inputs",
+            "texto": "100 órdenes, 15 recursos, ventanas de tiempo, capacidades y dos fuentes de estado que discrepan. Después de tu primera demo se introduce un recurso fuera de servicio y una prioridad comercial nueva."
+          },
+          {
+            "etiqueta": "Construcción",
+            "texto": "modelo de restricciones; solución baseline; asignación y replaneación; comparación de escenarios sin asumir que una función legacy está disponible; acciones con control de concurrencia; simulador de sistema externo que a veces confirma y a veces deja resultado desconocido."
+          },
+          {
+            "etiqueta": "Aceptación",
+            "texto": "restricciones duras verificadas por código independiente; métrica de calidad frente al baseline; informe de casos inviables; reconciliación de efectos externos; defensa sobre cuándo abandonar la heurística. Presupuesto: 25–40 horas."
+          }
+        ]
+      },
+      "naturaleza": {
+        "valor": "a_mano"
+      },
+      "alcance": "local+nativa",
+      "etiquetas": []
+    },
+    {
+      "code": "F2-05",
+      "id": "cf000000-0000-4000-8000-0046322d3035",
+      "title": "F2-05 · Proyecto 5: aprender un dominio nuevo",
+      "cls": "ruta",
+      "flujo": "proyecto",
+      "compuerta": "mision",
+      "ficha": {
+        "foco": "Proyecto 5: aprender un dominio nuevo.",
+        "fuentes": [
+          {
+            "clave": "USE",
+            "etiqueta": "Use case lifecycle • Overview • Palantir",
+            "url": "https://www.palantir.com/docs/foundry/use-case-life-cycle/overview",
+            "tipo": "docs",
+            "acceso": "publico"
+          },
+          {
+            "clave": "DIST",
+            "etiqueta": "6.5840 Schedule: Spring 2026",
+            "url": "https://pdos.csail.mit.edu/6.5840/schedule.html",
+            "tipo": "curso",
+            "acceso": "publico"
+          }
+        ],
+        "mision": "Recibe un caso ajeno a salud e industria; entrega una vertical en dos días de trabajo.",
+        "defensa": "Pregunta antes de asumir y mide una mejora frente a un baseline."
+      },
+      "gate": {
+        "pregunta": "Pregunta antes de asumir y mide una mejora frente a un baseline.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Producto ≥ 3: Recibe un caso ajeno a salud e industria; entrega una vertical en dos días de trabajo.",
+          "Correctitud (condición crítica): Pregunta antes de asumir y mide una mejora frente a un baseline.",
+          "Aceptación del proyecto: preguntas iniciales registradas; hipótesis contrastable; una vertical que opere; límites conocidos; demo comprensible; un cambio de requisito absorbido sin reescribir todo. El uso de IA es permitido en construcción y se audita; la defensa posterior es independiente."
+        ]
+      },
+      "capacidades": [
+        "producto"
+      ],
+      "rastroCapacidades": {
+        "producto": "Recibe un caso ajeno a salud e industria; entrega una vertical en dos días de trabajo."
+      },
+      "criticas": [
+        {
+          "id": "correctitud",
+          "texto": "Correctitud",
+          "rastro": "Pregunta antes de asumir y mide una mejora frente a un baseline."
+        }
+      ],
+      "proyecto": {
+        "n": 5,
+        "titulo": "Dominio desconocido, primera vertical",
+        "campos": [
+          {
+            "etiqueta": "Brief reservado hasta iniciar",
+            "texto": "Ejemplos de familia: desperdicio alimentario, reparaciones de equipos compartidos o incidencias de un campus. No se permite elegir salud o industria para esta prueba de transferencia."
+          },
+          {
+            "etiqueta": "Restricción",
+            "texto": "dos jornadas de trabajo de 6–8 horas, con pausas. El evaluador introduce una ambigüedad de identidad, una fuente rota y un usuario que cambia de opinión. Se evalúa la priorización; no cuántas pantallas lograste fabricar."
+          },
+          {
+            "etiqueta": "Aceptación",
+            "texto": "preguntas iniciales registradas; hipótesis contrastable; una vertical que opere; límites conocidos; demo comprensible; un cambio de requisito absorbido sin reescribir todo. El uso de IA es permitido en construcción y se audita; la defensa posterior es independiente."
+          }
+        ]
+      },
+      "naturaleza": {
+        "valor": "mixto",
+        "rastro": "El uso de IA es permitido en construcción y se audita; la defensa posterior es independiente.",
+        "parts": [
+          {
+            "name": "Construcción de la vertical (IA permitida y auditada)",
+            "nature": "delegable"
+          },
+          {
+            "name": "Defensa posterior independiente",
+            "nature": "a_mano"
+          }
+        ]
+      },
+      "alcance": "local",
+      "etiquetas": []
+    },
+    {
+      "code": "F2-06",
+      "id": "cf000000-0000-4000-8000-0046322d3036",
+      "title": "F2-06 · Proyecto 6: hardening y traspaso",
+      "cls": "ruta",
+      "flujo": "proyecto",
+      "compuerta": "mision",
+      "ficha": {
+        "foco": "Proyecto 6: hardening y traspaso.",
+        "fuentes": [
+          {
+            "clave": "BRANCH",
+            "etiqueta": "Global Branching • Overview • Palantir",
+            "url": "https://www.palantir.com/docs/foundry/global-branching",
+            "tipo": "docs",
+            "acceso": "publico"
+          },
+          {
+            "clave": "HEALTH",
+            "etiqueta": "Data Health • Palantir",
+            "url": "https://www.palantir.com/docs/foundry/observability/data-health",
+            "tipo": "docs",
+            "acceso": "publico"
+          },
+          {
+            "clave": "SEC",
+            "etiqueta": "Concepts • Access control propagation • Palantir",
+            "url": "https://www.palantir.com/docs/foundry/security/access-control-propagation",
+            "tipo": "docs",
+            "acceso": "publico"
+          }
+        ],
+        "mision": "Otra persona intenta romper y operar uno de tus proyectos sin tu ayuda.",
+        "defensa": "Recupera el sistema y corrige el runbook a partir de fallas observadas."
+      },
+      "gate": {
+        "pregunta": "Recupera el sistema y corrige el runbook a partir de fallas observadas.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Producto ≥ 3: Otra persona intenta romper y operar uno de tus proyectos sin tu ayuda.",
+          "Responsabilidad ≥ 3: Recupera el sistema y corrige el runbook a partir de fallas observadas.",
+          "Recuperación (condición crítica): Recupera el sistema y corrige el runbook a partir de fallas observadas.",
+          "Aceptación del proyecto: detectar y localizar; preservar datos y decisiones; recuperar o compensar; comunicar impacto y límites; actualizar el runbook con lo aprendido. Cerrar con revisión de diseño y postmortem sin culpas. Presupuesto: 12–20 horas."
+        ]
+      },
+      "capacidades": [
+        "producto",
+        "responsabilidad"
+      ],
+      "rastroCapacidades": {
+        "producto": "Otra persona intenta romper y operar uno de tus proyectos sin tu ayuda.",
+        "responsabilidad": "Recupera el sistema y corrige el runbook a partir de fallas observadas."
+      },
+      "criticas": [
+        {
+          "id": "recuperacion",
+          "texto": "Recuperación",
+          "rastro": "Recupera el sistema y corrige el runbook a partir de fallas observadas."
+        }
+      ],
+      "proyecto": {
+        "n": 6,
+        "titulo": "Operación, handoff y game day",
+        "campos": [
+          {
+            "etiqueta": "",
+            "texto": "Selecciona uno de los proyectos anteriores. Otra persona lo instala o utiliza siguiendo solo tu documentación. Si no hay observador humano, una ejecución automatizada desde entorno limpio verifica reproducibilidad, pero no sustituye la prueba de usabilidad humana."
+          },
+          {
+            "etiqueta": "Incidentes",
+            "texto": "fuente obsoleta; duplicación de evento; permiso insuficiente; servicio externo lento; cambio incompatible de esquema; modelo que produce una respuesta bien formada pero incorrecta. Se elige un subconjunto sin anunciarlo."
+          },
+          {
+            "etiqueta": "Aceptación",
+            "texto": "detectar y localizar; preservar datos y decisiones; recuperar o compensar; comunicar impacto y límites; actualizar el runbook con lo aprendido. Cerrar con revisión de diseño y postmortem sin culpas. Presupuesto: 12–20 horas."
+          }
+        ]
+      },
+      "naturaleza": {
+        "valor": "a_mano"
+      },
+      "alcance": "local+nativa",
+      "etiquetas": []
+    },
+    {
+      "code": "F2-07",
+      "id": "cf000000-0000-4000-8000-0046322d3037",
+      "title": "F2-07 · Mock loop FDE",
+      "cls": "ruta",
+      "flujo": "mision",
+      "compuerta": "mision",
+      "ficha": {
+        "foco": "Mock loop FDE.",
+        "fuentes": [
+          {
+            "clave": "CAREER",
+            "etiqueta": "Palantir Careers | Getting Hired",
+            "url": "https://www.palantir.com/careers/getting-hired",
+            "tipo": "otro",
+            "acceso": "publico"
+          },
+          {
+            "clave": "OA",
+            "etiqueta": "Tech OA and Interview Questions — índice comunitario",
+            "url": "https://github.com/perixtar/Tech-OA-Interview-Questions",
+            "tipo": "otro",
+            "acceso": "publico"
+          },
+          {
+            "clave": "OASD",
+            "etiqueta": "Índice comunitario de system design",
+            "url": "https://github.com/perixtar/Tech-OA-Interview-Questions/blob/master/formats/system-design.md",
+            "tipo": "otro",
+            "acceso": "publico"
+          }
+        ],
+        "mision": "Completa coding, aprendizaje, descomposición, diseño y defensa de proyecto.",
+        "defensa": "Formato de práctica propio; no se presenta como proceso oficial de contratación."
+      },
+      "gate": {
+        "pregunta": "Formato de práctica propio; no se presenta como proceso oficial de contratación.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Producto ≥ 3: Completa coding, aprendizaje, descomposición, diseño y defensa de proyecto.",
+          "Comunicación ≥ 3: no se presenta como proceso oficial de contratación.",
+          "Correctitud (condición crítica): Formato de práctica propio; no se presenta como proceso oficial de contratación."
+        ]
+      },
+      "capacidades": [
+        "producto",
+        "comunicacion"
+      ],
+      "rastroCapacidades": {
+        "producto": "Completa coding, aprendizaje, descomposición, diseño y defensa de proyecto.",
+        "comunicacion": "no se presenta como proceso oficial de contratación."
+      },
+      "criticas": [
+        {
+          "id": "correctitud",
+          "texto": "Correctitud",
+          "rastro": "Formato de práctica propio; no se presenta como proceso oficial de contratación."
+        }
+      ],
+      "naturaleza": {
+        "valor": "a_mano"
+      },
+      "alcance": "local",
+      "etiquetas": [
+        "formato_practica"
+      ]
+    },
+    {
+      "code": "F2-08",
+      "id": "cf000000-0000-4000-8000-0046322d3038",
+      "title": "F2-08 · Graduación con dominio transferible",
+      "cls": "ruta",
+      "flujo": "mision",
+      "compuerta": "mision",
+      "ficha": {
+        "foco": "Graduación con dominio transferible.",
+        "fuentes": [
+          {
+            "clave": "USE",
+            "etiqueta": "Use case lifecycle • Overview • Palantir",
+            "url": "https://www.palantir.com/docs/foundry/use-case-life-cycle/overview",
+            "tipo": "docs",
+            "acceso": "publico"
+          },
+          {
+            "clave": "EVAL",
+            "etiqueta": "AIP Evals • Evaluation suites for Logic functions • Palantir",
+            "url": "https://www.palantir.com/docs/foundry/aip-evals/getting-started",
+            "tipo": "docs",
+            "acceso": "publico"
+          },
+          {
+            "clave": "SLO",
+            "etiqueta": "Google SRE - Continuous Improvement To Get Reliability",
+            "url": "https://sre.google/workbook/implementing-slos/",
+            "tipo": "otro",
+            "acceso": "publico"
+          }
+        ],
+        "mision": "Defiende un proyecto desconocido y vuelve a resolver dos tareas semanas después.",
+        "defensa": "Tres evaluaciones independientes sin fallas críticas y evidencia de retención."
+      },
+      "gate": {
+        "pregunta": "Tres evaluaciones independientes sin fallas críticas y evidencia de retención.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Producto ≥ 3: Defiende un proyecto desconocido y vuelve a resolver dos tareas semanas después.",
+          "Responsabilidad ≥ 3: Tres evaluaciones independientes sin fallas críticas y evidencia de retención.",
+          "Correctitud (condición crítica): Tres evaluaciones independientes sin fallas críticas y evidencia de retención."
+        ]
+      },
+      "capacidades": [
+        "producto",
+        "responsabilidad"
+      ],
+      "rastroCapacidades": {
+        "producto": "Defiende un proyecto desconocido y vuelve a resolver dos tareas semanas después.",
+        "responsabilidad": "Tres evaluaciones independientes sin fallas críticas y evidencia de retención."
+      },
+      "criticas": [
+        {
+          "id": "correctitud",
+          "texto": "Correctitud",
+          "rastro": "Tres evaluaciones independientes sin fallas críticas y evidencia de retención."
+        }
+      ],
+      "naturaleza": {
+        "valor": "a_mano"
+      },
+      "alcance": "local",
+      "etiquetas": []
+    }
+  ],
+  "maestro_sha10": "38cbc7da42"
+}

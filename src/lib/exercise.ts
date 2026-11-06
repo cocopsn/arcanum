@@ -4,8 +4,22 @@
 // learner hunts the bug. Level 3 (design/elegance) is NOT judged offline (Phase 3, Asuka with AI). This
 // file is the pure model + comparison helpers (no DOM, no worker) → fully testable.
 
+import type { ForgeBankItem } from "@/forge/bank/registry";
+
 export type Lang = "js" | "python";
 export type ExerciseSource = "curated" | "procedural" | "book";
+/** `rol:` line of the bank contract (§9.2): practica (default), recuperacion, prediccion or transferencia. */
+export type ExerciseRol = "practica" | "recuperacion" | "prediccion" | "transferencia";
+export const EXERCISE_ROLES: readonly ExerciseRol[] = ["practica", "recuperacion", "prediccion", "transferencia"];
+
+/** Optional `id:` / `rol:` lines on the existing kinds. Present ONLY when the bank declares them, so a bank
+ *  without those lines parses exactly as before (exercises-md-compat.test.ts). */
+interface DeclaredItem {
+  /** the `id:` line (the evidence itemId); absent → positional id as before */
+  itemId?: string;
+  /** the `rol:` line; absent → practica */
+  rol?: ExerciseRol;
+}
 
 export interface TestCase {
   /** positional args passed to the learner's function */
@@ -24,7 +38,7 @@ export interface QualityPattern {
   message: string;
 }
 
-export interface CodeExercise {
+export interface CodeExercise extends DeclaredItem {
   id: string;
   kind: "code";
   moduleId: string | null;
@@ -46,9 +60,15 @@ export interface CodeExercise {
   source: ExerciseSource;
   /** declared time target in minutes (`tiempo:` in the bank contract) — arms the real drill clock */
   timeTargetMin?: number;
+  /** RF-E1 (optional): this language's `generate(seed)` source; with it, `generatedCases` exist. Not run by the
+   *  current runner: a generated case runs in the worker as __run_generated(seed) (owner of the runtime, §9.3). */
+  generator?: string;
+  generatedCases?: { semilla: number; esperado: unknown }[];
+  /** RF-E1 (optional): this language's `check(args, salida, esperado)` source, for outputs with valid ties */
+  checker?: string;
 }
 
-export interface ChoiceExercise {
+export interface ChoiceExercise extends DeclaredItem {
   id: string;
   kind: "choice";
   moduleId: string | null;
@@ -70,7 +90,7 @@ export interface ChoiceExercise {
  *  auto-graded (grading free production offline would be a placebo) — the learner self-attests honestly
  *  against the rubric, exactly like the "fallback that shows the reference and advances". Self-attest fires
  *  reinforcement (checkpoint XP), NEVER mastery — mastery stays gate-only. */
-export interface ProductionExercise {
+export interface ProductionExercise extends DeclaredItem {
   id: string;
   kind: "production";
   moduleId: string | null;
@@ -87,7 +107,9 @@ export interface ProductionExercise {
   timeTargetMin?: number;
 }
 
-export type Exercise = CodeExercise | ChoiceExercise | ProductionExercise;
+/** `kind: "forge"` = one of the 16 Forge types (src/forge/bank/registry.ts). The existing UI filters by kind
+ *  (code/choice/production), so a Forge item never reaches those runners. */
+export type Exercise = CodeExercise | ChoiceExercise | ProductionExercise | ForgeBankItem;
 
 // ── pure comparison + formatting (used by the runner + the UI) ──────────────────────────────
 export function deepEqual(a: unknown, b: unknown): boolean {

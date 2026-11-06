@@ -1,0 +1,464 @@
+{
+  "v": 1,
+  "slug": "sw4",
+  "code": "SW4",
+  "name": "SW4 · Almacenamiento y sistemas distribuidos en profundidad",
+  "family": "Profundidad SWE",
+  "header": {
+    "entrada": "S1, S2 y SW2/SW3 segun laboratorio; C++ para CMU y Go para MIT.",
+    "entradaRecomendada": [
+      "S1",
+      "S2",
+      "SW2",
+      "SW3"
+    ],
+    "evidencia": "",
+    "apoyo": [
+      {
+        "clave": "C-10",
+        "etiqueta": "CMU 15-445/645, Spring 2025: assignments",
+        "url": "https://15445.courses.cs.cmu.edu/spring2025/assignments.html",
+        "tipo": "curso",
+        "acceso": "publico"
+      },
+      {
+        "clave": "C-11",
+        "etiqueta": "MIT 6.5840: calendario",
+        "url": "https://pdos.csail.mit.edu/6.5840/schedule.html",
+        "tipo": "curso",
+        "acceso": "publico"
+      }
+    ]
+  },
+  "cells": [
+    {
+      "code": "SW4-01",
+      "id": "cf000000-0000-4000-8000-5357342d3031",
+      "title": "SW4-01 · Motor de almacenamiento y buffer pool",
+      "cls": "ruta",
+      "flujo": "mision",
+      "compuerta": "mision",
+      "ficha": {
+        "resultado": "Comprender que conserva y que reemplaza un buffer de paginas.",
+        "fuentes": [
+          {
+            "clave": "C-10",
+            "etiqueta": "CMU 15-445/645, Spring 2025: assignments",
+            "url": "https://15445.courses.cs.cmu.edu/spring2025/assignments.html",
+            "tipo": "curso",
+            "acceso": "publico"
+          }
+        ],
+        "mision": "Completa el Buffer Pool Manager de CMU de la edición seleccionada.",
+        "defensa": "Muestra tests de la edición y un limite que los tests no prueban.",
+        "variante": "Explica evicción, referencias y acceso concurrente usando casos pequenos propios."
+      },
+      "gate": {
+        "pregunta": "Muestra tests de la edición y un limite que los tests no prueban.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Sistemas ≥ 3: Explica evicción, referencias y acceso concurrente usando casos pequenos propios.",
+          "Comunicación ≥ 3: Explica evicción, referencias y acceso concurrente usando casos pequenos propios.",
+          "Correctitud (condición crítica): Muestra tests de la edición y un limite que los tests no prueban.",
+          "Autorización (condición crítica): Explica evicción, referencias y acceso concurrente usando casos pequenos propios."
+        ]
+      },
+      "capacidades": [
+        "sistemas",
+        "comunicacion"
+      ],
+      "rastroCapacidades": {
+        "sistemas": "Explica evicción, referencias y acceso concurrente usando casos pequenos propios.",
+        "comunicacion": "Explica evicción, referencias y acceso concurrente usando casos pequenos propios."
+      },
+      "criticas": [
+        {
+          "id": "correctitud",
+          "texto": "Correctitud",
+          "rastro": "Muestra tests de la edición y un limite que los tests no prueban."
+        },
+        {
+          "id": "autorizacion",
+          "texto": "Autorización",
+          "rastro": "Explica evicción, referencias y acceso concurrente usando casos pequenos propios."
+        }
+      ],
+      "naturaleza": {
+        "valor": "a_mano"
+      },
+      "alcance": "local",
+      "etiquetas": [
+        "seleccion_curso"
+      ]
+    },
+    {
+      "code": "SW4-02",
+      "id": "cf000000-0000-4000-8000-5357342d3032",
+      "title": "SW4-02 · Índice B+Tree",
+      "cls": "ruta",
+      "flujo": "mision",
+      "compuerta": "mision",
+      "ficha": {
+        "resultado": "Implementar un índice manteniendo sus invariantes estructurales.",
+        "fuentes": [
+          {
+            "clave": "C-10",
+            "etiqueta": "CMU 15-445/645, Spring 2025: assignments",
+            "url": "https://15445.courses.cs.cmu.edu/spring2025/assignments.html",
+            "tipo": "curso",
+            "acceso": "publico"
+          }
+        ],
+        "mision": "Completa el proyecto B+Tree de la misma edición y código base.",
+        "defensa": "Defiende estructura, busqueda y conservacion de invariantes ante cambios.",
+        "variante": "Trabaja splits, merges y accesos concurrentes segun el alcance del enunciado."
+      },
+      "gate": {
+        "pregunta": "Defiende estructura, busqueda y conservacion de invariantes ante cambios.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Sistemas ≥ 3: Trabaja splits, merges y accesos concurrentes segun el alcance del enunciado.",
+          "Abstracción ≥ 3: Implementar un índice manteniendo sus invariantes estructurales.",
+          "Datos ≥ 3: Implementar un índice manteniendo sus invariantes estructurales.",
+          "Autorización (condición crítica): Trabaja splits, merges y accesos concurrentes segun el alcance del enunciado.",
+          "Consistencia (condición crítica): Trabaja splits, merges y accesos concurrentes segun el alcance del enunciado."
+        ]
+      },
+      "capacidades": [
+        "sistemas",
+        "abstraccion",
+        "datos"
+      ],
+      "rastroCapacidades": {
+        "sistemas": "Trabaja splits, merges y accesos concurrentes segun el alcance del enunciado.",
+        "abstraccion": "Implementar un índice manteniendo sus invariantes estructurales.",
+        "datos": "Implementar un índice manteniendo sus invariantes estructurales."
+      },
+      "criticas": [
+        {
+          "id": "autorizacion",
+          "texto": "Autorización",
+          "rastro": "Trabaja splits, merges y accesos concurrentes segun el alcance del enunciado."
+        },
+        {
+          "id": "consistencia",
+          "texto": "Consistencia",
+          "rastro": "Trabaja splits, merges y accesos concurrentes segun el alcance del enunciado."
+        }
+      ],
+      "naturaleza": {
+        "valor": "a_mano"
+      },
+      "alcance": "local",
+      "etiquetas": [
+        "seleccion_curso"
+      ]
+    },
+    {
+      "code": "SW4-03",
+      "id": "cf000000-0000-4000-8000-5357342d3033",
+      "title": "SW4-03 · Ejecución de consultas",
+      "cls": "ruta",
+      "flujo": "mision",
+      "compuerta": "mision",
+      "ficha": {
+        "resultado": "Relacionar operadores y planes con trabajo real del sistema.",
+        "fuentes": [
+          {
+            "clave": "C-10",
+            "etiqueta": "CMU 15-445/645, Spring 2025: assignments",
+            "url": "https://15445.courses.cs.cmu.edu/spring2025/assignments.html",
+            "tipo": "curso",
+            "acceso": "publico"
+          }
+        ],
+        "mision": "Realiza el proyecto de ejecución de la edición o una seleccion declarada.",
+        "defensa": "Explica el plan, el costo dominante y los límites de tu medición.",
+        "variante": "Compara joins y distribuciones de datos con resultado identico."
+      },
+      "gate": {
+        "pregunta": "Explica el plan, el costo dominante y los límites de tu medición.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Sistemas ≥ 3: Realiza el proyecto de ejecución de la edición o una seleccion declarada.",
+          "Datos ≥ 3: Compara joins y distribuciones de datos con resultado identico.",
+          "Producto ≥ 3: Relacionar operadores y planes con trabajo real del sistema.",
+          "Correctitud (condición crítica): Explica el plan, el costo dominante y los límites de tu medición."
+        ]
+      },
+      "capacidades": [
+        "sistemas",
+        "datos",
+        "producto"
+      ],
+      "rastroCapacidades": {
+        "sistemas": "Realiza el proyecto de ejecución de la edición o una seleccion declarada.",
+        "datos": "Compara joins y distribuciones de datos con resultado identico.",
+        "producto": "Relacionar operadores y planes con trabajo real del sistema."
+      },
+      "criticas": [
+        {
+          "id": "correctitud",
+          "texto": "Correctitud",
+          "rastro": "Explica el plan, el costo dominante y los límites de tu medición."
+        }
+      ],
+      "naturaleza": {
+        "valor": "a_mano"
+      },
+      "alcance": "local",
+      "etiquetas": [
+        "seleccion_curso"
+      ]
+    },
+    {
+      "code": "SW4-04",
+      "id": "cf000000-0000-4000-8000-5357342d3034",
+      "title": "SW4-04 · Control de concurrencia",
+      "cls": "ruta",
+      "flujo": "mision",
+      "compuerta": "mision",
+      "ficha": {
+        "resultado": "Evitar anomalías declarando el nivel de aislamiento que se implementa.",
+        "fuentes": [
+          {
+            "clave": "C-10",
+            "etiqueta": "CMU 15-445/645, Spring 2025: assignments",
+            "url": "https://15445.courses.cs.cmu.edu/spring2025/assignments.html",
+            "tipo": "curso",
+            "acceso": "publico"
+          },
+          {
+            "clave": "C-07",
+            "etiqueta": "Operating Systems: Three Easy Pieces",
+            "url": "https://pages.cs.wisc.edu/~remzi/OSTEP/",
+            "tipo": "curso",
+            "acceso": "publico"
+          }
+        ],
+        "mision": "Trabaja el proyecto de concurrencia y reproduce historiales adversariales.",
+        "defensa": "No confundir ausencia de un race report con correccion transaccional.",
+        "variante": "Incluye abortos y reintentos; conserva los tests originales del curso."
+      },
+      "gate": {
+        "pregunta": "No confundir ausencia de un race report con correccion transaccional.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Sistemas ≥ 3: Trabaja el proyecto de concurrencia y reproduce historiales adversariales.",
+          "Responsabilidad ≥ 3: Trabaja el proyecto de concurrencia y reproduce historiales adversariales.",
+          "Correctitud (condición crítica): conserva los tests originales del curso.",
+          "Consistencia (condición crítica): Evitar anomalías declarando el nivel de aislamiento que se implementa."
+        ]
+      },
+      "capacidades": [
+        "sistemas",
+        "responsabilidad"
+      ],
+      "rastroCapacidades": {
+        "sistemas": "Trabaja el proyecto de concurrencia y reproduce historiales adversariales.",
+        "responsabilidad": "Trabaja el proyecto de concurrencia y reproduce historiales adversariales."
+      },
+      "criticas": [
+        {
+          "id": "correctitud",
+          "texto": "Correctitud",
+          "rastro": "conserva los tests originales del curso."
+        },
+        {
+          "id": "consistencia",
+          "texto": "Consistencia",
+          "rastro": "Evitar anomalías declarando el nivel de aislamiento que se implementa."
+        }
+      ],
+      "naturaleza": {
+        "valor": "a_mano"
+      },
+      "alcance": "local",
+      "etiquetas": [
+        "seleccion_curso"
+      ]
+    },
+    {
+      "code": "SW4-05",
+      "id": "cf000000-0000-4000-8000-5357342d3035",
+      "title": "SW4-05 · MapReduce y fallas de workers",
+      "cls": "ruta",
+      "flujo": "mision",
+      "compuerta": "mision",
+      "ficha": {
+        "resultado": "Coordinar tareas distribuidas sin asumir ejecución perfecta.",
+        "fuentes": [
+          {
+            "clave": "C-11",
+            "etiqueta": "MIT 6.5840: calendario",
+            "url": "https://pdos.csail.mit.edu/6.5840/schedule.html",
+            "tipo": "curso",
+            "acceso": "publico"
+          }
+        ],
+        "mision": "Completa el laboratorio MapReduce de MIT con su código inicial.",
+        "defensa": "Explica el estado persistido o temporal y el efecto de ejecutar de nuevo una tarea.",
+        "variante": "Ejecuta pruebas de fallas y presenta una traza de reasignacion."
+      },
+      "gate": {
+        "pregunta": "Explica el estado persistido o temporal y el efecto de ejecutar de nuevo una tarea.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Sistemas ≥ 3: Coordinar tareas distribuidas sin asumir ejecución perfecta.",
+          "Comunicación ≥ 3: Explica el estado persistido o temporal y el efecto de ejecutar de nuevo una tarea.",
+          "Responsabilidad ≥ 3: Ejecuta pruebas de fallas y presenta una traza de reasignacion.",
+          "Correctitud (condición crítica): Ejecuta pruebas de fallas y presenta una traza de reasignacion."
+        ]
+      },
+      "capacidades": [
+        "sistemas",
+        "comunicacion",
+        "responsabilidad"
+      ],
+      "rastroCapacidades": {
+        "sistemas": "Coordinar tareas distribuidas sin asumir ejecución perfecta.",
+        "comunicacion": "Explica el estado persistido o temporal y el efecto de ejecutar de nuevo una tarea.",
+        "responsabilidad": "Ejecuta pruebas de fallas y presenta una traza de reasignacion."
+      },
+      "criticas": [
+        {
+          "id": "correctitud",
+          "texto": "Correctitud",
+          "rastro": "Ejecuta pruebas de fallas y presenta una traza de reasignacion."
+        }
+      ],
+      "naturaleza": {
+        "valor": "a_mano"
+      },
+      "alcance": "local",
+      "etiquetas": [
+        "seleccion_curso"
+      ]
+    },
+    {
+      "code": "SW4-06",
+      "id": "cf000000-0000-4000-8000-5357342d3036",
+      "title": "SW4-06 · Raft y servicio replicado",
+      "cls": "ruta",
+      "flujo": "mision",
+      "compuerta": "mision",
+      "ficha": {
+        "resultado": "Implementar acuerdo y usarlo para un servicio replicado.",
+        "fuentes": [
+          {
+            "clave": "C-11",
+            "etiqueta": "MIT 6.5840: calendario",
+            "url": "https://pdos.csail.mit.edu/6.5840/schedule.html",
+            "tipo": "curso",
+            "acceso": "publico"
+          }
+        ],
+        "mision": "Recorre servidor KV, Raft y servicio sobre Raft en orden de la edición.",
+        "defensa": "Distingue liderazgo, commit y aplicacion; explica cuando el sistema no progresa.",
+        "variante": "Conserva evidencia de partición, reinicio y pruebas con detector de carreras."
+      },
+      "gate": {
+        "pregunta": "Distingue liderazgo, commit y aplicacion; explica cuando el sistema no progresa.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Sistemas ≥ 3: Implementar acuerdo y usarlo para un servicio replicado.",
+          "Comunicación ≥ 3: explica cuando el sistema no progresa.",
+          "Correctitud (condición crítica): Conserva evidencia de partición, reinicio y pruebas con detector de carreras.",
+          "Consistencia (condición crítica): Conserva evidencia de partición, reinicio y pruebas con detector de carreras."
+        ]
+      },
+      "capacidades": [
+        "sistemas",
+        "comunicacion"
+      ],
+      "rastroCapacidades": {
+        "sistemas": "Implementar acuerdo y usarlo para un servicio replicado.",
+        "comunicacion": "explica cuando el sistema no progresa."
+      },
+      "criticas": [
+        {
+          "id": "correctitud",
+          "texto": "Correctitud",
+          "rastro": "Conserva evidencia de partición, reinicio y pruebas con detector de carreras."
+        },
+        {
+          "id": "consistencia",
+          "texto": "Consistencia",
+          "rastro": "Conserva evidencia de partición, reinicio y pruebas con detector de carreras."
+        }
+      ],
+      "naturaleza": {
+        "valor": "a_mano"
+      },
+      "alcance": "local",
+      "etiquetas": [
+        "seleccion_curso"
+      ]
+    },
+    {
+      "code": "SW4-07",
+      "id": "cf000000-0000-4000-8000-5357342d3037",
+      "title": "SW4-07 · Sharding y reconfiguración",
+      "cls": "ruta",
+      "flujo": "mision",
+      "compuerta": "mision",
+      "ficha": {
+        "resultado": "Mantener una garantía de servicio mientras cambian las asignaciones.",
+        "fuentes": [
+          {
+            "clave": "C-11",
+            "etiqueta": "MIT 6.5840: calendario",
+            "url": "https://pdos.csail.mit.edu/6.5840/schedule.html",
+            "tipo": "curso",
+            "acceso": "publico"
+          }
+        ],
+        "mision": "Completa el laboratorio particionado o proyecto final equivalente explicitamente declarado.",
+        "defensa": "Defiende unicidad del responsable de cada shard y recuperación de una migración incompleta.",
+        "variante": "Introduce movimientos de shards, controladores fallidos y clientes con configuración vieja."
+      },
+      "gate": {
+        "pregunta": "Defiende unicidad del responsable de cada shard y recuperación de una migración incompleta.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Sistemas ≥ 3: Completa el laboratorio particionado o proyecto final equivalente explicitamente declarado.",
+          "Producto ≥ 3: Introduce movimientos de shards, controladores fallidos y clientes con configuración vieja.",
+          "Responsabilidad ≥ 3: Defiende unicidad del responsable de cada shard y recuperación de una migración incompleta.",
+          "Recuperación (condición crítica): Defiende unicidad del responsable de cada shard y recuperación de una migración incompleta."
+        ]
+      },
+      "capacidades": [
+        "sistemas",
+        "producto",
+        "responsabilidad"
+      ],
+      "rastroCapacidades": {
+        "sistemas": "Completa el laboratorio particionado o proyecto final equivalente explicitamente declarado.",
+        "producto": "Introduce movimientos de shards, controladores fallidos y clientes con configuración vieja.",
+        "responsabilidad": "Defiende unicidad del responsable de cada shard y recuperación de una migración incompleta."
+      },
+      "criticas": [
+        {
+          "id": "recuperacion",
+          "texto": "Recuperación",
+          "rastro": "Defiende unicidad del responsable de cada shard y recuperación de una migración incompleta."
+        }
+      ],
+      "naturaleza": {
+        "valor": "a_mano"
+      },
+      "alcance": "local",
+      "etiquetas": [
+        "seleccion_curso"
+      ]
+    }
+  ],
+  "maestro_sha10": "38cbc7da42"
+}

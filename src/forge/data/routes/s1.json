@@ -1,0 +1,530 @@
+{
+  "v": 1,
+  "slug": "s1",
+  "code": "S1",
+  "name": "S1 · Bases de datos y software que sostiene el diseño",
+  "family": "Sistemas y diseño",
+  "header": {
+    "entrada": "F0-03 a F0-06; A1 en paralelo.",
+    "entradaRecomendada": [
+      "F0-03",
+      "F0-06",
+      "A1"
+    ],
+    "evidencia": "Contrato, modelo, reproducción del problema, pruebas y decisión de diseño.",
+    "apoyo": [
+      {
+        "clave": "C-10",
+        "etiqueta": "CMU 15-445/645, Spring 2025: assignments",
+        "url": "https://15445.courses.cs.cmu.edu/spring2025/assignments.html",
+        "tipo": "curso",
+        "acceso": "publico"
+      }
+    ]
+  },
+  "cells": [
+    {
+      "code": "S1-01",
+      "id": "cf000000-0000-4000-8000-0053312d3031",
+      "title": "S1-01 · Modelo relacional y dominio",
+      "cls": "ruta",
+      "flujo": "mision",
+      "compuerta": "mision",
+      "ficha": {
+        "foco": "Modelo relacional y dominio.",
+        "fuentes": [
+          {
+            "clave": "DB",
+            "etiqueta": "Schedule | CMU 15-445/645 :: Intro to Database Systems (Fall 2026)",
+            "url": "https://15445.courses.cs.cmu.edu/fall2026/schedule.html",
+            "tipo": "curso",
+            "acceso": "publico"
+          },
+          {
+            "clave": "ONTO",
+            "etiqueta": "Overview • Ontology • Palantir",
+            "url": "https://www.palantir.com/docs/foundry/ontology/overview",
+            "tipo": "docs",
+            "acceso": "publico"
+          }
+        ],
+        "mision": "Modela pacientes sintéticos, citas, equipos y órdenes con claves explícitas.",
+        "defensa": "Separa esquema de almacenamiento y modelo operacional; evita entidades ambiguas."
+      },
+      "gate": {
+        "pregunta": "Separa esquema de almacenamiento y modelo operacional; evita entidades ambiguas.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Datos ≥ 3: Modela pacientes sintéticos, citas, equipos y órdenes con claves explícitas.",
+          "Sistemas ≥ 3: Separa esquema de almacenamiento y modelo operacional;",
+          "Correctitud (condición crítica): Separa esquema de almacenamiento y modelo operacional; evita entidades ambiguas."
+        ]
+      },
+      "capacidades": [
+        "datos",
+        "sistemas"
+      ],
+      "rastroCapacidades": {
+        "datos": "Modela pacientes sintéticos, citas, equipos y órdenes con claves explícitas.",
+        "sistemas": "Separa esquema de almacenamiento y modelo operacional;"
+      },
+      "criticas": [
+        {
+          "id": "correctitud",
+          "texto": "Correctitud",
+          "rastro": "Separa esquema de almacenamiento y modelo operacional; evita entidades ambiguas."
+        }
+      ],
+      "naturaleza": {
+        "valor": "a_mano"
+      },
+      "alcance": "local",
+      "etiquetas": []
+    },
+    {
+      "code": "S1-02",
+      "id": "cf000000-0000-4000-8000-0053312d3032",
+      "title": "S1-02 · SQL, cardinalidad y planes",
+      "cls": "ruta",
+      "flujo": "mision",
+      "compuerta": "mision",
+      "ficha": {
+        "foco": "SQL, cardinalidad y planes.",
+        "fuentes": [
+          {
+            "clave": "DB",
+            "etiqueta": "Schedule | CMU 15-445/645 :: Intro to Database Systems (Fall 2026)",
+            "url": "https://15445.courses.cs.cmu.edu/fall2026/schedule.html",
+            "tipo": "curso",
+            "acceso": "publico"
+          },
+          {
+            "clave": "PG",
+            "etiqueta": "PostgreSQL: Documentation: 18: Chapter 13. Concurrency Control",
+            "url": "https://www.postgresql.org/docs/current/mvcc.html?trk=article-ssr-frontend-pulse_little-text-block",
+            "tipo": "otro",
+            "acceso": "publico"
+          }
+        ],
+        "mision": "Compara dos consultas sobre datos crecientes y registra planes de ejecución.",
+        "defensa": "Explica por qué un join multiplica filas y por qué un índice puede no ayudar."
+      },
+      "gate": {
+        "pregunta": "Explica por qué un join multiplica filas y por qué un índice puede no ayudar.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Datos ≥ 3: SQL, cardinalidad y planes.",
+          "Comunicación ≥ 3: Explica por qué un join multiplica filas y por qué un índice puede no ayudar.",
+          "Correctitud (condición crítica): Explica por qué un join multiplica filas y por qué un índice puede no ayudar."
+        ]
+      },
+      "capacidades": [
+        "datos",
+        "comunicacion"
+      ],
+      "rastroCapacidades": {
+        "datos": "SQL, cardinalidad y planes.",
+        "comunicacion": "Explica por qué un join multiplica filas y por qué un índice puede no ayudar."
+      },
+      "criticas": [
+        {
+          "id": "correctitud",
+          "texto": "Correctitud",
+          "rastro": "Explica por qué un join multiplica filas y por qué un índice puede no ayudar."
+        }
+      ],
+      "naturaleza": {
+        "valor": "a_mano"
+      },
+      "alcance": "local",
+      "etiquetas": []
+    },
+    {
+      "code": "S1-03",
+      "id": "cf000000-0000-4000-8000-0053312d3033",
+      "title": "S1-03 · Índices y almacenamiento",
+      "cls": "ruta",
+      "flujo": "mision",
+      "compuerta": "mision",
+      "ficha": {
+        "foco": "Índices y almacenamiento.",
+        "fuentes": [
+          {
+            "clave": "DB",
+            "etiqueta": "Schedule | CMU 15-445/645 :: Intro to Database Systems (Fall 2026)",
+            "url": "https://15445.courses.cs.cmu.edu/fall2026/schedule.html",
+            "tipo": "curso",
+            "acceso": "publico"
+          },
+          {
+            "clave": "INDEX",
+            "etiqueta": "Indexing • Overview • Palantir",
+            "url": "https://www.palantir.com/docs/foundry/object-indexing/overview",
+            "tipo": "docs",
+            "acceso": "publico"
+          }
+        ],
+        "mision": "Construye un índice simple y compara búsqueda frente a escaneo.",
+        "defensa": "Relaciona el algoritmo con lectura, memoria, escrituras y mantenimiento."
+      },
+      "gate": {
+        "pregunta": "Relaciona el algoritmo con lectura, memoria, escrituras y mantenimiento.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Datos ≥ 3: Índices y almacenamiento.",
+          "Algoritmos ≥ 3: Relaciona el algoritmo con lectura, memoria, escrituras y mantenimiento.",
+          "Sistemas ≥ 3: Índices y almacenamiento.",
+          "Correctitud (condición crítica): Relaciona el algoritmo con lectura, memoria, escrituras y mantenimiento."
+        ]
+      },
+      "capacidades": [
+        "datos",
+        "algoritmos",
+        "sistemas"
+      ],
+      "rastroCapacidades": {
+        "datos": "Índices y almacenamiento.",
+        "algoritmos": "Relaciona el algoritmo con lectura, memoria, escrituras y mantenimiento.",
+        "sistemas": "Índices y almacenamiento."
+      },
+      "criticas": [
+        {
+          "id": "correctitud",
+          "texto": "Correctitud",
+          "rastro": "Relaciona el algoritmo con lectura, memoria, escrituras y mantenimiento."
+        }
+      ],
+      "naturaleza": {
+        "valor": "a_mano"
+      },
+      "alcance": "local",
+      "etiquetas": []
+    },
+    {
+      "code": "S1-04",
+      "id": "cf000000-0000-4000-8000-0053312d3034",
+      "title": "S1-04 · Transacciones y anomalías",
+      "cls": "ruta",
+      "flujo": "mision",
+      "compuerta": "mision",
+      "ficha": {
+        "foco": "Transacciones y anomalías.",
+        "fuentes": [
+          {
+            "clave": "PG",
+            "etiqueta": "PostgreSQL: Documentation: 18: Chapter 13. Concurrency Control",
+            "url": "https://www.postgresql.org/docs/current/mvcc.html?trk=article-ssr-frontend-pulse_little-text-block",
+            "tipo": "otro",
+            "acceso": "publico"
+          },
+          {
+            "clave": "CONSIST",
+            "etiqueta": "Action types • Consistency and isolation • Palantir",
+            "url": "https://www.palantir.com/docs/foundry/action-types/consistency-guarantees",
+            "tipo": "docs",
+            "acceso": "publico"
+          }
+        ],
+        "mision": "Reproduce doble reserva y una anomalía de concurrencia en una base local.",
+        "defensa": "Construye un historial que rompa una regla de negocio aun con transacciones."
+      },
+      "gate": {
+        "pregunta": "Construye un historial que rompa una regla de negocio aun con transacciones.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Datos ≥ 3: Reproduce doble reserva y una anomalía de concurrencia en una base local.",
+          "Sistemas ≥ 3: Reproduce doble reserva y una anomalía de concurrencia en una base local.",
+          "Responsabilidad ≥ 3: Reproduce doble reserva y una anomalía de concurrencia en una base local.",
+          "Consistencia (condición crítica): Transacciones y anomalías.",
+          "Trazabilidad (condición crítica): Construye un historial que rompa una regla de negocio aun con transacciones."
+        ]
+      },
+      "capacidades": [
+        "datos",
+        "sistemas",
+        "responsabilidad"
+      ],
+      "rastroCapacidades": {
+        "datos": "Reproduce doble reserva y una anomalía de concurrencia en una base local.",
+        "sistemas": "Reproduce doble reserva y una anomalía de concurrencia en una base local.",
+        "responsabilidad": "Reproduce doble reserva y una anomalía de concurrencia en una base local."
+      },
+      "criticas": [
+        {
+          "id": "consistencia",
+          "texto": "Consistencia",
+          "rastro": "Transacciones y anomalías."
+        },
+        {
+          "id": "trazabilidad",
+          "texto": "Trazabilidad",
+          "rastro": "Construye un historial que rompa una regla de negocio aun con transacciones."
+        }
+      ],
+      "naturaleza": {
+        "valor": "a_mano"
+      },
+      "alcance": "local",
+      "etiquetas": []
+    },
+    {
+      "code": "S1-05",
+      "id": "cf000000-0000-4000-8000-0053312d3035",
+      "title": "S1-05 · Modelado de estados e invariantes",
+      "cls": "ruta",
+      "flujo": "mision",
+      "compuerta": "mision",
+      "ficha": {
+        "foco": "Modelado de estados e invariantes.",
+        "fuentes": [
+          {
+            "clave": "ACTION",
+            "etiqueta": "Action types • Getting started • Palantir",
+            "url": "https://www.palantir.com/docs/foundry/action-types/getting-started",
+            "tipo": "docs",
+            "acceso": "publico"
+          },
+          {
+            "clave": "USE",
+            "etiqueta": "Use case lifecycle • Overview • Palantir",
+            "url": "https://www.palantir.com/docs/foundry/use-case-life-cycle/overview",
+            "tipo": "docs",
+            "acceso": "publico"
+          }
+        ],
+        "mision": "Define transiciones válidas de una orden y pruébalas con secuencias inválidas.",
+        "defensa": "Defiende dónde vive cada invariante y qué cliente puede intentar violarla."
+      },
+      "gate": {
+        "pregunta": "Defiende dónde vive cada invariante y qué cliente puede intentar violarla.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Datos ≥ 3: Define transiciones válidas de una orden y pruébalas con secuencias inválidas.",
+          "Abstracción ≥ 3: Modelado de estados e invariantes.",
+          "Producto ≥ 3: Defiende dónde vive cada invariante y qué cliente puede intentar violarla.",
+          "Correctitud (condición crítica): Defiende dónde vive cada invariante y qué cliente puede intentar violarla."
+        ]
+      },
+      "capacidades": [
+        "datos",
+        "abstraccion",
+        "producto"
+      ],
+      "rastroCapacidades": {
+        "datos": "Define transiciones válidas de una orden y pruébalas con secuencias inválidas.",
+        "abstraccion": "Modelado de estados e invariantes.",
+        "producto": "Defiende dónde vive cada invariante y qué cliente puede intentar violarla."
+      },
+      "criticas": [
+        {
+          "id": "correctitud",
+          "texto": "Correctitud",
+          "rastro": "Defiende dónde vive cada invariante y qué cliente puede intentar violarla."
+        }
+      ],
+      "naturaleza": {
+        "valor": "a_mano"
+      },
+      "alcance": "local",
+      "etiquetas": []
+    },
+    {
+      "code": "S1-06",
+      "id": "cf000000-0000-4000-8000-0053312d3036",
+      "title": "S1-06 · API y evolución de contratos",
+      "cls": "ruta",
+      "flujo": "mision",
+      "compuerta": "mision",
+      "ficha": {
+        "foco": "API y evolución de contratos.",
+        "fuentes": [
+          {
+            "clave": "CONSOLE",
+            "etiqueta": "Developer Console • Overview • Palantir",
+            "url": "https://www.palantir.com/docs/foundry/developer-console/overview",
+            "tipo": "docs",
+            "acceso": "publico"
+          },
+          {
+            "clave": "OSDK",
+            "etiqueta": "Ontology SDK • Overview • Palantir",
+            "url": "https://www.palantir.com/docs/foundry/ontology-sdk",
+            "tipo": "docs",
+            "acceso": "publico"
+          }
+        ],
+        "mision": "Diseña paginación, errores y compatibilidad de una API de operaciones.",
+        "defensa": "Explica cómo despliegas un cambio sin romper consumidores anteriores."
+      },
+      "gate": {
+        "pregunta": "Explica cómo despliegas un cambio sin romper consumidores anteriores.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Datos ≥ 3: Diseña paginación, errores y compatibilidad de una API de operaciones.",
+          "Abstracción ≥ 3: API y evolución de contratos.",
+          "Comunicación ≥ 3: Explica cómo despliegas un cambio sin romper consumidores anteriores.",
+          "Correctitud (condición crítica): Explica cómo despliegas un cambio sin romper consumidores anteriores."
+        ]
+      },
+      "capacidades": [
+        "datos",
+        "abstraccion",
+        "comunicacion"
+      ],
+      "rastroCapacidades": {
+        "datos": "Diseña paginación, errores y compatibilidad de una API de operaciones.",
+        "abstraccion": "API y evolución de contratos.",
+        "comunicacion": "Explica cómo despliegas un cambio sin romper consumidores anteriores."
+      },
+      "criticas": [
+        {
+          "id": "correctitud",
+          "texto": "Correctitud",
+          "rastro": "Explica cómo despliegas un cambio sin romper consumidores anteriores."
+        }
+      ],
+      "naturaleza": {
+        "valor": "a_mano"
+      },
+      "alcance": "local",
+      "etiquetas": []
+    },
+    {
+      "code": "S1-07",
+      "id": "cf000000-0000-4000-8000-0053312d3037",
+      "title": "S1-07 · Pruebas por riesgo",
+      "cls": "ruta",
+      "flujo": "mision",
+      "compuerta": "mision",
+      "ficha": {
+        "foco": "Pruebas por riesgo.",
+        "fuentes": [
+          {
+            "clave": "MOCK",
+            "etiqueta": "Ontology SDK • Unit testing TypeScript OSDK code • Palantir",
+            "url": "https://www.palantir.com/docs/foundry/ontology-sdk/typescript-osdk-testing",
+            "tipo": "docs",
+            "acceso": "publico"
+          },
+          {
+            "clave": "PYTEST",
+            "etiqueta": "Python • Basic transforms • Unit tests • Palantir",
+            "url": "https://www.palantir.com/docs/foundry/transforms-python/unit-tests",
+            "tipo": "docs",
+            "acceso": "publico"
+          }
+        ],
+        "mision": "Diseña tests unitarios, integración y un recorrido crítico reproducible.",
+        "defensa": "Señala qué falla real puede sobrevivir a todos tus mocks."
+      },
+      "gate": {
+        "pregunta": "Señala qué falla real puede sobrevivir a todos tus mocks.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Datos ≥ 3: Diseña tests unitarios, integración y un recorrido crítico reproducible.",
+          "Responsabilidad ≥ 3: Diseña tests unitarios, integración y un recorrido crítico reproducible.",
+          "Correctitud (condición crítica): Pruebas por riesgo.",
+          "Trazabilidad (condición crítica): Diseña tests unitarios, integración y un recorrido crítico reproducible."
+        ]
+      },
+      "capacidades": [
+        "datos",
+        "responsabilidad"
+      ],
+      "rastroCapacidades": {
+        "datos": "Diseña tests unitarios, integración y un recorrido crítico reproducible.",
+        "responsabilidad": "Diseña tests unitarios, integración y un recorrido crítico reproducible."
+      },
+      "criticas": [
+        {
+          "id": "correctitud",
+          "texto": "Correctitud",
+          "rastro": "Pruebas por riesgo."
+        },
+        {
+          "id": "trazabilidad",
+          "texto": "Trazabilidad",
+          "rastro": "Diseña tests unitarios, integración y un recorrido crítico reproducible."
+        }
+      ],
+      "naturaleza": {
+        "valor": "a_mano"
+      },
+      "alcance": "local",
+      "etiquetas": []
+    },
+    {
+      "code": "S1-08",
+      "id": "cf000000-0000-4000-8000-0053312d3038",
+      "title": "S1-08 · Recuperación y diseño reversible",
+      "cls": "ruta",
+      "flujo": "mision",
+      "compuerta": "mision",
+      "ficha": {
+        "foco": "Recuperación y diseño reversible.",
+        "fuentes": [
+          {
+            "clave": "DB",
+            "etiqueta": "Schedule | CMU 15-445/645 :: Intro to Database Systems (Fall 2026)",
+            "url": "https://15445.courses.cs.cmu.edu/fall2026/schedule.html",
+            "tipo": "curso",
+            "acceso": "publico"
+          },
+          {
+            "clave": "BRANCH",
+            "etiqueta": "Global Branching • Overview • Palantir",
+            "url": "https://www.palantir.com/docs/foundry/global-branching",
+            "tipo": "docs",
+            "acceso": "publico"
+          }
+        ],
+        "mision": "Ensaya una migración fallida y un procedimiento verificable de recuperación.",
+        "defensa": "Distingue revertir código, revertir esquema y compensar efectos externos."
+      },
+      "gate": {
+        "pregunta": "Distingue revertir código, revertir esquema y compensar efectos externos.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Datos ≥ 3: Ensaya una migración fallida y un procedimiento verificable de recuperación.",
+          "Responsabilidad ≥ 3: Recuperación y diseño reversible.",
+          "Correctitud (condición crítica): Ensaya una migración fallida y un procedimiento verificable de recuperación.",
+          "Recuperación (condición crítica): Recuperación y diseño reversible."
+        ]
+      },
+      "capacidades": [
+        "datos",
+        "responsabilidad"
+      ],
+      "rastroCapacidades": {
+        "datos": "Ensaya una migración fallida y un procedimiento verificable de recuperación.",
+        "responsabilidad": "Recuperación y diseño reversible."
+      },
+      "criticas": [
+        {
+          "id": "correctitud",
+          "texto": "Correctitud",
+          "rastro": "Ensaya una migración fallida y un procedimiento verificable de recuperación."
+        },
+        {
+          "id": "recuperacion",
+          "texto": "Recuperación",
+          "rastro": "Recuperación y diseño reversible."
+        }
+      ],
+      "naturaleza": {
+        "valor": "a_mano"
+      },
+      "alcance": "local",
+      "etiquetas": []
+    }
+  ],
+  "maestro_sha10": "38cbc7da42"
+}

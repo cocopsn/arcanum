@@ -1,4 +1,5 @@
 import withSerwistInit from "@serwist/next";
+import { ForgeChunkMapPlugin } from "./scripts/forge/forge-chunk-map.mjs";
 
 const withSerwist = withSerwistInit({
   swSrc: "src/app/sw.ts",
@@ -16,6 +17,9 @@ const withSerwist = withSerwistInit({
   // navigation type "reload"). Sync + the AI queue already have their own gentle `online`
   // listeners — nothing here needs a reload to use the network again.
   reloadOnOnline: false,
+  // Precache ONLY the icons from public/: public/atlas/** and public/forge/** (Atlas data, Forge books) are
+  // loaded on demand and must never enter the install download (Forge design §6.6, CA-57).
+  globPublicPatterns: ["icons/**/*"],
 });
 
 // Content-Security-Policy — defense-in-depth for a PUBLIC-repo app that executes learner code. The code
@@ -47,8 +51,10 @@ const nextConfig = {
     return [{ source: "/:path*", headers: [{ key: "Content-Security-Policy", value: CSP }] }];
   },
   // import seed books (content/books/*.md) as RAW strings so they bundle offline (no CDN, no fs).
-  webpack: (config) => {
+  webpack: (config, { isServer, dev }) => {
     config.module.rules.push({ test: /\.md$/, type: "asset/source" });
+    // Forge: .next/forge-chunks.json from the module graph, production client build only (budget-report, §6.7).
+    if (!isServer && !dev) config.plugins.push(new ForgeChunkMapPlugin());
     return config;
   },
 };

@@ -1,0 +1,22 @@
+{
+  "P2-01": {
+    "title": "Del proceso a objetos",
+    "group": "P2",
+    "docs_pages_en": 1,
+    "docs_pages_all_langs": 2,
+    "by_basis_en": { "cita_directa": 1 },
+    "cited_urls": ["https://www.palantir.com/docs/foundry/ontology/overview"],
+    "direct_pages": ["https://www.palantir.com/docs/foundry/ontology/overview"],
+    "direct_requested_urls": ["https://www.palantir.com/docs/foundry/ontology/overview"]
+  },
+  "A1-01": {
+    "title": "Complejidad, invariantes y cotas",
+    "group": "A1",
+    "docs_pages_en": 0,
+    "docs_pages_all_langs": 0,
+    "by_basis_en": {},
+    "cited_urls": [],
+    "direct_pages": [],
+    "direct_requested_urls": []
+  }
+}
