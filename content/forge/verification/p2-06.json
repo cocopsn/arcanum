@@ -1,7 +1,7 @@
 {
  "v": 1,
  "code": "P2-06",
- "sha10": "d000854665",
+ "sha10": "ca85c8f9fb",
  "versiones": {
   "python": "3.12.10",
   "sqlite": "3.49.1",
@@ -13,14 +13,14 @@
    "tipo": "code",
    "lenguaje": "javascript",
    "resultado": "paso",
-   "ms": 4
+   "ms": 3
   },
   {
    "id": "p206-bug-writeback",
    "tipo": "code",
    "lenguaje": "javascript",
    "resultado": "paso",
-   "ms": 3
+   "ms": 2
   }
  ],
  "resumen": {
