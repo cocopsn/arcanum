@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Cinzel, EB_Garamond, Chakra_Petch } from "next/font/google";
+import { forgeSans, forgeMono } from "@/forge/fonts/plex";
 import "./globals.css";
 
 // Cinzel — Trajan imperial caps: the crown, grade names, world titles, the ceremony.
@@ -57,7 +58,7 @@ export default function RootLayout({
   return (
     <html
       lang="es"
-      className={`${display.variable} ${serif.variable} ${sans.variable}`}
+      className={`${display.variable} ${serif.variable} ${sans.variable} ${forgeSans.variable} ${forgeMono.variable}`}
     >
       <body>{children}</body>
     </html>

@@ -20,6 +20,18 @@ import { VigiliaSheet } from "@/ui/VigiliaSheet";
 import { AscensionCeremony } from "@/ui/AscensionCeremony";
 import { RoadmapCanvas } from "@/ui/roadmap/RoadmapCanvas";
 import { SubjectMap } from "@/ui/subject/SubjectMap";
+import dynamic from "next/dynamic";
+import { FORGE_GOAL_ID } from "@/forge/ids";
+
+// Engineering Forge renders its own console (design §14.5); lazy, so none of its UI lands in the page chunk (§6.4).
+const ForgeWorld = dynamic(() => import("@/forge/ui/ForgeWorld").then((m) => m.ForgeWorld), {
+  ssr: false,
+  loading: () => (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#0a0a0b] text-[12px] tracking-[0.2em] text-[#b9b9b9]">
+      ENGINEERING FORGE
+    </div>
+  ),
+});
 import { BookReader } from "@/ui/books/BookReader";
 import { getBook, type BookRow } from "@/lib/book-store";
 import { loadResume, clearResume } from "@/lib/resume";
@@ -128,7 +140,16 @@ export function HomeView() {
       <RoadmapCanvas open={mapOpen} onClose={() => setMapOpen(false)} />
       <AgendaSheet open={agendaOpen} onClose={() => setAgendaOpen(false)} />
       <AudioConfig open={audioOpen} onClose={() => setAudioOpen(false)} />
-      {subjectGoal && (
+      {subjectGoal && subjectGoal === FORGE_GOAL_ID && (
+        <ForgeWorld
+          initialCellId={resumeCell}
+          onClose={() => {
+            setResumeCell(null);
+            setSubjectGoal(null);
+          }}
+        />
+      )}
+      {subjectGoal && subjectGoal !== FORGE_GOAL_ID && (
         <SubjectMap
           goalId={subjectGoal}
           initialCellId={resumeCell}
