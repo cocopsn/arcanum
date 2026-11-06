@@ -1,0 +1,40 @@
+{
+ "v": 1,
+ "code": "P1-04",
+ "sha10": "96be00064b",
+ "versiones": {
+  "python": "3.12.10",
+  "sqlite": "3.49.1",
+  "node": "v24.22.1"
+ },
+ "items": [
+  {
+   "id": "resolver-changelog",
+   "tipo": "code",
+   "lenguaje": "javascript",
+   "resultado": "paso",
+   "ms": 3
+  },
+  {
+   "id": "resolver-changelog",
+   "tipo": "code",
+   "lenguaje": "python",
+   "resultado": "paso",
+   "ms": 64
+  },
+  {
+   "id": "contraejemplo-llegada",
+   "tipo": "contraejemplo",
+   "lenguaje": "javascript",
+   "resultado": "sin-verificar",
+   "ms": 0,
+   "detalle": "sin arnés scripts/forge/bank-check/contraejemplo.py"
+  }
+ ],
+ "resumen": {
+  "ejecutables": 3,
+  "cubiertos": 2,
+  "fallidos": 0,
+  "sin_verificar": 1
+ }
+}
