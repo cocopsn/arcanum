@@ -74,10 +74,21 @@ export function verificationSummary(vbuf, bankSha10) {
   };
 }
 
+/** Shape of a cell code of the master program (A1-01, D3, X07, SD-01, SW4-02…); same alphabet as ids.ts CODE_RE. */
+const CELL_CODE_RE = /^[A-Z0-9]{1,3}(-[0-9]{2})?$/;
+
+/** Valid codes from maestro-urls.json, tolerant of both shapes (D11.1): the design's `{ code: [urls] }` and
+ *  c0-nucleo's `{ maestro_sha10, urls: { code: [urls] } }`. Metadata keys (maestro_sha10 or anything that is not a
+ *  code) never count as codes. Pure. */
+export function codesFromMaestroUrls(data) {
+  const src = data && typeof data.urls === "object" && data.urls !== null && !Array.isArray(data.urls) ? data.urls : data ?? {};
+  return new Set(Object.keys(src).map((k) => k.toUpperCase()).filter((k) => CELL_CODE_RE.test(k)));
+}
+
 function loadCodes(root) {
   const f = path.join(root, "src/forge/data/maestro-urls.json");
   if (!existsSync(f)) return null;
-  return new Set(Object.keys(JSON.parse(readFileSync(f, "utf8"))).map((k) => k.toUpperCase()));
+  return codesFromMaestroUrls(JSON.parse(readFileSync(f, "utf8")));
 }
 
 export function publish(root = ROOT) {
