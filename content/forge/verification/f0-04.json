@@ -1,0 +1,25 @@
+{
+ "v": 1,
+ "code": "F0-04",
+ "sha10": "7ea1fb291f",
+ "versiones": {
+  "python": "3.12.10",
+  "sqlite": "3.49.1",
+  "node": "v24.22.1"
+ },
+ "items": [
+  {
+   "id": "code-validar-lineas",
+   "tipo": "code",
+   "lenguaje": "javascript",
+   "resultado": "paso",
+   "ms": 4
+  }
+ ],
+ "resumen": {
+  "ejecutables": 1,
+  "cubiertos": 1,
+  "fallidos": 0,
+  "sin_verificar": 0
+ }
+}
