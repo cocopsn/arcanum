@@ -1,0 +1,46 @@
+{
+ "v": 1,
+ "code": "A2-06",
+ "sha10": "3cdbb20a34",
+ "versiones": {
+  "python": "3.12.10",
+  "sqlite": "3.49.1",
+  "node": "v24.22.1"
+ },
+ "items": [
+  {
+   "id": "a2-06-code-paginar",
+   "tipo": "code",
+   "lenguaje": "javascript",
+   "resultado": "paso",
+   "ms": 4
+  },
+  {
+   "id": "a2-06-code-paginar",
+   "tipo": "code",
+   "lenguaje": "python",
+   "resultado": "paso",
+   "ms": 90
+  },
+  {
+   "id": "a2-06-code-dia",
+   "tipo": "code",
+   "lenguaje": "javascript",
+   "resultado": "paso",
+   "ms": 4
+  },
+  {
+   "id": "a2-06-code-dia",
+   "tipo": "code",
+   "lenguaje": "python",
+   "resultado": "paso",
+   "ms": 88
+  }
+ ],
+ "resumen": {
+  "ejecutables": 4,
+  "cubiertos": 4,
+  "fallidos": 0,
+  "sin_verificar": 0
+ }
+}

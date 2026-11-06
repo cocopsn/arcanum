@@ -1,0 +1,53 @@
+{
+ "v": 1,
+ "code": "A1-08",
+ "sha10": "9ca3160eb9",
+ "versiones": {
+  "python": "3.12.10",
+  "sqlite": "3.49.1",
+  "node": "v24.22.1"
+ },
+ "items": [
+  {
+   "id": "a1-08-desv-pago",
+   "tipo": "desvanecido",
+   "lenguaje": "javascript",
+   "resultado": "paso",
+   "ms": 16
+  },
+  {
+   "id": "a1-08-code-monedas",
+   "tipo": "code",
+   "lenguaje": "javascript",
+   "resultado": "paso",
+   "ms": 4
+  },
+  {
+   "id": "a1-08-code-monedas",
+   "tipo": "code",
+   "lenguaje": "python",
+   "resultado": "paso",
+   "ms": 119
+  },
+  {
+   "id": "a1-08-ret-formas",
+   "tipo": "retencion",
+   "lenguaje": "javascript",
+   "resultado": "paso",
+   "ms": 5
+  },
+  {
+   "id": "a1-08-ret-formas",
+   "tipo": "retencion",
+   "lenguaje": "python",
+   "resultado": "paso",
+   "ms": 104
+  }
+ ],
+ "resumen": {
+  "ejecutables": 5,
+  "cubiertos": 5,
+  "fallidos": 0,
+  "sin_verificar": 0
+ }
+}

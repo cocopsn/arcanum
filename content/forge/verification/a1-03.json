@@ -1,0 +1,53 @@
+{
+ "v": 1,
+ "code": "A1-03",
+ "sha10": "990e12eb71",
+ "versiones": {
+  "python": "3.12.10",
+  "sqlite": "3.49.1",
+  "node": "v24.22.1"
+ },
+ "items": [
+  {
+   "id": "a1-03-desv-ventana",
+   "tipo": "desvanecido",
+   "lenguaje": "javascript",
+   "resultado": "paso",
+   "ms": 59
+  },
+  {
+   "id": "a1-03-code-siguiente-mayor",
+   "tipo": "code",
+   "lenguaje": "javascript",
+   "resultado": "paso",
+   "ms": 28
+  },
+  {
+   "id": "a1-03-code-siguiente-mayor",
+   "tipo": "code",
+   "lenguaje": "python",
+   "resultado": "paso",
+   "ms": 170
+  },
+  {
+   "id": "a1-03-ret-minimo",
+   "tipo": "retencion",
+   "lenguaje": "javascript",
+   "resultado": "paso",
+   "ms": 41
+  },
+  {
+   "id": "a1-03-ret-minimo",
+   "tipo": "retencion",
+   "lenguaje": "python",
+   "resultado": "paso",
+   "ms": 219
+  }
+ ],
+ "resumen": {
+  "ejecutables": 5,
+  "cubiertos": 5,
+  "fallidos": 0,
+  "sin_verificar": 0
+ }
+}

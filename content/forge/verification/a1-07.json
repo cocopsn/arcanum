@@ -1,0 +1,55 @@
+{
+ "v": 1,
+ "code": "A1-07",
+ "sha10": "f55c51968d",
+ "versiones": {
+  "python": "3.12.10",
+  "sqlite": "3.49.1",
+  "node": "v24.22.1"
+ },
+ "items": [
+  {
+   "id": "a1-07-desv-intervalos",
+   "tipo": "desvanecido",
+   "lenguaje": "javascript",
+   "resultado": "paso",
+   "ms": 6
+  },
+  {
+   "id": "a1-07-contra-corto",
+   "tipo": "contraejemplo",
+   "lenguaje": "javascript",
+   "resultado": "sin-verificar",
+   "ms": 0,
+   "detalle": "sin arnés scripts/forge/bank-check/contraejemplo.py"
+  },
+  {
+   "id": "a1-07-code-dijkstra",
+   "tipo": "code",
+   "lenguaje": "javascript",
+   "resultado": "paso",
+   "ms": 5
+  },
+  {
+   "id": "a1-07-code-dijkstra",
+   "tipo": "code",
+   "lenguaje": "python",
+   "resultado": "paso",
+   "ms": 137
+  },
+  {
+   "id": "a1-07-mut-greedy",
+   "tipo": "mutantes",
+   "lenguaje": "javascript",
+   "resultado": "sin-verificar",
+   "ms": 0,
+   "detalle": "sin arnés scripts/forge/bank-check/mutantes.py"
+  }
+ ],
+ "resumen": {
+  "ejecutables": 5,
+  "cubiertos": 3,
+  "fallidos": 0,
+  "sin_verificar": 2
+ }
+}

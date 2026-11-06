@@ -1,0 +1,53 @@
+{
+ "v": 1,
+ "code": "A2-08",
+ "sha10": "417200ceac",
+ "versiones": {
+  "python": "3.12.10",
+  "sqlite": "3.49.1",
+  "node": "v24.22.1"
+ },
+ "items": [
+  {
+   "id": "a2-08-code-frecuentes",
+   "tipo": "code",
+   "lenguaje": "javascript",
+   "resultado": "paso",
+   "ms": 147
+  },
+  {
+   "id": "a2-08-code-frecuentes",
+   "tipo": "code",
+   "lenguaje": "python",
+   "resultado": "paso",
+   "ms": 259
+  },
+  {
+   "id": "a2-08-sql-categorias",
+   "tipo": "sql",
+   "lenguaje": "sql",
+   "resultado": "paso",
+   "ms": 160
+  },
+  {
+   "id": "a2-08-code-mediana",
+   "tipo": "code",
+   "lenguaje": "javascript",
+   "resultado": "paso",
+   "ms": 4
+  },
+  {
+   "id": "a2-08-code-mediana",
+   "tipo": "code",
+   "lenguaje": "python",
+   "resultado": "paso",
+   "ms": 88
+  }
+ ],
+ "resumen": {
+  "ejecutables": 5,
+  "cubiertos": 5,
+  "fallidos": 0,
+  "sin_verificar": 0
+ }
+}
