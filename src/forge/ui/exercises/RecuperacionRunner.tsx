@@ -1,14 +1,20 @@
 "use client";
 
 import type { RunnerProps } from "./registry";
-import { PENDING_TEXT } from "@/forge/ui/flow-contract";
+import { RetrievalDesk, type RecuperacionItem } from "@/forge/ui/RetrievalDesk";
 
-// STUB (Phase 0) of the `recuperacion` runner. Owner: forge/e1-modelos, which replaces this file (design §9.5, §22.4). It grades
-// nothing and offers no verdict: it only says, honestly, that the type is not available yet.
-export default function RecuperacionRunner({ item }: RunnerProps) {
+// PRACTICE runner of `recuperacion` (design §9.5): mounts RetrievalDesk. Local, deterministic grade; it records evidence
+// and never opens a gate.
+export default function RecuperacionRunner({ item, cellId, onClose }: RunnerProps) {
+  const it = item as RecuperacionItem;
   return (
-    <p role="status" data-forge-stub="recuperacion" data-item={item.itemId}>
-      {PENDING_TEXT}
-    </p>
+    <section data-forge-runner="recuperacion" data-item={it.itemId} aria-label={`Recuperación · ${it.title}`}>
+      <h3>{it.title}</h3>
+      <p style={{ whiteSpace: "pre-wrap" }}>{it.statement}</p>
+      <RetrievalDesk item={it} cellId={cellId} />
+      <button type="button" onClick={onClose}>
+        Cerrar
+      </button>
+    </section>
   );
 }
