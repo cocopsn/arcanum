@@ -3,6 +3,7 @@ import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { parseBook } from "@/lib/book";
 import { CELL_SLUG_TO_ID } from "@/lib/cell-slugs";
+import type { AtlasPartitionFile } from "@/forge/atlas/types";
 import {
   allowedLinkSet,
   checkBookFigures,
@@ -67,6 +68,33 @@ function allowedSources() {
   }
   return { pending, urls, videoIds, haveVideos: existsSync(join(DATA, "videos.json")), haveAll: pending.length === 0 };
 }
+
+// D11.4 (integrar-fase0): the figure-image membership against the Atlas partitions of c0-atlas
+// (public/atlas/v1/docs/**, AtlasPartitionFile.pages[].i). null while the Atlas is not in the tree.
+const ATLAS_DOCS = join(ROOT, "public", "atlas", "v1", "docs");
+const normPage = (u: string): string => u.replace(/#.*$/, "").replace(/\/+$/, "");
+let atlasCache: Map<string, string[]> | null | undefined;
+function atlasImages(): Map<string, string[]> | null {
+  if (atlasCache !== undefined) return atlasCache;
+  if (!existsSync(ATLAS_DOCS)) return (atlasCache = null);
+  const map = new Map<string, string[]>();
+  const walk = (dir: string): void => {
+    for (const e of readdirSync(dir, { withFileTypes: true })) {
+      const full = join(dir, e.name);
+      if (e.isDirectory()) walk(full);
+      else if (e.name.endsWith(".json")) {
+        const part = readJson(full) as Partial<AtlasPartitionFile> | undefined;
+        for (const pg of part?.pages ?? []) map.set(normPage(pg.u), pg.i.map((img) => img[0]));
+      }
+    }
+  };
+  walk(ATLAS_DOCS);
+  return (atlasCache = map);
+}
+const atlasImagesOf =
+  (atlas: Map<string, string[]>) =>
+  (page: string): string[] | null =>
+    atlas.get(normPage(page)) ?? null;
 
 function bookHandles(): Set<string> {
   const out = new Set<string>(Object.keys(CELL_SLUG_TO_ID));
@@ -133,13 +161,30 @@ describe("books · rules over fixtures of each form (§13.1, §18.2)", () => {
   });
 });
 
+describe("books · data sources of c0-nucleo and c0-atlas are wired (D11.4)", () => {
+  it("every allowed-link source exists, so book links are validated and not «pendiente»", () => {
+    expect(allowedSources().pending).toEqual([]);
+  });
+
+  it("a figure is checked against the images of ITS page in the Atlas", () => {
+    const atlas = atlasImages();
+    expect(atlas, "public/atlas/v1/docs no está: las figuras quedarían «pendiente de Atlas»").not.toBeNull();
+    const [page, imgs] = [...atlas!.entries()].find(([, i]) => i.length > 0)!;
+    const ok = `![Figura real](${imgs[0]} "figura ${page}")`;
+    const bad = `![Figura inventada](https://www.palantir.com/docs/resources/no-existe.png "figura ${page}")`;
+    expect(checkBookFigures(ok, atlasImagesOf(atlas!))).toEqual([]);
+    expect(checkBookFigures(bad, atlasImagesOf(atlas!)).join(" "), "imagen inventada aceptada").toMatch(/no está en esa página del Atlas/);
+  });
+});
+
 describe("books · content/forge/books (zero books is green)", () => {
   const src = allowedSources();
   const handles = bookHandles();
 
   it(`there are ${files.length} Forge books; missing data sources are reported, not failed`, () => {
     // the figure-image membership needs the Atlas partitions (c0-atlas, §11.2): reported until the integration wires it
-    console.info(`[books.test] ${[...src.pending, "imágenes de figura contra el Atlas: pendiente de Atlas"].join("; ")}`);
+    const pending = [...src.pending, ...(atlasImages() === null ? ["imágenes de figura contra el Atlas: pendiente de Atlas"] : [])];
+    console.info(`[books.test] ${pending.length ? pending.join("; ") : "todas las fuentes de datos presentes (fichas, catálogo y Atlas)"}`);
     expect(Array.isArray(files)).toBe(true);
   });
 
@@ -156,7 +201,9 @@ describe("books · content/forge/books (zero books is green)", () => {
     const problems = [...checkBookStructure(book!), ...checkLibroLinks(md, handles)];
     if (src.haveAll) problems.push(...checkBookLinks(book!, allowedLinkSet({ urls: src.urls, videoIds: src.videoIds })));
     if (src.haveVideos) problems.push(...checkBookVideos(md, new Set(src.videoIds)));
-    for (const fig of figureParagraphs(md)) {
+    const atlas = atlasImages();
+    if (atlas) problems.push(...checkBookFigures(md, atlasImagesOf(atlas)));
+    else for (const fig of figureParagraphs(md)) {
       if (!isDocsUrl(fig.page)) problems.push(`la figura «${fig.text}» no apunta a una página de palantir.com/docs`);
     }
     if (code === "f1-03") {
