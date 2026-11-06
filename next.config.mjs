@@ -1,4 +1,5 @@
 import withSerwistInit from "@serwist/next";
+import { brandIconPrecacheEntries } from "./scripts/brand-icons-precache.mjs";
 import { ForgeChunkMapPlugin } from "./scripts/forge/forge-chunk-map.mjs";
 import { buildCsp } from "./src/lib/csp.mjs";
 
@@ -21,6 +22,9 @@ const withSerwist = withSerwistInit({
   // Precache ONLY the icons from public/: public/atlas/** and public/forge/** (Atlas data, Forge books) are
   // loaded on demand and must never enter the install download (Forge design §6.6, CA-57).
   globPublicPatterns: ["icons/**/*"],
+  // ...plus the brand icons under the exact ?v= URLs that the <head> and the manifest request, so those resolve offline
+  // too (scripts/brand-icons-precache.mjs). Appended here: `additionalPrecacheEntries` would replace the glob above.
+  manifestTransforms: [(entries) => ({ manifest: [...entries, ...brandIconPrecacheEntries()], warnings: [] })],
 });
 
 // Content-Security-Policy — the single source is src/lib/csp.mjs (Forge design §12.1). VideoEmbed and the figure
