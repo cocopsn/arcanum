@@ -14,7 +14,7 @@ import { RUNNERS, RUNNER_LOADERS, isSelectable } from "@/forge/ui/exercises/regi
 import { FLOWS, FLOW_LOADERS } from "@/forge/ui/flows/registry";
 import { project } from "@/core/projector";
 import SqlRunner from "@/forge/ui/exercises/SqlRunner";
-import ForgeMission from "@/forge/ui/flows/mision";
+import ExpedienteStub from "@/forge/ui/flows/expediente";
 import { BLOCKS, bankMd } from "@/forge/__tests__/fixtures/forge-blocks";
 import { parseExercisesMd } from "@/lib/exercises-md";
 import type { ForgeBankItem } from "@/forge/bank/registry";
@@ -112,7 +112,8 @@ describe("honest stubs", () => {
     const { unmount } = render(<SqlRunner item={item!} cellCode="P1-02" cellId="x" readModel={project([])} onClose={() => {}} />);
     expect(screen.getByRole("status").textContent).toBe(PENDING_TEXT);
     unmount();
-    render(<ForgeMission cellCode="P2-06" cellId="x" route={{ v: 1, slug: "p2", maestro_sha10: "0000000000", code: "P2", name: "", family: "Plataforma Foundry/AIP", header: { entrada: "", entradaRecomendada: [], evidencia: "", apoyo: [] }, cells: [] }} readModel={project([])} onClose={() => {}} />);
+    // Phase 1: ForgeMission is real (flow-envelope.test.tsx covers it); the stub check uses a flow that is still a stub.
+    render(<ExpedienteStub cellCode="SD-01" cellId="x" route={{ v: 1, slug: "p2", maestro_sha10: "0000000000", code: "P2", name: "", family: "Plataforma Foundry/AIP", header: { entrada: "", entradaRecomendada: [], evidencia: "", apoyo: [] }, cells: [] }} readModel={project([])} onClose={() => {}} />);
     expect(screen.getByRole("status").textContent).toBe(PENDING_TEXT);
     expect(screen.queryByText(/Pedir veredicto/)).toBeNull();
   });
