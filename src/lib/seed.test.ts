@@ -5,9 +5,12 @@ import { project } from "@/core/projector";
 import { nodeStatus } from "@/core/roadmap";
 import { createDb } from "@/db/schema";
 import { appendEvents, getAllEvents } from "@/db/repo";
+import { FORGE_EDGE_COUNT } from "@/forge/seed";
 
 const totalCells = SPINES.reduce((n, s) => n + s.cells.length, 0);
-const totalEdges = SPINES.reduce((n, s) => n + Math.max(0, s.cells.length - 1), 0);
+// positional spines form one chain each; Engineering Forge (own seed block) is 16 chains, counted apart
+const totalEdges =
+  SPINES.filter((s) => !s.ownSeedBlock).reduce((n, s) => n + Math.max(0, s.cells.length - 1), 0) + FORGE_EDGE_COUNT;
 
 describe("seed — the curricular spines (WHITE ROOM)", () => {
   it("uses fixed UUIDs (stable across imports)", () => {
@@ -18,7 +21,7 @@ describe("seed — the curricular spines (WHITE ROOM)", () => {
 
   it("projects to the spine goals, every cell idle, course-order edges, zero XP", () => {
     const rm = project(SEED_EVENTS);
-    expect(rm.goals.map((g) => g.title).sort()).toEqual(["Alemán", "Competitiva (ICPC)", "FrED Factory", "ITC", "OA Amazon"]);
+    expect(rm.goals.map((g) => g.title).sort()).toEqual(["Alemán", "Competitiva (ICPC)", "Engineering Forge", "FrED Factory", "ITC", "OA Amazon"]);
     expect(rm.modules).toHaveLength(totalCells + 9); // + the 9 seeded FrED Operativo cells (op-0..op-8)
     expect(rm.modules.every((m) => m.status === "idle" && !m.gatePassed)).toBe(true);
     expect(rm.edges).toHaveLength(totalEdges + 9); // + 6 original Operativo edges + 3 for the op-6/op-8 insertion

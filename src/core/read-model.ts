@@ -1,5 +1,7 @@
 import type { GradeName } from "@/core/config";
-import type { Json, NodeNature, NodePart } from "@/core/event";
+import type { EntregaKey, Json, NodeNature, NodePart } from "@/core/event";
+import type { ForgeEvidenceOutcome, ForgeEvidenceSource, ForgeEvidenceType } from "@/core/evidence";
+import type { ForgeFailureMode, ForgeVerdictFields, ForgeVerdictKind } from "@/core/forge-verdict";
 
 export interface Goal {
   id: string;
@@ -153,6 +155,8 @@ export interface GateRM {
    *  (mission cells); empty for a pre-authored justify-gate */
   questions: string[];
   ts: number;
+  /** Engineering Forge: the structured verdict, when the event carried one (absent otherwise) */
+  forge?: ForgeVerdictFields;
 }
 
 /** Latest MISSION evidence submission for a heavy cell (kind:'mission'), folded from
@@ -161,6 +165,44 @@ export interface MissionRM {
   moduleId: string;
   notes: string;
   ts: number;
+  /** Engineering Forge: the 9 sections of §16, only when the payload had exactly those 9 text keys */
+  entrega?: Record<EntregaKey, string>;
+  /** Engineering Forge: the declared support, only when it is one of the two values */
+  apoyo?: "independiente" | "con_apoyo";
+}
+
+/** Engineering Forge: one `evidence.recorded`, in fold order (design §7.3). */
+export interface EvidenceRM {
+  id: string;
+  moduleId: string;
+  goalId: string | null;
+  itemId: string;
+  type: ForgeEvidenceType;
+  phase: string;
+  outcome: ForgeEvidenceOutcome;
+  /** whole when its JSON is ≤ 4,096 characters, else `{ truncated: true, bytes }` */
+  data: Json;
+  source: ForgeEvidenceSource;
+  provider: string | null;
+  /** null without a verdict; with one, true only for AI + "aprobado" + a verdict that passes the rule */
+  passed: boolean | null;
+  ts: number;
+}
+
+/** Engineering Forge: every structured verdict, in fold order (design §7.3). `passed` can only be true
+ *  when `source === "ai"`. */
+export interface ForgeVerdictRM {
+  moduleId: string;
+  source: "ai" | "heuristic";
+  passed: boolean;
+  failureMode: ForgeFailureMode | null;
+  scope: "local" | "nativa";
+  apoyo: "independiente" | "con_apoyo";
+  kind: ForgeVerdictKind;
+  ts: number;
+  eventId: string;
+  /** the queue id of the event, or null; lets derivations count once a submission drained twice */
+  queueId: string | null;
 }
 
 /** Latest adversarial evaluation of a module (Bloque 5), folded from the log. */
@@ -217,12 +259,18 @@ export interface ReadModel {
   /** AI actions enqueued offline and NOT yet resolved by a real verdict (ai.queued minus its
    *  resolving gate.evaluated) — the honest pending queue. Drives the "N pendientes" badge. */
   pendingAi: PendingAiRM[];
+  /** Engineering Forge: every evidence.recorded, in fold order (never opens anything) */
+  evidence: EvidenceRM[];
+  /** Engineering Forge: every structured verdict (local and native), in fold order */
+  forgeVerdicts: ForgeVerdictRM[];
+  /** Engineering Forge: the latest NATIVE verdict per cell (never touches gates/gatePassed) */
+  nativeGates: GateRM[];
   cursor: { ts: number; id: string } | null;
 }
 
 export interface PendingAiRM {
   queueId: string;
-  kind: "gate" | "mission";
+  kind: "gate" | "mission" | "forge";
   moduleId: string;
   goalId: string | null;
   /** the learner's preserved work — { justification } (gate) or { notes } (mission) */

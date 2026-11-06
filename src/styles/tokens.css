@@ -38,4 +38,28 @@
   --r-md: 12px;
   --r-lg: 18px;
   --r-pill: 999px;
+
+  /* Engineering Forge — D4 scale («carbón místico», monochrome), dark mode. Only VALUES measured in the public
+     CSS of palantir.com/docs plus black; no CSS, classes, fonts or marks are copied. White is the only accent.
+     Contrasts measured with contrast.test.ts on #1e2124 / #2f3234. */
+  --forge-abyss: #000000;
+  --forge-void: #0a0a0b;
+  --forge-surface: #1e2124;
+  --forge-surface-raised: #2f3234;
+  --forge-line: #494a4b; /* decorative only: 1.82 on surface */
+  --forge-control: #9b9b9b; /* control or state border: 5.82 / 4.64 */
+  --forge-text: #ffffff; /* main text and the only accent: 16.18 / 12.91 */
+  --forge-text-muted: #b9b9b9; /* 8.24 / 6.58 */
+  --forge-text-faint: #9b9b9b; /* 5.82 / 4.64 */
+  --forge-grain: #767676; /* never text on dark: 3.56 / 2.84 */
+  --forge-reticle: #636363; /* never text on dark: 2.69 / 2.15 */
+  /* light mode of the reader and the Atlas (chosen by the learner, stored on the device) */
+  --forge-light-bg: #ffffff;
+  --forge-light-surface: #f3f3f3;
+  --forge-light-surface-2: #f9f9f9;
+  --forge-light-text: #1e2124; /* 16.18 / 14.58 */
+  --forge-light-text-muted: #494a4b; /* 8.88 / 8.00 */
+  --forge-light-text-faint: #636363; /* 6.01 / 5.41 */
+  --forge-light-line: #b9b9b9; /* decorative */
+  --forge-light-control: #636363; /* control border, active item: 6.01 / 5.41 */
 }

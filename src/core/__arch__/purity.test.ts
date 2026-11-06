@@ -40,4 +40,16 @@ describe("core purity", () => {
     }
     expect(violations).toEqual([]);
   });
+
+  // Engineering Forge (design §8.7): the fold and the verdict rule never read the clock nor draw randomness — the
+  // retention presenter receives `now` from the UI. A text check over the three files that the fold runs.
+  it("projector.ts, forge-verdict.ts and evidence.ts contain no Date.now( nor Math.random(", () => {
+    const coreDir = join(process.cwd(), "src", "core");
+    const offenders: string[] = [];
+    for (const f of ["projector.ts", "forge-verdict.ts", "evidence.ts"]) {
+      const src = readFileSync(join(coreDir, f), "utf8");
+      if (src.includes("Date.now(") || src.includes("Math.random(")) offenders.push(f);
+    }
+    expect(offenders, "el pliegue o la regla de veredicto leen el reloj o el azar").toEqual([]);
+  });
 });
