@@ -18,6 +18,12 @@ public/sw.js
 public/sw.js.map
 public/swe-worker*.js
 public/workbox-*.js
+# forge: generated in the build (scripts/forge/books-publish.mjs, oembed-fetch.mjs, youtube-import.mjs)
+public/forge/books/
+src/forge/data/book-index.json
+src/forge/data/bank-index.json
+public/atlas/v1/videos/oembed.json
+public/atlas/v1/videos/canales.json
 
 # env — NEVER commit secrets
 .env
