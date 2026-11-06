@@ -36,9 +36,13 @@ export const metadata: Metadata = {
     statusBarStyle: "black-translucent",
     title: "Arcanum",
   },
+  // the guardian raven (`pnpm icons`); ?v= = sha256[:10] of each file, so browsers drop the old icon (brand-icons.test.ts)
   icons: {
-    icon: "/icons/favicon-32.png",
-    apple: "/icons/apple-touch-icon.png",
+    icon: [
+      { url: "/favicon.ico?v=746ff5c916", sizes: "16x16 32x32 48x48", type: "image/x-icon" },
+      { url: "/icons/favicon-32.png?v=ecfe2855bc", sizes: "32x32", type: "image/png" },
+    ],
+    apple: "/icons/apple-touch-icon.png?v=bea11a0e15",
   },
 };
 

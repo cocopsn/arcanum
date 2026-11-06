@@ -119,6 +119,7 @@ supabase/     migrations (public.events + RLS) · functions/ai-router (the evalu
 content/      books/ · exercises/   ← the learning content (.md, ingested)
 infra/        canvas-scraper (n8n)  ← optional Fase-4 obligations scraper
 scripts/      tooling (loc.mjs · generate-icons.mjs)
+assets/brand/ the guardian raven, source of every icon (`pnpm icons` → public/icons, favicon, OG card)
 ```
 
 ## Contributing content
