@@ -93,8 +93,9 @@ export function scoreFindings(source: string): string[] {
 /** The real normScore of the Edge, evaluated from its own source text (the Edge is Deno code, not importable here). */
 function loadNormScore(source: string): (raw: unknown) => number {
   const m = source.match(/function normScore\(raw: unknown\): number \{([\s\S]*?)\n\}/);
-  if (!m) throw new Error("normScore no existe en ai-router");
-  return new Function("raw", m[1]) as (raw: unknown) => number;
+  const body = m?.[1];
+  if (!body) throw new Error("normScore no existe en ai-router");
+  return new Function("raw", body) as (raw: unknown) => number;
 }
 
 describe("ai-router — the anti-injection lock table (§10.10)", () => {
