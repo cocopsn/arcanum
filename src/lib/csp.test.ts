@@ -60,6 +60,7 @@ describe("CSP (src/lib/csp.mjs, CA-68)", () => {
     expect(isAllowedImageUrl("http://www.palantir.com/a.png")).toBe(false);
     expect(isAllowedImageUrl("https://evil.example/a.png")).toBe(false);
     expect(isAllowedImageUrl("javascript:alert(1)")).toBe(false);
+    expect(isAllowedImageUrl("https://www.palantir.com:8443/x.png"), "la figura aceptó un origen con otro puerto que img-src no permite").toBe(false);
     expect(isAllowedFrameUrl("https://www.youtube-nocookie.com/embed/abcdefghijk")).toBe(true);
     expect(isAllowedFrameUrl("https://www.youtube.com/embed/abcdefghijk")).toBe(false);
     expect(isAllowedFrameUrl("https://player.vimeo.com/video/1")).toBe(true);

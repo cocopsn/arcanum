@@ -1,7 +1,6 @@
 import { describe, it, expect } from "vitest";
 import {
   NEVER_FETCH_HOSTS,
-  isAllowedImageUrl,
   isDocsHop,
   isDocsUrl,
   isFetchableSourceUrl,
@@ -37,14 +36,11 @@ describe("fetch policy (§12, CA-51, review NIT 11)", () => {
     expect(bad, "una URL curada apunta a una IP o a un host interno").toEqual([]);
   });
 
-  it("docs policy: palantir.com under /docs/ only; images only from palantir.com and build.palantir.com", () => {
+  it("docs policy: palantir.com under /docs/ only (images: see csp.test.ts, the single image check)", () => {
     expect(isDocsUrl("https://www.palantir.com/docs/foundry/x")).toBe(true);
     expect(isDocsUrl("https://www.palantir.com/careers/")).toBe(false);
     expect(isDocsHop("https://palantir.com/docs/x")).toBe(true);
     expect(isDocsHop("https://evil.com/docs/x")).toBe(false);
-    expect(isAllowedImageUrl("https://www.palantir.com/docs/resources/x.png")).toBe(true);
-    expect(isAllowedImageUrl("https://build.palantir.com/x.png")).toBe(true);
-    expect(isAllowedImageUrl("https://cdn.example.com/x.png")).toBe(false);
   });
 
   it("outgoing labels of §5.5 for never-fetched URLs", () => {

@@ -160,11 +160,18 @@ and none silently worse; #1–#3 keep their low rating for a single-user trusted
 - **CSP.** One source, `src/lib/csp.mjs`, 14 directives applied by `next.config.mjs` to every path. `img-src` adds
   only `https://www.palantir.com` and `https://build.palantir.com`; `frame-src` only `https://www.youtube-nocookie.com`
   and `https://player.vimeo.com`. `connect-src` is unchanged in spirit: self, Supabase and the Pyodide CDN. No new
-  wildcard. `SafeImage`, `VideoEmbed` and `SourceViewer` read the same origin lists, so embed and policy cannot drift.
+  wildcard. Only two components check URLs against those origin lists before rendering: `VideoEmbed`
+  (`isAllowedFrameUrl`) and the figure paragraph of `BookReader` (`isAllowedImageUrl`, exact origin match). Any other
+  `<img>` or `<iframe>` relies on the header alone. A `SafeImage` component, a `SourceViewer` that reads these lists
+  and an `offline-download` filter are **not in this version**.
 - **Fetch policy.** `src/lib/fetch-policy.ts` is the one list of hosts the server never requests: learn,
   certification, Skilljar, build.palantir.com and every video host, plus IP literals and internal suffixes. The
   allowlist of `/api/fetch-source` is still the exact set of curated spine URLs (now including Forge's
-  `sourceUrls`), filtered by that policy, with every redirect hop re-validated.
+  `sourceUrls`), filtered by `isFetchableSourceUrl` when the list is built (`src/lib/spines.ts`). The route itself is
+  unchanged: it accepts the entry URL only on an exact match and checks every redirect hop with `isAllowedSourceHost`
+  (https and a host of that filtered list). That hop check does not reject credentials in the URL. `SourceViewer`
+  still offers «Ver dentro» for curated URLs that the filter removed (for example YouTube); the route answers
+  `url-not-allowed` and the client falls back to «abrir fuente».
 - **Not in this version (declared).** The design's session gate and per-session rate limit for `/api/fetch-source`
   (design §12) were not built before the cut. The route keeps today's posture: anonymous, but closed to the curated
   allowlist (no client-chosen URL, no SSRF). A URL outside it answers `url-not-allowed` and the client offers

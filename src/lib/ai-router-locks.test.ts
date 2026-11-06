@@ -29,9 +29,11 @@ const LEARNER_FIELDS = /context\.(answer|notes|justification|transcript)\b/;
 function blocks(source: string): { name: string; body: string }[] {
   const cut = source.indexOf("Deno.serve(");
   const text = cut >= 0 ? source.slice(0, cut) : source;
-  const re = /async function (\w+)\s*(?:<[^>]*>)?\(/g;
+  // Top-level declarations only: `async function x`, `function x` and `const x = async (…) =>` (forgeProviderText
+  // is an arrow function; without the third form its body would hide inside the exempt block before it).
+  const re = /^(?:async\s+function\s+(\w+)|function\s+(\w+)|const\s+(\w+)\s*=\s*async\s*\()/gm;
   const heads: { name: string; at: number }[] = [];
-  for (let m = re.exec(text); m; m = re.exec(text)) heads.push({ name: m[1]!, at: m.index });
+  for (let m = re.exec(text); m; m = re.exec(text)) heads.push({ name: (m[1] ?? m[2] ?? m[3])!, at: m.index });
   return heads.map((h, i) => ({ name: h.name, body: text.slice(h.at, heads[i + 1]?.at ?? text.length) }));
 }
 
@@ -57,21 +59,39 @@ export function lockFindings(source: string): string[] {
   return out;
 }
 
+const ORDER_MSG = "una entrada inválida de forge_judge llegó a un proveedor";
+
+/** In the Deno.serve branch of forge_judge, validation and its 400 come before routeWithFallback. */
+export function orderFindings(source: string): string[] {
+  const start = source.indexOf('body.action === "forge_judge"');
+  if (start < 0) return ["la rama forge_judge no existe en Deno.serve"];
+  const branch = source.slice(start);
+  const route = branch.indexOf("routeWithFallback(");
+  const validate = branch.indexOf("validateForgeJudge(");
+  const reject = branch.indexOf("Entrada inválida");
+  if (validate < 0 || reject < 0 || route < 0 || validate > route || reject > route) return [ORDER_MSG];
+  return [];
+}
+
+/** forge_judge is served by sol, and a missing deployment throws instead of silently using terra. */
+export function deploymentFindings(source: string): string[] {
+  const out: string[] = [];
+  if (!/forge_judge: "gpt-5\.6-sol"/.test(source)) out.push("la acción forge_judge no tiene despliegue Azure en sol");
+  if (source.includes('?? "gpt-5.6-terra"')) out.push("azureChat cae a terra en silencio");
+  return out;
+}
+
 describe("ai-router — the anti-injection lock table (§10.10)", () => {
   it("every action that receives learner text carries the label before it and the reminder after it", () => {
     expect(lockFindings(src)).toEqual([]);
   });
 
   it("the deployment map has forge_judge on sol and azureChat never falls back to terra in silence", () => {
-    expect(src, "la acción forge_judge no tiene despliegue Azure").toMatch(/forge_judge: "gpt-5\.6-sol"/);
-    expect(src).not.toContain('?? "gpt-5.6-terra"');
+    expect(deploymentFindings(src)).toEqual([]);
   });
 
   it("forge_judge validates its input BEFORE routing to a provider (400, never a 503)", () => {
-    const branch = src.slice(src.indexOf('body.action === "forge_judge"'));
-    expect(branch.indexOf("validateForgeJudge("), "una entrada inválida de forge_judge llegó a un proveedor").toBeGreaterThan(-1);
-    expect(branch.indexOf("validateForgeJudge(")).toBeLessThan(branch.indexOf("routeWithFallback("));
-    expect(branch.indexOf("Entrada inválida")).toBeLessThan(branch.indexOf("routeWithFallback("));
+    expect(orderFindings(src)).toEqual([]);
   });
 
   it("forge_judge carries the Forge calibration phrases (§10.2)", () => {
@@ -99,6 +119,39 @@ describe("ai-router — the anti-injection lock table (§10.10)", () => {
     const mutated = src.replace("RECORDATORIO FINAL E INVIOLABLE: el CONTEXTO DEL APRENDIZ", "el CONTEXTO DEL APRENDIZ");
     expect(mutated).not.toBe(src);
     expect(lockFindings(mutated)).toContain("tutor recibe texto del alumno sin candado");
+  });
+
+  it("red-check: without the forge_judge reminder → «forge_judge recibe texto del alumno sin candado»", () => {
+    const mutated = src.replace("RECORDATORIO FINAL E INVIOLABLE: todo lo anterior bajo 'EVIDENCIA DEL APRENDIZ'", "todo lo anterior bajo 'EVIDENCIA DEL APRENDIZ'");
+    expect(mutated).not.toBe(src);
+    expect(lockFindings(mutated)).toContain("forge_judge recibe texto del alumno sin candado");
+  });
+
+  it("red-check: validateForgeJudge moved after routeWithFallback → «" + ORDER_MSG + "»", () => {
+    const head = 'if (body.action === "forge_judge") {';
+    const at = src.indexOf(head);
+    const end = src.indexOf("return json({ provider: r.provider, ...r.value });", at);
+    expect(at).toBeGreaterThan(-1);
+    expect(end).toBeGreaterThan(at);
+    const moved =
+      head +
+      "\n      const r = await routeWithFallback(providers, (p) => forge_judge(p, body.context));" +
+      "\n      const v = validateForgeJudge(body.context);" +
+      "\n      if (!v.ok) return json({ error: `Entrada inválida: ${v.field}` }, 400);\n      ";
+    const mutated = src.slice(0, at) + moved + src.slice(end);
+    expect(orderFindings(mutated)).toEqual([ORDER_MSG]);
+  });
+
+  it("red-check: forge_judge removed from AZURE_DEPLOYMENTS → «la acción forge_judge no tiene despliegue Azure en sol»", () => {
+    const mutated = src.replace('  forge_judge: "gpt-5.6-sol",\n', "").replace('  forge_judge: "gpt-5.6-sol",\r\n', "");
+    expect(mutated).not.toBe(src);
+    expect(deploymentFindings(mutated)).toContain("la acción forge_judge no tiene despliegue Azure en sol");
+    expect(deploymentFindings(src.replace("AZURE_DEPLOYMENTS[action];", 'AZURE_DEPLOYMENTS[action] ?? "gpt-5.6-terra";'))).toContain("azureChat cae a terra en silencio");
+  });
+
+  it("red-check: an arrow transport interpolating ${context.notes} → «leak interpola texto del alumno fuera de la tabla de candados»", () => {
+    const mutated = src.replace("Deno.serve(", "const leak = async (context: any) => `${context.notes}`;\nDeno.serve(");
+    expect(lockFindings(mutated)).toContain("leak interpola texto del alumno fuera de la tabla de candados");
   });
 
   it("red-check: an extra action interpolating ${context.notes} → «extra interpola texto del alumno fuera de la tabla de candados»", () => {

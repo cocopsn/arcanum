@@ -221,7 +221,7 @@ export function AtlasPanel({ manifest, onClose }: { manifest: AtlasManifest; onC
           />
         </label>
         <p className="mt-1 text-[11px] text-text-muted" data-atlas-search-scope="">
-          La búsqueda cubre sólo las particiones cargadas en este dispositivo ({loadedIds.length}); abre una capacidad
+          La búsqueda cubre sólo las particiones cargadas en esta sesión ({loadedIds.length}); abre una capacidad
           para sumarla. Aún no hay búsqueda sobre todo el Atlas.
         </p>
 
@@ -260,7 +260,7 @@ export function AtlasPanel({ manifest, onClose }: { manifest: AtlasManifest; onC
                             {st === "cargando" && <p className="text-[12px] text-text-muted">cargando partición…</p>}
                             {st === "error" && (
                               <p className="text-[12px] text-text-muted">
-                                ✕ Partición no descargada en este dispositivo (sin conexión o error). Ciérrala y vuelve
+                                ✕ Partición no descargada en esta sesión (sin conexión o error). Ciérrala y vuelve
                                 a abrirla con red.
                               </p>
                             )}

@@ -1,6 +1,6 @@
 // Content-Security-Policy — the SINGLE source (Forge design §12.1, RD-7). next.config.mjs applies buildCsp() to
-// /:path*; SafeImage, VideoEmbed and SourceViewer read IMG_ORIGINS / FRAME_ORIGINS, so what the app embeds and
-// what the CSP allows cannot diverge.
+// /:path*. Two components read these lists today: VideoEmbed (isAllowedFrameUrl) and the figure paragraph of
+// BookReader (isAllowedImageUrl). Nothing else checks them; for any other <img> or <iframe> only the header applies.
 //
 // Defense-in-depth for a PUBLIC-repo app that executes learner code. The code runner NEEDS 'unsafe-eval'
 // (new Function) + blob workers + Pyodide from jsdelivr, so script/worker are necessarily permissive; the

@@ -46,7 +46,7 @@ describe("Atlas · entrada y panel", () => {
     vi.stubGlobal("fetch", fetchMock);
     render(<AtlasPanel manifest={manifest} onClose={() => {}} />);
     expect(fetchMock).not.toHaveBeenCalled();
-    expect(screen.getByText(/sólo las particiones cargadas en este dispositivo \(0\)/)).toBeTruthy();
+    expect(screen.getByText(/sólo las particiones cargadas en esta sesión \(0\)/)).toBeTruthy();
 
     fireEvent.click(screen.getByRole("button", { name: /ontology · 2/ }));
     const link = (await screen.findByRole("link", { name: /Ontology overview/ })) as HTMLAnchorElement;
@@ -66,7 +66,7 @@ describe("Atlas · entrada y panel", () => {
     vi.stubGlobal("fetch", vi.fn(async () => { throw new TypeError("offline"); }));
     render(<AtlasPanel manifest={manifest} onClose={() => {}} />);
     fireEvent.click(screen.getByRole("button", { name: /ontology · 2/ }));
-    expect(await screen.findByText(/Partición no descargada en este dispositivo/)).toBeTruthy();
+    expect(await screen.findByText(/Partición no descargada en esta sesión/)).toBeTruthy();
     expect(screen.queryAllByRole("link")).toHaveLength(0);
   });
 });

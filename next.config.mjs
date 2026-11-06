@@ -23,8 +23,8 @@ const withSerwist = withSerwistInit({
   globPublicPatterns: ["icons/**/*"],
 });
 
-// Content-Security-Policy — the single source is src/lib/csp.mjs (Forge design §12.1): the same module tells
-// SafeImage, VideoEmbed and SourceViewer which origins may be embedded, so the rule and the header never diverge.
+// Content-Security-Policy — the single source is src/lib/csp.mjs (Forge design §12.1). VideoEmbed and the figure
+// paragraph of BookReader check URLs against the same origin lists; everything else relies on this header alone.
 const CSP = buildCsp();
 
 /** @type {import('next').NextConfig} */

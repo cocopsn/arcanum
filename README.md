@@ -53,8 +53,11 @@ devices when there's a network.
 The newest world: a forward-deployed / platform engineering curriculum (Foundry, AIP, Ontology, data systems,
 software engineering, algorithms and case files) in a monochrome "carbón místico" console. 19 routes and 168 cells
 with their own seed block; books and banks load lazily per route. The Atlas data (metadata of the public pages of
-palantir.com/docs, with a search index) is generated under `public/atlas/v1/`; its browsing and search screens are
-not in this version yet. Sixteen evaluation types are specified beyond
+palantir.com/docs, with a search index) is generated under `public/atlas/v1/`. The Atlas panel shows the page count
+from its manifest, a language selector and a product → capability tree whose partitions download only when opened.
+Its search matches titles and breadcrumbs of the partitions loaded in the current session only; there is no global
+search yet and the `index/*.json` files are not used. It shows metadata and links, never page bodies. Sixteen
+evaluation types are specified beyond
 the classic gates; this version ships interactive ones for Ontology Forge, SQL, history (DSL + simulator),
 permissions, retrieval with abstention, prediction with calibration and signal (history: trace mode only). The rest show «aún no está
 disponible en esta versión» and are not offered (CONTENT.md §6.5). Content state per cell is derived, never
