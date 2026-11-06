@@ -155,4 +155,30 @@ and none silently worse; #1–#3 keep their low rating for a single-user trusted
 | 6 | **Pending secret rotation** — the Supabase `service_role` + `anon` were used during setup with a disposable PAT; a rotation was noted as a standing owner action | medium — do it |
 | 7 | **Structural sandbox** — the shield is a global-severing shield, not an origin boundary. Fine while every bank is authored by the owner; if banks are ever shared/imported from third parties, move the runner to an **opaque-origin iframe** + `connect-src 'none'` | low today · **blocking if banks are ever shared** |
 
+## 7. Engineering Forge
+
+- **CSP.** One source, `src/lib/csp.mjs`, 14 directives applied by `next.config.mjs` to every path. `img-src` adds
+  only `https://www.palantir.com` and `https://build.palantir.com`; `frame-src` only `https://www.youtube-nocookie.com`
+  and `https://player.vimeo.com`. `connect-src` is unchanged in spirit: self, Supabase and the Pyodide CDN. No new
+  wildcard. `SafeImage`, `VideoEmbed` and `SourceViewer` read the same origin lists, so embed and policy cannot drift.
+- **Fetch policy.** `src/lib/fetch-policy.ts` is the one list of hosts the server never requests: learn,
+  certification, Skilljar, build.palantir.com and every video host, plus IP literals and internal suffixes. The
+  allowlist of `/api/fetch-source` is still the exact set of curated spine URLs (now including Forge's
+  `sourceUrls`), filtered by that policy, with every redirect hop re-validated.
+- **Not in this version (declared).** The design's session gate and per-session rate limit for `/api/fetch-source`
+  (design §12) were not built before the cut. The route keeps today's posture: anonymous, but closed to the curated
+  allowlist (no client-chosen URL, no SSRF). A URL outside it answers `url-not-allowed` and the client offers
+  «abrir fuente».
+- **Edge `ai-router`.** The repo has `forge_judge` (input validated before any provider call; the fold applies
+  rule §8.1 to the verdict) and the lock on `lesson` and `tutor` (§10.10: learner text is fenced with a label before it and a reminder
+  after it, so the model treats it as data), covered by `src/lib/ai-router-locks.test.ts` with red-checks. It is **not
+  deployed** (D7: the account token answered 401); production runs the previous Edge. Forge verdicts stay queued
+  with their honest message and drain when the owner deploys (AF3). `forge_interview` is not implemented; the
+  interview flow says so.
+- **YouTube.** Only ids that appear in allowed sources, embedded through `youtube-nocookie.com`, labelled «no
+  revisado». Metadata only from oEmbed at build time; channel listings only through the Data API with the owner's
+  key, never versioned.
+- **Banks.** Every Forge bank is authored in this repo. Debt #7 (structural sandbox) is unchanged: it becomes
+  blocking only if banks are ever imported from third parties.
+
 See also: [ARCHITECTURE.md](ARCHITECTURE.md) · [OPERATIONS.md](OPERATIONS.md).

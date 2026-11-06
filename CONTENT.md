@@ -276,6 +276,33 @@ sources section, and ≥ 1 explanation section; every explanation section, and e
 of a hidden fact of its interview. `books.test.ts` applies these rules; zero books is green, and a rule whose data source
 is not merged yet (maestro, catalog, Atlas, videos) is reported as pending, not failed.
 
+### 6.4 Authoring state and publication
+
+- `estado` in a book's frontmatter is `autorado` at most; nobody writes `verificado` by hand. The app derives the
+  state per cell (`src/forge/model/authoring.ts`): «Especificado» with a complete ficha; «Autorado» with a valid
+  book and bank (SD: book + expediente; X and D: statement + deliverable); «Verificado» only when every executable
+  item has a passing bank-check run with the current `sha10` **and** the bank has no pending items.
+- `books-publish` (`pnpm forge:publish`) copies books and banks and writes `book-index.json` and `bank-index.json`;
+  it runs before `dev`, `build`, `test` and `typecheck`.
+- Links in books use only allowed hosts (docs, build, the master's URLs); learn and certification appear only as
+  outgoing «requiere cuenta» links. Videos are youtube-nocookie embeds labelled «no revisado»; figures come from
+  the cited page's images in the Atlas. `#libro:` links point to another world's book by anchor.
+
+### 6.5 State at integration (2026-11-06)
+
+- **128 books and 128 banks** across F0-F2, P1-P4, S1-S2, SW1-SW4, A1-A2 and SD-01 to SD-12, with their
+  verification files. `bank-check --all`: 0 failures; 21 banks keep items «sin verificar» for types without a
+  harness. The strict gate passes.
+- **Without book or bank («Libro pendiente», state «Especificado»):** P5-01 to P5-08. D1-D8 and X01-X24 are
+  statement + deliverable cells and have no book by design.
+- **Types with their stub** («aún no está disponible en esta versión», never offered): runners `contraejemplo`,
+  `desvanecido`, `forense`, `gameday`, `mutantes`, `retencion`; flows `diagnostico`, `entrevista`, `expediente`,
+  `gameday`, `proyecto`. Ingestion checks still on the shared stub: `contraejemplo`, `desvanecido`, `forense`,
+  `mutantes`, `retencion`; banks that use them are accepted with those items pending and stay «Autorado» at most.
+- **Interactive types:** `ontologia` (Ontology Forge), `sql`, `historial` (mode `traza`; mode `fallas` keeps the
+  pending text), `permisos`, `recuperacion`,
+  `prediccion`, `senal`, plus the mission flow (`ForgeMission`), whose verdicts queue until the Edge is deployed.
+
 ---
 
 See also: [ARCHITECTURE.md](ARCHITECTURE.md) · [README.md](README.md) · [SECURITY.md](SECURITY.md).

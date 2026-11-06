@@ -97,6 +97,20 @@ supabase secrets set KEE_API_KEY=<token> --project-ref tssmjabfszndxwlpzngv
 Las claves de IA viven SOLO en los secrets de la función (`Deno.env.get`), nunca en
 el cliente. El cliente invoca `ai-router` autenticado con su JWT de Supabase.
 
+### 2.1 Edge de Engineering Forge (AF3, la despliega el dueño)
+
+El repo trae `forge_judge` y el candado de `lesson` y `tutor` (commit `dc489d8`, en `forge/e3-ia` y ya en
+`feat/palantir-forge`). Ningún agente toca ni busca el PAT: el despliegue lo corre el dueño con el mismo comando de
+arriba, desde el commit que llegue a `main`:
+
+```bash
+supabase functions deploy ai-router --project-ref tssmjabfszndxwlpzngv
+```
+
+Mientras no se despliegue, producción sigue con la Edge anterior: los veredictos Forge quedan en cola con su
+mensaje honesto y se drenan solos después; encolar nunca abre una compuerta. Vuelta atrás: desplegar `ai-router`
+desde el commit anterior.
+
 ## 3) Canvas (capa de obligaciones) → droplet con n8n
 
 Todo el paso a paso está en [`infra/canvas-scraper/README.md`](infra/canvas-scraper/README.md).
@@ -141,6 +155,7 @@ lea para mandarlo. Requiere también `SUPABASE_SERVICE_ROLE_KEY` + `NEXT_PUBLIC_
 | Build + PWA prod-ready | ✅ verificado local | — |
 | App en Vercel | ⏳ listo para subir | §1 (GitHub push + import + env) |
 | Edge Function `ai-router` (Fase 4) | ⏳ código listo | §2 (`supabase functions deploy`, tu PAT) |
+| Edge `ai-router` con `forge_judge` y candado de `lesson`/`tutor` (Engineering Forge) | ⏳ en el repo, no desplegada | §2.1 (AF3, la despliega el dueño) |
 | Migración DB | ✅ ninguna nueva | — |
 | Canvas scraper (n8n) | ⏳ todo generado | §3 (droplet + cookie + activar) |
 

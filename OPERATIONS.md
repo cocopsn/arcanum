@@ -74,6 +74,29 @@ done
 
 This is more reliable than the deploy API's state (which can read stale for a few seconds).
 
+### 5.1 Engineering Forge
+
+- **Build command.** `vercel.json` fixes `{ "buildCommand": "pnpm build" }`, so Vercel runs `books-publish`,
+  `oembed-fetch --build` and `youtube-import --if-key` before `next build`. Check the Vercel build log for the line
+  `[books-publish] N libros … y N bancos publicados`; without it `book-index.json` is missing.
+- **Scripts.** `pnpm forge:publish` (run it before a single vitest file; `typecheck`, `test`, `dev` and `build`
+  already run it), `forge:bank-check` (`--all` or a code; writes `content/forge/verification/<código>.json`),
+  `forge:anticopy`, `forge:budget` (after `pnpm build`; writes `budget-report.json`), `forge:extract`,
+  `forge:derived`, `forge:atlas` (regenerates `public/atlas/v1/`; only when recapturing).
+- **Gates before a Forge merge**, besides §3: `node scripts/forge/bank-check.mjs --all`,
+  `FORGE_BANKS_STRICT=1 pnpm vitest run src/forge/__tests__/banks.test.ts`, `pnpm build` then
+  `node scripts/forge/budget-report.mjs`, `node scripts/forge/anticopy.mjs`, and a scan of the diff for `sk-`,
+  `sbp_` and JWTs (counts only).
+- **Budgets** (`budget-report`, limits in its JSON): page chunk ≤ 2,771,456 B, Forge total ≤ 7 MiB, banks ≤ 4 MiB,
+  no `/atlas/` or `/forge/books/` entry in the precache. Chunks are attributed through `forge-chunks.json`.
+- **oEmbed and YouTube.** In this version `oembed-fetch` and `youtube-import` are the Phase 0 stubs: no request is
+  made, every video is «sin dato» and plays with its own label plus «Video no revisado»; the channel listing waits
+  for the owner's key (AF2). The real scripts refresh monthly once built.
+- **Probe.** `scripts/forge/probe-prod.mjs` is not in this version; probe by hand with the method above, a Forge
+  marker from the page chunk, and the CSP header (14 directives).
+- **`estado/v1` counts.** On the deploy day `goals` rises by 1, `modules` by 168 and `sealed` by the sealed Forge
+  cells. Expected, not a regression (see `COORDINACION.md`).
+
 ## 6. Lines-of-code report
 
 ```bash

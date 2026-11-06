@@ -44,9 +44,23 @@ devices when there's a network.
 
 <div align="center">
 
-**✶ ITC** · la sala del trono &nbsp;&nbsp; **⎓ FrED Factory** · la forja &nbsp;&nbsp; **✺ Competitiva** · la arena &nbsp;&nbsp; **ᚦ Alemán** · el claustro &nbsp;&nbsp; **⌖ OA Amazon** · el coliseo
+**✶ ITC** · la sala del trono &nbsp;&nbsp; **⎓ FrED Factory** · la forja &nbsp;&nbsp; **✺ Competitiva** · la arena &nbsp;&nbsp; **ᚦ Alemán** · el claustro &nbsp;&nbsp; **⌖ OA Amazon** · el coliseo &nbsp;&nbsp; **▣ Engineering Forge** · la consola
 
 </div>
+
+### Engineering Forge
+
+The newest world: a forward-deployed / platform engineering curriculum (Foundry, AIP, Ontology, data systems,
+software engineering, algorithms and case files) in a monochrome "carbón místico" console. 19 routes and 168 cells
+with their own seed block; books and banks load lazily per route. The Atlas data (metadata of the public pages of
+palantir.com/docs, with a search index) is generated under `public/atlas/v1/`; its browsing and search screens are
+not in this version yet. Sixteen evaluation types are specified beyond
+the classic gates; this version ships interactive ones for Ontology Forge, SQL, history (DSL + simulator),
+permissions, retrieval with abstention, prediction with calibration and signal (history: trace mode only). The rest show «aún no está
+disponible en esta versión» and are not offered (CONTENT.md §6.5). Content state per cell is derived, never
+declared: «Especificado», «Autorado» or «Verificado».
+
+Inspirado en Palantir. No afiliado a Palantir Technologies Inc. Engineering Forge es un mundo de estudio de Arcanum y no cuenta con patrocinio ni aprobación de Palantir. Palantir, Foundry, AIP, Apollo y Gotham son marcas de sus titulares y aquí sólo nombran lo que se estudia. Las imágenes y los videos se muestran enlazados desde su fuente, con atribución.
 
 ## The régime
 
