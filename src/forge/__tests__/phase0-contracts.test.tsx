@@ -13,7 +13,6 @@ import { MISCONFIGURED_TEXT, PENDING_TEXT, closingMount, missionConfigError } fr
 import { RUNNERS, RUNNER_LOADERS, isSelectable } from "@/forge/ui/exercises/registry";
 import { FLOWS, FLOW_LOADERS } from "@/forge/ui/flows/registry";
 import { project } from "@/core/projector";
-import SqlRunner from "@/forge/ui/exercises/SqlRunner";
 import ForgeMission from "@/forge/ui/flows/mision";
 import { BLOCKS, bankMd } from "@/forge/__tests__/fixtures/forge-blocks";
 import { parseExercisesMd } from "@/lib/exercises-md";
@@ -108,11 +107,19 @@ describe("honest stubs", () => {
     expect(await ensureForgeBank("P2-06")).toEqual({ ok: false, reason: "no-descargado" });
     expect(await loadForgeBankItems("P2-06")).toBeNull();
   });
-  it("stub runner and stub flow paint the pending text and offer no verdict", () => {
-    const [item] = items(bankMd([BLOCKS.sql]));
-    const { unmount } = render(<SqlRunner item={item!} cellCode="P1-02" cellId="x" readModel={project([])} onClose={() => {}} />);
-    expect(screen.getByRole("status").textContent).toBe(PENDING_TEXT);
-    unmount();
+  it("stub runner and stub flow paint the pending text and offer no verdict", async () => {
+    // Phase 1 replaces runners file by file (§22.4): every runner that is still the Phase-0 stub paints the pending text.
+    const dir = join(process.cwd(), "src", "forge", "ui", "exercises");
+    const stubs = (Object.keys(RUNNER_LOADERS) as (keyof typeof RUNNER_LOADERS)[]).filter((t) =>
+      readFileSync(join(dir, `${t[0]!.toUpperCase()}${t.slice(1)}Runner.tsx`), "utf8").includes("data-forge-stub"),
+    );
+    for (const t of stubs) {
+      const { default: Stub } = await RUNNER_LOADERS[t]();
+      const [item] = items(bankMd([BLOCKS[t]]));
+      const { unmount } = render(<Stub item={item!} cellCode="P1-02" cellId="x" readModel={project([])} onClose={() => {}} />);
+      expect(screen.getByRole("status").textContent, `el corredor stub de ${t} no pinta el texto pendiente`).toBe(PENDING_TEXT);
+      unmount();
+    }
     render(<ForgeMission cellCode="P2-06" cellId="x" route={{ v: 1, slug: "p2", maestro_sha10: "0000000000", code: "P2", name: "", family: "Plataforma Foundry/AIP", header: { entrada: "", entradaRecomendada: [], evidencia: "", apoyo: [] }, cells: [] }} readModel={project([])} onClose={() => {}} />);
     expect(screen.getByRole("status").textContent).toBe(PENDING_TEXT);
     expect(screen.queryByText(/Pedir veredicto/)).toBeNull();
