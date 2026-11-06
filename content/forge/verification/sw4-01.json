@@ -13,14 +13,14 @@
    "tipo": "code",
    "lenguaje": "javascript",
    "resultado": "paso",
-   "ms": 4
+   "ms": 3
   },
   {
    "id": "codigo-lru-k",
    "tipo": "code",
    "lenguaje": "python",
    "resultado": "paso",
-   "ms": 218
+   "ms": 113
   }
  ],
  "resumen": {

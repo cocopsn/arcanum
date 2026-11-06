@@ -13,14 +13,14 @@
    "tipo": "code",
    "lenguaje": "javascript",
    "resultado": "paso",
-   "ms": 80
+   "ms": 4
   },
   {
    "id": "codigo-serializable",
    "tipo": "code",
    "lenguaje": "python",
    "resultado": "paso",
-   "ms": 167
+   "ms": 65
   }
  ],
  "resumen": {

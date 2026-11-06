@@ -13,14 +13,14 @@
    "tipo": "code",
    "lenguaje": "javascript",
    "resultado": "paso",
-   "ms": 51
+   "ms": 3
   },
   {
    "id": "codigo-clasificar-trabajos",
    "tipo": "code",
    "lenguaje": "python",
    "resultado": "paso",
-   "ms": 482
+   "ms": 78
   }
  ],
  "resumen": {

@@ -13,14 +13,14 @@
    "tipo": "code",
    "lenguaje": "javascript",
    "resultado": "paso",
-   "ms": 4
+   "ms": 3
   },
   {
    "id": "codigo-flujo-bytes",
    "tipo": "code",
    "lenguaje": "python",
    "resultado": "paso",
-   "ms": 156
+   "ms": 82
   }
  ],
  "resumen": {

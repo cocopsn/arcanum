@@ -13,14 +13,14 @@
    "tipo": "code",
    "lenguaje": "javascript",
    "resultado": "paso",
-   "ms": 2
+   "ms": 4
   },
   {
    "id": "codigo-verificar-bmas",
    "tipo": "code",
    "lenguaje": "python",
    "resultado": "paso",
-   "ms": 94
+   "ms": 80
   }
  ],
  "resumen": {

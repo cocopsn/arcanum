@@ -21,14 +21,14 @@
    "tipo": "code",
    "lenguaje": "javascript",
    "resultado": "paso",
-   "ms": 298
+   "ms": 5
   },
   {
    "id": "codigo-abstraer-deque",
    "tipo": "code",
    "lenguaje": "python",
    "resultado": "paso",
-   "ms": 133
+   "ms": 67
   }
  ],
  "resumen": {

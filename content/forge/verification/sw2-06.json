@@ -13,14 +13,14 @@
    "tipo": "code",
    "lenguaje": "javascript",
    "resultado": "paso",
-   "ms": 360
+   "ms": 4
   },
   {
    "id": "codigo-recuperar-log",
    "tipo": "code",
    "lenguaje": "python",
    "resultado": "paso",
-   "ms": 274
+   "ms": 84
   }
  ],
  "resumen": {

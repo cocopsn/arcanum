@@ -13,14 +13,14 @@
    "tipo": "code",
    "lenguaje": "javascript",
    "resultado": "paso",
-   "ms": 417
+   "ms": 3
   },
   {
    "id": "codigo-cola-secuencial",
    "tipo": "code",
    "lenguaje": "python",
    "resultado": "paso",
-   "ms": 310
+   "ms": 78
   }
  ],
  "resumen": {

@@ -13,14 +13,14 @@
    "tipo": "code",
    "lenguaje": "javascript",
    "resultado": "paso",
-   "ms": 194
+   "ms": 3
   },
   {
    "id": "codigo-pool-generaciones",
    "tipo": "code",
    "lenguaje": "python",
    "resultado": "paso",
-   "ms": 466
+   "ms": 86
   }
  ],
  "resumen": {

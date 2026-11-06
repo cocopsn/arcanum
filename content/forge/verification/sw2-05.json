@@ -13,14 +13,14 @@
    "tipo": "code",
    "lenguaje": "javascript",
    "resultado": "paso",
-   "ms": 301
+   "ms": 3
   },
   {
    "id": "codigo-fallos-cache",
    "tipo": "code",
    "lenguaje": "python",
    "resultado": "paso",
-   "ms": 430
+   "ms": 83
   }
  ],
  "resumen": {

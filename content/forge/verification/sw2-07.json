@@ -13,14 +13,14 @@
    "tipo": "code",
    "lenguaje": "javascript",
    "resultado": "paso",
-   "ms": 2
+   "ms": 3
   },
   {
    "id": "codigo-percentiles",
    "tipo": "code",
    "lenguaje": "python",
    "resultado": "paso",
-   "ms": 147
+   "ms": 85
   }
  ],
  "resumen": {
