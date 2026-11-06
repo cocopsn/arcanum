@@ -13,14 +13,14 @@
    "tipo": "code",
    "lenguaje": "javascript",
    "resultado": "paso",
-   "ms": 16
+   "ms": 3
   },
   {
    "id": "lecturas-viejas",
    "tipo": "code",
    "lenguaje": "python",
    "resultado": "paso",
-   "ms": 231
+   "ms": 98
   }
  ],
  "resumen": {

@@ -13,14 +13,14 @@
    "tipo": "code",
    "lenguaje": "javascript",
    "resultado": "paso",
-   "ms": 2
+   "ms": 3
   },
   {
    "id": "diagnostico-join",
    "tipo": "code",
    "lenguaje": "python",
    "resultado": "paso",
-   "ms": 64
+   "ms": 133
   },
   {
    "id": "resumen-medico",

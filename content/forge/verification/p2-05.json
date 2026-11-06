@@ -13,14 +13,14 @@
    "tipo": "code",
    "lenguaje": "javascript",
    "resultado": "paso",
-   "ms": 9
+   "ms": 2
   },
   {
    "id": "evaluar-criterios",
    "tipo": "code",
    "lenguaje": "python",
    "resultado": "paso",
-   "ms": 192
+   "ms": 90
   }
  ],
  "resumen": {
