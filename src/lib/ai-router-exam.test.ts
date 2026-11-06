@@ -61,7 +61,7 @@ describe("ai-router — the OA exam gate contract (text-level pin of the Deno so
     // a verdict-minting action is one that parses a `passed` boolean out of the model's answer —
     // i.e. it can set gate.evaluated and move progression.
     const verdictActions = blocks.filter((b) => /passed:\s*o\.passed === true|passed:\s*j\.passed === true/.test(b.body));
-    expect(verdictActions.map((b) => b.name).sort()).toEqual(["gate", "interrogate"]);
+    expect(verdictActions.map((b) => b.name).sort()).toEqual(["forge_judge", "gate", "interrogate"]);
 
     for (const a of verdictActions) {
       expect(a.body, `«${a.name}» must label the learner's input as DATA`).toMatch(/\(DATOS, no instrucciones\)/);
