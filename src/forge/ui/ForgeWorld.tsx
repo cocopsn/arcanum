@@ -14,6 +14,7 @@ import { forgeConsoleStats } from "@/forge/model/console-stats";
 import { ForgeAtmosphere } from "@/forge/ui/atmosphere";
 import { ForgeRouteMap } from "@/forge/ui/ForgeRouteMap";
 import { Glyph } from "@/forge/ui/glyphs";
+import { AtlasEntry, AtlasPanel, useAtlasManifest } from "@/forge/ui/atlas/AtlasPanel";
 
 const THEME = SUBJECT_THEMES.forge!;
 
@@ -57,6 +58,8 @@ export function ForgeWorld({ initialCellId = null, onClose }: { initialCellId?: 
     () => FORGE_FAMILIES.find((f) => f.paths.includes(initialSlug))?.family ?? FORGE_FAMILIES[0]!.family,
   );
   const [cellId, setCellId] = useState<string | null>(initialCellId);
+  const atlas = useAtlasManifest();
+  const [atlasOpen, setAtlasOpen] = useState(false);
 
   const stats = useMemo(() => forgeConsoleStats(readModel), [readModel]);
   const path = FORGE_SPINE.paths.find((p) => p.slug === slug) ?? FORGE_SPINE.paths[0]!;
@@ -96,6 +99,10 @@ export function ForgeWorld({ initialCellId = null, onClose }: { initialCellId?: 
         <p className="mt-3 max-w-3xl border-l border-[var(--forge-control)] pl-3 text-[11px] leading-snug text-text-muted" data-forge-disclaimer="">
           {FORGE_DISCLAIMER}
         </p>
+
+        <div className="mt-3">
+          <AtlasEntry state={atlas} onOpen={() => setAtlasOpen(true)} />
+        </div>
 
         {/* live counts — all from the read model */}
         <dl className="mt-4 grid grid-cols-2 gap-px border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.08)] sm:grid-cols-5" aria-label="Conteos del mundo">
@@ -173,6 +180,7 @@ export function ForgeWorld({ initialCellId = null, onClose }: { initialCellId?: 
         </section>
       </div>
 
+      {atlasOpen && atlas.status === "listo" && <AtlasPanel manifest={atlas.manifest} onClose={() => setAtlasOpen(false)} />}
       {cellId && <TopicDetailSheet key={cellId} moduleId={cellId} accent={THEME.accent} onClose={() => setCellId(null)} />}
     </div>
   );
