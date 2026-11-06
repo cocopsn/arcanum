@@ -1,0 +1,32 @@
+{
+ "v": 1,
+ "code": "P2-08",
+ "sha10": "159f935650",
+ "versiones": {
+  "python": "3.12.10",
+  "sqlite": "3.49.1",
+  "node": "v24.22.1"
+ },
+ "items": [
+  {
+   "id": "reconstruir-estado",
+   "tipo": "code",
+   "lenguaje": "javascript",
+   "resultado": "paso",
+   "ms": 175
+  },
+  {
+   "id": "reconstruir-estado",
+   "tipo": "code",
+   "lenguaje": "python",
+   "resultado": "paso",
+   "ms": 672
+  }
+ ],
+ "resumen": {
+  "ejecutables": 2,
+  "cubiertos": 2,
+  "fallidos": 0,
+  "sin_verificar": 0
+ }
+}
