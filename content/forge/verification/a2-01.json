@@ -13,14 +13,14 @@
    "tipo": "code",
    "lenguaje": "javascript",
    "resultado": "paso",
-   "ms": 34
+   "ms": 5
   },
   {
    "id": "a2-01-code-suma-cero",
    "tipo": "code",
    "lenguaje": "python",
    "resultado": "paso",
-   "ms": 311
+   "ms": 105
   }
  ],
  "resumen": {

@@ -13,35 +13,35 @@
    "tipo": "desvanecido",
    "lenguaje": "javascript",
    "resultado": "paso",
-   "ms": 431
+   "ms": 59
   },
   {
    "id": "a1-03-code-siguiente-mayor",
    "tipo": "code",
    "lenguaje": "javascript",
    "resultado": "paso",
-   "ms": 391
+   "ms": 28
   },
   {
    "id": "a1-03-code-siguiente-mayor",
    "tipo": "code",
    "lenguaje": "python",
    "resultado": "paso",
-   "ms": 591
+   "ms": 170
   },
   {
    "id": "a1-03-ret-minimo",
    "tipo": "retencion",
    "lenguaje": "javascript",
    "resultado": "paso",
-   "ms": 752
+   "ms": 41
   },
   {
    "id": "a1-03-ret-minimo",
    "tipo": "retencion",
    "lenguaje": "python",
    "resultado": "paso",
-   "ms": 515
+   "ms": 219
   }
  ],
  "resumen": {

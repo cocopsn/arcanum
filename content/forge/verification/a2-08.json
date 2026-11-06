@@ -13,42 +13,41 @@
    "tipo": "code",
    "lenguaje": "javascript",
    "resultado": "paso",
-   "ms": 32
+   "ms": 147
   },
   {
    "id": "a2-08-code-frecuentes",
    "tipo": "code",
    "lenguaje": "python",
    "resultado": "paso",
-   "ms": 108
+   "ms": 259
   },
   {
    "id": "a2-08-sql-categorias",
    "tipo": "sql",
    "lenguaje": "sql",
-   "resultado": "sin-verificar",
-   "ms": 0,
-   "detalle": "sin arnés scripts/forge/bank-check/sql.py"
+   "resultado": "paso",
+   "ms": 160
   },
   {
    "id": "a2-08-code-mediana",
    "tipo": "code",
    "lenguaje": "javascript",
    "resultado": "paso",
-   "ms": 89
+   "ms": 4
   },
   {
    "id": "a2-08-code-mediana",
    "tipo": "code",
    "lenguaje": "python",
    "resultado": "paso",
-   "ms": 247
+   "ms": 88
   }
  ],
  "resumen": {
   "ejecutables": 5,
-  "cubiertos": 4,
+  "cubiertos": 5,
   "fallidos": 0,
-  "sin_verificar": 1
+  "sin_verificar": 0
  }
 }

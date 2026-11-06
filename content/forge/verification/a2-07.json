@@ -13,28 +13,28 @@
    "tipo": "code",
    "lenguaje": "javascript",
    "resultado": "paso",
-   "ms": 47
+   "ms": 5
   },
   {
    "id": "a2-07-code-fusionar",
    "tipo": "code",
    "lenguaje": "python",
    "resultado": "paso",
-   "ms": 351
+   "ms": 116
   },
   {
    "id": "a2-07-code-balanceado",
    "tipo": "code",
    "lenguaje": "javascript",
    "resultado": "paso",
-   "ms": 1033
+   "ms": 44
   },
   {
    "id": "a2-07-code-balanceado",
    "tipo": "code",
    "lenguaje": "python",
    "resultado": "paso",
-   "ms": 297
+   "ms": 221
   }
  ],
  "resumen": {

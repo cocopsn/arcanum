@@ -13,21 +13,21 @@
    "tipo": "desvanecido",
    "lenguaje": "javascript",
    "resultado": "paso",
-   "ms": 130
+   "ms": 41
   },
   {
    "id": "a1-04-code-es-bst",
    "tipo": "code",
    "lenguaje": "javascript",
    "resultado": "paso",
-   "ms": 765
+   "ms": 35
   },
   {
    "id": "a1-04-code-es-bst",
    "tipo": "code",
    "lenguaje": "python",
    "resultado": "paso",
-   "ms": 358
+   "ms": 133
   }
  ],
  "resumen": {

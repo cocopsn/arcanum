@@ -13,28 +13,28 @@
    "tipo": "code",
    "lenguaje": "javascript",
    "resultado": "paso",
-   "ms": 224
+   "ms": 21
   },
   {
    "id": "a2-03-code-componentes",
    "tipo": "code",
    "lenguaje": "python",
    "resultado": "paso",
-   "ms": 299
+   "ms": 121
   },
   {
    "id": "a2-03-code-rupturas",
    "tipo": "code",
    "lenguaje": "javascript",
    "resultado": "paso",
-   "ms": 268
+   "ms": 5
   },
   {
    "id": "a2-03-code-rupturas",
    "tipo": "code",
    "lenguaje": "python",
    "resultado": "paso",
-   "ms": 242
+   "ms": 96
   }
  ],
  "resumen": {
