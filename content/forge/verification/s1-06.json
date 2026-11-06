@@ -1,0 +1,25 @@
+{
+ "v": 1,
+ "code": "S1-06",
+ "sha10": "2b1c908fcf",
+ "versiones": {
+  "python": "3.12.10",
+  "sqlite": "3.49.1",
+  "node": "v24.22.1"
+ },
+ "items": [
+  {
+   "id": "s1-06-code-cursor",
+   "tipo": "code",
+   "lenguaje": "javascript",
+   "resultado": "paso",
+   "ms": 680
+  }
+ ],
+ "resumen": {
+  "ejecutables": 1,
+  "cubiertos": 1,
+  "fallidos": 0,
+  "sin_verificar": 0
+ }
+}

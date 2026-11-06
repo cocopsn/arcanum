@@ -1,0 +1,26 @@
+{
+ "v": 1,
+ "code": "S1-08",
+ "sha10": "1127642a46",
+ "versiones": {
+  "python": "3.12.10",
+  "sqlite": "3.49.1",
+  "node": "v24.22.1"
+ },
+ "items": [
+  {
+   "id": "s1-08-sql-verificar",
+   "tipo": "sql",
+   "lenguaje": "sql",
+   "resultado": "sin-verificar",
+   "ms": 0,
+   "detalle": "sin arnés scripts/forge/bank-check/sql.py"
+  }
+ ],
+ "resumen": {
+  "ejecutables": 1,
+  "cubiertos": 0,
+  "fallidos": 0,
+  "sin_verificar": 1
+ }
+}
