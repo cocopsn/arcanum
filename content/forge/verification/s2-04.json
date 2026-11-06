@@ -1,0 +1,26 @@
+{
+ "v": 1,
+ "code": "S2-04",
+ "sha10": "5b53cdfee7",
+ "versiones": {
+  "python": "3.12.10",
+  "sqlite": "3.49.1",
+  "node": "v24.22.1"
+ },
+ "items": [
+  {
+   "id": "s2-04-contra-invalidacion",
+   "tipo": "contraejemplo",
+   "lenguaje": "javascript",
+   "resultado": "sin-verificar",
+   "ms": 0,
+   "detalle": "sin arnés scripts/forge/bank-check/contraejemplo.py"
+  }
+ ],
+ "resumen": {
+  "ejecutables": 1,
+  "cubiertos": 0,
+  "fallidos": 0,
+  "sin_verificar": 1
+ }
+}

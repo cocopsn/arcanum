@@ -1,0 +1,33 @@
+{
+ "v": 1,
+ "code": "S1-05",
+ "sha10": "e2faf69715",
+ "versiones": {
+  "python": "3.12.10",
+  "sqlite": "3.49.1",
+  "node": "v24.22.1"
+ },
+ "items": [
+  {
+   "id": "s1-05-code-transicionar",
+   "tipo": "code",
+   "lenguaje": "javascript",
+   "resultado": "paso",
+   "ms": 5
+  },
+  {
+   "id": "s1-05-contra-terminal",
+   "tipo": "contraejemplo",
+   "lenguaje": "javascript",
+   "resultado": "sin-verificar",
+   "ms": 0,
+   "detalle": "sin arnés scripts/forge/bank-check/contraejemplo.py"
+  }
+ ],
+ "resumen": {
+  "ejecutables": 2,
+  "cubiertos": 1,
+  "fallidos": 0,
+  "sin_verificar": 1
+ }
+}

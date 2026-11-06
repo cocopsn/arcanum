@@ -1,0 +1,33 @@
+{
+ "v": 1,
+ "code": "S2-05",
+ "sha10": "19c6592a6c",
+ "versiones": {
+  "python": "3.12.10",
+  "sqlite": "3.49.1",
+  "node": "v24.22.1"
+ },
+ "items": [
+  {
+   "id": "s2-05-code-proyectar",
+   "tipo": "code",
+   "lenguaje": "javascript",
+   "resultado": "paso",
+   "ms": 2
+  },
+  {
+   "id": "s2-05-sql-estado-actual",
+   "tipo": "sql",
+   "lenguaje": "sql",
+   "resultado": "sin-verificar",
+   "ms": 0,
+   "detalle": "sin arnés scripts/forge/bank-check/sql.py"
+  }
+ ],
+ "resumen": {
+  "ejecutables": 2,
+  "cubiertos": 1,
+  "fallidos": 0,
+  "sin_verificar": 1
+ }
+}

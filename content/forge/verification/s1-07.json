@@ -1,0 +1,26 @@
+{
+ "v": 1,
+ "code": "S1-07",
+ "sha10": "daf6cffeef",
+ "versiones": {
+  "python": "3.12.10",
+  "sqlite": "3.49.1",
+  "node": "v24.22.1"
+ },
+ "items": [
+  {
+   "id": "s1-07-mut-traslape",
+   "tipo": "mutantes",
+   "lenguaje": "javascript",
+   "resultado": "sin-verificar",
+   "ms": 0,
+   "detalle": "sin arnés scripts/forge/bank-check/mutantes.py"
+  }
+ ],
+ "resumen": {
+  "ejecutables": 1,
+  "cubiertos": 0,
+  "fallidos": 0,
+  "sin_verificar": 1
+ }
+}
