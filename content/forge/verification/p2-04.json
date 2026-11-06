@@ -13,14 +13,14 @@
    "tipo": "code",
    "lenguaje": "javascript",
    "resultado": "paso",
-   "ms": 5
+   "ms": 147
   },
   {
    "id": "rastrear-cambio",
    "tipo": "code",
    "lenguaje": "python",
    "resultado": "paso",
-   "ms": 63
+   "ms": 618
   }
  ],
  "resumen": {

@@ -13,14 +13,14 @@
    "tipo": "code",
    "lenguaje": "javascript",
    "resultado": "paso",
-   "ms": 2
+   "ms": 4
   },
   {
    "id": "simular-automatizacion",
    "tipo": "code",
    "lenguaje": "python",
    "resultado": "paso",
-   "ms": 69
+   "ms": 529
   }
  ],
  "resumen": {

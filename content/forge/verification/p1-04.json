@@ -13,14 +13,14 @@
    "tipo": "code",
    "lenguaje": "javascript",
    "resultado": "paso",
-   "ms": 3
+   "ms": 380
   },
   {
    "id": "resolver-changelog",
    "tipo": "code",
    "lenguaje": "python",
    "resultado": "paso",
-   "ms": 86
+   "ms": 171
   },
   {
    "id": "contraejemplo-llegada",

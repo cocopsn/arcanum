@@ -13,14 +13,14 @@
    "tipo": "code",
    "lenguaje": "javascript",
    "resultado": "paso",
-   "ms": 2
+   "ms": 434
   },
   {
    "id": "atribuir-latencia",
    "tipo": "code",
    "lenguaje": "python",
    "resultado": "paso",
-   "ms": 74
+   "ms": 585
   }
  ],
  "resumen": {

@@ -13,14 +13,14 @@
    "tipo": "code",
    "lenguaje": "javascript",
    "resultado": "paso",
-   "ms": 3
+   "ms": 79
   },
   {
    "id": "comparar-versiones",
    "tipo": "code",
    "lenguaje": "python",
    "resultado": "paso",
-   "ms": 83
+   "ms": 294
   }
  ],
  "resumen": {
