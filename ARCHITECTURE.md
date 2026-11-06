@@ -318,6 +318,7 @@ supabase/        migrations (public.events + RLS) · functions/ai-router (the ev
 content/         books/ (mini-books .md) · exercises/ (exercise banks .md)  ← the learning content
 infra/           canvas-scraper (n8n workflow + docker-compose) — the Fase-4 obligations scraper
 scripts/         tooling (loc.mjs, generate-icons.mjs)
+assets/brand/    the guardian raven (1254×1254), source of every icon — `pnpm icons` → public/icons, favicon.ico, OG card
 ```
 
 ## 8. Engineering Forge (the sixth world)

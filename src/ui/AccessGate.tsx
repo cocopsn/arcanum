@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { getSupabase } from "@/sync/client";
+import { BrandMark } from "@/ui/BrandMark";
 
 // Single-user ACCESS GATE. Checks /api/session (cookie validated server-side against the env
 // password). Not configured (no env var, e.g. local dev) → gate is OPEN. Offline → trusts the
@@ -53,7 +54,14 @@ export function AccessGate({ children }: { children: React.ReactNode }) {
   }, []);
 
   if (phase === "checking") {
-    return <main className="grid min-h-screen place-items-center font-display text-sm tracking-[0.4em] text-text-faint">ARCANUM</main>;
+    return (
+      <main className="grid min-h-screen place-items-center font-display text-sm tracking-[0.4em] text-text-faint">
+        <div className="flex flex-col items-center gap-4">
+          <BrandMark size={56} />
+          ARCANUM
+        </div>
+      </main>
+    );
   }
   if (phase === "out") {
     return (
@@ -115,7 +123,7 @@ function LoginScreen({ onIn }: { onIn: () => void }) {
     <main className="relative grid min-h-screen place-items-center overflow-hidden px-6" style={{ background: "linear-gradient(170deg, var(--ink), var(--surface))" }}>
       <div aria-hidden className="pointer-events-none absolute inset-0" style={{ background: "radial-gradient(90% 55% at 50% -8%, var(--rank-soft), transparent 60%)" }} />
       <form onSubmit={submit} className="relative w-full max-w-[320px] text-center" style={{ paddingTop: "env(safe-area-inset-top)" }}>
-        <div aria-hidden className="font-display text-3xl" style={{ color: "var(--rank)", textShadow: "0 0 18px var(--rank-glow)" }}>✶</div>
+        <BrandMark size={64} className="mx-auto" style={{ boxShadow: "0 0 18px var(--rank-glow)" }} />
         <h1 className="mt-3 font-display text-2xl tracking-[0.4em] text-text">ARCANUM</h1>
         <p className="mt-1 font-serif text-[12px] italic text-text-muted">el régimen es de uno solo</p>
 

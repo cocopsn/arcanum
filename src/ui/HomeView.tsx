@@ -6,6 +6,7 @@ import { useArcanum, useArcanumStore } from "@/app/providers";
 import { useActions } from "@/ui/use-actions";
 import { RankAura } from "@/ui/RankAura";
 import { GradeSigil } from "@/ui/GradeSigil";
+import { BrandMark } from "@/ui/BrandMark";
 import { StreakFlame } from "@/ui/StreakFlame";
 import { XpBurst } from "@/ui/XpBurst";
 import { RitoDelDia } from "@/ui/RitoDelDia";
@@ -99,6 +100,7 @@ export function HomeView() {
   if (status === "loading") {
     return (
       <main className="mx-auto max-w-md px-5 py-16 text-center font-display text-sm tracking-[0.4em] text-text-faint">
+        <BrandMark size={56} className="mx-auto mb-4" />
         ARCANUM
       </main>
     );
@@ -115,9 +117,15 @@ export function HomeView() {
           setSubjectGoal(goalId);
         }}
         header={
-          <header className="flex items-center justify-between">
-            <span className="font-display text-sm tracking-[0.4em] text-text-muted">ARCANUM</span>
-            <div className="flex items-center gap-3">
+          // the raven next to the name. On a phone the row is nearly full (360–390 px): a 20 px mark, tighter gaps and the
+          // wordmark's trailing tracking given back keep one row from 375 px; when it still doesn't fit (360 px, longer
+          // labels like «sin conexión»), the status group drops whole to a second row instead of splitting its labels.
+          <header className="flex flex-wrap items-center justify-between gap-y-2">
+            <span className="flex items-center gap-1.5 sm:gap-2.5">
+              <BrandMark size={28} className="h-5 w-5 sm:h-7 sm:w-7" />
+              <span className="-mr-[0.4em] font-display text-sm tracking-[0.4em] text-text-muted">ARCANUM</span>
+            </span>
+            <div className="ml-auto flex items-center gap-2 sm:gap-3">
               <LayoutToggle />
               <OfflinePill onOpen={() => setOfflineOpen(true)} />
               <SyncStatus onOpen={() => setAuthOpen(true)} />
