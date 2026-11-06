@@ -1,5 +1,17 @@
 import { slugify } from "@/lib/book";
-import type { CodeExercise, ChoiceExercise, ProductionExercise, Exercise, Lang, QualityPattern, TestCase } from "@/lib/exercise";
+import {
+  EXERCISE_ROLES,
+  type CodeExercise,
+  type ChoiceExercise,
+  type ProductionExercise,
+  type Exercise,
+  type ExerciseRol,
+  type Lang,
+  type QualityPattern,
+  type TestCase,
+} from "@/lib/exercise";
+import { FORGE_SCHEMAS, isForgeType, type ForgeBankItem, type ForgeType } from "@/forge/bank/registry";
+import { hasH4OutsideFences, ITEM_ID_RE, norm as forgeNorm, type ForgeSection } from "@/forge/bank/types/_shared";
 
 // CONTRACT + PURE PARSER for CURATED EXERCISE BANKS as .md — the parallel to lib/book.ts. Arcanum INGESTS
 // exercise banks generated externally (Sonnet 5), it does NOT generate them. A bank .md = YAML frontmatter
@@ -191,13 +203,105 @@ const F = {
 const CHOICE_TYPES = new Set(["multiple_choice", "choice", "complexity", "complejidad", "trace", "trazar"]);
 const PRODUCTION_TYPES = new Set(["production", "produccion", "producir"]);
 
+type Reject = (why: string) => null;
+
+/** Parse a `tiempo:` value (`N` or `N min`) → minutes, or NaN when malformed. */
+function parseTiempo(raw: string): number {
+  const m = raw.trim().match(/^(\d+)\s*(?:min(?:utos)?\.?)?$/i);
+  const n = m ? parseInt(m[1]!, 10) : NaN;
+  return Number.isFinite(n) && n > 0 ? n : NaN;
+}
+
+/** FORGE BLOCK (one of the 16 types of §9.3): recognized preamble lines (type:, tiempo:, id:, rol: and the
+ *  type's own) are removed from the statement; `id:` is mandatory; `####` only inside `### Mutantes`; a repeated
+ *  section or line rejects; then the type's schema parser (src/forge/bank/types/<tipo>.ts) checks structure and
+ *  mandatory fields. Nothing here executes code. */
+function parseForgeBlock(
+  idBase: string,
+  title: string,
+  type: ForgeType,
+  preamble: string[],
+  sections: { heading: string; body: string[] }[],
+  reject: Reject,
+): ForgeBankItem | null {
+  const schema = FORGE_SCHEMAS[type];
+  const known = new Set<string>(["type", "tiempo", "id", "rol", ...schema.lines]);
+  const lines: Record<string, string> = {};
+  const promptLines: string[] = [];
+  for (const l of preamble) {
+    const m = l.match(/^\s*([A-Za-z_][A-Za-z0-9_]*)\s*:\s*(.*)$/);
+    const key = m ? forgeNorm(m[1]!) : null;
+    if (m && key && known.has(key)) {
+      if (key in lines) return reject(`la línea ${key}: aparece dos veces`);
+      lines[key] = m[2]!.trim();
+    } else promptLines.push(l);
+  }
+  const itemId = lines.id;
+  if (!itemId) return reject("falta la línea id: (obligatoria en los tipos de Forge)");
+  if (!ITEM_ID_RE.test(itemId)) return reject(`id: «${itemId}» no cumple ^[a-z0-9][a-z0-9-]{1,63}$`);
+  const rol = lines.rol === undefined ? "practica" : forgeNorm(lines.rol);
+  if (!(EXERCISE_ROLES as readonly string[]).includes(rol)) return reject(`rol: «${lines.rol}» no es practica, recuperacion, prediccion ni transferencia`);
+  let timed: { timeTargetMin?: number } = {};
+  if (lines.tiempo !== undefined) {
+    const n = parseTiempo(lines.tiempo);
+    if (!Number.isFinite(n)) return reject("tiempo: debe ser un entero positivo de minutos");
+    timed = { timeTargetMin: n };
+  }
+  const statement = promptLines.join("\n").trim();
+  if (!statement) return reject("falta el enunciado");
+  const fsecs: ForgeSection[] = sections.map((s) => ({ heading: s.heading, key: forgeNorm(s.heading), body: s.body }));
+  const seenKeys = new Set<string>();
+  for (const s of fsecs) {
+    if (seenKeys.has(s.key)) return reject(`la sección ### ${s.heading} aparece dos veces`);
+    seenKeys.add(s.key);
+    if (s.key !== "mutantes" && hasH4OutsideFences(s.body)) return reject(`#### sólo existe dentro de ### Mutantes (encontrado en ### ${s.heading})`);
+  }
+  const ownLines: Record<string, string> = {};
+  for (const k of schema.lines) if (lines[k] !== undefined) ownLines[k] = lines[k]!;
+  const r = schema.parse({ title, lines: ownLines, sections: fsecs });
+  if (!r.ok) return reject(r.error);
+  return {
+    id: `${idBase}:${itemId}`,
+    kind: "forge",
+    type,
+    moduleId: null,
+    itemId,
+    rol: rol as ExerciseRol,
+    title,
+    statement,
+    source: "curated",
+    ...timed,
+    data: r.data,
+  } as ForgeBankItem;
+}
+
 /** Parse ONE exercise block → the CodeExercise(s) (one per language) or a single ChoiceExercise, or null
  *  if the block is malformed (which invalidates the WHOLE bank — no partial ingest). */
-function parseExerciseBlock(idBase: string, index: number, title: string, body: string[]): Exercise[] | null {
+function parseExerciseBlock(idBase: string, index: number, title: string, body: string[], reject: Reject = () => null): Exercise[] | null {
   const { preamble, sections } = splitByHeading(body, 3);
   const typeLine = preamble.find((l) => /^\s*type\s*:/i.test(l));
-  if (!typeLine) return null;
+  if (!typeLine) return reject("falta la línea type:");
   const type = norm(typeLine.replace(/^\s*type\s*:/i, ""));
+  if (isForgeType(type)) {
+    const item = parseForgeBlock(idBase, title, type, preamble, sections, reject);
+    return item ? [item] : null;
+  }
+  // optional `id:` / `rol:` lines on the existing kinds (§9.2). Absent → exactly the previous behavior.
+  const idLine = preamble.find((l) => /^\s*id\s*:/i.test(l));
+  const rolLine = preamble.find((l) => /^\s*rol\s*:/i.test(l));
+  let itemId: string | undefined;
+  if (idLine) {
+    const v = idLine.replace(/^\s*id\s*:/i, "").trim();
+    if (!ITEM_ID_RE.test(v)) return reject(`id: «${v}» no cumple ^[a-z0-9][a-z0-9-]{1,63}$`);
+    itemId = v;
+  }
+  let rol: ExerciseRol | undefined;
+  if (rolLine) {
+    const v = norm(rolLine.replace(/^\s*rol\s*:/i, ""));
+    if (!(EXERCISE_ROLES as readonly string[]).includes(v)) return reject(`rol: «${v}» no es un rol válido`);
+    rol = v as ExerciseRol;
+  }
+  const declared = { ...(itemId ? { itemId } : {}), ...(rol ? { rol } : {}) };
   // optional TIMED-DRILL target: a `tiempo: N` (or `tiempo: N min`) preamble line → timeTargetMin.
   // A DECLARED-but-malformed tiempo (non-numeric / non-positive) rejects the block (all-or-nothing,
   // same as every other field) — a silent drop would ship an untimed drill that claims to be timed.
@@ -210,9 +314,9 @@ function parseExerciseBlock(idBase: string, index: number, title: string, body: 
     timeTargetMin = n;
   }
   const timed = timeTargetMin !== undefined ? { timeTargetMin } : {};
-  const prompt = preamble.filter((l) => l !== typeLine && l !== tiempoLine).join("\n").trim();
-  if (!prompt) return null;
-  const uid = `${idBase}:${index}-${slugify(title)}`;
+  const prompt = preamble.filter((l) => l !== typeLine && l !== tiempoLine && l !== idLine && l !== rolLine).join("\n").trim();
+  if (!prompt) return reject("falta el enunciado");
+  const uid = itemId ? `${idBase}:${itemId}` : `${idBase}:${index}-${slugify(title)}`;
 
   if (type === "code") {
     const specBody = findSection(sections, F.spec);
@@ -259,6 +363,7 @@ function parseExerciseBlock(idBase: string, index: number, title: string, body: 
         patterns,
         source: "curated",
         ...timed,
+        ...declared,
       });
     }
     return out.length ? out : null;
@@ -293,6 +398,7 @@ function parseExerciseBlock(idBase: string, index: number, title: string, body: 
       rationale,
       source: "curated",
       ...timed,
+      ...declared,
     };
     return [choice];
   }
@@ -319,22 +425,33 @@ function parseExerciseBlock(idBase: string, index: number, title: string, body: 
       rubric,
       source: "curated",
       ...timed,
+      ...declared,
     };
     return [prod];
   }
 
-  return null; // unknown type → invalid
+  return reject(`type: «${type}» no es un tipo conocido`); // unknown type → invalid
 }
 
 /** Parse a full exercise-bank .md → the bank, or null if it does NOT satisfy the contract (honest — the
  *  caller shows "formato inválido", never fabricates exercises). ALL-OR-NOTHING: a single malformed
  *  exercise rejects the whole bank so a broken AI-generated file never ingests partially. */
 export function parseExercisesMd(md: string): ParsedExerciseBank | null {
+  const r = explainExercisesMd(md);
+  return r.ok ? r.bank : null;
+}
+
+export type ExplainBankResult = { ok: true; bank: ParsedExerciseBank } | { ok: false; error: string };
+
+/** Same parse as parseExercisesMd, but a rejection says WHY (which exercise and which field) — for authors and
+ *  for the content tests. ALL-OR-NOTHING exactly as parseExercisesMd: the first malformed block rejects. */
+export function explainExercisesMd(md: string): ExplainBankResult {
+  const no = (error: string): ExplainBankResult => ({ ok: false, error });
   const fmMatch = md.match(/^﻿?---\r?\n([\s\S]*?)\r?\n---\r?\n?([\s\S]*)$/);
-  if (!fmMatch) return null;
+  if (!fmMatch) return no("falta el frontmatter --- … ---");
   const meta = parseFrontmatter(fmMatch[1]!);
-  if (meta.kind !== "exercises") return null; // not an exercise bank
-  if (!meta.title.trim()) return null;
+  if (meta.kind !== "exercises") return no("el frontmatter no dice kind: exercises"); // not an exercise bank
+  if (!meta.title.trim()) return no("el frontmatter no trae title");
   const body = fmMatch[2] ?? "";
 
   // FAIL-CLOSED fence balance: every fenced block is exactly two marker lines, so a well-formed bank has an
@@ -342,25 +459,36 @@ export function parseExercisesMd(md: string): ParsedExerciseBank | null {
   // fence-aware split and SILENTLY drop or truncate an exercise. Reject the whole bank instead (ALL-OR-NOTHING).
   const bodyLines = body.split(/\r?\n/);
   const fenceCount = bodyLines.filter((l) => /^\s*(```|~~~)/.test(l)).length;
-  if (fenceCount % 2 !== 0) return null;
+  if (fenceCount % 2 !== 0) return no("hay una cerca ``` sin cerrar");
 
   const idBase = meta.moduleId ?? slugify(meta.title);
   const { sections } = splitByHeading(bodyLines, 2);
-  if (sections.length === 0) return null; // a bank with no exercises is not a valid bank
+  if (sections.length === 0) return no("el banco no trae ningún ejercicio"); // a bank with no exercises is not a valid bank
 
   const exercises: Exercise[] = [];
   const seen = new Set<string>();
+  const seenItemIds = new Set<string>();
   let index = 0;
   for (const sec of sections) {
-    const parsed = parseExerciseBlock(idBase, index, sec.heading.replace(/^ejercicio\s*:\s*/i, "").trim(), sec.body);
-    if (!parsed) return null; // one malformed exercise → reject the whole bank
+    const title = sec.heading.replace(/^ejercicio\s*:\s*/i, "").trim();
+    let why = "bloque inválido";
+    const parsed = parseExerciseBlock(idBase, index, title, sec.body, (w) => {
+      why = w;
+      return null;
+    });
+    if (!parsed) return no(`«${title}»: ${why}`); // one malformed exercise → reject the whole bank
+    const itemId = parsed[0]?.itemId;
+    if (itemId) {
+      if (seenItemIds.has(itemId)) return no(`«${title}»: id: «${itemId}» repetido en el banco`); // id: unique in the bank
+      seenItemIds.add(itemId);
+    }
     for (const ex of parsed) {
-      if (seen.has(ex.id)) return null; // id collision (shouldn't happen — index-prefixed) → reject
+      if (seen.has(ex.id)) return no(`«${title}»: id de ejercicio repetido «${ex.id}»`); // id collision → reject
       seen.add(ex.id);
       exercises.push({ ...ex, moduleId: meta.moduleId });
     }
     index++;
   }
-  if (exercises.length === 0) return null;
-  return { meta, exercises };
+  if (exercises.length === 0) return no("el banco no trae ningún ejercicio");
+  return { ok: true, bank: { meta, exercises } };
 }
