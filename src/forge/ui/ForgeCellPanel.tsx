@@ -7,7 +7,11 @@ import { useCallback, useEffect, useState } from "react";
 import { useArcanum } from "@/app/providers";
 import { FORGE_SPINE } from "@/lib/spines-forge";
 import { forgeCodeForCellId } from "@/forge/ids";
-import { ensureForgeBook, loadForgeRoute, type EnsureResult } from "@/forge/loaders";
+import { ensureForgeBank, ensureForgeBook, loadForgeRoute, type EnsureResult } from "@/forge/loaders";
+import { forgeCellState } from "@/forge/model/console-stats";
+import { FLOWS } from "@/forge/ui/flows/registry";
+import type { FlowProps } from "@/forge/ui/flow-contract";
+import type { ForgeFlujo } from "@/forge/route-data";
 import type { ForgeCellData, ForgeRouteData } from "@/forge/route-data";
 import labels from "@/forge/data/labels.json";
 import { getBookForModule, type BookRow } from "@/lib/book-store";
@@ -33,6 +37,10 @@ export function ForgeCellPanel({ moduleId }: { moduleId: string }) {
   const [book, setBook] = useState<BookState>({ kind: "cargando" });
   const [row, setRow] = useState<BookRow | null>(null);
   const [reading, setReading] = useState(false);
+  const [flowOpen, setFlowOpen] = useState(false);
+  const [bankNote, setBankNote] = useState<string | null>(null);
+  const byId = new Map(readModel.modules.map((m) => [m.id, m]));
+  const sealed = forgeCellState(byId.get(moduleId), readModel, byId) === "sellado";
 
   useEffect(() => {
     let cancel = false;
@@ -178,8 +186,40 @@ export function ForgeCellPanel({ moduleId }: { moduleId: string }) {
         )}
       </div>
 
+      {/* the cell's flow (§5.2, §9.5): never offered on a sealed cell (fail-closed fog-of-war) */}
+      {cell && route && route !== "cargando" && !sealed && (
+        <div className="border border-[rgba(255,255,255,0.12)] p-3">
+          <div className="forge-label text-[10px] text-text-muted">Misión de la celda</div>
+          <button
+            type="button"
+            onClick={() => {
+              // the bank goes to the device before any flow reads its items (§6.3); a failure keeps its reason visible
+              void ensureForgeBank(code).then((r) => setBankNote(r.ok || r.reason === "desconocido" ? null : r.reason === "invalido" ? "Banco inválido en esta versión" : "Banco no descargado · requiere conexión una vez"));
+              setFlowOpen(true);
+            }}
+            className="mt-1 min-h-11 w-full border border-[var(--forge-text)] px-3 text-[13px] text-text"
+          >
+            <Glyph name="right" size={11} className="mr-1.5 inline-block" />
+            Abrir la misión
+          </button>
+          {bankNote && <p className="mt-1 text-[12px] text-text-muted">{bankNote}</p>}
+        </div>
+      )}
+      {flowOpen && cell && route && route !== "cargando" && !sealed && (
+        <FlowHost flujo={cell.flujo} props={{ cellCode: code, cellId: moduleId, route, readModel, onClose: () => setFlowOpen(false) }} />
+      )}
+
       {reading && row && <BookReader book={row} onClose={() => setReading(false)} />}
     </section>
+  );
+}
+
+function FlowHost({ flujo, props }: { flujo: ForgeFlujo; props: FlowProps }) {
+  const Flow = FLOWS[flujo];
+  return (
+    <div className="border border-[var(--forge-control)] p-3" data-forge-flow={flujo}>
+      <Flow {...props} />
+    </div>
   );
 }
 
