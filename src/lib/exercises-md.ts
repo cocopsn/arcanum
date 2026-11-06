@@ -319,10 +319,13 @@ function parseExerciseBlock(idBase: string, index: number, title: string, body: 
   const uid = itemId ? `${idBase}:${itemId}` : `${idBase}:${index}-${slugify(title)}`;
 
   if (type === "code") {
-    const specBody = findSection(sections, F.spec);
-    const firmaBody = findSection(sections, F.firma);
-    const casosBody = findSection(sections, F.casos);
-    const solBody = findSection(sections, F.solucion);
+    // RF-E1 extension (§9.3): "### Casos generados" must never be taken as "### Casos" (F.casos matches by prefix).
+    // Without that section this is exactly the previous lookup (exercises-md-compat.test.ts).
+    const baseSections = sections.filter((s) => !fieldMatches(s.heading, ["casos generados"]));
+    const specBody = findSection(baseSections, F.spec);
+    const firmaBody = findSection(baseSections, F.firma);
+    const casosBody = findSection(baseSections, F.casos);
+    const solBody = findSection(baseSections, F.solucion);
     if (!firmaBody || !casosBody || !solBody) return null; // code requires signature + cases + solution
     const testCases = parseTestCases(casosBody);
     if (!testCases) return null;
@@ -341,12 +344,53 @@ function parseExerciseBlock(idBase: string, index: number, title: string, body: 
       if (l && !sols.has(l)) sols.set(l, f.code);
     }
     if (sigs.size === 0) return null;
+    // RF-E1 (optional, structure only): ### Generador (per language, `generate(seed)` returns the args), ### Casos
+    // generados (JSON [{ semilla, esperado }]) and ### Comprobador (per language, `check(args, salida, esperado)`).
+    // A language without a generator fence has no generated cases (the item says so, CA-45). Nothing runs here.
+    const genBody = findSection(sections, ["generador"]);
+    const genCasesBody = findSection(sections, ["casos generados"]);
+    const checkerBody = findSection(sections, ["comprobador"]);
+    if (!!genBody !== !!genCasesBody) return reject("### Generador y ### Casos generados van juntos");
+    let generatedCases: { semilla: number; esperado: unknown }[] | undefined;
+    if (genCasesBody) {
+      const f = extractFences(genCasesBody).find((x) => x.lang === "json");
+      let arr: unknown = null;
+      try {
+        arr = f ? JSON.parse(f.code) : null;
+      } catch {
+        arr = null;
+      }
+      if (!Array.isArray(arr) || arr.length === 0) return reject("### Casos generados necesita una cerca json con [{ semilla, esperado }]");
+      for (const c of arr) {
+        if (!c || typeof c !== "object" || !Number.isInteger((c as { semilla?: unknown }).semilla) || !("esperado" in c)) {
+          return reject("### Casos generados: cada caso necesita semilla (entero) y esperado");
+        }
+      }
+      generatedCases = (arr as { semilla: number; esperado: unknown }[]).map((c) => ({ semilla: c.semilla, esperado: c.esperado }));
+    }
+    const byLang = (body: string[] | null, fn: string): Map<Lang, string> | null => {
+      const m = new Map<Lang, string>();
+      for (const f of body ? extractFences(body) : []) {
+        const l = normLang(f.lang);
+        if (!l || m.has(l)) continue;
+        if (!new RegExp(`\\b${fn}\\b`).test(f.code)) return null;
+        m.set(l, f.code);
+      }
+      return m;
+    };
+    const gens = byLang(genBody, "generate");
+    const checkers = byLang(checkerBody, "check");
+    if (!gens) return reject("### Generador debe definir generate(seed)");
+    if (!checkers) return reject("### Comprobador debe definir check(args, salida, esperado)");
+    if (genBody && ![...sigs.keys()].some((l) => gens.has(l))) return reject("### Generador no trae la cerca de ningún lenguaje de la firma");
     const out: CodeExercise[] = [];
     for (const [lang, starter] of sigs) {
       const solution = sols.get(lang);
       if (!solution) return null; // a signed language MUST have a reference solution
       const functionName = deriveFunctionName(starter, lang) ?? deriveFunctionName(solution, lang);
       if (!functionName) return null; // can't run without a function name
+      const generated = gens.get(lang) && generatedCases ? { generator: gens.get(lang)!, generatedCases } : {};
+      const checker = checkers.get(lang) ? { checker: checkers.get(lang)! } : {};
       out.push({
         id: `${uid}:${lang}`,
         kind: "code",
@@ -364,6 +408,8 @@ function parseExerciseBlock(idBase: string, index: number, title: string, body: 
         source: "curated",
         ...timed,
         ...declared,
+        ...generated,
+        ...checker,
       });
     }
     return out.length ? out : null;

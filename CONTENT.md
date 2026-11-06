@@ -226,6 +226,12 @@ type's own lines. Common rules:
 | `recuperacion` | `corte:` | Corpus (≤ 40, texto ≤ 4,000), Preguntas, Clave, Contradicciones, Inyección |
 | `gameday` | — | Línea de tiempo (≤ 200), Causas, Acciones, Clave, Rúbrica |
 
+**`code` extension (RF-E1, optional):** `### Generador` (fences per language with `generate(seed)` returning the
+arguments) together with `### Casos generados` (JSON `[{ "semilla", "esperado" }]`), and `### Comprobador` (fences per
+language with `check(args, salida, esperado)`). A language without a generator fence has no generated cases. The parser
+only reads them; in the seed they are trusted (bank-check ran them) and at import a bank with generated cases is
+rejected until the worker harness `__run_generated(seed)` exists.
+
 **Route banks** (F0-F2, S1-S2, P1-P5, SW1-SW4, A1-A2; content rule CA-77, `banks.test.ts`): ≥ 6 items, ≥ 1 with
 `rol: prediccion` or `recuperacion`, exactly 1 `giro` with an explicit `rol: transferencia`, `id:` in all, ≤ 48 KiB.
 

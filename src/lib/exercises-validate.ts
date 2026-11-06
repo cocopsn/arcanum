@@ -61,7 +61,7 @@ export interface BankCheckContext {
   source: "seed" | "import";
   /** in `check`: a guard that refuses to execute (M1). In `js.check` (import only): the caller's Worker runner. */
   jsRun: ExecRunner;
-  /** runPy at import; absent in the seed */
+  /** runPy, only in `js.check`/`py.check` at import; absent in `check` and in the seed */
   pyRun?: ExecRunner;
 }
 export type BankCheck = (item: ForgeBankItem, ctx: BankCheckContext) => Promise<{ ok: true } | { ok: false; errors: string[] } | { disponible: false }>;
@@ -116,7 +116,8 @@ async function validateForgeItems(items: ForgeBankItem[], opts: ValidateOpts, so
   if (typeof mods === "string") return { ok: false, errors: [mods], missingCheck: true };
   const errors: string[] = [];
   const pendientes: string[] = [];
-  const checkCtx: BankCheckContext = { source, jsRun: CHECK_GUARD_RUNNER, ...(source === "import" && opts.pyRun ? { pyRun: opts.pyRun } : {}) };
+  // `check` never executes: no pyRun, and a jsRun that refuses (M1). Execution lives only in js.check / py.check below.
+  const checkCtx: BankCheckContext = { source, jsRun: CHECK_GUARD_RUNNER };
   for (const item of items) {
     const mod = mods.get(item.type)!;
     let r: Awaited<ReturnType<BankCheck>>;
@@ -190,6 +191,12 @@ export async function validateBank(bank: ParsedExerciseBank, opts: ValidateOpts 
   if (!forge.ok) errors.push(...forge.errors);
   for (const ex of bank.exercises) {
     if (ex.kind !== "code") continue;
+    // RF-E1 generated cases: in the seed they are trusted like Python (bank-check ran them); at import there is no
+    // worker harness for __run_generated yet, so they are rejected honestly instead of being accepted unverified.
+    if (ex.generatedCases && source === "import") {
+      errors.push(`«${ex.title}» (${ex.lang}): los casos generados aún no se pueden validar al importar en esta versión.`);
+      continue;
+    }
     let result: RunResult & { pyUnavailable?: boolean };
     if (ex.lang === "python") {
       if (opts.trustPython) continue;

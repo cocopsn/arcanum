@@ -6,7 +6,11 @@ import { createDb } from "@/db/schema";
 import { createArcanumStore, type ArcanumState, type ArcanumStore } from "@/store/arcanum-store";
 import type { ArcanumEvent } from "@/core/event";
 import type { ForgeSubmitRequest, ForgeSubmitResult, SimulatedUserRequest, SimulatedUserResult } from "@/forge/ai-port";
-import { STUB_QUEUE_MOTIVO } from "@/forge/ai-port";
+
+// Same text as STUB_QUEUE_MOTIVO of ai-port.ts. Not imported at runtime: "@/forge/ai-port" is the module this harness
+// replaces, and importing it here would close a cycle with the vi.mock factory (flow-envelope.smoke.test.tsx checks
+// that both strings stay equal).
+export const STUB_QUEUE_MOTIVO = "el evaluador desplegado todavía no tiene la acción Forge";
 import type { FlowProps } from "@/forge/ui/flow-contract";
 import type { ForgeCellData, ForgeCompuerta, ForgeFlujo, ForgeRouteData } from "@/forge/route-data";
 

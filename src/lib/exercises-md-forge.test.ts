@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { explainExercisesMd, parseExercisesMd } from "@/lib/exercises-md";
+import { validateBank } from "@/lib/exercises-validate";
 import { FORGE_TYPES, type ForgeBankItem } from "@/forge/bank/registry";
 import { VARIACION_RECHAZO } from "@/forge/bank/types/entrevista";
 import { BLOCKS, MANDATORY, MODULE_ID, bankMd, withoutField } from "@/forge/__tests__/fixtures/forge-blocks";
@@ -136,6 +137,73 @@ describe("exercises-md · common Forge rules (§9.2)", () => {
     expect(explainExercisesMd(bankMd([defensa])).ok).toBe(true);
     expect(parseExercisesMd(bankMd([defensa.replace("dias: 21", "dias: 121")]))).toBeNull();
     expect(parseExercisesMd(bankMd([defensa.replace(/### Rúbrica[\s\S]*$/, "")]))).toBeNull();
+  });
+});
+
+describe("exercises-md · code extension RF-E1 (### Generador, ### Casos generados, ### Comprobador)", () => {
+  const code = (extra: string) => `## Trabajos
+type: code
+id: trabajos
+
+Elige trabajos.
+
+### Casos generados
+~~~json
+[{ "semilla": 1, "esperado": 3 }]
+~~~
+
+### Firma
+~~~javascript
+function elegir(trabajos) {}
+~~~
+~~~python
+def elegir(trabajos):
+    pass
+~~~
+
+### Casos
+~~~json
+[{ "input": [[1, 2]], "expected": 3 }]
+~~~
+
+### Solución
+~~~javascript
+function elegir(trabajos) { return trabajos.reduce((a, b) => a + b, 0); }
+~~~
+~~~python
+def elegir(trabajos):
+    return sum(trabajos)
+~~~
+${extra}`;
+  const gen = `\n### Generador\n~~~javascript\nfunction generate(seed) { return [[seed, 2]]; }\n~~~\n\n### Comprobador\n~~~javascript\nfunction check(args, salida, esperado) { return salida === esperado; }\n~~~\n`;
+
+  it("parses per language: the language with a generator gets it, the other says nothing; ### Casos is not confused", () => {
+    const ex = parseExercisesMd(bankMd([code(gen)]))!.exercises as { lang: string; generator?: string; generatedCases?: unknown[]; checker?: string; testCases: unknown[] }[];
+    const js = ex.find((e) => e.lang === "js")!;
+    const py = ex.find((e) => e.lang === "python")!;
+    expect(js.generator).toMatch(/generate/);
+    expect(js.generatedCases).toEqual([{ semilla: 1, esperado: 3 }]);
+    expect(js.checker).toMatch(/check/);
+    expect(js.testCases).toEqual([{ input: [[1, 2]], expected: 3 }]);
+    expect(py.generator).toBeUndefined();
+    expect(py.generatedCases).toBeUndefined();
+  });
+
+  it("at import, generated cases are rejected honestly (no worker harness yet); in the seed they are trusted", async () => {
+    const bank = parseExercisesMd(bankMd([code(gen)]))!;
+    const passingPy = async (_c: string, _f: string, cases: { input: unknown[]; expected: unknown }[]) => ({
+      syntaxError: null,
+      cases: cases.map((c) => ({ input: c.input, expected: c.expected, output: c.expected, pass: true })),
+    });
+    const imported = await validateBank(bank, { source: "import", pyRun: passingPy });
+    expect(imported.ok, "un banco importado con casos generados se aceptó sin validarlos").toBe(false);
+    if (!imported.ok) expect(imported.errors.join(" ")).toMatch(/casos generados aún no se pueden validar/);
+    expect((await validateBank(bank, { source: "seed", trustPython: true })).ok).toBe(true);
+  });
+
+  it("### Casos generados without ### Generador (or the reverse) rejects", () => {
+    expect(parseExercisesMd(bankMd([code("")]))).toBeNull();
+    expect(parseExercisesMd(bankMd([code(gen).replace(/### Casos generados\n~~~json\n.*\n~~~\n/, "")]))).toBeNull();
   });
 });
 

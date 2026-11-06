@@ -60,6 +60,12 @@ export interface CodeExercise extends DeclaredItem {
   source: ExerciseSource;
   /** declared time target in minutes (`tiempo:` in the bank contract) — arms the real drill clock */
   timeTargetMin?: number;
+  /** RF-E1 (optional): this language's `generate(seed)` source; with it, `generatedCases` exist. Not run by the
+   *  current runner: a generated case runs in the worker as __run_generated(seed) (owner of the runtime, §9.3). */
+  generator?: string;
+  generatedCases?: { semilla: number; esperado: unknown }[];
+  /** RF-E1 (optional): this language's `check(args, salida, esperado)` source, for outputs with valid ties */
+  checker?: string;
 }
 
 export interface ChoiceExercise extends DeclaredItem {

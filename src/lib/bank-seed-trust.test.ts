@@ -21,7 +21,8 @@ vi.mock("@/forge/bank/check/desvanecido", () => ({ check: async () => ({ ok: tru
 vi.mock("@/forge/bank/check/mutantes", () => ({ check: async () => ({ ok: true }), js: { needs: () => true, check: spies.js.mutantes }, py: undefined }));
 // a check that (wrongly) tries to execute author JS inside `check`: M1 says it must never run
 vi.mock("@/forge/bank/check/contraejemplo", () => ({
-  check: async (_item: unknown, ctx: { jsRun: ExecRunner }) => {
+  check: async (_item: unknown, ctx: { jsRun: ExecRunner; pyRun?: ExecRunner }) => {
+    if (ctx.pyRun) throw new Error("check recibió pyRun: podría ejecutar Python fuera de py.check");
     await ctx.jsRun("function elegir(t) { return t.length; }", "elegir", [{ input: [[1]], expected: 1 }]);
     return { ok: true };
   },
@@ -155,6 +156,11 @@ describe("bank-seed-trust · the seed never executes author code (§9.2, M1)", (
     const jsRun = vi.fn(fakeRun);
     const res = await saveExerciseBank(bankMd([BLOCKS.contraejemplo, BLOCKS.giro], M(3)), { source: "import", jsRun, pyRun: fakeRun });
     expect(res.ok, "check ejecutó código del autor al importar y el banco se aceptó (M1)").toBe(false);
+    if (!res.ok) {
+      const details = (res.details ?? []).join(" ");
+      expect(details, "check recibió pyRun al importar: podría ejecutar Python fuera de py.check").not.toMatch(/recibió pyRun/);
+      expect(details).toMatch(/M1/);
+    }
     expect(jsRun, "check recibió el runner del llamador").not.toHaveBeenCalled();
     expect(spies.execCode).not.toHaveBeenCalled();
   });
