@@ -73,7 +73,8 @@ export function fences(lines) {
   return res;
 }
 
-const LANG = { js: "javascript", javascript: "javascript", py: "python", python: "python", sql: "sql" };
+// Same executable languages as src/forge/model/authoring.ts (EXEC_LANG), so both count the same items (D9).
+const LANG = { js: "javascript", javascript: "javascript", mjs: "javascript", py: "python", python: "python", python3: "python", sql: "sql", sqlite: "sql" };
 
 /** Parse a bank into items (pure). Throws with a message on a bad bank. */
 export function parseBank(md) {
@@ -113,8 +114,15 @@ function jsonFence(sec) {
   return f ? JSON.parse(f.codigo) : null;
 }
 
-/** JS reference of a `code` item under node:vm. Returns { ok, detalle? }. */
-export function runJsCode({ solution, cases, generator, checker, generated }) {
+/** Function name of a fence, the same rule as deriveFunctionName in src/lib/exercises-md.ts (pure). */
+export function deriveFunctionName(code, lang) {
+  if (!code) return null;
+  if (lang === "python") return (code.match(/def\s+([A-Za-z_]\w*)\s*\(/) || [])[1] ?? null;
+  return (code.match(/function\s+([A-Za-z_$][\w$]*)\s*\(/) || code.match(/(?:const|let|var)\s+([A-Za-z_$][\w$]*)\s*=/) || [])[1] ?? null;
+}
+
+/** JS reference of a `code` item under node:vm. `fn` is the name from ### Firma (D11.7); without it, the solution's. */
+export function runJsCode({ solution, cases, generator, checker, generated, fn: firmaFn }) {
   const ctx = vm.createContext({});
   try {
     vm.runInContext(solution, ctx, { timeout: JS_TIMEOUT });
@@ -123,7 +131,7 @@ export function runJsCode({ solution, cases, generator, checker, generated }) {
   } catch (e) {
     return { ok: false, detalle: `JS no parsea o no ejecuta: ${e.message}` };
   }
-  const fnName = (solution.match(/function\s+([A-Za-z_$][\w$]*)\s*\(/) || solution.match(/(?:const|let|var)\s+([A-Za-z_$][\w$]*)\s*=/) || [])[1];
+  const fnName = firmaFn ?? deriveFunctionName(solution, "javascript");
   const fn = fnName ? ctx[fnName] ?? vm.runInContext(`typeof ${fnName} === "function" ? ${fnName} : undefined`, ctx) : undefined;
   if (typeof fn !== "function") return { ok: false, detalle: `JS: función ${fnName ?? "?"} no definida` };
   const check = checker ? vm.runInContext("typeof check === 'function' ? check : undefined", ctx) : undefined;
@@ -131,7 +139,7 @@ export function runJsCode({ solution, cases, generator, checker, generated }) {
   try {
     for (const [i, c] of cases.entries()) {
       const out = vm.runInContext("__fn(...__args)", Object.assign(ctx, { __fn: fn, __args: c.input }), { timeout: JS_TIMEOUT });
-      if (!same(c.input, out, c.expected)) return { ok: false, detalle: `JS caso ${i}: esperado ${JSON.stringify(c.expected)} obtuvo ${JSON.stringify(out)}`.slice(0, 300) };
+      if (!same(c.input, out, c.expected)) return { ok: false, detalle: `JS ${fnName} caso ${i}: esperado ${JSON.stringify(c.expected)} obtuvo ${JSON.stringify(out)}`.slice(0, 300) };
     }
     if (generated?.length) {
       const gen = vm.runInContext("typeof generate === 'function' ? generate : undefined", ctx);
@@ -182,7 +190,7 @@ def same(a, o, e):
 for i, c in enumerate(spec["cases"]):
     out = fn(*c["input"])
     if not same(c["input"], out, c["expected"]):
-        print(json.dumps({"ok": False, "detalle": "PY caso %d: esperado %s obtuvo %s" % (i, json.dumps(c["expected"]), json.dumps(out, default=str))})); sys.exit(0)
+        print(json.dumps({"ok": False, "detalle": "PY %s caso %d: esperado %s obtuvo %s" % (spec["fn"], i, json.dumps(c["expected"]), json.dumps(out, default=str))})); sys.exit(0)
 for i, g in enumerate(spec.get("generated") or []):
     gen = ns.get("generate")
     if not callable(gen):
@@ -214,11 +222,33 @@ function timed(f) {
 }
 
 /** Verify one parsed item. Returns the verification entries for it (possibly none). */
+//
+// D9 (integrar-fase0): EVERY executable item of ANY type (one with a javascript/python/sql fence, the same rule as
+// authoring.ts) gets at least one entry, so «Verificado» can never come from an item the run skipped:
+//   - `code`, and any item with a JS/Python reference plus ### Casos (retencion forma codigo: ### Solución;
+//     desvanecido: the full ### Plantilla, whose `<paso N>` regions are comments), runs like `code`;
+//   - otherwise the type's harness, when it exists;
+//   - otherwise one «sin-verificar» entry per executable language (Python/SQL without harness, JS without a
+//     runnable reference).
+const REF_SECTIONS = ["solucion", "solution", "referencia"];
+const refSectionOf = (item) => (item.tipo === "desvanecido" ? section(item, ["plantilla"]) : section(item, REF_SECTIONS));
+// Types whose executable step has the shape of `code` (§9.3 b and i). Other types run only through their harness.
+const CODE_SHAPED = new Set(["code", "retencion", "desvanecido"]);
+const runnableAsCode = (item) => {
+  if (item.tipo === "code") return true;
+  if (!CODE_SHAPED.has(item.tipo)) return false;
+  const sol = refSectionOf(item);
+  const hasRef = (sol?.cercas ?? []).some((c) => LANG[c.lenguaje] === "javascript" || LANG[c.lenguaje] === "python");
+  return hasRef && Boolean(section(item, ["casos", "cases", "test cases"]));
+};
+
 export function verifyItem(code, item, { harnessDir, tmp }) {
   const entries = [];
   const push = (lenguaje, r) => entries.push({ id: item.id, tipo: item.tipo, lenguaje, resultado: r.resultado, ms: r.ms ?? 0, ...(r.detalle ? { detalle: r.detalle } : {}) });
-  if (item.tipo === "code") {
-    const sol = section(item, ["solucion", "solution", "referencia"]);
+  const harness = path.join(harnessDir, `${item.tipo}.py`);
+  const hasHarness = Boolean(item.tipo) && existsSync(harness);
+  if (item.tipo === "code" || (!hasHarness && runnableAsCode(item))) {
+    const sol = refSectionOf(item);
     let cases;
     let generated = null;
     try {
@@ -232,18 +262,21 @@ export function verifyItem(code, item, { harnessDir, tmp }) {
     cases = (Array.isArray(cases) ? cases : []).filter((c) => !c.hint);
     const gen = section(item, ["generador"]);
     const chk = section(item, ["comprobador"]);
+    const firma = section(item, ["firma", "signature"]);
     const langs = [...new Set((sol?.cercas ?? []).map((c) => LANG[c.lenguaje]).filter((l) => l === "javascript" || l === "python"))];
     if (!sol || langs.length === 0) {
       push("desconocido", { resultado: "fallo", detalle: "code sin solución de referencia en JavaScript o Python" });
       return entries;
     }
     for (const lang of langs) {
-      const spec = { solution: fenceOf(sol, lang).codigo, cases, generator: fenceOf(gen, lang)?.codigo, checker: fenceOf(chk, lang)?.codigo, generated };
+      const solution = fenceOf(sol, lang).codigo;
+      // D11.7: the name comes from ### Firma, like parseExercisesMd; only without a Firma fence, from the solution.
+      const fn = deriveFunctionName(fenceOf(firma, lang)?.codigo, lang) ?? deriveFunctionName(solution, lang);
+      const spec = { solution, cases, generator: fenceOf(gen, lang)?.codigo, checker: fenceOf(chk, lang)?.codigo, generated, fn };
       if (lang === "javascript") {
         const r = timed(() => runJsCode(spec));
         push(lang, { resultado: r.ok ? "paso" : "fallo", ms: r.ms, detalle: r.detalle });
       } else {
-        const fn = (spec.solution.match(/def\s+([A-Za-z_]\w*)\s*\(/) || [])[1];
         const hp = path.join(tmp, "code_harness.py");
         if (!existsSync(hp)) writeFileSync(hp, PY_CODE_HARNESS, "utf8");
         const r = timed(() => {
@@ -256,12 +289,10 @@ export function verifyItem(code, item, { harnessDir, tmp }) {
     }
     return entries;
   }
-  const harness = path.join(harnessDir, `${item.tipo}.py`);
   const langs = [...new Set(item.secciones.flatMap((s) => s.cercas.map((c) => LANG[c.lenguaje])).filter(Boolean))];
-  const hasHarness = item.tipo && existsSync(harness);
-  if (!hasHarness && !EXEC_TYPES.has(item.tipo)) return entries;
   if (!hasHarness) {
-    for (const l of langs) push(l, { resultado: "sin-verificar", detalle: `sin arnés scripts/forge/bank-check/${item.tipo}.py` });
+    // D9: any type, not only EXEC_TYPES. An item without executable fences has no entry (it is not executable).
+    for (const l of langs) push(l, { resultado: "sin-verificar", detalle: `sin arnés scripts/forge/bank-check/${item.tipo || "?"}.py` });
     return entries;
   }
   const t0 = performance.now();
