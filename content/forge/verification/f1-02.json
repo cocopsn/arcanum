@@ -1,0 +1,17 @@
+{
+ "v": 1,
+ "code": "F1-02",
+ "sha10": "0c845404a2",
+ "versiones": {
+  "python": "3.12.10",
+  "sqlite": "3.49.1",
+  "node": "v24.22.1"
+ },
+ "items": [],
+ "resumen": {
+  "ejecutables": 0,
+  "cubiertos": 0,
+  "fallidos": 0,
+  "sin_verificar": 0
+ }
+}
