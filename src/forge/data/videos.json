@@ -1,0 +1,286 @@
+{
+ "v": 1,
+ "youtube": [
+  {
+   "id": "1F7apO2hFXk",
+   "fuentes": [
+    "docs"
+   ],
+   "paginas": [
+    "https://www.palantir.com/docs/foundry/platform-overview",
+    "https://www.palantir.com/docs/foundry/platform-overview/overview",
+    "https://www.palantir.com/docs/jp/foundry/platform-overview",
+    "https://www.palantir.com/docs/jp/foundry/platform-overview/overview",
+    "https://www.palantir.com/docs/kr/foundry/platform-overview",
+    "https://www.palantir.com/docs/kr/foundry/platform-overview/overview",
+    "https://www.palantir.com/docs/zh/foundry/platform-overview",
+    "https://www.palantir.com/docs/zh/foundry/platform-overview/overview"
+   ],
+   "maestro": []
+  },
+  {
+   "id": "2C-zfsRboSU",
+   "fuentes": [
+    "docs"
+   ],
+   "paginas": [
+    "https://www.palantir.com/docs/foundry/quiver/cards-parameters",
+    "https://www.palantir.com/docs/jp/foundry/quiver/cards-parameters",
+    "https://www.palantir.com/docs/kr/foundry/quiver/cards-parameters",
+    "https://www.palantir.com/docs/zh/foundry/quiver/cards-parameters"
+   ],
+   "maestro": []
+  },
+  {
+   "id": "3C4_3O2Grn4",
+   "fuentes": [
+    "docs"
+   ],
+   "paginas": [
+    "https://www.palantir.com/docs/foundry/platform-overview",
+    "https://www.palantir.com/docs/foundry/platform-overview/overview",
+    "https://www.palantir.com/docs/jp/foundry/platform-overview",
+    "https://www.palantir.com/docs/jp/foundry/platform-overview/overview",
+    "https://www.palantir.com/docs/kr/foundry/platform-overview",
+    "https://www.palantir.com/docs/kr/foundry/platform-overview/overview",
+    "https://www.palantir.com/docs/zh/foundry/platform-overview",
+    "https://www.palantir.com/docs/zh/foundry/platform-overview/overview"
+   ],
+   "maestro": []
+  },
+  {
+   "id": "6_cyrBAf_dQ",
+   "fuentes": [
+    "docs"
+   ],
+   "paginas": [
+    "https://www.palantir.com/docs/foundry/announcements/2022-08",
+    "https://www.palantir.com/docs/jp/foundry/announcements/2022-08",
+    "https://www.palantir.com/docs/zh/foundry/announcements/2022-08"
+   ],
+   "maestro": []
+  },
+  {
+   "id": "7rRLOTXe60Q",
+   "fuentes": [
+    "docs"
+   ],
+   "paginas": [
+    "https://www.palantir.com/docs/foundry/ontology/overview-semantic-search",
+    "https://www.palantir.com/docs/jp/foundry/ontology/overview-semantic-search",
+    "https://www.palantir.com/docs/kr/foundry/functions/overview-semantic-search",
+    "https://www.palantir.com/docs/zh/foundry/functions/overview-semantic-search"
+   ],
+   "maestro": []
+  },
+  {
+   "id": "CmpQTrnL3ko",
+   "fuentes": [
+    "docs"
+   ],
+   "paginas": [
+    "https://www.palantir.com/docs/foundry/platform-overview",
+    "https://www.palantir.com/docs/foundry/platform-overview/overview",
+    "https://www.palantir.com/docs/jp/foundry/platform-overview",
+    "https://www.palantir.com/docs/jp/foundry/platform-overview/overview",
+    "https://www.palantir.com/docs/zh/foundry/platform-overview",
+    "https://www.palantir.com/docs/zh/foundry/platform-overview/overview"
+   ],
+   "maestro": []
+  },
+  {
+   "id": "GZHSCMz6Aio",
+   "fuentes": [
+    "docs"
+   ],
+   "paginas": [
+    "https://www.palantir.com/docs/foundry/announcements/2026-08"
+   ],
+   "maestro": []
+  },
+  {
+   "id": "ILZQyan3gh0",
+   "fuentes": [
+    "docs"
+   ],
+   "paginas": [
+    "https://www.palantir.com/docs/foundry/dev-toolchain",
+    "https://www.palantir.com/docs/foundry/dev-toolchain/overview",
+    "https://www.palantir.com/docs/jp/foundry/dev-toolchain",
+    "https://www.palantir.com/docs/jp/foundry/dev-toolchain/overview"
+   ],
+   "maestro": []
+  },
+  {
+   "id": "MITSJDI08R4",
+   "fuentes": [
+    "docs"
+   ],
+   "paginas": [
+    "https://www.palantir.com/docs/foundry/announcements/2025-09"
+   ],
+   "maestro": []
+  },
+  {
+   "id": "NGJKf3srI5E",
+   "fuentes": [
+    "docs"
+   ],
+   "paginas": [
+    "https://www.palantir.com/docs/foundry/announcements/2024-10",
+    "https://www.palantir.com/docs/jp/foundry/announcements/2024-10",
+    "https://www.palantir.com/docs/zh/foundry/announcements/2024-10"
+   ],
+   "maestro": []
+  },
+  {
+   "id": "QMKRMEuCoaU",
+   "fuentes": [
+    "docs"
+   ],
+   "paginas": [
+    "https://www.palantir.com/docs/foundry/ontology-mcp/mcp-tools-and-agent-configuration",
+    "https://www.palantir.com/docs/jp/foundry/ontology-mcp/mcp-tools-and-agent-configuration"
+   ],
+   "maestro": []
+  },
+  {
+   "id": "TOsgyjJuQVc",
+   "fuentes": [
+    "maestro"
+   ],
+   "paginas": [],
+   "maestro": [
+    "§20"
+   ]
+  },
+  {
+   "id": "XmLVuZKd2L0",
+   "fuentes": [
+    "docs"
+   ],
+   "paginas": [
+    "https://www.palantir.com/docs/apollo/apollo-getting-started/introduction-welcome"
+   ],
+   "maestro": []
+  },
+  {
+   "id": "_-dzTtTFiqg",
+   "fuentes": [
+    "docs"
+   ],
+   "paginas": [
+    "https://www.palantir.com/docs/foundry/announcements/2026-01"
+   ],
+   "maestro": []
+  },
+  {
+   "id": "elzenOIEdtI",
+   "fuentes": [
+    "docs"
+   ],
+   "paginas": [
+    "https://www.palantir.com/docs/foundry/developers"
+   ],
+   "maestro": []
+  },
+  {
+   "id": "fMiaepe7zOU",
+   "fuentes": [
+    "docs"
+   ],
+   "paginas": [
+    "https://www.palantir.com/docs/foundry/announcements/2023-01",
+    "https://www.palantir.com/docs/jp/foundry/announcements/2023-01",
+    "https://www.palantir.com/docs/zh/foundry/announcements/2023-01"
+   ],
+   "maestro": []
+  },
+  {
+   "id": "lpHFL4xjVPg",
+   "fuentes": [
+    "docs"
+   ],
+   "paginas": [
+    "https://www.palantir.com/docs/kr/foundry/quiver/analysis-overview",
+    "https://www.palantir.com/docs/zh/foundry/quiver/analysis-overview"
+   ],
+   "maestro": []
+  },
+  {
+   "id": "mDGjptFvePY",
+   "fuentes": [
+    "docs"
+   ],
+   "paginas": [
+    "https://www.palantir.com/docs/foundry/developers"
+   ],
+   "maestro": []
+  },
+  {
+   "id": "pyudERNI1Qo",
+   "fuentes": [
+    "docs"
+   ],
+   "paginas": [
+    "https://www.palantir.com/docs/foundry/announcements/2026-04"
+   ],
+   "maestro": []
+  },
+  {
+   "id": "vSJ5H00V7Es",
+   "fuentes": [
+    "maestro"
+   ],
+   "paginas": [],
+   "maestro": [
+    "§20",
+    "§21"
+   ]
+  }
+ ],
+ "vimeo": [
+  {
+   "id": "804003285",
+   "build": "https://build.palantir.com/platform/9c4e2d6a-2e7f-4b7c-9f32-6e7f4c5d6dbd",
+   "publicada": false,
+   "etiqueta": "Build with AIP"
+  },
+  {
+   "id": "927234079",
+   "build": "https://build.palantir.com/platform/777ea1ed-88fe-4d37-9f9c-ab0be7b249e8",
+   "publicada": false,
+   "etiqueta": "AIP for Intelligent Purchasing"
+  },
+  {
+   "id": "927235528",
+   "build": "https://build.palantir.com/platform/3d25878a-f483-413d-9139-1e5ee37fdf9f",
+   "publicada": false,
+   "etiqueta": "AIP for Warranty Claims Resolution"
+  },
+  {
+   "id": "927293930",
+   "build": "https://build.palantir.com/platform/ae823ab6-4cb7-4c2d-9cbd-4da06fbe8dd8",
+   "publicada": false,
+   "etiqueta": "AIP Product Cost 360"
+  },
+  {
+   "id": "938039216",
+   "build": "https://build.palantir.com/platform/614e5f35-3222-4fd5-818d-60d31dd6b728",
+   "publicada": false,
+   "etiqueta": "AIP for Technical Issue Resolution"
+  }
+ ],
+ "canales": [
+  {
+   "id": "UCQRc3PMlCsoodxbR4IsglKQ",
+   "url": "https://www.youtube.com/@palantirdevelopers",
+   "etiqueta": "Palantir Developers"
+  },
+  {
+   "id": "UCwed6_f0WcDIioXvMQfcP2Q",
+   "url": "https://www.youtube.com/@palantirtech",
+   "etiqueta": "Palantir"
+  }
+ ]
+}

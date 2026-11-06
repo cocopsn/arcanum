@@ -1,0 +1,35 @@
+{
+  "partition": "en/foundry/api",
+  "count": 1,
+  "pages": [
+    {
+      "url": "https://www.palantir.com/docs/foundry/api/ontology-resources/actions/apply-action",
+      "sitemap_url": "https://palantir.com/docs/foundry/api/ontology-resources/actions/apply-action/",
+      "source": "sitemap:docs-sitemap.xml",
+      "status": 200,
+      "chain": "302>308>200",
+      "soft_404": false,
+      "lang": "en",
+      "product": "foundry",
+      "capability": "api",
+      "section": "ontology-resources",
+      "template": "api",
+      "title": "Apply Action • API Reference • Palantir",
+      "breadcrumb": ["API Reference", "Ontology", "Actions", "Apply Action"],
+      "headings": [{ "l": 1, "t": "Apply Action", "id": "apply-action" }],
+      "images": [],
+      "videos": [],
+      "internal_links_out": 0,
+      "lastmod_sitemap": "2026-11-05T19:22:22.799Z",
+      "http_last_modified": "Thu, 05 Nov 2026 19:41:00 GMT",
+      "cells": [{ "group": "P2", "basis": "grupo_tematico(api)" }],
+      "api_endpoint": {
+        "operationId": "v2.applyAction",
+        "method": "POST",
+        "path": "/api/v2/ontologies/{ontology}/actions/{action}/apply",
+        "scopes": ["api:ontologies-write"]
+      },
+      "meta_description": { "text": "CANARIOPROSA endpoint prose", "words": 3, "attribution": "fixture" }
+    }
+  ]
+}

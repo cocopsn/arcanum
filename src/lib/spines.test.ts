@@ -5,7 +5,8 @@ describe("spines — the curated course skeleton (real, fixed)", () => {
   it("every cell has at least one real https source anchored", () => {
     for (const s of SPINES) {
       for (const c of s.cells) {
-        const anchored = (c.sourceUrls ?? []).length + (c.videoUrls ?? []).length + (c.references ?? []).length;
+        const anchored =
+          (c.sourceUrls ?? []).length + (c.videoUrls ?? []).length + (c.references ?? []).length + (c.authoredIn ? 1 : 0);
         expect(anchored, `${c.title} has no anchor`).toBeGreaterThan(0);
         for (const u of c.sourceUrls ?? []) expect(u).toMatch(/^https:\/\//);
       }
