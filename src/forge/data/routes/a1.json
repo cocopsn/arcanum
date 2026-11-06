@@ -1,0 +1,377 @@
+{
+  "v": 1,
+  "slug": "a1",
+  "code": "A1",
+  "name": "A1 · Algoritmos y estructuras desde primer principio",
+  "family": "Fundamentos",
+  "header": {
+    "entrada": "F0-02; reutiliza ITC y Competitiva.",
+    "entradaRecomendada": [
+      "F0-02"
+    ],
+    "evidencia": "Código, prueba de correctitud o invariante, complejidad y casos adversariales.",
+    "apoyo": [
+      {
+        "clave": "C-04",
+        "etiqueta": "MIT 6.006, Spring 2020: assignments",
+        "url": "https://ocw.mit.edu/courses/6-006-introduction-to-algorithms-spring-2020/pages/assignments/",
+        "tipo": "curso",
+        "acceso": "publico"
+      }
+    ]
+  },
+  "cells": [
+    {
+      "code": "A1-01",
+      "id": "cf000000-0000-4000-8000-0041312d3031",
+      "title": "A1-01 · Complejidad, invariantes y cotas",
+      "cls": "ruta",
+      "flujo": "mision",
+      "compuerta": "mision",
+      "ficha": {
+        "foco": "Complejidad, invariantes y cotas.",
+        "fuentes": [
+          {
+            "clave": "MIT",
+            "etiqueta": "Lecture Notes | Introduction to Algorithms | Electrical Engineering and Computer Science | MIT OpenCourseWare",
+            "url": "https://www.ocw.mit.edu/courses/6-006-introduction-to-algorithms-spring-2020/pages/lecture-notes/",
+            "tipo": "curso",
+            "acceso": "publico"
+          }
+        ],
+        "mision": "Prueba correctitud y costo de búsqueda binaria e insertion sort.",
+        "defensa": "Explica por qué tu invariante basta y ofrece un contraejemplo a uno incorrecto."
+      },
+      "capacidades": [
+        "algoritmos",
+        "abstraccion",
+        "comunicacion"
+      ],
+      "rastroCapacidades": {
+        "algoritmos": "Complejidad, invariantes y cotas.",
+        "abstraccion": "Complejidad, invariantes y cotas.",
+        "comunicacion": "Explica por qué tu invariante basta y ofrece un contraejemplo a uno incorrecto."
+      },
+      "criticas": [
+        {
+          "id": "correctitud",
+          "texto": "Correctitud",
+          "rastro": "Prueba correctitud y costo de búsqueda binaria e insertion sort."
+        }
+      ],
+      "naturaleza": {
+        "valor": "a_mano"
+      },
+      "alcance": "local",
+      "etiquetas": []
+    },
+    {
+      "code": "A1-02",
+      "id": "cf000000-0000-4000-8000-0041312d3032",
+      "title": "A1-02 · Arrays, hashing y dos punteros",
+      "cls": "ruta",
+      "flujo": "mision",
+      "compuerta": "mision",
+      "ficha": {
+        "foco": "Arrays, hashing y dos punteros.",
+        "fuentes": [
+          {
+            "clave": "MIT",
+            "etiqueta": "Lecture Notes | Introduction to Algorithms | Electrical Engineering and Computer Science | MIT OpenCourseWare",
+            "url": "https://www.ocw.mit.edu/courses/6-006-introduction-to-algorithms-spring-2020/pages/lecture-notes/",
+            "tipo": "curso",
+            "acceso": "publico"
+          },
+          {
+            "clave": "PY",
+            "etiqueta": "5. Data Structures — Python 3.15.2 documentation",
+            "url": "https://docs.python.org/3/tutorial/datastructures.html",
+            "tipo": "otro",
+            "acceso": "publico"
+          }
+        ],
+        "mision": "Implementa deduplicación y conciliación de eventos sin perder multiplicidades.",
+        "defensa": "Distingue identidad de igualdad, costo esperado y peor caso."
+      },
+      "capacidades": [
+        "algoritmos"
+      ],
+      "rastroCapacidades": {
+        "algoritmos": "Implementa deduplicación y conciliación de eventos sin perder multiplicidades."
+      },
+      "criticas": [
+        {
+          "id": "identidad",
+          "texto": "Identidad",
+          "rastro": "Implementa deduplicación y conciliación de eventos sin perder multiplicidades."
+        }
+      ],
+      "naturaleza": {
+        "valor": "a_mano"
+      },
+      "alcance": "local",
+      "etiquetas": []
+    },
+    {
+      "code": "A1-03",
+      "id": "cf000000-0000-4000-8000-0041312d3033",
+      "title": "A1-03 · Stacks, queues y ventanas",
+      "cls": "ruta",
+      "flujo": "mision",
+      "compuerta": "mision",
+      "ficha": {
+        "foco": "Stacks, queues y ventanas.",
+        "fuentes": [
+          {
+            "clave": "MIT",
+            "etiqueta": "Lecture Notes | Introduction to Algorithms | Electrical Engineering and Computer Science | MIT OpenCourseWare",
+            "url": "https://www.ocw.mit.edu/courses/6-006-introduction-to-algorithms-spring-2020/pages/lecture-notes/",
+            "tipo": "curso",
+            "acceso": "publico"
+          },
+          {
+            "clave": "PY",
+            "etiqueta": "5. Data Structures — Python 3.15.2 documentation",
+            "url": "https://docs.python.org/3/tutorial/datastructures.html",
+            "tipo": "otro",
+            "acceso": "publico"
+          }
+        ],
+        "mision": "Procesa una secuencia con ventana móvil y cola monótona.",
+        "defensa": "Justifica por qué cada elemento entra y sale una cantidad acotada de veces."
+      },
+      "capacidades": [
+        "algoritmos"
+      ],
+      "rastroCapacidades": {
+        "algoritmos": "Procesa una secuencia con ventana móvil y cola monótona."
+      },
+      "criticas": [
+        {
+          "id": "correctitud",
+          "texto": "Correctitud",
+          "rastro": "Justifica por qué cada elemento entra y sale una cantidad acotada de veces."
+        }
+      ],
+      "naturaleza": {
+        "valor": "a_mano"
+      },
+      "alcance": "local",
+      "etiquetas": []
+    },
+    {
+      "code": "A1-04",
+      "id": "cf000000-0000-4000-8000-0041312d3034",
+      "title": "A1-04 · Árboles e índices",
+      "cls": "ruta",
+      "flujo": "mision",
+      "compuerta": "mision",
+      "ficha": {
+        "foco": "Árboles e índices.",
+        "fuentes": [
+          {
+            "clave": "MIT",
+            "etiqueta": "Lecture Notes | Introduction to Algorithms | Electrical Engineering and Computer Science | MIT OpenCourseWare",
+            "url": "https://www.ocw.mit.edu/courses/6-006-introduction-to-algorithms-spring-2020/pages/lecture-notes/",
+            "tipo": "curso",
+            "acceso": "publico"
+          },
+          {
+            "clave": "DB",
+            "etiqueta": "Schedule | CMU 15-445/645 :: Intro to Database Systems (Fall 2026)",
+            "url": "https://15445.courses.cs.cmu.edu/fall2026/schedule.html",
+            "tipo": "curso",
+            "acceso": "publico"
+          }
+        ],
+        "mision": "Implementa un BST y deriva el límite de altura de un AVL.",
+        "defensa": "Explica cuándo un árbol degenerado destruye la complejidad prometida."
+      },
+      "capacidades": [
+        "algoritmos",
+        "datos",
+        "comunicacion"
+      ],
+      "rastroCapacidades": {
+        "algoritmos": "Explica cuándo un árbol degenerado destruye la complejidad prometida.",
+        "datos": "Árboles e índices.",
+        "comunicacion": "Explica cuándo un árbol degenerado destruye la complejidad prometida."
+      },
+      "criticas": [
+        {
+          "id": "correctitud",
+          "texto": "Correctitud",
+          "rastro": "Explica cuándo un árbol degenerado destruye la complejidad prometida."
+        }
+      ],
+      "naturaleza": {
+        "valor": "a_mano"
+      },
+      "alcance": "local",
+      "etiquetas": []
+    },
+    {
+      "code": "A1-05",
+      "id": "cf000000-0000-4000-8000-0041312d3035",
+      "title": "A1-05 · Heaps, scheduling y Top-K",
+      "cls": "ruta",
+      "flujo": "mision",
+      "compuerta": "mision",
+      "ficha": {
+        "foco": "Heaps, scheduling y Top-K.",
+        "fuentes": [
+          {
+            "clave": "MIT",
+            "etiqueta": "Lecture Notes | Introduction to Algorithms | Electrical Engineering and Computer Science | MIT OpenCourseWare",
+            "url": "https://www.ocw.mit.edu/courses/6-006-introduction-to-algorithms-spring-2020/pages/lecture-notes/",
+            "tipo": "curso",
+            "acceso": "publico"
+          }
+        ],
+        "mision": "Construye una cola de prioridades para trabajos de mantenimiento.",
+        "defensa": "Defiende heap frente a ordenar todo y explica desempates y starvation."
+      },
+      "capacidades": [
+        "algoritmos",
+        "comunicacion"
+      ],
+      "rastroCapacidades": {
+        "algoritmos": "Heaps, scheduling y Top-K.",
+        "comunicacion": "Defiende heap frente a ordenar todo y explica desempates y starvation."
+      },
+      "criticas": [
+        {
+          "id": "correctitud",
+          "texto": "Correctitud",
+          "rastro": "Defiende heap frente a ordenar todo y explica desempates y starvation."
+        }
+      ],
+      "naturaleza": {
+        "valor": "a_mano"
+      },
+      "alcance": "local",
+      "etiquetas": []
+    },
+    {
+      "code": "A1-06",
+      "id": "cf000000-0000-4000-8000-0041312d3036",
+      "title": "A1-06 · Grafos, BFS, DFS y dependencias",
+      "cls": "ruta",
+      "flujo": "mision",
+      "compuerta": "mision",
+      "ficha": {
+        "foco": "Grafos, BFS, DFS y dependencias.",
+        "fuentes": [
+          {
+            "clave": "MIT",
+            "etiqueta": "Lecture Notes | Introduction to Algorithms | Electrical Engineering and Computer Science | MIT OpenCourseWare",
+            "url": "https://www.ocw.mit.edu/courses/6-006-introduction-to-algorithms-spring-2020/pages/lecture-notes/",
+            "tipo": "curso",
+            "acceso": "publico"
+          }
+        ],
+        "mision": "Modela dependencias de órdenes; detecta ciclos y construye un orden válido.",
+        "defensa": "Define nodo y arista; demuestra por qué el algoritmo termina y qué costo tiene."
+      },
+      "capacidades": [
+        "algoritmos"
+      ],
+      "rastroCapacidades": {
+        "algoritmos": "Grafos, BFS, DFS y dependencias."
+      },
+      "criticas": [
+        {
+          "id": "correctitud",
+          "texto": "Correctitud",
+          "rastro": "Define nodo y arista; demuestra por qué el algoritmo termina y qué costo tiene."
+        }
+      ],
+      "naturaleza": {
+        "valor": "a_mano"
+      },
+      "alcance": "local",
+      "etiquetas": []
+    },
+    {
+      "code": "A1-07",
+      "id": "cf000000-0000-4000-8000-0041312d3037",
+      "title": "A1-07 · Greedy, rutas y optimización",
+      "cls": "ruta",
+      "flujo": "mision",
+      "compuerta": "mision",
+      "ficha": {
+        "foco": "Greedy, rutas y optimización.",
+        "fuentes": [
+          {
+            "clave": "MIT",
+            "etiqueta": "Lecture Notes | Introduction to Algorithms | Electrical Engineering and Computer Science | MIT OpenCourseWare",
+            "url": "https://www.ocw.mit.edu/courses/6-006-introduction-to-algorithms-spring-2020/pages/lecture-notes/",
+            "tipo": "curso",
+            "acceso": "publico"
+          }
+        ],
+        "mision": "Resuelve asignación de recursos con dos enfoques y un caso adversarial.",
+        "defensa": "Deriva cuándo el greedy es correcto y cuándo necesitas otro método."
+      },
+      "capacidades": [
+        "algoritmos"
+      ],
+      "rastroCapacidades": {
+        "algoritmos": "Resuelve asignación de recursos con dos enfoques y un caso adversarial."
+      },
+      "criticas": [
+        {
+          "id": "correctitud",
+          "texto": "Correctitud",
+          "rastro": "Deriva cuándo el greedy es correcto y cuándo necesitas otro método."
+        }
+      ],
+      "naturaleza": {
+        "valor": "a_mano"
+      },
+      "alcance": "local",
+      "etiquetas": []
+    },
+    {
+      "code": "A1-08",
+      "id": "cf000000-0000-4000-8000-0041312d3038",
+      "title": "A1-08 · DP y transferencia",
+      "cls": "ruta",
+      "flujo": "mision",
+      "compuerta": "mision",
+      "ficha": {
+        "foco": "DP y transferencia.",
+        "fuentes": [
+          {
+            "clave": "MIT",
+            "etiqueta": "Lecture Notes | Introduction to Algorithms | Electrical Engineering and Computer Science | MIT OpenCourseWare",
+            "url": "https://www.ocw.mit.edu/courses/6-006-introduction-to-algorithms-spring-2020/pages/lecture-notes/",
+            "tipo": "curso",
+            "acceso": "publico"
+          }
+        ],
+        "mision": "Resuelve una asignación con restricciones; escribe estado y transición antes del código.",
+        "defensa": "Cambia una restricción y reconstruye la recurrencia sin memorizar la solución."
+      },
+      "capacidades": [
+        "algoritmos"
+      ],
+      "rastroCapacidades": {
+        "algoritmos": "Cambia una restricción y reconstruye la recurrencia sin memorizar la solución."
+      },
+      "criticas": [
+        {
+          "id": "correctitud",
+          "texto": "Correctitud",
+          "rastro": "Cambia una restricción y reconstruye la recurrencia sin memorizar la solución."
+        }
+      ],
+      "naturaleza": {
+        "valor": "a_mano"
+      },
+      "alcance": "local",
+      "etiquetas": []
+    }
+  ],
+  "maestro_sha10": "38cbc7da42"
+}

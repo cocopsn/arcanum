@@ -1,0 +1,421 @@
+{
+  "v": 1,
+  "slug": "p4",
+  "code": "P4",
+  "name": "P4 · AIP: funciones, recuperación, agentes y evaluación",
+  "family": "Plataforma Foundry/AIP",
+  "header": {
+    "entrada": "P2-07; P3-03; S2-07.",
+    "entradaRecomendada": [
+      "P2-07",
+      "P3-03",
+      "S2-07"
+    ],
+    "evidencia": "Dataset y versiones, métricas, trazas, citas, límites y costos observados.",
+    "apoyo": [
+      {
+        "clave": "C-17",
+        "etiqueta": "Ontologize: tutoriales",
+        "url": "https://www.ontologize.com/tutorials",
+        "tipo": "curso",
+        "acceso": "publico"
+      }
+    ]
+  },
+  "cells": [
+    {
+      "code": "P4-01",
+      "id": "cf000000-0000-4000-8000-0050342d3031",
+      "title": "P4-01 · Elegir el papel de la IA",
+      "cls": "ruta",
+      "flujo": "mision",
+      "compuerta": "mision",
+      "ficha": {
+        "foco": "Elegir el papel de la IA.",
+        "fuentes": [
+          {
+            "clave": "AIP",
+            "etiqueta": "AIP overview",
+            "url": "https://www.palantir.com/docs/foundry/aip/overview",
+            "tipo": "docs",
+            "acceso": "publico"
+          },
+          {
+            "clave": "USE",
+            "etiqueta": "Use case lifecycle • Overview • Palantir",
+            "url": "https://www.palantir.com/docs/foundry/use-case-life-cycle/overview",
+            "tipo": "docs",
+            "acceso": "publico"
+          }
+        ],
+        "mision": "Compara regla, búsqueda, modelo predictivo y LLM para un mismo problema.",
+        "defensa": "Defiende por qué una parte concreta no necesita IA."
+      },
+      "capacidades": [
+        "ia"
+      ],
+      "rastroCapacidades": {
+        "ia": "Elegir el papel de la IA."
+      },
+      "criticas": [
+        {
+          "id": "correctitud",
+          "texto": "Correctitud",
+          "rastro": "Defiende por qué una parte concreta no necesita IA."
+        }
+      ],
+      "naturaleza": {
+        "valor": "a_mano"
+      },
+      "alcance": "local+nativa",
+      "etiquetas": []
+    },
+    {
+      "code": "P4-02",
+      "id": "cf000000-0000-4000-8000-0050342d3032",
+      "title": "P4-02 · AIP Logic con contrato",
+      "cls": "ruta",
+      "flujo": "mision",
+      "compuerta": "mision",
+      "ficha": {
+        "foco": "AIP Logic con contrato.",
+        "fuentes": [
+          {
+            "clave": "LOGIC",
+            "etiqueta": "AIP Logic • Getting started • Palantir",
+            "url": "https://www.palantir.com/docs/foundry/logic/getting-started",
+            "tipo": "docs",
+            "acceso": "publico"
+          }
+        ],
+        "mision": "Construye una función con salida estructurada y errores explícitos.",
+        "defensa": "Muestra entradas inválidas y límites de lo que puede concluir el modelo."
+      },
+      "capacidades": [
+        "ia",
+        "abstraccion"
+      ],
+      "rastroCapacidades": {
+        "ia": "AIP Logic con contrato.",
+        "abstraccion": "AIP Logic con contrato."
+      },
+      "criticas": [
+        {
+          "id": "correctitud",
+          "texto": "Correctitud",
+          "rastro": "Muestra entradas inválidas y límites de lo que puede concluir el modelo."
+        }
+      ],
+      "naturaleza": {
+        "valor": "a_mano"
+      },
+      "alcance": "local+nativa",
+      "etiquetas": []
+    },
+    {
+      "code": "P4-03",
+      "id": "cf000000-0000-4000-8000-0050342d3033",
+      "title": "P4-03 · Recuperación y citas verificables",
+      "cls": "ruta",
+      "flujo": "mision",
+      "compuerta": "mision",
+      "ficha": {
+        "foco": "Recuperación y citas verificables.",
+        "fuentes": [
+          {
+            "clave": "RAG",
+            "etiqueta": "AIP Chatbot Studio • Retrieval context • Context types • Palantir",
+            "url": "https://www.palantir.com/docs/foundry/chatbot-studio/retrieval-context",
+            "tipo": "docs",
+            "acceso": "publico"
+          },
+          {
+            "clave": "CITE",
+            "etiqueta": "AIP Chatbot Studio • Retrieval context • Citations • Palantir",
+            "url": "https://www.palantir.com/docs/foundry/chatbot-studio/citations",
+            "tipo": "docs",
+            "acceso": "publico"
+          },
+          {
+            "clave": "SEM",
+            "etiqueta": "Semantic search • Use Palantir-provided models to create a semantic search workflow • Palantir",
+            "url": "https://www.palantir.com/docs/foundry/ontology/using-palantir-provided-models-to-create-a-semantic-search-workflow",
+            "tipo": "docs",
+            "acceso": "publico"
+          }
+        ],
+        "mision": "Construye preguntas respondibles, sin evidencia y con documentos contradictorios.",
+        "defensa": "Relaciona cada afirmación con evidencia y reconoce abstención correcta."
+      },
+      "capacidades": [
+        "ia",
+        "responsabilidad"
+      ],
+      "rastroCapacidades": {
+        "ia": "Construye preguntas respondibles, sin evidencia y con documentos contradictorios.",
+        "responsabilidad": "Recuperación y citas verificables."
+      },
+      "criticas": [
+        {
+          "id": "correctitud",
+          "texto": "Correctitud",
+          "rastro": "Recuperación y citas verificables."
+        },
+        {
+          "id": "recuperacion",
+          "texto": "Recuperación",
+          "rastro": "Recuperación y citas verificables."
+        }
+      ],
+      "naturaleza": {
+        "valor": "a_mano"
+      },
+      "alcance": "local+nativa",
+      "etiquetas": []
+    },
+    {
+      "code": "P4-04",
+      "id": "cf000000-0000-4000-8000-0050342d3034",
+      "title": "P4-04 · Chatbot y herramientas",
+      "cls": "ruta",
+      "flujo": "mision",
+      "compuerta": "mision",
+      "ficha": {
+        "foco": "Chatbot y herramientas.",
+        "fuentes": [
+          {
+            "clave": "CHAT",
+            "etiqueta": "AIP Chatbot Studio • Getting started • Palantir",
+            "url": "https://www.palantir.com/docs/foundry/chatbot-studio/getting-started",
+            "tipo": "docs",
+            "acceso": "publico"
+          },
+          {
+            "clave": "RAG",
+            "etiqueta": "AIP Chatbot Studio • Retrieval context • Context types • Palantir",
+            "url": "https://www.palantir.com/docs/foundry/chatbot-studio/retrieval-context",
+            "tipo": "docs",
+            "acceso": "publico"
+          }
+        ],
+        "mision": "Construye un asistente que consulta datos y propone una acción revisable.",
+        "defensa": "Distingue conversación, lectura y autoridad para modificar operaciones."
+      },
+      "capacidades": [
+        "ia",
+        "datos"
+      ],
+      "rastroCapacidades": {
+        "ia": "Construye un asistente que consulta datos y propone una acción revisable.",
+        "datos": "Construye un asistente que consulta datos y propone una acción revisable."
+      },
+      "criticas": [
+        {
+          "id": "correctitud",
+          "texto": "Correctitud",
+          "rastro": "Distingue conversación, lectura y autoridad para modificar operaciones."
+        }
+      ],
+      "naturaleza": {
+        "valor": "a_mano"
+      },
+      "alcance": "local+nativa",
+      "etiquetas": []
+    },
+    {
+      "code": "P4-05",
+      "id": "cf000000-0000-4000-8000-0050342d3035",
+      "title": "P4-05 · Evaluaciones y regresiones",
+      "cls": "ruta",
+      "flujo": "mision",
+      "compuerta": "mision",
+      "ficha": {
+        "foco": "Evaluaciones y regresiones.",
+        "fuentes": [
+          {
+            "clave": "EVAL",
+            "etiqueta": "AIP Evals • Evaluation suites for Logic functions • Palantir",
+            "url": "https://www.palantir.com/docs/foundry/aip-evals/getting-started",
+            "tipo": "docs",
+            "acceso": "publico"
+          }
+        ],
+        "mision": "Compara dos versiones sobre un conjunto fijo y otro reservado de evaluación.",
+        "defensa": "Separa optimizar contra ejemplos conocidos de mejorar generalización."
+      },
+      "capacidades": [
+        "ia"
+      ],
+      "rastroCapacidades": {
+        "ia": "Compara dos versiones sobre un conjunto fijo y otro reservado de evaluación."
+      },
+      "criticas": [
+        {
+          "id": "correctitud",
+          "texto": "Correctitud",
+          "rastro": "Separa optimizar contra ejemplos conocidos de mejorar generalización."
+        }
+      ],
+      "naturaleza": {
+        "valor": "a_mano"
+      },
+      "alcance": "local+nativa",
+      "etiquetas": []
+    },
+    {
+      "code": "P4-06",
+      "id": "cf000000-0000-4000-8000-0050342d3036",
+      "title": "P4-06 · Agent Stack y sesiones",
+      "cls": "ruta",
+      "flujo": "mision",
+      "compuerta": "mision",
+      "ficha": {
+        "foco": "Agent Stack y sesiones.",
+        "fuentes": [
+          {
+            "clave": "AGENT",
+            "etiqueta": "Overview • AIP • Palantir",
+            "url": "https://www.palantir.com/docs/foundry/aip/agent-stack",
+            "tipo": "docs",
+            "acceso": "publico"
+          },
+          {
+            "clave": "SDK",
+            "etiqueta": "Agent SDK • Overview • Palantir",
+            "url": "https://www.palantir.com/docs/foundry/agent-sdk/overview",
+            "tipo": "docs",
+            "acceso": "publico"
+          }
+        ],
+        "mision": "Construye una sesión con contexto tipado, eventos y revisión humana.",
+        "defensa": "Demuestra cómo continúa el trabajo sin duplicar la acción tras una interrupción."
+      },
+      "capacidades": [
+        "ia"
+      ],
+      "rastroCapacidades": {
+        "ia": "Construye una sesión con contexto tipado, eventos y revisión humana."
+      },
+      "criticas": [
+        {
+          "id": "correctitud",
+          "texto": "Correctitud",
+          "rastro": "Demuestra cómo continúa el trabajo sin duplicar la acción tras una interrupción."
+        }
+      ],
+      "naturaleza": {
+        "valor": "a_mano"
+      },
+      "alcance": "local+nativa",
+      "etiquetas": []
+    },
+    {
+      "code": "P4-07",
+      "id": "cf000000-0000-4000-8000-0050342d3037",
+      "title": "P4-07 · Máquina de estados y observabilidad",
+      "cls": "ruta",
+      "flujo": "mision",
+      "compuerta": "mision",
+      "ficha": {
+        "foco": "Máquina de estados y observabilidad.",
+        "fuentes": [
+          {
+            "clave": "CUSTOM",
+            "etiqueta": "Agent SDK • Advanced customization • Palantir",
+            "url": "https://www.palantir.com/docs/foundry/agent-sdk/advanced-customization",
+            "tipo": "docs",
+            "acceso": "publico"
+          },
+          {
+            "clave": "MGR",
+            "etiqueta": "Agent Manager • Overview • Palantir",
+            "url": "https://www.palantir.com/docs/foundry/agent-manager/overview",
+            "tipo": "docs",
+            "acceso": "publico"
+          }
+        ],
+        "mision": "Instrumenta decisiones, herramientas, pausas y límites de ejecución.",
+        "defensa": "Reconstruye una falla desde el historial y limita acciones repetidas."
+      },
+      "capacidades": [
+        "ia",
+        "responsabilidad"
+      ],
+      "rastroCapacidades": {
+        "ia": "Instrumenta decisiones, herramientas, pausas y límites de ejecución.",
+        "responsabilidad": "Reconstruye una falla desde el historial y limita acciones repetidas."
+      },
+      "criticas": [
+        {
+          "id": "trazabilidad",
+          "texto": "Trazabilidad",
+          "rastro": "Reconstruye una falla desde el historial y limita acciones repetidas."
+        }
+      ],
+      "naturaleza": {
+        "valor": "a_mano"
+      },
+      "alcance": "local+nativa",
+      "etiquetas": []
+    },
+    {
+      "code": "P4-08",
+      "id": "cf000000-0000-4000-8000-0050342d3038",
+      "title": "P4-08 · Agente operacional evaluado",
+      "cls": "ruta",
+      "flujo": "mision",
+      "compuerta": "mision",
+      "ficha": {
+        "foco": "Agente operacional evaluado.",
+        "fuentes": [
+          {
+            "clave": "EVAL",
+            "etiqueta": "AIP Evals • Evaluation suites for Logic functions • Palantir",
+            "url": "https://www.palantir.com/docs/foundry/aip-evals/getting-started",
+            "tipo": "docs",
+            "acceso": "publico"
+          },
+          {
+            "clave": "STAGED",
+            "etiqueta": "AIP Logic • Staged writes • Palantir",
+            "url": "https://www.palantir.com/docs/foundry/logic/staged-writes",
+            "tipo": "docs",
+            "acceso": "publico"
+          },
+          {
+            "clave": "SEC",
+            "etiqueta": "Concepts • Access control propagation • Palantir",
+            "url": "https://www.palantir.com/docs/foundry/security/access-control-propagation",
+            "tipo": "docs",
+            "acceso": "publico"
+          }
+        ],
+        "mision": "Entrega un workflow con permisos, costos medidos y regresión probada.",
+        "defensa": "No aprueba si una acción crítica se ejecuta fuera de las precondiciones."
+      },
+      "capacidades": [
+        "ia",
+        "abstraccion",
+        "producto"
+      ],
+      "rastroCapacidades": {
+        "ia": "Agente operacional evaluado.",
+        "abstraccion": "No aprueba si una acción crítica se ejecuta fuera de las precondiciones.",
+        "producto": "Entrega un workflow con permisos, costos medidos y regresión probada."
+      },
+      "criticas": [
+        {
+          "id": "autorizacion",
+          "texto": "Autorización",
+          "rastro": "Entrega un workflow con permisos, costos medidos y regresión probada."
+        }
+      ],
+      "naturaleza": {
+        "valor": "a_mano"
+      },
+      "alcance": "local+nativa",
+      "etiquetas": []
+    }
+  ],
+  "maestro_sha10": "38cbc7da42"
+}

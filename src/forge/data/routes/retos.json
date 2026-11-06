@@ -1,0 +1,974 @@
+{
+  "v": 1,
+  "slug": "retos",
+  "code": "X",
+  "name": "Banco de retos",
+  "family": "Evaluación",
+  "header": {
+    "entrada": "",
+    "entradaRecomendada": [],
+    "evidencia": "",
+    "apoyo": []
+  },
+  "cells": [
+    {
+      "code": "X01",
+      "id": "cf000000-0000-4000-8000-000000583031",
+      "title": "X01 · Deque con historial aleatorio",
+      "cls": "reto",
+      "flujo": "mision",
+      "compuerta": "mision",
+      "ficha": {
+        "foco": "Deque con historial aleatorio",
+        "fuentes": [],
+        "mision": "Deque con historial aleatorio",
+        "defensa": "Comparación contra referencia simple; explicar amortización y fronteras."
+      },
+      "capacidades": [
+        "algoritmos",
+        "comunicacion"
+      ],
+      "rastroCapacidades": {
+        "algoritmos": "explicar amortización y fronteras.",
+        "comunicacion": "explicar amortización y fronteras."
+      },
+      "criticas": [
+        {
+          "id": "trazabilidad",
+          "texto": "Trazabilidad",
+          "rastro": "Deque con historial aleatorio"
+        }
+      ],
+      "naturaleza": {
+        "valor": "a_mano"
+      },
+      "alcance": "local",
+      "etiquetas": [
+        "reto_propio"
+      ],
+      "x": {
+        "reto": "Deque con historial aleatorio",
+        "entregable": "Comparación contra referencia simple; explicar amortización y fronteras."
+      }
+    },
+    {
+      "code": "X02",
+      "id": "cf000000-0000-4000-8000-000000583032",
+      "title": "X02 · Conciliación con identidad ambigua",
+      "cls": "reto",
+      "flujo": "mision",
+      "compuerta": "mision",
+      "ficha": {
+        "foco": "Conciliación con identidad ambigua",
+        "fuentes": [],
+        "mision": "Conciliación con identidad ambigua",
+        "defensa": "Resultado más tabla de casos sin resolución; distinguir ambigüedad de dato faltante."
+      },
+      "capacidades": [
+        "algoritmos",
+        "datos"
+      ],
+      "rastroCapacidades": {
+        "algoritmos": "Conciliación con identidad ambigua",
+        "datos": "Resultado más tabla de casos sin resolución;"
+      },
+      "criticas": [
+        {
+          "id": "identidad",
+          "texto": "Identidad",
+          "rastro": "Conciliación con identidad ambigua"
+        }
+      ],
+      "naturaleza": {
+        "valor": "a_mano"
+      },
+      "alcance": "local",
+      "etiquetas": [
+        "reto_propio"
+      ],
+      "x": {
+        "reto": "Conciliación con identidad ambigua",
+        "entregable": "Resultado más tabla de casos sin resolución; distinguir ambigüedad de dato faltante."
+      }
+    },
+    {
+      "code": "X03",
+      "id": "cf000000-0000-4000-8000-000000583033",
+      "title": "X03 · Detección de ciclos con explicación",
+      "cls": "reto",
+      "flujo": "mision",
+      "compuerta": "mision",
+      "ficha": {
+        "foco": "Detección de ciclos con explicación",
+        "fuentes": [],
+        "mision": "Detección de ciclos con explicación",
+        "defensa": "Devolver un ciclo concreto, no solo un booleano; analizar complejidad."
+      },
+      "capacidades": [
+        "algoritmos",
+        "comunicacion"
+      ],
+      "rastroCapacidades": {
+        "algoritmos": "analizar complejidad.",
+        "comunicacion": "Detección de ciclos con explicación"
+      },
+      "criticas": [
+        {
+          "id": "correctitud",
+          "texto": "Correctitud",
+          "rastro": "Devolver un ciclo concreto, no solo un booleano; analizar complejidad."
+        }
+      ],
+      "naturaleza": {
+        "valor": "a_mano"
+      },
+      "alcance": "local",
+      "etiquetas": [
+        "reto_propio"
+      ],
+      "x": {
+        "reto": "Detección de ciclos con explicación",
+        "entregable": "Devolver un ciclo concreto, no solo un booleano; analizar complejidad."
+      }
+    },
+    {
+      "code": "X04",
+      "id": "cf000000-0000-4000-8000-000000583034",
+      "title": "X04 · Agenda ponderada",
+      "cls": "reto",
+      "flujo": "mision",
+      "compuerta": "mision",
+      "ficha": {
+        "foco": "Agenda ponderada",
+        "fuentes": [],
+        "mision": "Agenda ponderada",
+        "defensa": "Obtener un subconjunto no superpuesto de valor máximo y justificar recurrencia."
+      },
+      "capacidades": [
+        "algoritmos"
+      ],
+      "rastroCapacidades": {
+        "algoritmos": "Obtener un subconjunto no superpuesto de valor máximo y justificar recurrencia."
+      },
+      "criticas": [
+        {
+          "id": "correctitud",
+          "texto": "Correctitud",
+          "rastro": "Obtener un subconjunto no superpuesto de valor máximo y justificar recurrencia."
+        }
+      ],
+      "naturaleza": {
+        "valor": "a_mano"
+      },
+      "alcance": "local",
+      "etiquetas": [
+        "reto_propio"
+      ],
+      "x": {
+        "reto": "Agenda ponderada",
+        "entregable": "Obtener un subconjunto no superpuesto de valor máximo y justificar recurrencia."
+      }
+    },
+    {
+      "code": "X05",
+      "id": "cf000000-0000-4000-8000-000000583035",
+      "title": "X05 · Motor de reglas extensible",
+      "cls": "reto",
+      "flujo": "mision",
+      "compuerta": "mision",
+      "ficha": {
+        "foco": "Motor de reglas extensible",
+        "fuentes": [],
+        "mision": "Motor de reglas extensible",
+        "defensa": "Contrato y parser pequeño; añadir un operador sin cambiar reglas anteriores."
+      },
+      "capacidades": [
+        "algoritmos",
+        "abstraccion",
+        "producto"
+      ],
+      "rastroCapacidades": {
+        "algoritmos": "Motor de reglas extensible",
+        "abstraccion": "Contrato y parser pequeño;",
+        "producto": "añadir un operador sin cambiar reglas anteriores."
+      },
+      "criticas": [
+        {
+          "id": "correctitud",
+          "texto": "Correctitud",
+          "rastro": "Contrato y parser pequeño; añadir un operador sin cambiar reglas anteriores."
+        }
+      ],
+      "naturaleza": {
+        "valor": "a_mano"
+      },
+      "alcance": "local",
+      "etiquetas": [
+        "reto_propio"
+      ],
+      "x": {
+        "reto": "Motor de reglas extensible",
+        "entregable": "Contrato y parser pequeño; añadir un operador sin cambiar reglas anteriores."
+      }
+    },
+    {
+      "code": "X06",
+      "id": "cf000000-0000-4000-8000-000000583036",
+      "title": "X06 · API compatible bajo evolución",
+      "cls": "reto",
+      "flujo": "mision",
+      "compuerta": "mision",
+      "ficha": {
+        "foco": "API compatible bajo evolución",
+        "fuentes": [],
+        "mision": "API compatible bajo evolución",
+        "defensa": "Dos consumidores de versiones distintas y migración comprobable."
+      },
+      "capacidades": [
+        "algoritmos"
+      ],
+      "rastroCapacidades": {
+        "algoritmos": "API compatible bajo evolución"
+      },
+      "criticas": [
+        {
+          "id": "correctitud",
+          "texto": "Correctitud",
+          "rastro": "Dos consumidores de versiones distintas y migración comprobable."
+        }
+      ],
+      "naturaleza": {
+        "valor": "a_mano"
+      },
+      "alcance": "local",
+      "etiquetas": [
+        "reto_propio"
+      ],
+      "x": {
+        "reto": "API compatible bajo evolución",
+        "entregable": "Dos consumidores de versiones distintas y migración comprobable."
+      }
+    },
+    {
+      "code": "X07",
+      "id": "cf000000-0000-4000-8000-000000583037",
+      "title": "X07 · Cola con cancelación",
+      "cls": "reto",
+      "flujo": "mision",
+      "compuerta": "mision",
+      "ficha": {
+        "foco": "Cola con cancelación",
+        "fuentes": [],
+        "mision": "Cola con cancelación",
+        "defensa": "Semántica explícita de pendiente, tomado y completado; manejar shutdown."
+      },
+      "capacidades": [
+        "algoritmos"
+      ],
+      "rastroCapacidades": {
+        "algoritmos": "Cola con cancelación"
+      },
+      "criticas": [
+        {
+          "id": "correctitud",
+          "texto": "Correctitud",
+          "rastro": "Semántica explícita de pendiente, tomado y completado; manejar shutdown."
+        }
+      ],
+      "naturaleza": {
+        "valor": "a_mano"
+      },
+      "alcance": "local",
+      "etiquetas": [
+        "reto_propio"
+      ],
+      "x": {
+        "reto": "Cola con cancelación",
+        "entregable": "Semántica explícita de pendiente, tomado y completado; manejar shutdown."
+      }
+    },
+    {
+      "code": "X08",
+      "id": "cf000000-0000-4000-8000-000000583038",
+      "title": "X08 · Diagnóstico de contención",
+      "cls": "reto",
+      "flujo": "mision",
+      "compuerta": "mision",
+      "ficha": {
+        "foco": "Diagnóstico de contención",
+        "fuentes": [],
+        "mision": "Diagnóstico de contención",
+        "defensa": "Perfil antes/después y corrección que preserve resultados."
+      },
+      "capacidades": [
+        "algoritmos"
+      ],
+      "rastroCapacidades": {
+        "algoritmos": "Diagnóstico de contención"
+      },
+      "criticas": [
+        {
+          "id": "correctitud",
+          "texto": "Correctitud",
+          "rastro": "Perfil antes/después y corrección que preserve resultados."
+        }
+      ],
+      "naturaleza": {
+        "valor": "a_mano"
+      },
+      "alcance": "local",
+      "etiquetas": [
+        "reto_propio"
+      ],
+      "x": {
+        "reto": "Diagnóstico de contención",
+        "entregable": "Perfil antes/después y corrección que preserve resultados."
+      }
+    },
+    {
+      "code": "X09",
+      "id": "cf000000-0000-4000-8000-000000583039",
+      "title": "X09 · Doble reserva",
+      "cls": "reto",
+      "flujo": "mision",
+      "compuerta": "mision",
+      "ficha": {
+        "foco": "Doble reserva",
+        "fuentes": [],
+        "mision": "Doble reserva",
+        "defensa": "Historial concurrente y solución que preserve la restricción compartida."
+      },
+      "capacidades": [
+        "algoritmos",
+        "sistemas"
+      ],
+      "rastroCapacidades": {
+        "algoritmos": "Doble reserva",
+        "sistemas": "Historial concurrente y solución que preserve la restricción compartida."
+      },
+      "criticas": [
+        {
+          "id": "consistencia",
+          "texto": "Consistencia",
+          "rastro": "Historial concurrente y solución que preserve la restricción compartida."
+        },
+        {
+          "id": "trazabilidad",
+          "texto": "Trazabilidad",
+          "rastro": "Historial concurrente y solución que preserve la restricción compartida."
+        }
+      ],
+      "naturaleza": {
+        "valor": "a_mano"
+      },
+      "alcance": "local",
+      "etiquetas": [
+        "reto_propio"
+      ],
+      "x": {
+        "reto": "Doble reserva",
+        "entregable": "Historial concurrente y solución que preserve la restricción compartida."
+      }
+    },
+    {
+      "code": "X10",
+      "id": "cf000000-0000-4000-8000-000000583130",
+      "title": "X10 · Índice bajo carga sesgada",
+      "cls": "reto",
+      "flujo": "mision",
+      "compuerta": "mision",
+      "ficha": {
+        "foco": "Índice bajo carga sesgada",
+        "fuentes": [],
+        "mision": "Índice bajo carga sesgada",
+        "defensa": "Benchmark reproducible; defender carga, distribución y memoria."
+      },
+      "capacidades": [
+        "algoritmos",
+        "sistemas",
+        "datos"
+      ],
+      "rastroCapacidades": {
+        "algoritmos": "Índice bajo carga sesgada",
+        "sistemas": "defender carga, distribución y memoria.",
+        "datos": "Índice bajo carga sesgada"
+      },
+      "criticas": [
+        {
+          "id": "trazabilidad",
+          "texto": "Trazabilidad",
+          "rastro": "Benchmark reproducible;"
+        }
+      ],
+      "naturaleza": {
+        "valor": "a_mano"
+      },
+      "alcance": "local",
+      "etiquetas": [
+        "reto_propio"
+      ],
+      "x": {
+        "reto": "Índice bajo carga sesgada",
+        "entregable": "Benchmark reproducible; defender carga, distribución y memoria."
+      }
+    },
+    {
+      "code": "X11",
+      "id": "cf000000-0000-4000-8000-000000583131",
+      "title": "X11 · Consumidor con replay",
+      "cls": "reto",
+      "flujo": "mision",
+      "compuerta": "mision",
+      "ficha": {
+        "foco": "Consumidor con replay",
+        "fuentes": [],
+        "mision": "Consumidor con replay",
+        "defensa": "Estado idéntico tras duplicados y reinicio; explicar cuándo hay efectos externos."
+      },
+      "capacidades": [
+        "algoritmos",
+        "comunicacion"
+      ],
+      "rastroCapacidades": {
+        "algoritmos": "Consumidor con replay",
+        "comunicacion": "explicar cuándo hay efectos externos."
+      },
+      "criticas": [
+        {
+          "id": "identidad",
+          "texto": "Identidad",
+          "rastro": "Estado idéntico tras duplicados y reinicio;"
+        }
+      ],
+      "naturaleza": {
+        "valor": "a_mano"
+      },
+      "alcance": "local",
+      "etiquetas": [
+        "reto_propio"
+      ],
+      "x": {
+        "reto": "Consumidor con replay",
+        "entregable": "Estado idéntico tras duplicados y reinicio; explicar cuándo hay efectos externos."
+      }
+    },
+    {
+      "code": "X12",
+      "id": "cf000000-0000-4000-8000-000000583132",
+      "title": "X12 · Resultado remoto desconocido",
+      "cls": "reto",
+      "flujo": "mision",
+      "compuerta": "mision",
+      "ficha": {
+        "foco": "Resultado remoto desconocido",
+        "fuentes": [],
+        "mision": "Resultado remoto desconocido",
+        "defensa": "Registrar incertidumbre y reconciliar sin duplicar la operación lógica."
+      },
+      "capacidades": [
+        "algoritmos"
+      ],
+      "rastroCapacidades": {
+        "algoritmos": "Resultado remoto desconocido"
+      },
+      "criticas": [
+        {
+          "id": "recuperacion",
+          "texto": "Recuperación",
+          "rastro": "Registrar incertidumbre y reconciliar sin duplicar la operación lógica."
+        }
+      ],
+      "naturaleza": {
+        "valor": "a_mano"
+      },
+      "alcance": "local",
+      "etiquetas": [
+        "reto_propio"
+      ],
+      "x": {
+        "reto": "Resultado remoto desconocido",
+        "entregable": "Registrar incertidumbre y reconciliar sin duplicar la operación lógica."
+      }
+    },
+    {
+      "code": "X13",
+      "id": "cf000000-0000-4000-8000-000000583133",
+      "title": "X13 · Cache que sirve datos obsoletos",
+      "cls": "reto",
+      "flujo": "mision",
+      "compuerta": "mision",
+      "ficha": {
+        "foco": "Cache que sirve datos obsoletos",
+        "fuentes": [],
+        "mision": "Cache que sirve datos obsoletos",
+        "defensa": "Elegir política por riesgo del usuario; probar invalidación y degradación."
+      },
+      "capacidades": [
+        "algoritmos",
+        "datos",
+        "producto"
+      ],
+      "rastroCapacidades": {
+        "algoritmos": "Cache que sirve datos obsoletos",
+        "datos": "Cache que sirve datos obsoletos",
+        "producto": "Elegir política por riesgo del usuario;"
+      },
+      "criticas": [
+        {
+          "id": "correctitud",
+          "texto": "Correctitud",
+          "rastro": "probar invalidación y degradación."
+        },
+        {
+          "id": "recuperacion",
+          "texto": "Recuperación",
+          "rastro": "probar invalidación y degradación."
+        }
+      ],
+      "naturaleza": {
+        "valor": "a_mano"
+      },
+      "alcance": "local",
+      "etiquetas": [
+        "reto_propio"
+      ],
+      "x": {
+        "reto": "Cache que sirve datos obsoletos",
+        "entregable": "Elegir política por riesgo del usuario; probar invalidación y degradación."
+      }
+    },
+    {
+      "code": "X14",
+      "id": "cf000000-0000-4000-8000-000000583134",
+      "title": "X14 · Hot partition",
+      "cls": "reto",
+      "flujo": "mision",
+      "compuerta": "mision",
+      "ficha": {
+        "foco": "Hot partition",
+        "fuentes": [],
+        "mision": "Hot partition",
+        "defensa": "Reproducir skew y explicar el costo de tu estrategia de reparto."
+      },
+      "capacidades": [
+        "algoritmos",
+        "comunicacion",
+        "responsabilidad"
+      ],
+      "rastroCapacidades": {
+        "algoritmos": "Hot partition",
+        "comunicacion": "Reproducir skew y explicar el costo de tu estrategia de reparto.",
+        "responsabilidad": "Reproducir skew y explicar el costo de tu estrategia de reparto."
+      },
+      "criticas": [
+        {
+          "id": "correctitud",
+          "texto": "Correctitud",
+          "rastro": "Reproducir skew y explicar el costo de tu estrategia de reparto."
+        }
+      ],
+      "naturaleza": {
+        "valor": "a_mano"
+      },
+      "alcance": "local",
+      "etiquetas": [
+        "reto_propio"
+      ],
+      "x": {
+        "reto": "Hot partition",
+        "entregable": "Reproducir skew y explicar el costo de tu estrategia de reparto."
+      }
+    },
+    {
+      "code": "X15",
+      "id": "cf000000-0000-4000-8000-000000583135",
+      "title": "X15 · Pipeline que pasa pero miente",
+      "cls": "reto",
+      "flujo": "mision",
+      "compuerta": "mision",
+      "ficha": {
+        "foco": "Pipeline que pasa pero miente",
+        "fuentes": [],
+        "mision": "Pipeline que pasa pero miente",
+        "defensa": "Detectar join multiplicador o fuente vieja con controles independientes."
+      },
+      "capacidades": [
+        "algoritmos",
+        "datos"
+      ],
+      "rastroCapacidades": {
+        "algoritmos": "Pipeline que pasa pero miente",
+        "datos": "Pipeline que pasa pero miente"
+      },
+      "criticas": [
+        {
+          "id": "correctitud",
+          "texto": "Correctitud",
+          "rastro": "Detectar join multiplicador o fuente vieja con controles independientes."
+        }
+      ],
+      "naturaleza": {
+        "valor": "a_mano"
+      },
+      "alcance": "local",
+      "etiquetas": [
+        "reto_propio"
+      ],
+      "x": {
+        "reto": "Pipeline que pasa pero miente",
+        "entregable": "Detectar join multiplicador o fuente vieja con controles independientes."
+      }
+    },
+    {
+      "code": "X16",
+      "id": "cf000000-0000-4000-8000-000000583136",
+      "title": "X16 · Objeto editado contra datasource",
+      "cls": "reto",
+      "flujo": "mision",
+      "compuerta": "mision",
+      "ficha": {
+        "foco": "Objeto editado contra datasource",
+        "fuentes": [],
+        "mision": "Objeto editado contra datasource",
+        "defensa": "Mostrar la regla de conflicto configurada y sus efectos, sin asumir defaults."
+      },
+      "capacidades": [
+        "algoritmos"
+      ],
+      "rastroCapacidades": {
+        "algoritmos": "Objeto editado contra datasource"
+      },
+      "criticas": [
+        {
+          "id": "correctitud",
+          "texto": "Correctitud",
+          "rastro": "Mostrar la regla de conflicto configurada y sus efectos, sin asumir defaults."
+        }
+      ],
+      "naturaleza": {
+        "valor": "a_mano"
+      },
+      "alcance": "local",
+      "etiquetas": [
+        "reto_propio"
+      ],
+      "x": {
+        "reto": "Objeto editado contra datasource",
+        "entregable": "Mostrar la regla de conflicto configurada y sus efectos, sin asumir defaults."
+      }
+    },
+    {
+      "code": "X17",
+      "id": "cf000000-0000-4000-8000-000000583137",
+      "title": "X17 · UI con selección que cambia",
+      "cls": "reto",
+      "flujo": "mision",
+      "compuerta": "mision",
+      "ficha": {
+        "foco": "UI con selección que cambia",
+        "fuentes": [],
+        "mision": "UI con selección que cambia",
+        "defensa": "Evitar aplicar una acción al objeto equivocado durante una actualización."
+      },
+      "capacidades": [
+        "algoritmos"
+      ],
+      "rastroCapacidades": {
+        "algoritmos": "UI con selección que cambia"
+      },
+      "criticas": [
+        {
+          "id": "correctitud",
+          "texto": "Correctitud",
+          "rastro": "Evitar aplicar una acción al objeto equivocado durante una actualización."
+        }
+      ],
+      "naturaleza": {
+        "valor": "a_mano"
+      },
+      "alcance": "local",
+      "etiquetas": [
+        "reto_propio"
+      ],
+      "x": {
+        "reto": "UI con selección que cambia",
+        "entregable": "Evitar aplicar una acción al objeto equivocado durante una actualización."
+      }
+    },
+    {
+      "code": "X18",
+      "id": "cf000000-0000-4000-8000-000000583138",
+      "title": "X18 · Herramienta de IA autorizada",
+      "cls": "reto",
+      "flujo": "mision",
+      "compuerta": "mision",
+      "ficha": {
+        "foco": "Herramienta de IA autorizada",
+        "fuentes": [],
+        "mision": "Herramienta de IA autorizada",
+        "defensa": "Probar parámetros, permisos y condiciones de acción de extremo a extremo."
+      },
+      "capacidades": [
+        "algoritmos",
+        "ia"
+      ],
+      "rastroCapacidades": {
+        "algoritmos": "Herramienta de IA autorizada",
+        "ia": "Herramienta de IA autorizada"
+      },
+      "criticas": [
+        {
+          "id": "autorizacion",
+          "texto": "Autorización",
+          "rastro": "Herramienta de IA autorizada"
+        }
+      ],
+      "naturaleza": {
+        "valor": "a_mano"
+      },
+      "alcance": "local",
+      "etiquetas": [
+        "reto_propio"
+      ],
+      "x": {
+        "reto": "Herramienta de IA autorizada",
+        "entregable": "Probar parámetros, permisos y condiciones de acción de extremo a extremo."
+      }
+    },
+    {
+      "code": "X19",
+      "id": "cf000000-0000-4000-8000-000000583139",
+      "title": "X19 · Retrieval con contradicciones",
+      "cls": "reto",
+      "flujo": "mision",
+      "compuerta": "mision",
+      "ficha": {
+        "foco": "Retrieval con contradicciones",
+        "fuentes": [],
+        "mision": "Retrieval con contradicciones",
+        "defensa": "Evidencia de citas y abstención; separar error de búsqueda y de generación."
+      },
+      "capacidades": [
+        "algoritmos"
+      ],
+      "rastroCapacidades": {
+        "algoritmos": "Retrieval con contradicciones"
+      },
+      "criticas": [
+        {
+          "id": "correctitud",
+          "texto": "Correctitud",
+          "rastro": "Evidencia de citas y abstención; separar error de búsqueda y de generación."
+        }
+      ],
+      "naturaleza": {
+        "valor": "a_mano"
+      },
+      "alcance": "local",
+      "etiquetas": [
+        "reto_propio"
+      ],
+      "x": {
+        "reto": "Retrieval con contradicciones",
+        "entregable": "Evidencia de citas y abstención; separar error de búsqueda y de generación."
+      }
+    },
+    {
+      "code": "X20",
+      "id": "cf000000-0000-4000-8000-000000583230",
+      "title": "X20 · Evaluación que sobreajusta",
+      "cls": "reto",
+      "flujo": "mision",
+      "compuerta": "mision",
+      "ficha": {
+        "foco": "Evaluación que sobreajusta",
+        "fuentes": [],
+        "mision": "Evaluación que sobreajusta",
+        "defensa": "Mantener un set reservado y mostrar dónde la mejora aparente no generaliza."
+      },
+      "capacidades": [
+        "algoritmos"
+      ],
+      "rastroCapacidades": {
+        "algoritmos": "Evaluación que sobreajusta"
+      },
+      "criticas": [
+        {
+          "id": "correctitud",
+          "texto": "Correctitud",
+          "rastro": "Mantener un set reservado y mostrar dónde la mejora aparente no generaliza."
+        }
+      ],
+      "naturaleza": {
+        "valor": "a_mano"
+      },
+      "alcance": "local",
+      "etiquetas": [
+        "reto_propio"
+      ],
+      "x": {
+        "reto": "Evaluación que sobreajusta",
+        "entregable": "Mantener un set reservado y mostrar dónde la mejora aparente no generaliza."
+      }
+    },
+    {
+      "code": "X21",
+      "id": "cf000000-0000-4000-8000-000000583231",
+      "title": "X21 · Documento de diseño impugnado",
+      "cls": "reto",
+      "flujo": "expediente",
+      "compuerta": "expediente",
+      "ficha": {
+        "foco": "Documento de diseño impugnado",
+        "fuentes": [],
+        "mision": "Documento de diseño impugnado",
+        "defensa": "Defender o reemplazar la arquitectura ante una alternativa más simple."
+      },
+      "capacidades": [
+        "algoritmos"
+      ],
+      "rastroCapacidades": {
+        "algoritmos": "Documento de diseño impugnado"
+      },
+      "criticas": [
+        {
+          "id": "correctitud",
+          "texto": "Correctitud",
+          "rastro": "Defender o reemplazar la arquitectura ante una alternativa más simple."
+        }
+      ],
+      "naturaleza": {
+        "valor": "a_mano"
+      },
+      "alcance": "local",
+      "etiquetas": [
+        "reto_propio"
+      ],
+      "x": {
+        "reto": "Documento de diseño impugnado",
+        "entregable": "Defender o reemplazar la arquitectura ante una alternativa más simple."
+      }
+    },
+    {
+      "code": "X22",
+      "id": "cf000000-0000-4000-8000-000000583232",
+      "title": "X22 · Usuario y sponsor discrepan",
+      "cls": "reto",
+      "flujo": "entrevista",
+      "compuerta": "entrevista",
+      "ficha": {
+        "foco": "Usuario y sponsor discrepan",
+        "fuentes": [],
+        "mision": "Usuario y sponsor discrepan",
+        "defensa": "Formular decisiones distintas y acordar una primera entrega medible."
+      },
+      "capacidades": [
+        "algoritmos",
+        "producto"
+      ],
+      "rastroCapacidades": {
+        "algoritmos": "Usuario y sponsor discrepan",
+        "producto": "Usuario y sponsor discrepan"
+      },
+      "criticas": [
+        {
+          "id": "correctitud",
+          "texto": "Correctitud",
+          "rastro": "Formular decisiones distintas y acordar una primera entrega medible."
+        }
+      ],
+      "naturaleza": {
+        "valor": "a_mano"
+      },
+      "alcance": "local",
+      "etiquetas": [
+        "reto_propio"
+      ],
+      "x": {
+        "reto": "Usuario y sponsor discrepan",
+        "entregable": "Formular decisiones distintas y acordar una primera entrega medible."
+      }
+    },
+    {
+      "code": "X23",
+      "id": "cf000000-0000-4000-8000-000000583233",
+      "title": "X23 · Toma de control de código ajeno",
+      "cls": "reto",
+      "flujo": "mision",
+      "compuerta": "mision",
+      "ficha": {
+        "foco": "Toma de control de código ajeno",
+        "fuentes": [],
+        "mision": "Toma de control de código ajeno",
+        "defensa": "Reproducir, parchear y revisar un bug sin regenerar el repositorio."
+      },
+      "capacidades": [
+        "algoritmos",
+        "responsabilidad"
+      ],
+      "rastroCapacidades": {
+        "algoritmos": "Toma de control de código ajeno",
+        "responsabilidad": "Reproducir, parchear y revisar un bug sin regenerar el repositorio."
+      },
+      "criticas": [
+        {
+          "id": "correctitud",
+          "texto": "Correctitud",
+          "rastro": "Reproducir, parchear y revisar un bug sin regenerar el repositorio."
+        }
+      ],
+      "naturaleza": {
+        "valor": "a_mano"
+      },
+      "alcance": "local",
+      "etiquetas": [
+        "reto_propio"
+      ],
+      "x": {
+        "reto": "Toma de control de código ajeno",
+        "entregable": "Reproducir, parchear y revisar un bug sin regenerar el repositorio."
+      }
+    },
+    {
+      "code": "X24",
+      "id": "cf000000-0000-4000-8000-000000583234",
+      "title": "X24 · Handoff en entorno limpio",
+      "cls": "reto",
+      "flujo": "mision",
+      "compuerta": "mision",
+      "ficha": {
+        "foco": "Handoff en entorno limpio",
+        "fuentes": [],
+        "mision": "Handoff en entorno limpio",
+        "defensa": "Otra persona ejecuta tu proyecto; corregir lo que la documentación omitió."
+      },
+      "capacidades": [
+        "algoritmos",
+        "comunicacion"
+      ],
+      "rastroCapacidades": {
+        "algoritmos": "Handoff en entorno limpio",
+        "comunicacion": "Handoff en entorno limpio"
+      },
+      "criticas": [
+        {
+          "id": "correctitud",
+          "texto": "Correctitud",
+          "rastro": "Otra persona ejecuta tu proyecto; corregir lo que la documentación omitió."
+        }
+      ],
+      "naturaleza": {
+        "valor": "a_mano"
+      },
+      "alcance": "local",
+      "etiquetas": [
+        "reto_propio"
+      ],
+      "x": {
+        "reto": "Handoff en entorno limpio",
+        "entregable": "Otra persona ejecuta tu proyecto; corregir lo que la documentación omitió."
+      }
+    }
+  ],
+  "maestro_sha10": "38cbc7da42"
+}

@@ -1,0 +1,417 @@
+{
+  "v": 1,
+  "slug": "f1",
+  "code": "F1",
+  "name": "F1 · Oficio FDE: filosofía, usuarios y descomposición",
+  "family": "Oficio FDE",
+  "header": {
+    "entrada": "F0-01; comienza en paralelo.",
+    "entradaRecomendada": [
+      "F0-01"
+    ],
+    "evidencia": "Memo, grabación o transcripción de decisiones; hechos separados de inferencias.",
+    "apoyo": [
+      {
+        "clave": "C-18",
+        "etiqueta": "Palantir: documentación",
+        "url": "https://www.palantir.com/docs/foundry",
+        "tipo": "docs",
+        "acceso": "publico"
+      }
+    ]
+  },
+  "cells": [
+    {
+      "code": "F1-01",
+      "id": "cf000000-0000-4000-8000-0046312d3031",
+      "title": "F1-01 · Leer la filosofía con criterio propio",
+      "cls": "ruta",
+      "flujo": "mision",
+      "compuerta": "mision",
+      "ficha": {
+        "foco": "Leer la filosofía con criterio propio.",
+        "fuentes": [
+          {
+            "clave": "DEV",
+            "etiqueta": "Dev Versus Delta: Demystifying Engineering Roles at Palantir",
+            "url": "https://blog.palantir.com/dev-versus-delta-demystifying-engineering-roles-at-palantir-ad44c2a6e87",
+            "tipo": "blog",
+            "acceso": "publico"
+          },
+          {
+            "clave": "DELTA",
+            "etiqueta": "Who Wants to be a Delta?",
+            "url": "https://blog.palantir.com/who-wants-to-be-a-delta-8d2ea948035",
+            "tipo": "blog",
+            "acceso": "publico"
+          },
+          {
+            "clave": "ARCH",
+            "etiqueta": "The Ontology system • Palantir",
+            "url": "https://www.palantir.com/docs/foundry/architecture-center/ontology-system",
+            "tipo": "docs",
+            "acceso": "publico"
+          }
+        ],
+        "mision": "Escribe un memo sobre autonomía, ownership y resultados; incluye objeciones.",
+        "defensa": "Defiende dónde la visión funciona y dónde exige límites o adaptación."
+      },
+      "capacidades": [
+        "producto",
+        "comunicacion"
+      ],
+      "rastroCapacidades": {
+        "producto": "Escribe un memo sobre autonomía, ownership y resultados; incluye objeciones.",
+        "comunicacion": "Escribe un memo sobre autonomía, ownership y resultados;"
+      },
+      "criticas": [
+        {
+          "id": "correctitud",
+          "texto": "Correctitud",
+          "rastro": "Defiende dónde la visión funciona y dónde exige límites o adaptación."
+        }
+      ],
+      "naturaleza": {
+        "valor": "a_mano"
+      },
+      "alcance": "local",
+      "etiquetas": []
+    },
+    {
+      "code": "F1-02",
+      "id": "cf000000-0000-4000-8000-0046312d3032",
+      "title": "F1-02 · Entrevista de descubrimiento",
+      "cls": "ruta",
+      "flujo": "entrevista",
+      "compuerta": "entrevista",
+      "ficha": {
+        "foco": "Entrevista de descubrimiento.",
+        "fuentes": [
+          {
+            "clave": "USE",
+            "etiqueta": "Use case lifecycle • Overview • Palantir",
+            "url": "https://www.palantir.com/docs/foundry/use-case-life-cycle/overview",
+            "tipo": "docs",
+            "acceso": "publico"
+          },
+          {
+            "clave": "FDE",
+            "etiqueta": "A Day in the Life of a Palantir Forward Deployed Software Engineer",
+            "url": "https://blog.palantir.com/a-day-in-the-life-of-a-palantir-forward-deployed-software-engineer-45ef2de257b1",
+            "tipo": "blog",
+            "acceso": "publico"
+          }
+        ],
+        "mision": "Simula 20 minutos con un operador y registra preguntas y contradicciones.",
+        "defensa": "Separa lo observado, lo reportado, lo inferido y lo aún desconocido."
+      },
+      "capacidades": [
+        "producto"
+      ],
+      "rastroCapacidades": {
+        "producto": "Simula 20 minutos con un operador y registra preguntas y contradicciones."
+      },
+      "criticas": [
+        {
+          "id": "correctitud",
+          "texto": "Correctitud",
+          "rastro": "Separa lo observado, lo reportado, lo inferido y lo aún desconocido."
+        }
+      ],
+      "naturaleza": {
+        "valor": "a_mano"
+      },
+      "alcance": "local",
+      "etiquetas": []
+    },
+    {
+      "code": "F1-03",
+      "id": "cf000000-0000-4000-8000-0046312d3033",
+      "title": "F1-03 · Descomposición del problema",
+      "cls": "ruta",
+      "flujo": "entrevista",
+      "compuerta": "entrevista",
+      "ficha": {
+        "foco": "Descomposición del problema.",
+        "fuentes": [
+          {
+            "clave": "USE",
+            "etiqueta": "Use case lifecycle • Overview • Palantir",
+            "url": "https://www.palantir.com/docs/foundry/use-case-life-cycle/overview",
+            "tipo": "docs",
+            "acceso": "publico"
+          }
+        ],
+        "mision": "Convierte un pedido vago en decisiones, entidades, acciones y restricciones.",
+        "defensa": "Propón el experimento más barato que pueda refutar tu hipótesis."
+      },
+      "capacidades": [
+        "producto"
+      ],
+      "rastroCapacidades": {
+        "producto": "Convierte un pedido vago en decisiones, entidades, acciones y restricciones."
+      },
+      "criticas": [
+        {
+          "id": "correctitud",
+          "texto": "Correctitud",
+          "rastro": "Propón el experimento más barato que pueda refutar tu hipótesis."
+        }
+      ],
+      "naturaleza": {
+        "valor": "a_mano"
+      },
+      "alcance": "local",
+      "etiquetas": []
+    },
+    {
+      "code": "F1-04",
+      "id": "cf000000-0000-4000-8000-0046312d3034",
+      "title": "F1-04 · Priorizar y secuenciar",
+      "cls": "ruta",
+      "flujo": "mision",
+      "compuerta": "mision",
+      "ficha": {
+        "foco": "Priorizar y secuenciar.",
+        "fuentes": [
+          {
+            "clave": "USE",
+            "etiqueta": "Use case lifecycle • Overview • Palantir",
+            "url": "https://www.palantir.com/docs/foundry/use-case-life-cycle/overview",
+            "tipo": "docs",
+            "acceso": "publico"
+          },
+          {
+            "clave": "END",
+            "etiqueta": "Building End-to-End",
+            "url": "https://blog.palantir.com/building-end-to-end-e3a8349aee70",
+            "tipo": "blog",
+            "acceso": "publico"
+          }
+        ],
+        "mision": "Elige una vertical que entregue valor antes de completar toda la plataforma.",
+        "defensa": "Explica qué pospones, qué riesgo aceptas y qué señal cambiaría el plan."
+      },
+      "capacidades": [
+        "producto",
+        "comunicacion"
+      ],
+      "rastroCapacidades": {
+        "producto": "Priorizar y secuenciar.",
+        "comunicacion": "Explica qué pospones, qué riesgo aceptas y qué señal cambiaría el plan."
+      },
+      "criticas": [
+        {
+          "id": "correctitud",
+          "texto": "Correctitud",
+          "rastro": "Explica qué pospones, qué riesgo aceptas y qué señal cambiaría el plan."
+        }
+      ],
+      "naturaleza": {
+        "valor": "a_mano"
+      },
+      "alcance": "local",
+      "etiquetas": []
+    },
+    {
+      "code": "F1-05",
+      "id": "cf000000-0000-4000-8000-0046312d3035",
+      "title": "F1-05 · Aprender una herramienta desconocida",
+      "cls": "ruta",
+      "flujo": "mision",
+      "compuerta": "mision",
+      "ficha": {
+        "foco": "Aprender una herramienta desconocida.",
+        "fuentes": [
+          {
+            "clave": "SDK",
+            "etiqueta": "Agent SDK • Overview • Palantir",
+            "url": "https://www.palantir.com/docs/foundry/agent-sdk/overview",
+            "tipo": "docs",
+            "acceso": "publico"
+          },
+          {
+            "clave": "CONNECT",
+            "etiqueta": "Data Connection • Overview • Palantir",
+            "url": "https://www.palantir.com/docs/foundry/data-connection/overview",
+            "tipo": "docs",
+            "acceso": "publico"
+          }
+        ],
+        "mision": "Recibe documentación nueva y entrega una integración acotada.",
+        "defensa": "Haz explícitas tus dudas y verifica hipótesis con pruebas pequeñas."
+      },
+      "capacidades": [
+        "producto",
+        "comunicacion"
+      ],
+      "rastroCapacidades": {
+        "producto": "Recibe documentación nueva y entrega una integración acotada.",
+        "comunicacion": "Recibe documentación nueva y entrega una integración acotada."
+      },
+      "criticas": [
+        {
+          "id": "correctitud",
+          "texto": "Correctitud",
+          "rastro": "Haz explícitas tus dudas y verifica hipótesis con pruebas pequeñas."
+        }
+      ],
+      "naturaleza": {
+        "valor": "a_mano"
+      },
+      "alcance": "local",
+      "etiquetas": []
+    },
+    {
+      "code": "F1-06",
+      "id": "cf000000-0000-4000-8000-0046312d3036",
+      "title": "F1-06 · Demos y comunicación en inglés",
+      "cls": "ruta",
+      "flujo": "mision",
+      "compuerta": "mision",
+      "ficha": {
+        "foco": "Demos y comunicación en inglés.",
+        "fuentes": [
+          {
+            "clave": "FDE",
+            "etiqueta": "A Day in the Life of a Palantir Forward Deployed Software Engineer",
+            "url": "https://blog.palantir.com/a-day-in-the-life-of-a-palantir-forward-deployed-software-engineer-45ef2de257b1",
+            "tipo": "blog",
+            "acceso": "publico"
+          },
+          {
+            "clave": "USE",
+            "etiqueta": "Use case lifecycle • Overview • Palantir",
+            "url": "https://www.palantir.com/docs/foundry/use-case-life-cycle/overview",
+            "tipo": "docs",
+            "acceso": "publico"
+          }
+        ],
+        "mision": "Graba una demo de 5 minutos y una defensa de 15 minutos en inglés.",
+        "defensa": "Responde una objeción comercial y una técnica con evidencia distinta."
+      },
+      "capacidades": [
+        "producto",
+        "comunicacion"
+      ],
+      "rastroCapacidades": {
+        "producto": "Graba una demo de 5 minutos y una defensa de 15 minutos en inglés.",
+        "comunicacion": "Demos y comunicación en inglés."
+      },
+      "criticas": [
+        {
+          "id": "correctitud",
+          "texto": "Correctitud",
+          "rastro": "Responde una objeción comercial y una técnica con evidencia distinta."
+        }
+      ],
+      "naturaleza": {
+        "valor": "a_mano"
+      },
+      "alcance": "local",
+      "requireEnglish": true,
+      "etiquetas": [
+        "transcripcion_f106"
+      ]
+    },
+    {
+      "code": "F1-07",
+      "id": "cf000000-0000-4000-8000-0046312d3037",
+      "title": "F1-07 · Incidentes y desacuerdo profesional",
+      "cls": "ruta",
+      "flujo": "gameday",
+      "compuerta": "gameday",
+      "ficha": {
+        "foco": "Incidentes y desacuerdo profesional.",
+        "fuentes": [
+          {
+            "clave": "SLO",
+            "etiqueta": "Google SRE - Continuous Improvement To Get Reliability",
+            "url": "https://sre.google/workbook/implementing-slos/",
+            "tipo": "otro",
+            "acceso": "publico"
+          },
+          {
+            "clave": "DELTA",
+            "etiqueta": "Who Wants to be a Delta?",
+            "url": "https://blog.palantir.com/who-wants-to-be-a-delta-8d2ea948035",
+            "tipo": "blog",
+            "acceso": "publico"
+          }
+        ],
+        "mision": "Comunica un incidente, presenta alternativas y lidera un análisis causal.",
+        "defensa": "Asume responsabilidad sin ocultar incertidumbre ni culpar al usuario."
+      },
+      "capacidades": [
+        "producto",
+        "comunicacion",
+        "responsabilidad"
+      ],
+      "rastroCapacidades": {
+        "producto": "Asume responsabilidad sin ocultar incertidumbre ni culpar al usuario.",
+        "comunicacion": "Comunica un incidente, presenta alternativas y lidera un análisis causal.",
+        "responsabilidad": "Incidentes y desacuerdo profesional."
+      },
+      "criticas": [
+        {
+          "id": "recuperacion",
+          "texto": "Recuperación",
+          "rastro": "Incidentes y desacuerdo profesional."
+        }
+      ],
+      "naturaleza": {
+        "valor": "a_mano"
+      },
+      "alcance": "local",
+      "etiquetas": []
+    },
+    {
+      "code": "F1-08",
+      "id": "cf000000-0000-4000-8000-0046312d3038",
+      "title": "F1-08 · Portafolio y entrevista conductual",
+      "cls": "ruta",
+      "flujo": "mision",
+      "compuerta": "mision",
+      "ficha": {
+        "foco": "Portafolio y entrevista conductual.",
+        "fuentes": [
+          {
+            "clave": "CAREER",
+            "etiqueta": "Palantir Careers | Getting Hired",
+            "url": "https://www.palantir.com/careers/getting-hired",
+            "tipo": "otro",
+            "acceso": "publico"
+          },
+          {
+            "clave": "DEV",
+            "etiqueta": "Dev Versus Delta: Demystifying Engineering Roles at Palantir",
+            "url": "https://blog.palantir.com/dev-versus-delta-demystifying-engineering-roles-at-palantir-ad44c2a6e87",
+            "tipo": "blog",
+            "acceso": "publico"
+          }
+        ],
+        "mision": "Prepara tres casos propios con decisiones, límites y resultados medidos.",
+        "defensa": "Distingue tu contribución individual y demuestra una ocasión en que cambiaste de opinión."
+      },
+      "capacidades": [
+        "producto"
+      ],
+      "rastroCapacidades": {
+        "producto": "Prepara tres casos propios con decisiones, límites y resultados medidos."
+      },
+      "criticas": [
+        {
+          "id": "correctitud",
+          "texto": "Correctitud",
+          "rastro": "Distingue tu contribución individual y demuestra una ocasión en que cambiaste de opinión."
+        }
+      ],
+      "naturaleza": {
+        "valor": "a_mano"
+      },
+      "alcance": "local",
+      "etiquetas": []
+    }
+  ],
+  "maestro_sha10": "38cbc7da42"
+}

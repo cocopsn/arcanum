@@ -1,0 +1,385 @@
+{
+  "v": 1,
+  "slug": "sw1",
+  "code": "SW1",
+  "name": "SW1 · Construcción SWE: contratos, abstracciones y mantenimiento",
+  "family": "Profundidad SWE",
+  "header": {
+    "entrada": "F0-03, F0-04 y A1-01; validar programación independiente antes de iniciar.",
+    "entradaRecomendada": [
+      "F0-03",
+      "F0-04",
+      "A1-01"
+    ],
+    "evidencia": "",
+    "apoyo": [
+      {
+        "clave": "C-06",
+        "etiqueta": "MIT 6.005 Software Construction, Spring 2016",
+        "url": "https://ocw.mit.edu/ans7870/6/6.005/s16/",
+        "tipo": "curso",
+        "acceso": "publico"
+      }
+    ]
+  },
+  "cells": [
+    {
+      "code": "SW1-01",
+      "id": "cf000000-0000-4000-8000-5357312d3031",
+      "title": "SW1-01 · Especificaciones y fronteras",
+      "cls": "ruta",
+      "flujo": "mision",
+      "compuerta": "mision",
+      "ficha": {
+        "resultado": "Diseñar el contrato de una operación de reserva antes de implementarla.",
+        "fuentes": [
+          {
+            "clave": "C-06",
+            "etiqueta": "MIT 6.005 Software Construction, Spring 2016",
+            "url": "https://ocw.mit.edu/ans7870/6/6.005/s16/",
+            "tipo": "curso",
+            "acceso": "publico"
+          }
+        ],
+        "mision": "Escribe precondiciones, resultados y errores; construye dos implementaciones con el mismo contrato.",
+        "defensa": "Explica una decisión que pertenece al contrato y otra que debe quedar como detalle interno.",
+        "variante": "Deriva particiones de entrada y un caso que el contrato no deberia aceptar."
+      },
+      "capacidades": [
+        "abstraccion",
+        "comunicacion"
+      ],
+      "rastroCapacidades": {
+        "abstraccion": "Diseñar el contrato de una operación de reserva antes de implementarla.",
+        "comunicacion": "Explica una decisión que pertenece al contrato y otra que debe quedar como detalle interno."
+      },
+      "criticas": [
+        {
+          "id": "correctitud",
+          "texto": "Correctitud",
+          "rastro": "Explica una decisión que pertenece al contrato y otra que debe quedar como detalle interno."
+        }
+      ],
+      "naturaleza": {
+        "valor": "a_mano"
+      },
+      "alcance": "local",
+      "etiquetas": [
+        "seleccion_curso"
+      ]
+    },
+    {
+      "code": "SW1-02",
+      "id": "cf000000-0000-4000-8000-5357312d3032",
+      "title": "SW1-02 · ADTs e invariantes de representación",
+      "cls": "ruta",
+      "flujo": "mision",
+      "compuerta": "mision",
+      "ficha": {
+        "resultado": "Separar lo que representa una estructura de como lo guarda.",
+        "fuentes": [
+          {
+            "clave": "C-06",
+            "etiqueta": "MIT 6.005 Software Construction, Spring 2016",
+            "url": "https://ocw.mit.edu/ans7870/6/6.005/s16/",
+            "tipo": "curso",
+            "acceso": "publico"
+          },
+          {
+            "clave": "C-03",
+            "etiqueta": "Berkeley CS61B, Spring 2025: proyectos",
+            "url": "https://sp25.datastructur.es/projects/",
+            "tipo": "curso",
+            "acceso": "publico"
+          }
+        ],
+        "mision": "Implementa un conjunto ordenado y documenta función de abstraccion e invariante.",
+        "defensa": "Demuestra preservacion del invariante tras cada operación publica.",
+        "variante": "Introduce una representación inválida y un alias mutable que intente romperla."
+      },
+      "capacidades": [
+        "abstraccion",
+        "comunicacion"
+      ],
+      "rastroCapacidades": {
+        "abstraccion": "Implementa un conjunto ordenado y documenta función de abstraccion e invariante.",
+        "comunicacion": "Separar lo que representa una estructura de como lo guarda."
+      },
+      "criticas": [
+        {
+          "id": "correctitud",
+          "texto": "Correctitud",
+          "rastro": "Demuestra preservacion del invariante tras cada operación publica."
+        }
+      ],
+      "naturaleza": {
+        "valor": "a_mano"
+      },
+      "alcance": "local",
+      "etiquetas": [
+        "seleccion_curso"
+      ]
+    },
+    {
+      "code": "SW1-03",
+      "id": "cf000000-0000-4000-8000-5357312d3033",
+      "title": "SW1-03 · Pruebas por propiedades y referencia",
+      "cls": "ruta",
+      "flujo": "mision",
+      "compuerta": "mision",
+      "ficha": {
+        "resultado": "Encontrar errores que sobreviven a ejemplos manuales.",
+        "fuentes": [
+          {
+            "clave": "C-06",
+            "etiqueta": "MIT 6.005 Software Construction, Spring 2016",
+            "url": "https://ocw.mit.edu/ans7870/6/6.005/s16/",
+            "tipo": "curso",
+            "acceso": "publico"
+          },
+          {
+            "clave": "C-03",
+            "etiqueta": "Berkeley CS61B, Spring 2025: proyectos",
+            "url": "https://sp25.datastructur.es/projects/",
+            "tipo": "curso",
+            "acceso": "publico"
+          }
+        ],
+        "mision": "Compara una estructura contra una referencia simple con secuencias reproducibles.",
+        "defensa": "Justifica que propiedad detecta el error y que tipo de bug podria escapar.",
+        "variante": "Reduce una secuencia que falla al caso más pequeño que puedas explicar."
+      },
+      "capacidades": [
+        "abstraccion",
+        "comunicacion",
+        "responsabilidad"
+      ],
+      "rastroCapacidades": {
+        "abstraccion": "Compara una estructura contra una referencia simple con secuencias reproducibles.",
+        "comunicacion": "Reduce una secuencia que falla al caso más pequeño que puedas explicar.",
+        "responsabilidad": "Compara una estructura contra una referencia simple con secuencias reproducibles."
+      },
+      "criticas": [
+        {
+          "id": "trazabilidad",
+          "texto": "Trazabilidad",
+          "rastro": "Compara una estructura contra una referencia simple con secuencias reproducibles."
+        }
+      ],
+      "naturaleza": {
+        "valor": "a_mano"
+      },
+      "alcance": "local",
+      "etiquetas": [
+        "seleccion_curso"
+      ]
+    },
+    {
+      "code": "SW1-04",
+      "id": "cf000000-0000-4000-8000-5357312d3034",
+      "title": "SW1-04 · Igualdad, mutabilidad y evolución",
+      "cls": "ruta",
+      "flujo": "mision",
+      "compuerta": "mision",
+      "ficha": {
+        "resultado": "Definir identidad, igualdad y compatibilidad de una API.",
+        "fuentes": [
+          {
+            "clave": "C-06",
+            "etiqueta": "MIT 6.005 Software Construction, Spring 2016",
+            "url": "https://ocw.mit.edu/ans7870/6/6.005/s16/",
+            "tipo": "curso",
+            "acceso": "publico"
+          }
+        ],
+        "mision": "Añade versionado e igualdad a objetos de dominio sin romper consumidores.",
+        "defensa": "Explica diferencias entre identidad, equivalencia de valor y compatibilidad.",
+        "variante": "Prueba claves mutables y objetos distintos con el mismo contenido."
+      },
+      "capacidades": [
+        "abstraccion",
+        "comunicacion"
+      ],
+      "rastroCapacidades": {
+        "abstraccion": "Añade versionado e igualdad a objetos de dominio sin romper consumidores.",
+        "comunicacion": "Explica diferencias entre identidad, equivalencia de valor y compatibilidad."
+      },
+      "criticas": [
+        {
+          "id": "correctitud",
+          "texto": "Correctitud",
+          "rastro": "Prueba claves mutables y objetos distintos con el mismo contenido."
+        },
+        {
+          "id": "identidad",
+          "texto": "Identidad",
+          "rastro": "Definir identidad, igualdad y compatibilidad de una API."
+        }
+      ],
+      "naturaleza": {
+        "valor": "a_mano"
+      },
+      "alcance": "local",
+      "etiquetas": [
+        "seleccion_curso"
+      ]
+    },
+    {
+      "code": "SW1-05",
+      "id": "cf000000-0000-4000-8000-5357312d3035",
+      "title": "SW1-05 · Parsing y pequenos lenguajes",
+      "cls": "ruta",
+      "flujo": "mision",
+      "compuerta": "mision",
+      "ficha": {
+        "resultado": "Aprender una gramática e implementarla sin confundir sintaxis y significado.",
+        "fuentes": [
+          {
+            "clave": "C-06",
+            "etiqueta": "MIT 6.005 Software Construction, Spring 2016",
+            "url": "https://ocw.mit.edu/ans7870/6/6.005/s16/",
+            "tipo": "curso",
+            "acceso": "publico"
+          },
+          {
+            "clave": "C-02",
+            "etiqueta": "Berkeley CS61A: Cats",
+            "url": "https://cs61a.org/fa26/projects/cats/",
+            "tipo": "curso",
+            "acceso": "publico"
+          }
+        ],
+        "mision": "Implementa una DSL de reglas con árbol de sintaxis, validación y evaluación.",
+        "defensa": "Extiende el lenguaje frente al evaluador manteniendo comportamiento anterior.",
+        "variante": "Agrega precedencia, entradas malformadas y una operación nueva."
+      },
+      "capacidades": [
+        "abstraccion"
+      ],
+      "rastroCapacidades": {
+        "abstraccion": "Implementa una DSL de reglas con árbol de sintaxis, validación y evaluación."
+      },
+      "criticas": [
+        {
+          "id": "correctitud",
+          "texto": "Correctitud",
+          "rastro": "Implementa una DSL de reglas con árbol de sintaxis, validación y evaluación."
+        }
+      ],
+      "naturaleza": {
+        "valor": "a_mano"
+      },
+      "alcance": "local",
+      "etiquetas": [
+        "seleccion_curso"
+      ]
+    },
+    {
+      "code": "SW1-06",
+      "id": "cf000000-0000-4000-8000-5357312d3036",
+      "title": "SW1-06 · Revisión de código y cambio minimo",
+      "cls": "ruta",
+      "flujo": "mision",
+      "compuerta": "mision",
+      "ficha": {
+        "resultado": "Leer código ajeno y mejorar un componente con evidencia.",
+        "fuentes": [
+          {
+            "clave": "C-06",
+            "etiqueta": "MIT 6.005 Software Construction, Spring 2016",
+            "url": "https://ocw.mit.edu/ans7870/6/6.005/s16/",
+            "tipo": "curso",
+            "acceso": "publico"
+          },
+          {
+            "clave": "C-01",
+            "etiqueta": "MIT Missing Semester, 2020",
+            "url": "https://missing.csail.mit.edu/2020/index.html",
+            "tipo": "curso",
+            "acceso": "publico"
+          }
+        ],
+        "mision": "Reproduce un bug de un repositorio y entrega un parche pequeño con test de regresión.",
+        "defensa": "Explica la causa, el alcance y por que no elegiste una reescritura.",
+        "variante": "Revisa un parche alternativo que pasa tests pero cambia un contrato."
+      },
+      "capacidades": [
+        "abstraccion",
+        "comunicacion",
+        "responsabilidad"
+      ],
+      "rastroCapacidades": {
+        "abstraccion": "Revisa un parche alternativo que pasa tests pero cambia un contrato.",
+        "comunicacion": "Explica la causa, el alcance y por que no elegiste una reescritura.",
+        "responsabilidad": "Reproduce un bug de un repositorio y entrega un parche pequeño con test de regresión."
+      },
+      "criticas": [
+        {
+          "id": "correctitud",
+          "texto": "Correctitud",
+          "rastro": "Reproduce un bug de un repositorio y entrega un parche pequeño con test de regresión."
+        }
+      ],
+      "naturaleza": {
+        "valor": "a_mano"
+      },
+      "alcance": "local",
+      "etiquetas": [
+        "seleccion_curso"
+      ]
+    },
+    {
+      "code": "SW1-07",
+      "id": "cf000000-0000-4000-8000-5357312d3037",
+      "title": "SW1-07 · Capacidad reutilizable y developer experience",
+      "cls": "ruta",
+      "flujo": "mision",
+      "compuerta": "mision",
+      "ficha": {
+        "resultado": "Convertir una solucion en una capacidad que otro ingeniero pueda usar.",
+        "fuentes": [
+          {
+            "clave": "C-06",
+            "etiqueta": "MIT 6.005 Software Construction, Spring 2016",
+            "url": "https://ocw.mit.edu/ans7870/6/6.005/s16/",
+            "tipo": "curso",
+            "acceso": "publico"
+          },
+          {
+            "clave": "C-14",
+            "etiqueta": "Google SRE Workbook",
+            "url": "https://sre.google/workbook/implementing-slos/",
+            "tipo": "curso",
+            "acceso": "publico"
+          }
+        ],
+        "mision": "Entrega una biblioteca o servicio con API, ejemplos, errores estables y migración.",
+        "defensa": "Defiende extensibilidad, coste de soporte y que decidiste no abstraer.",
+        "variante": "Un consumidor nuevo intenta integrarse usando solo la documentación."
+      },
+      "capacidades": [
+        "abstraccion",
+        "comunicacion"
+      ],
+      "rastroCapacidades": {
+        "abstraccion": "Entrega una biblioteca o servicio con API, ejemplos, errores estables y migración.",
+        "comunicacion": "Un consumidor nuevo intenta integrarse usando solo la documentación."
+      },
+      "criticas": [
+        {
+          "id": "correctitud",
+          "texto": "Correctitud",
+          "rastro": "Defiende extensibilidad, coste de soporte y que decidiste no abstraer."
+        }
+      ],
+      "naturaleza": {
+        "valor": "a_mano"
+      },
+      "alcance": "local",
+      "etiquetas": [
+        "seleccion_curso"
+      ]
+    }
+  ],
+  "maestro_sha10": "38cbc7da42"
+}

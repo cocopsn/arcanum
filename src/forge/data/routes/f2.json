@@ -1,0 +1,490 @@
+{
+  "v": 1,
+  "slug": "f2",
+  "code": "F2",
+  "name": "F2 · Proyectos de campo y evaluaciones integradoras",
+  "family": "Oficio FDE",
+  "header": {
+    "entrada": "Puertas por proyecto; detalle más abajo.",
+    "entradaRecomendada": [],
+    "evidencia": "Paquete ejecutable/documentado, resultados medidos, demo y defensa de contribución propia.",
+    "apoyo": [
+      {
+        "clave": "C-16",
+        "etiqueta": "Palantir Learning",
+        "url": "https://learn.palantir.com/",
+        "tipo": "curso",
+        "acceso": "cuenta"
+      },
+      {
+        "clave": "C-17",
+        "etiqueta": "Ontologize: tutoriales",
+        "url": "https://www.ontologize.com/tutorials",
+        "tipo": "curso",
+        "acceso": "publico"
+      }
+    ]
+  },
+  "cells": [
+    {
+      "code": "F2-01",
+      "id": "cf000000-0000-4000-8000-0046322d3031",
+      "title": "F2-01 · Proyecto 1: clínica operativa",
+      "cls": "ruta",
+      "flujo": "proyecto",
+      "compuerta": "mision",
+      "ficha": {
+        "foco": "Proyecto 1: clínica operativa.",
+        "fuentes": [
+          {
+            "clave": "USE",
+            "etiqueta": "Use case lifecycle • Overview • Palantir",
+            "url": "https://www.palantir.com/docs/foundry/use-case-life-cycle/overview",
+            "tipo": "docs",
+            "acceso": "publico"
+          },
+          {
+            "clave": "ONTO",
+            "etiqueta": "Overview • Ontology • Palantir",
+            "url": "https://www.palantir.com/docs/foundry/ontology/overview",
+            "tipo": "docs",
+            "acceso": "publico"
+          },
+          {
+            "clave": "WORK",
+            "etiqueta": "Workshop • Getting started • Palantir",
+            "url": "https://www.palantir.com/docs/foundry/workshop/getting-started",
+            "tipo": "docs",
+            "acceso": "publico"
+          }
+        ],
+        "mision": "Construye conciliación de citas, equipos y capacidad con datos sintéticos.",
+        "defensa": "El usuario decide, actúa y verifica el resultado; no basta un dashboard."
+      },
+      "capacidades": [
+        "producto",
+        "datos"
+      ],
+      "rastroCapacidades": {
+        "producto": "El usuario decide, actúa y verifica el resultado;",
+        "datos": "Construye conciliación de citas, equipos y capacidad con datos sintéticos."
+      },
+      "criticas": [
+        {
+          "id": "correctitud",
+          "texto": "Correctitud",
+          "rastro": "El usuario decide, actúa y verifica el resultado;"
+        },
+        {
+          "id": "identidad",
+          "texto": "Identidad",
+          "rastro": "Construye conciliación de citas, equipos y capacidad con datos sintéticos."
+        }
+      ],
+      "naturaleza": {
+        "valor": "a_mano"
+      },
+      "alcance": "local+nativa",
+      "etiquetas": []
+    },
+    {
+      "code": "F2-02",
+      "id": "cf000000-0000-4000-8000-0046322d3032",
+      "title": "F2-02 · Proyecto 2: FrED maintenance",
+      "cls": "ruta",
+      "flujo": "proyecto",
+      "compuerta": "mision",
+      "ficha": {
+        "foco": "Proyecto 2: FrED maintenance.",
+        "fuentes": [
+          {
+            "clave": "TIME",
+            "etiqueta": "Time series • Overview • Palantir",
+            "url": "https://www.palantir.com/docs/foundry/time-series/time-series-overview",
+            "tipo": "docs",
+            "acceso": "publico"
+          },
+          {
+            "clave": "CDC",
+            "etiqueta": "Core concepts • Change data capture (CDC) • Palantir",
+            "url": "https://www.palantir.com/docs/foundry/data-integration/change-data-capture",
+            "tipo": "docs",
+            "acceso": "publico"
+          },
+          {
+            "clave": "AUTO",
+            "etiqueta": "Automate • Overview • Palantir",
+            "url": "https://www.palantir.com/docs/foundry/automate/overview",
+            "tipo": "docs",
+            "acceso": "publico"
+          }
+        ],
+        "mision": "Conecta eventos de una planta simulada a un flujo de mantenimiento.",
+        "defensa": "Maneja datos tardíos, sensores ruidosos y repetición de alertas."
+      },
+      "capacidades": [
+        "producto",
+        "sistemas",
+        "datos"
+      ],
+      "rastroCapacidades": {
+        "producto": "Conecta eventos de una planta simulada a un flujo de mantenimiento.",
+        "sistemas": "FrED maintenance.",
+        "datos": "Maneja datos tardíos, sensores ruidosos y repetición de alertas."
+      },
+      "criticas": [
+        {
+          "id": "correctitud",
+          "texto": "Correctitud",
+          "rastro": "Maneja datos tardíos, sensores ruidosos y repetición de alertas."
+        }
+      ],
+      "naturaleza": {
+        "valor": "a_mano"
+      },
+      "alcance": "local+nativa",
+      "etiquetas": []
+    },
+    {
+      "code": "F2-03",
+      "id": "cf000000-0000-4000-8000-0046322d3033",
+      "title": "F2-03 · Proyecto 3: documentos a decisiones",
+      "cls": "ruta",
+      "flujo": "proyecto",
+      "compuerta": "mision",
+      "ficha": {
+        "foco": "Proyecto 3: documentos a decisiones.",
+        "fuentes": [
+          {
+            "clave": "DOC",
+            "etiqueta": "AIP Document Intelligence • Overview • Palantir",
+            "url": "https://www.palantir.com/docs/foundry/document-intelligence/overview",
+            "tipo": "docs",
+            "acceso": "publico"
+          },
+          {
+            "clave": "RAG",
+            "etiqueta": "AIP Chatbot Studio • Retrieval context • Context types • Palantir",
+            "url": "https://www.palantir.com/docs/foundry/chatbot-studio/retrieval-context",
+            "tipo": "docs",
+            "acceso": "publico"
+          },
+          {
+            "clave": "EVAL",
+            "etiqueta": "AIP Evals • Evaluation suites for Logic functions • Palantir",
+            "url": "https://www.palantir.com/docs/foundry/aip-evals/getting-started",
+            "tipo": "docs",
+            "acceso": "publico"
+          }
+        ],
+        "mision": "Extrae, recupera y revisa evidencia documental antes de crear una acción.",
+        "defensa": "Debe abstenerse sin evidencia suficiente y conservar trazabilidad."
+      },
+      "capacidades": [
+        "producto",
+        "comunicacion",
+        "responsabilidad"
+      ],
+      "rastroCapacidades": {
+        "producto": "Extrae, recupera y revisa evidencia documental antes de crear una acción.",
+        "comunicacion": "Extrae, recupera y revisa evidencia documental antes de crear una acción.",
+        "responsabilidad": "Extrae, recupera y revisa evidencia documental antes de crear una acción."
+      },
+      "criticas": [
+        {
+          "id": "trazabilidad",
+          "texto": "Trazabilidad",
+          "rastro": "Debe abstenerse sin evidencia suficiente y conservar trazabilidad."
+        },
+        {
+          "id": "recuperacion",
+          "texto": "Recuperación",
+          "rastro": "Extrae, recupera y revisa evidencia documental antes de crear una acción."
+        }
+      ],
+      "naturaleza": {
+        "valor": "a_mano"
+      },
+      "alcance": "local+nativa",
+      "etiquetas": []
+    },
+    {
+      "code": "F2-04",
+      "id": "cf000000-0000-4000-8000-0046322d3034",
+      "title": "F2-04 · Proyecto 4: asignación logística",
+      "cls": "ruta",
+      "flujo": "proyecto",
+      "compuerta": "mision",
+      "ficha": {
+        "foco": "Proyecto 4: asignación logística.",
+        "fuentes": [
+          {
+            "clave": "OASD",
+            "etiqueta": "Índice comunitario de system design",
+            "url": "https://github.com/perixtar/Tech-OA-Interview-Questions/blob/master/formats/system-design.md",
+            "tipo": "otro",
+            "acceso": "publico"
+          },
+          {
+            "clave": "CONSIST",
+            "etiqueta": "Action types • Consistency and isolation • Palantir",
+            "url": "https://www.palantir.com/docs/foundry/action-types/consistency-guarantees",
+            "tipo": "docs",
+            "acceso": "publico"
+          }
+        ],
+        "mision": "Asigna recursos escasos y resuelve conflictos al cambiar restricciones.",
+        "defensa": "Evita doble reserva y explica cuándo deja de servir tu optimizador."
+      },
+      "capacidades": [
+        "producto",
+        "comunicacion"
+      ],
+      "rastroCapacidades": {
+        "producto": "Asigna recursos escasos y resuelve conflictos al cambiar restricciones.",
+        "comunicacion": "Evita doble reserva y explica cuándo deja de servir tu optimizador."
+      },
+      "criticas": [
+        {
+          "id": "correctitud",
+          "texto": "Correctitud",
+          "rastro": "Evita doble reserva y explica cuándo deja de servir tu optimizador."
+        }
+      ],
+      "naturaleza": {
+        "valor": "a_mano"
+      },
+      "alcance": "local+nativa",
+      "etiquetas": []
+    },
+    {
+      "code": "F2-05",
+      "id": "cf000000-0000-4000-8000-0046322d3035",
+      "title": "F2-05 · Proyecto 5: aprender un dominio nuevo",
+      "cls": "ruta",
+      "flujo": "proyecto",
+      "compuerta": "mision",
+      "ficha": {
+        "foco": "Proyecto 5: aprender un dominio nuevo.",
+        "fuentes": [
+          {
+            "clave": "USE",
+            "etiqueta": "Use case lifecycle • Overview • Palantir",
+            "url": "https://www.palantir.com/docs/foundry/use-case-life-cycle/overview",
+            "tipo": "docs",
+            "acceso": "publico"
+          },
+          {
+            "clave": "DIST",
+            "etiqueta": "6.5840 Schedule: Spring 2026",
+            "url": "https://pdos.csail.mit.edu/6.5840/schedule.html",
+            "tipo": "curso",
+            "acceso": "publico"
+          }
+        ],
+        "mision": "Recibe un caso ajeno a salud e industria; entrega una vertical en dos días de trabajo.",
+        "defensa": "Pregunta antes de asumir y mide una mejora frente a un baseline."
+      },
+      "capacidades": [
+        "producto"
+      ],
+      "rastroCapacidades": {
+        "producto": "Recibe un caso ajeno a salud e industria; entrega una vertical en dos días de trabajo."
+      },
+      "criticas": [
+        {
+          "id": "correctitud",
+          "texto": "Correctitud",
+          "rastro": "Pregunta antes de asumir y mide una mejora frente a un baseline."
+        }
+      ],
+      "naturaleza": {
+        "valor": "mixto",
+        "rastro": "El uso de IA es permitido en construcción y se audita; la defensa posterior es independiente.",
+        "parts": [
+          {
+            "name": "Construcción de la vertical (IA permitida y auditada)",
+            "nature": "delegable"
+          },
+          {
+            "name": "Defensa posterior independiente",
+            "nature": "a_mano"
+          }
+        ]
+      },
+      "alcance": "local",
+      "etiquetas": []
+    },
+    {
+      "code": "F2-06",
+      "id": "cf000000-0000-4000-8000-0046322d3036",
+      "title": "F2-06 · Proyecto 6: hardening y traspaso",
+      "cls": "ruta",
+      "flujo": "proyecto",
+      "compuerta": "mision",
+      "ficha": {
+        "foco": "Proyecto 6: hardening y traspaso.",
+        "fuentes": [
+          {
+            "clave": "BRANCH",
+            "etiqueta": "Global Branching • Overview • Palantir",
+            "url": "https://www.palantir.com/docs/foundry/global-branching",
+            "tipo": "docs",
+            "acceso": "publico"
+          },
+          {
+            "clave": "HEALTH",
+            "etiqueta": "Data Health • Palantir",
+            "url": "https://www.palantir.com/docs/foundry/observability/data-health",
+            "tipo": "docs",
+            "acceso": "publico"
+          },
+          {
+            "clave": "SEC",
+            "etiqueta": "Concepts • Access control propagation • Palantir",
+            "url": "https://www.palantir.com/docs/foundry/security/access-control-propagation",
+            "tipo": "docs",
+            "acceso": "publico"
+          }
+        ],
+        "mision": "Otra persona intenta romper y operar uno de tus proyectos sin tu ayuda.",
+        "defensa": "Recupera el sistema y corrige el runbook a partir de fallas observadas."
+      },
+      "capacidades": [
+        "producto",
+        "responsabilidad"
+      ],
+      "rastroCapacidades": {
+        "producto": "Otra persona intenta romper y operar uno de tus proyectos sin tu ayuda.",
+        "responsabilidad": "Recupera el sistema y corrige el runbook a partir de fallas observadas."
+      },
+      "criticas": [
+        {
+          "id": "recuperacion",
+          "texto": "Recuperación",
+          "rastro": "Recupera el sistema y corrige el runbook a partir de fallas observadas."
+        }
+      ],
+      "naturaleza": {
+        "valor": "a_mano"
+      },
+      "alcance": "local+nativa",
+      "etiquetas": []
+    },
+    {
+      "code": "F2-07",
+      "id": "cf000000-0000-4000-8000-0046322d3037",
+      "title": "F2-07 · Mock loop FDE",
+      "cls": "ruta",
+      "flujo": "mision",
+      "compuerta": "mision",
+      "ficha": {
+        "foco": "Mock loop FDE.",
+        "fuentes": [
+          {
+            "clave": "CAREER",
+            "etiqueta": "Palantir Careers | Getting Hired",
+            "url": "https://www.palantir.com/careers/getting-hired",
+            "tipo": "otro",
+            "acceso": "publico"
+          },
+          {
+            "clave": "OA",
+            "etiqueta": "Tech OA and Interview Questions — índice comunitario",
+            "url": "https://github.com/perixtar/Tech-OA-Interview-Questions",
+            "tipo": "otro",
+            "acceso": "publico"
+          },
+          {
+            "clave": "OASD",
+            "etiqueta": "Índice comunitario de system design",
+            "url": "https://github.com/perixtar/Tech-OA-Interview-Questions/blob/master/formats/system-design.md",
+            "tipo": "otro",
+            "acceso": "publico"
+          }
+        ],
+        "mision": "Completa coding, aprendizaje, descomposición, diseño y defensa de proyecto.",
+        "defensa": "Formato de práctica propio; no se presenta como proceso oficial de contratación."
+      },
+      "capacidades": [
+        "producto",
+        "comunicacion"
+      ],
+      "rastroCapacidades": {
+        "producto": "Completa coding, aprendizaje, descomposición, diseño y defensa de proyecto.",
+        "comunicacion": "no se presenta como proceso oficial de contratación."
+      },
+      "criticas": [
+        {
+          "id": "correctitud",
+          "texto": "Correctitud",
+          "rastro": "Formato de práctica propio; no se presenta como proceso oficial de contratación."
+        }
+      ],
+      "naturaleza": {
+        "valor": "a_mano"
+      },
+      "alcance": "local",
+      "etiquetas": [
+        "formato_practica"
+      ]
+    },
+    {
+      "code": "F2-08",
+      "id": "cf000000-0000-4000-8000-0046322d3038",
+      "title": "F2-08 · Graduación con dominio transferible",
+      "cls": "ruta",
+      "flujo": "mision",
+      "compuerta": "mision",
+      "ficha": {
+        "foco": "Graduación con dominio transferible.",
+        "fuentes": [
+          {
+            "clave": "USE",
+            "etiqueta": "Use case lifecycle • Overview • Palantir",
+            "url": "https://www.palantir.com/docs/foundry/use-case-life-cycle/overview",
+            "tipo": "docs",
+            "acceso": "publico"
+          },
+          {
+            "clave": "EVAL",
+            "etiqueta": "AIP Evals • Evaluation suites for Logic functions • Palantir",
+            "url": "https://www.palantir.com/docs/foundry/aip-evals/getting-started",
+            "tipo": "docs",
+            "acceso": "publico"
+          },
+          {
+            "clave": "SLO",
+            "etiqueta": "Google SRE - Continuous Improvement To Get Reliability",
+            "url": "https://sre.google/workbook/implementing-slos/",
+            "tipo": "otro",
+            "acceso": "publico"
+          }
+        ],
+        "mision": "Defiende un proyecto desconocido y vuelve a resolver dos tareas semanas después.",
+        "defensa": "Tres evaluaciones independientes sin fallas críticas y evidencia de retención."
+      },
+      "capacidades": [
+        "producto",
+        "responsabilidad"
+      ],
+      "rastroCapacidades": {
+        "producto": "Defiende un proyecto desconocido y vuelve a resolver dos tareas semanas después.",
+        "responsabilidad": "Tres evaluaciones independientes sin fallas críticas y evidencia de retención."
+      },
+      "criticas": [
+        {
+          "id": "correctitud",
+          "texto": "Correctitud",
+          "rastro": "Tres evaluaciones independientes sin fallas críticas y evidencia de retención."
+        }
+      ],
+      "naturaleza": {
+        "valor": "a_mano"
+      },
+      "alcance": "local",
+      "etiquetas": []
+    }
+  ],
+  "maestro_sha10": "38cbc7da42"
+}

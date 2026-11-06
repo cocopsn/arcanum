@@ -1,0 +1,427 @@
+{
+  "v": 1,
+  "slug": "p5",
+  "code": "P5",
+  "name": "P5 · Producción, gobierno y operación",
+  "family": "Plataforma Foundry/AIP",
+  "header": {
+    "entrada": "P1-08; P3-08; P4-05.",
+    "entradaRecomendada": [
+      "P1-08",
+      "P3-08",
+      "P4-05"
+    ],
+    "evidencia": "Configuración, runbook, evidencia de operación y ejercicio de recuperación.",
+    "apoyo": [
+      {
+        "clave": "C-17",
+        "etiqueta": "Ontologize: tutoriales",
+        "url": "https://www.ontologize.com/tutorials",
+        "tipo": "curso",
+        "acceso": "publico"
+      }
+    ]
+  },
+  "cells": [
+    {
+      "code": "P5-01",
+      "id": "cf000000-0000-4000-8000-0050352d3031",
+      "title": "P5-01 · Branching del workflow completo",
+      "cls": "ruta",
+      "flujo": "mision",
+      "compuerta": "mision",
+      "ficha": {
+        "foco": "Branching del workflow completo.",
+        "fuentes": [
+          {
+            "clave": "BRANCH",
+            "etiqueta": "Global Branching • Overview • Palantir",
+            "url": "https://www.palantir.com/docs/foundry/global-branching",
+            "tipo": "docs",
+            "acceso": "publico"
+          }
+        ],
+        "mision": "Cambia pipeline, objeto y aplicación en una rama y ensaya el merge.",
+        "defensa": "Distingue aislar desarrollo de promover versiones entre entornos."
+      },
+      "capacidades": [
+        "responsabilidad",
+        "datos",
+        "producto"
+      ],
+      "rastroCapacidades": {
+        "responsabilidad": "Cambia pipeline, objeto y aplicación en una rama y ensaya el merge.",
+        "datos": "Cambia pipeline, objeto y aplicación en una rama y ensaya el merge.",
+        "producto": "Branching del workflow completo."
+      },
+      "criticas": [
+        {
+          "id": "correctitud",
+          "texto": "Correctitud",
+          "rastro": "Distingue aislar desarrollo de promover versiones entre entornos."
+        }
+      ],
+      "naturaleza": {
+        "valor": "a_mano"
+      },
+      "alcance": "local+nativa",
+      "etiquetas": []
+    },
+    {
+      "code": "P5-02",
+      "id": "cf000000-0000-4000-8000-0050352d3032",
+      "title": "P5-02 · SuperRepo y Ontology como código",
+      "cls": "ruta",
+      "flujo": "mision",
+      "compuerta": "mision",
+      "ficha": {
+        "foco": "SuperRepo y Ontology como código.",
+        "fuentes": [
+          {
+            "clave": "SUPER",
+            "etiqueta": "SuperRepo • Overview • Palantir",
+            "url": "https://www.palantir.com/docs/foundry/superrepo/overview",
+            "tipo": "docs",
+            "acceso": "publico"
+          }
+        ],
+        "mision": "Explora un flujo integrado de definiciones, funciones y frontend.",
+        "defensa": "Documenta disponibilidad y límites actuales antes de depender de la función."
+      },
+      "capacidades": [
+        "responsabilidad",
+        "abstraccion",
+        "comunicacion"
+      ],
+      "rastroCapacidades": {
+        "responsabilidad": "Explora un flujo integrado de definiciones, funciones y frontend.",
+        "abstraccion": "SuperRepo y Ontology como código.",
+        "comunicacion": "Documenta disponibilidad y límites actuales antes de depender de la función."
+      },
+      "criticas": [
+        {
+          "id": "correctitud",
+          "texto": "Correctitud",
+          "rastro": "Documenta disponibilidad y límites actuales antes de depender de la función."
+        }
+      ],
+      "naturaleza": {
+        "valor": "a_mano"
+      },
+      "alcance": "local+nativa",
+      "etiquetas": []
+    },
+    {
+      "code": "P5-03",
+      "id": "cf000000-0000-4000-8000-0050352d3033",
+      "title": "P5-03 · Marketplace y distribución",
+      "cls": "ruta",
+      "flujo": "mision",
+      "compuerta": "mision",
+      "ficha": {
+        "foco": "Marketplace y distribución.",
+        "fuentes": [
+          {
+            "clave": "MARKET",
+            "etiqueta": "Marketplace • Overview • Palantir",
+            "url": "https://www.palantir.com/docs/foundry/marketplace/overview",
+            "tipo": "docs",
+            "acceso": "publico"
+          }
+        ],
+        "mision": "Empaqueta una solución y especifica sus dependencias y configuración.",
+        "defensa": "Explica qué puede diferir al instalarla en otro entorno."
+      },
+      "capacidades": [
+        "responsabilidad",
+        "comunicacion"
+      ],
+      "rastroCapacidades": {
+        "responsabilidad": "Empaqueta una solución y especifica sus dependencias y configuración.",
+        "comunicacion": "Explica qué puede diferir al instalarla en otro entorno."
+      },
+      "criticas": [
+        {
+          "id": "correctitud",
+          "texto": "Correctitud",
+          "rastro": "Explica qué puede diferir al instalarla en otro entorno."
+        }
+      ],
+      "naturaleza": {
+        "valor": "a_mano"
+      },
+      "alcance": "local+nativa",
+      "etiquetas": []
+    },
+    {
+      "code": "P5-04",
+      "id": "cf000000-0000-4000-8000-0050352d3034",
+      "title": "P5-04 · Compute modules y límites externos",
+      "cls": "ruta",
+      "flujo": "mision",
+      "compuerta": "mision",
+      "ficha": {
+        "foco": "Compute modules y límites externos.",
+        "fuentes": [
+          {
+            "clave": "COMP",
+            "etiqueta": "Compute modules • Overview • Palantir",
+            "url": "https://www.palantir.com/docs/foundry/compute-modules/overview",
+            "tipo": "docs",
+            "acceso": "publico"
+          },
+          {
+            "clave": "INTEGR",
+            "etiqueta": "Compute modules • OSDK integration • Palantir",
+            "url": "https://www.palantir.com/docs/foundry/compute-modules/osdk-integration",
+            "tipo": "docs",
+            "acceso": "publico"
+          },
+          {
+            "clave": "COMPMODE",
+            "etiqueta": "Compute modules • Configuration • Execution modes • Palantir",
+            "url": "https://www.palantir.com/docs/foundry/compute-modules/execution-modes",
+            "tipo": "docs",
+            "acceso": "publico"
+          }
+        ],
+        "mision": "Integra un servicio contenedorizado con timeouts y contrato de recursos.",
+        "defensa": "Escoge modo de ejecución por patrón de carga y requisitos."
+      },
+      "capacidades": [
+        "responsabilidad",
+        "abstraccion",
+        "sistemas"
+      ],
+      "rastroCapacidades": {
+        "responsabilidad": "Integra un servicio contenedorizado con timeouts y contrato de recursos.",
+        "abstraccion": "Integra un servicio contenedorizado con timeouts y contrato de recursos.",
+        "sistemas": "Integra un servicio contenedorizado con timeouts y contrato de recursos."
+      },
+      "criticas": [
+        {
+          "id": "recuperacion",
+          "texto": "Recuperación",
+          "rastro": "Integra un servicio contenedorizado con timeouts y contrato de recursos."
+        }
+      ],
+      "naturaleza": {
+        "valor": "a_mano"
+      },
+      "alcance": "local+nativa",
+      "etiquetas": []
+    },
+    {
+      "code": "P5-05",
+      "id": "cf000000-0000-4000-8000-0050352d3035",
+      "title": "P5-05 · Modelos y evaluación operacional",
+      "cls": "ruta",
+      "flujo": "mision",
+      "compuerta": "mision",
+      "ficha": {
+        "foco": "Modelos y evaluación operacional.",
+        "fuentes": [
+          {
+            "clave": "MODEL",
+            "etiqueta": "Models • Overview • Palantir",
+            "url": "https://www.palantir.com/docs/foundry/integrate-models/integrate-overview",
+            "tipo": "docs",
+            "acceso": "publico"
+          },
+          {
+            "clave": "MTYPE",
+            "etiqueta": "Core concepts • Selecting the right modeling tool • Palantir",
+            "url": "https://www.palantir.com/docs/foundry/model-integration/what-to-use",
+            "tipo": "docs",
+            "acceso": "publico"
+          }
+        ],
+        "mision": "Compara un modelo simple con un baseline y documenta degradación.",
+        "defensa": "Relaciona calidad del modelo con decisiones y costo de errores."
+      },
+      "capacidades": [
+        "responsabilidad",
+        "comunicacion"
+      ],
+      "rastroCapacidades": {
+        "responsabilidad": "Compara un modelo simple con un baseline y documenta degradación.",
+        "comunicacion": "Compara un modelo simple con un baseline y documenta degradación."
+      },
+      "criticas": [
+        {
+          "id": "recuperacion",
+          "texto": "Recuperación",
+          "rastro": "Compara un modelo simple con un baseline y documenta degradación."
+        }
+      ],
+      "naturaleza": {
+        "valor": "a_mano"
+      },
+      "alcance": "local+nativa",
+      "etiquetas": []
+    },
+    {
+      "code": "P5-06",
+      "id": "cf000000-0000-4000-8000-0050352d3036",
+      "title": "P5-06 · Seguridad de extremo a extremo",
+      "cls": "ruta",
+      "flujo": "mision",
+      "compuerta": "mision",
+      "ficha": {
+        "foco": "Seguridad de extremo a extremo.",
+        "fuentes": [
+          {
+            "clave": "SEC",
+            "etiqueta": "Concepts • Access control propagation • Palantir",
+            "url": "https://www.palantir.com/docs/foundry/security/access-control-propagation",
+            "tipo": "docs",
+            "acceso": "publico"
+          },
+          {
+            "clave": "MARK",
+            "etiqueta": "Concepts • Markings • Palantir",
+            "url": "https://www.palantir.com/docs/foundry/security/markings",
+            "tipo": "docs",
+            "acceso": "publico"
+          }
+        ],
+        "mision": "Prueba usuarios con distintos permisos incluyendo outputs de modelos.",
+        "defensa": "Comprueba límites tras lecturas, funciones, exportaciones y acciones."
+      },
+      "capacidades": [
+        "responsabilidad",
+        "producto"
+      ],
+      "rastroCapacidades": {
+        "responsabilidad": "Prueba usuarios con distintos permisos incluyendo outputs de modelos.",
+        "producto": "Prueba usuarios con distintos permisos incluyendo outputs de modelos."
+      },
+      "criticas": [
+        {
+          "id": "correctitud",
+          "texto": "Correctitud",
+          "rastro": "Prueba usuarios con distintos permisos incluyendo outputs de modelos."
+        },
+        {
+          "id": "autorizacion",
+          "texto": "Autorización",
+          "rastro": "Seguridad de extremo a extremo."
+        }
+      ],
+      "naturaleza": {
+        "valor": "a_mano"
+      },
+      "alcance": "local+nativa",
+      "etiquetas": []
+    },
+    {
+      "code": "P5-07",
+      "id": "cf000000-0000-4000-8000-0050352d3037",
+      "title": "P5-07 · Observabilidad, capacidad y costo",
+      "cls": "ruta",
+      "flujo": "mision",
+      "compuerta": "mision",
+      "ficha": {
+        "foco": "Observabilidad, capacidad y costo.",
+        "fuentes": [
+          {
+            "clave": "HEALTH",
+            "etiqueta": "Data Health • Palantir",
+            "url": "https://www.palantir.com/docs/foundry/observability/data-health",
+            "tipo": "docs",
+            "acceso": "publico"
+          },
+          {
+            "clave": "COST",
+            "etiqueta": "Resource Management • Usage types • Palantir",
+            "url": "https://www.palantir.com/docs/foundry/resource-management/usage-types",
+            "tipo": "docs",
+            "acceso": "publico"
+          },
+          {
+            "clave": "SLO",
+            "etiqueta": "Google SRE - Continuous Improvement To Get Reliability",
+            "url": "https://sre.google/workbook/implementing-slos/",
+            "tipo": "otro",
+            "acceso": "publico"
+          }
+        ],
+        "mision": "Define indicadores y presupuesto; provoca una falla y registra detección.",
+        "defensa": "Distingue disponibilidad, frescura, exactitud y costo por tarea útil."
+      },
+      "capacidades": [
+        "responsabilidad"
+      ],
+      "rastroCapacidades": {
+        "responsabilidad": "provoca una falla y registra detección."
+      },
+      "criticas": [
+        {
+          "id": "correctitud",
+          "texto": "Correctitud",
+          "rastro": "Distingue disponibilidad, frescura, exactitud y costo por tarea útil."
+        }
+      ],
+      "naturaleza": {
+        "valor": "a_mano"
+      },
+      "alcance": "local+nativa",
+      "etiquetas": []
+    },
+    {
+      "code": "P5-08",
+      "id": "cf000000-0000-4000-8000-0050352d3038",
+      "title": "P5-08 · Release y game day",
+      "cls": "ruta",
+      "flujo": "gameday",
+      "compuerta": "gameday",
+      "ficha": {
+        "foco": "Release y game day.",
+        "fuentes": [
+          {
+            "clave": "APOLLO",
+            "etiqueta": "Introduction • Palantir",
+            "url": "https://www.palantir.com/docs/apollo/core/introduction/index.html",
+            "tipo": "docs",
+            "acceso": "publico"
+          },
+          {
+            "clave": "BRANCH",
+            "etiqueta": "Global Branching • Overview • Palantir",
+            "url": "https://www.palantir.com/docs/foundry/global-branching",
+            "tipo": "docs",
+            "acceso": "publico"
+          },
+          {
+            "clave": "SLO",
+            "etiqueta": "Google SRE - Continuous Improvement To Get Reliability",
+            "url": "https://sre.google/workbook/implementing-slos/",
+            "tipo": "otro",
+            "acceso": "publico"
+          }
+        ],
+        "mision": "Ensaya release, rollback o compensación y recuperación con runbook.",
+        "defensa": "Justifica alcance de Apollo; no lo confundas con todas las promociones Foundry."
+      },
+      "capacidades": [
+        "responsabilidad"
+      ],
+      "rastroCapacidades": {
+        "responsabilidad": "Ensaya release, rollback o compensación y recuperación con runbook."
+      },
+      "criticas": [
+        {
+          "id": "recuperacion",
+          "texto": "Recuperación",
+          "rastro": "Ensaya release, rollback o compensación y recuperación con runbook."
+        }
+      ],
+      "naturaleza": {
+        "valor": "a_mano"
+      },
+      "alcance": "local+nativa",
+      "etiquetas": []
+    }
+  ],
+  "maestro_sha10": "38cbc7da42"
+}

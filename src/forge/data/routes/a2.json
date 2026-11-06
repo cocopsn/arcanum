@@ -1,0 +1,427 @@
+{
+  "v": 1,
+  "slug": "a2",
+  "code": "A2",
+  "name": "A2 · OAs y ejecución técnica bajo reloj",
+  "family": "Fundamentos",
+  "header": {
+    "entrada": "A1 por concepto; reutiliza OA Amazon.",
+    "entradaRecomendada": [
+      "A1"
+    ],
+    "evidencia": "Resultado, tiempos reales, historial de intentos, errores y explicación sin asistente.",
+    "apoyo": [
+      {
+        "clave": "C-04",
+        "etiqueta": "MIT 6.006, Spring 2020: assignments",
+        "url": "https://ocw.mit.edu/courses/6-006-introduction-to-algorithms-spring-2020/pages/assignments/",
+        "tipo": "curso",
+        "acceso": "publico"
+      }
+    ]
+  },
+  "cells": [
+    {
+      "code": "A2-01",
+      "id": "cf000000-0000-4000-8000-0041322d3031",
+      "title": "A2-01 · Clasificar sin ver etiquetas",
+      "cls": "ruta",
+      "flujo": "mision",
+      "compuerta": "mision",
+      "ficha": {
+        "foco": "Clasificar sin ver etiquetas.",
+        "fuentes": [
+          {
+            "clave": "OACODE",
+            "etiqueta": "Índice comunitario de coding",
+            "url": "https://github.com/perixtar/Tech-OA-Interview-Questions/blob/master/formats/coding.md",
+            "tipo": "otro",
+            "acceso": "publico"
+          },
+          {
+            "clave": "MIT",
+            "etiqueta": "Lecture Notes | Introduction to Algorithms | Electrical Engineering and Computer Science | MIT OpenCourseWare",
+            "url": "https://www.ocw.mit.edu/courses/6-006-introduction-to-algorithms-spring-2020/pages/lecture-notes/",
+            "tipo": "curso",
+            "acceso": "publico"
+          }
+        ],
+        "mision": "Completa un set mixto inédito y registra hipótesis, errores y tiempos.",
+        "defensa": "Reconoce el patrón desde restricciones; no desde el nombre de la empresa."
+      },
+      "capacidades": [
+        "algoritmos"
+      ],
+      "rastroCapacidades": {
+        "algoritmos": "Completa un set mixto inédito y registra hipótesis, errores y tiempos."
+      },
+      "criticas": [
+        {
+          "id": "correctitud",
+          "texto": "Correctitud",
+          "rastro": "Reconoce el patrón desde restricciones; no desde el nombre de la empresa."
+        }
+      ],
+      "naturaleza": {
+        "valor": "a_mano"
+      },
+      "alcance": "local",
+      "etiquetas": []
+    },
+    {
+      "code": "A2-02",
+      "id": "cf000000-0000-4000-8000-0041322d3032",
+      "title": "A2-02 · Arrays, hashes y ventanas cronometradas",
+      "cls": "ruta",
+      "flujo": "mision",
+      "compuerta": "mision",
+      "ficha": {
+        "foco": "Arrays, hashes y ventanas cronometradas.",
+        "fuentes": [
+          {
+            "clave": "OACODE",
+            "etiqueta": "Índice comunitario de coding",
+            "url": "https://github.com/perixtar/Tech-OA-Interview-Questions/blob/master/formats/coding.md",
+            "tipo": "otro",
+            "acceso": "publico"
+          },
+          {
+            "clave": "PY",
+            "etiqueta": "5. Data Structures — Python 3.15.2 documentation",
+            "url": "https://docs.python.org/3/tutorial/datastructures.html",
+            "tipo": "otro",
+            "acceso": "publico"
+          }
+        ],
+        "mision": "Resuelve dos problemas independientes con tests de bordes.",
+        "defensa": "Explica un enfoque inicial incorrecto y el dato que te hizo descartarlo."
+      },
+      "capacidades": [
+        "algoritmos",
+        "datos",
+        "comunicacion"
+      ],
+      "rastroCapacidades": {
+        "algoritmos": "Resuelve dos problemas independientes con tests de bordes.",
+        "datos": "Explica un enfoque inicial incorrecto y el dato que te hizo descartarlo.",
+        "comunicacion": "Explica un enfoque inicial incorrecto y el dato que te hizo descartarlo."
+      },
+      "criticas": [
+        {
+          "id": "correctitud",
+          "texto": "Correctitud",
+          "rastro": "Resuelve dos problemas independientes con tests de bordes."
+        }
+      ],
+      "naturaleza": {
+        "valor": "a_mano"
+      },
+      "alcance": "local",
+      "etiquetas": []
+    },
+    {
+      "code": "A2-03",
+      "id": "cf000000-0000-4000-8000-0041322d3033",
+      "title": "A2-03 · Árboles y grafos cronometrados",
+      "cls": "ruta",
+      "flujo": "mision",
+      "compuerta": "mision",
+      "ficha": {
+        "foco": "Árboles y grafos cronometrados.",
+        "fuentes": [
+          {
+            "clave": "OACODE",
+            "etiqueta": "Índice comunitario de coding",
+            "url": "https://github.com/perixtar/Tech-OA-Interview-Questions/blob/master/formats/coding.md",
+            "tipo": "otro",
+            "acceso": "publico"
+          },
+          {
+            "clave": "MIT",
+            "etiqueta": "Lecture Notes | Introduction to Algorithms | Electrical Engineering and Computer Science | MIT OpenCourseWare",
+            "url": "https://www.ocw.mit.edu/courses/6-006-introduction-to-algorithms-spring-2020/pages/lecture-notes/",
+            "tipo": "curso",
+            "acceso": "publico"
+          }
+        ],
+        "mision": "Resuelve conectividad, dependencias y un problema de estado expandido.",
+        "defensa": "Justifica visitados, complejidad y comportamiento en grafos desconectados."
+      },
+      "capacidades": [
+        "algoritmos"
+      ],
+      "rastroCapacidades": {
+        "algoritmos": "Árboles y grafos cronometrados."
+      },
+      "criticas": [
+        {
+          "id": "correctitud",
+          "texto": "Correctitud",
+          "rastro": "Justifica visitados, complejidad y comportamiento en grafos desconectados."
+        }
+      ],
+      "naturaleza": {
+        "valor": "a_mano"
+      },
+      "alcance": "local",
+      "etiquetas": []
+    },
+    {
+      "code": "A2-04",
+      "id": "cf000000-0000-4000-8000-0041322d3034",
+      "title": "A2-04 · SQL técnico",
+      "cls": "ruta",
+      "flujo": "mision",
+      "compuerta": "mision",
+      "ficha": {
+        "foco": "SQL técnico.",
+        "fuentes": [
+          {
+            "clave": "DB",
+            "etiqueta": "Schedule | CMU 15-445/645 :: Intro to Database Systems (Fall 2026)",
+            "url": "https://15445.courses.cs.cmu.edu/fall2026/schedule.html",
+            "tipo": "curso",
+            "acceso": "publico"
+          },
+          {
+            "clave": "PG",
+            "etiqueta": "PostgreSQL: Documentation: 18: Chapter 13. Concurrency Control",
+            "url": "https://www.postgresql.org/docs/current/mvcc.html?trk=article-ssr-frontend-pulse_little-text-block",
+            "tipo": "otro",
+            "acceso": "publico"
+          }
+        ],
+        "mision": "Construye agregaciones, joins y consultas sobre historial de estados.",
+        "defensa": "Defiende nulos, duplicados, clientes sin eventos y zona horaria."
+      },
+      "capacidades": [
+        "algoritmos",
+        "datos",
+        "producto"
+      ],
+      "rastroCapacidades": {
+        "algoritmos": "Construye agregaciones, joins y consultas sobre historial de estados.",
+        "datos": "SQL técnico.",
+        "producto": "Defiende nulos, duplicados, clientes sin eventos y zona horaria."
+      },
+      "criticas": [
+        {
+          "id": "identidad",
+          "texto": "Identidad",
+          "rastro": "Defiende nulos, duplicados, clientes sin eventos y zona horaria."
+        },
+        {
+          "id": "trazabilidad",
+          "texto": "Trazabilidad",
+          "rastro": "Construye agregaciones, joins y consultas sobre historial de estados."
+        }
+      ],
+      "naturaleza": {
+        "valor": "a_mano"
+      },
+      "alcance": "local",
+      "etiquetas": []
+    },
+    {
+      "code": "A2-05",
+      "id": "cf000000-0000-4000-8000-0041322d3035",
+      "title": "A2-05 · Learning drill: reglas nuevas",
+      "cls": "ruta",
+      "flujo": "mision",
+      "compuerta": "mision",
+      "ficha": {
+        "foco": "Learning drill: reglas nuevas.",
+        "fuentes": [
+          {
+            "clave": "OACODE",
+            "etiqueta": "Índice comunitario de coding",
+            "url": "https://github.com/perixtar/Tech-OA-Interview-Questions/blob/master/formats/coding.md",
+            "tipo": "otro",
+            "acceso": "publico"
+          }
+        ],
+        "mision": "Aprende una pequeña DSL que se te entrega al iniciar y extiéndela.",
+        "defensa": "Aplica una regla nueva sin romper las anteriores; haz preguntas útiles."
+      },
+      "capacidades": [
+        "algoritmos"
+      ],
+      "rastroCapacidades": {
+        "algoritmos": "Aprende una pequeña DSL que se te entrega al iniciar y extiéndela."
+      },
+      "criticas": [
+        {
+          "id": "correctitud",
+          "texto": "Correctitud",
+          "rastro": "Aplica una regla nueva sin romper las anteriores; haz preguntas útiles."
+        }
+      ],
+      "naturaleza": {
+        "valor": "a_mano"
+      },
+      "alcance": "local",
+      "etiquetas": []
+    },
+    {
+      "code": "A2-06",
+      "id": "cf000000-0000-4000-8000-0041322d3036",
+      "title": "A2-06 · Repo-debug con IA autorizada",
+      "cls": "ruta",
+      "flujo": "mision",
+      "compuerta": "mision",
+      "ficha": {
+        "foco": "Repo-debug con IA autorizada.",
+        "fuentes": [
+          {
+            "clave": "AIINDEX",
+            "etiqueta": "Índice comunitario de AI coding",
+            "url": "https://github.com/perixtar/Tech-OA-Interview-Questions/blob/master/formats/ai-coding.md",
+            "tipo": "otro",
+            "acceso": "publico"
+          },
+          {
+            "clave": "PYTEST",
+            "etiqueta": "Python • Basic transforms • Unit tests • Palantir",
+            "url": "https://www.palantir.com/docs/foundry/transforms-python/unit-tests",
+            "tipo": "docs",
+            "acceso": "publico"
+          }
+        ],
+        "mision": "Localiza y corrige tres bugs sembrados con límites explícitos al asistente.",
+        "defensa": "Aporta diff, reproducciones y tests; demuestra que comprendiste el parche."
+      },
+      "capacidades": [
+        "algoritmos",
+        "ia",
+        "responsabilidad"
+      ],
+      "rastroCapacidades": {
+        "algoritmos": "Localiza y corrige tres bugs sembrados con límites explícitos al asistente.",
+        "ia": "Repo-debug con IA autorizada.",
+        "responsabilidad": "Aporta diff, reproducciones y tests;"
+      },
+      "criticas": [
+        {
+          "id": "correctitud",
+          "texto": "Correctitud",
+          "rastro": "Aporta diff, reproducciones y tests;"
+        },
+        {
+          "id": "autorizacion",
+          "texto": "Autorización",
+          "rastro": "Repo-debug con IA autorizada."
+        }
+      ],
+      "naturaleza": {
+        "valor": "mixto",
+        "rastro": "Localiza y corrige tres bugs sembrados con límites explícitos al asistente.",
+        "parts": [
+          {
+            "name": "Localizar con el asistente dentro de límites explícitos",
+            "nature": "delegable"
+          },
+          {
+            "name": "Corregir y defender el parche mínimo",
+            "nature": "a_mano"
+          }
+        ]
+      },
+      "alcance": "local",
+      "etiquetas": []
+    },
+    {
+      "code": "A2-07",
+      "id": "cf000000-0000-4000-8000-0041322d3037",
+      "title": "A2-07 · Live coding y comunicación",
+      "cls": "ruta",
+      "flujo": "mision",
+      "compuerta": "mision",
+      "ficha": {
+        "foco": "Live coding y comunicación.",
+        "fuentes": [
+          {
+            "clave": "OACODE",
+            "etiqueta": "Índice comunitario de coding",
+            "url": "https://github.com/perixtar/Tech-OA-Interview-Questions/blob/master/formats/coding.md",
+            "tipo": "otro",
+            "acceso": "publico"
+          }
+        ],
+        "mision": "Resuelve frente a un observador explicando supuestos y verificaciones.",
+        "defensa": "Corrige un error sin ocultarlo ni perder la estructura del razonamiento."
+      },
+      "capacidades": [
+        "algoritmos",
+        "comunicacion"
+      ],
+      "rastroCapacidades": {
+        "algoritmos": "Resuelve frente a un observador explicando supuestos y verificaciones.",
+        "comunicacion": "Live coding y comunicación."
+      },
+      "criticas": [
+        {
+          "id": "correctitud",
+          "texto": "Correctitud",
+          "rastro": "Resuelve frente a un observador explicando supuestos y verificaciones."
+        }
+      ],
+      "naturaleza": {
+        "valor": "a_mano"
+      },
+      "alcance": "local",
+      "etiquetas": []
+    },
+    {
+      "code": "A2-08",
+      "id": "cf000000-0000-4000-8000-0041322d3038",
+      "title": "A2-08 · Simulacro técnico completo",
+      "cls": "ruta",
+      "flujo": "mision",
+      "compuerta": "mision",
+      "ficha": {
+        "foco": "Simulacro técnico completo.",
+        "fuentes": [
+          {
+            "clave": "OA",
+            "etiqueta": "Tech OA and Interview Questions — índice comunitario",
+            "url": "https://github.com/perixtar/Tech-OA-Interview-Questions",
+            "tipo": "otro",
+            "acceso": "publico"
+          },
+          {
+            "clave": "CAREER",
+            "etiqueta": "Palantir Careers | Getting Hired",
+            "url": "https://www.palantir.com/careers/getting-hired",
+            "tipo": "otro",
+            "acceso": "publico"
+          }
+        ],
+        "mision": "Completa una sesión con coding, SQL, debug y preguntas de transferencia.",
+        "defensa": "Aprueba corrección, defensa y manejo de tiempo en tres sets independientes."
+      },
+      "capacidades": [
+        "algoritmos",
+        "datos"
+      ],
+      "rastroCapacidades": {
+        "algoritmos": "Completa una sesión con coding, SQL, debug y preguntas de transferencia.",
+        "datos": "Completa una sesión con coding, SQL, debug y preguntas de transferencia."
+      },
+      "criticas": [
+        {
+          "id": "correctitud",
+          "texto": "Correctitud",
+          "rastro": "Aprueba corrección, defensa y manejo de tiempo en tres sets independientes."
+        }
+      ],
+      "naturaleza": {
+        "valor": "a_mano"
+      },
+      "alcance": "local",
+      "etiquetas": [
+        "formato_practica"
+      ]
+    }
+  ],
+  "maestro_sha10": "38cbc7da42"
+}

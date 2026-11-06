@@ -1,0 +1,459 @@
+{
+  "v": 1,
+  "slug": "f0",
+  "code": "F0",
+  "name": "F0 · Orientación, herramientas y diagnóstico",
+  "family": "Fundamentos",
+  "header": {
+    "entrada": "Entrada; convalidable por evidencia.",
+    "entradaRecomendada": [],
+    "evidencia": "Código o diseño reproducible, explicación independiente y registro de dudas/ayudas.",
+    "apoyo": [
+      {
+        "clave": "C-01",
+        "etiqueta": "MIT Missing Semester, 2020",
+        "url": "https://missing.csail.mit.edu/2020/index.html",
+        "tipo": "curso",
+        "acceso": "publico"
+      },
+      {
+        "clave": "C-16",
+        "etiqueta": "Palantir Learning",
+        "url": "https://learn.palantir.com/",
+        "tipo": "curso",
+        "acceso": "cuenta"
+      }
+    ]
+  },
+  "cells": [
+    {
+      "code": "F0-01",
+      "id": "cf000000-0000-4000-8000-0046302d3031",
+      "title": "F0-01 · El trabajo FDE y el resultado del usuario",
+      "cls": "ruta",
+      "flujo": "mision",
+      "compuerta": "mision",
+      "ficha": {
+        "foco": "El trabajo FDE y el resultado del usuario.",
+        "fuentes": [
+          {
+            "clave": "FDE",
+            "etiqueta": "A Day in the Life of a Palantir Forward Deployed Software Engineer",
+            "url": "https://blog.palantir.com/a-day-in-the-life-of-a-palantir-forward-deployed-software-engineer-45ef2de257b1",
+            "tipo": "blog",
+            "acceso": "publico"
+          },
+          {
+            "clave": "DEV",
+            "etiqueta": "Dev Versus Delta: Demystifying Engineering Roles at Palantir",
+            "url": "https://blog.palantir.com/dev-versus-delta-demystifying-engineering-roles-at-palantir-ad44c2a6e87",
+            "tipo": "blog",
+            "acceso": "publico"
+          },
+          {
+            "clave": "DELTA",
+            "etiqueta": "Who Wants to be a Delta?",
+            "url": "https://blog.palantir.com/who-wants-to-be-a-delta-8d2ea948035",
+            "tipo": "blog",
+            "acceso": "publico"
+          }
+        ],
+        "mision": "Redacta qué decisión operativa cambia tu proyecto y para quién.",
+        "defensa": "Distingue entregar una feature, desplegar una plataforma y mejorar un resultado."
+      },
+      "capacidades": [
+        "producto",
+        "comunicacion"
+      ],
+      "rastroCapacidades": {
+        "producto": "El trabajo FDE y el resultado del usuario.",
+        "comunicacion": "Redacta qué decisión operativa cambia tu proyecto y para quién."
+      },
+      "criticas": [
+        {
+          "id": "correctitud",
+          "texto": "Correctitud",
+          "rastro": "Distingue entregar una feature, desplegar una plataforma y mejorar un resultado."
+        }
+      ],
+      "naturaleza": {
+        "valor": "a_mano"
+      },
+      "alcance": "local",
+      "etiquetas": []
+    },
+    {
+      "code": "F0-02",
+      "id": "cf000000-0000-4000-8000-0046302d3032",
+      "title": "F0-02 · Diagnóstico sin asistentes",
+      "cls": "ruta",
+      "flujo": "mision",
+      "compuerta": "mision",
+      "ficha": {
+        "foco": "Diagnóstico sin asistentes.",
+        "fuentes": [
+          {
+            "clave": "MIT",
+            "etiqueta": "Lecture Notes | Introduction to Algorithms | Electrical Engineering and Computer Science | MIT OpenCourseWare",
+            "url": "https://www.ocw.mit.edu/courses/6-006-introduction-to-algorithms-spring-2020/pages/lecture-notes/",
+            "tipo": "curso",
+            "acceso": "publico"
+          },
+          {
+            "clave": "PY",
+            "etiqueta": "5. Data Structures — Python 3.15.2 documentation",
+            "url": "https://docs.python.org/3/tutorial/datastructures.html",
+            "tipo": "otro",
+            "acceso": "publico"
+          },
+          {
+            "clave": "PG",
+            "etiqueta": "PostgreSQL: Documentation: 18: Chapter 13. Concurrency Control",
+            "url": "https://www.postgresql.org/docs/current/mvcc.html?trk=article-ssr-frontend-pulse_little-text-block",
+            "tipo": "otro",
+            "acceso": "publico"
+          }
+        ],
+        "mision": "Resuelve un problema de arrays, una consulta SQL, un bug de API y un diseño breve.",
+        "defensa": "Explica cada decisión; identifica tus lagunas sin ocultarlas con herramientas."
+      },
+      "capacidades": [
+        "producto",
+        "datos",
+        "comunicacion"
+      ],
+      "rastroCapacidades": {
+        "producto": "Resuelve un problema de arrays, una consulta SQL, un bug de API y un diseño breve.",
+        "datos": "Resuelve un problema de arrays, una consulta SQL, un bug de API y un diseño breve.",
+        "comunicacion": "Explica cada decisión;"
+      },
+      "criticas": [
+        {
+          "id": "correctitud",
+          "texto": "Correctitud",
+          "rastro": "Explica cada decisión; identifica tus lagunas sin ocultarlas con herramientas."
+        }
+      ],
+      "naturaleza": {
+        "valor": "a_mano"
+      },
+      "alcance": "local",
+      "etiquetas": []
+    },
+    {
+      "code": "F0-03",
+      "id": "cf000000-0000-4000-8000-0046302d3033",
+      "title": "F0-03 · Python operativo y estructuras",
+      "cls": "ruta",
+      "flujo": "mision",
+      "compuerta": "mision",
+      "ficha": {
+        "foco": "Python operativo y estructuras.",
+        "fuentes": [
+          {
+            "clave": "PY",
+            "etiqueta": "5. Data Structures — Python 3.15.2 documentation",
+            "url": "https://docs.python.org/3/tutorial/datastructures.html",
+            "tipo": "otro",
+            "acceso": "publico"
+          }
+        ],
+        "mision": "Construye un conciliador de CSV con validación y reporte reproducible.",
+        "defensa": "Justifica estructuras, mutabilidad y costo; procesa entradas vacías o corruptas."
+      },
+      "capacidades": [
+        "producto",
+        "datos",
+        "responsabilidad"
+      ],
+      "rastroCapacidades": {
+        "producto": "Construye un conciliador de CSV con validación y reporte reproducible.",
+        "datos": "Construye un conciliador de CSV con validación y reporte reproducible.",
+        "responsabilidad": "Construye un conciliador de CSV con validación y reporte reproducible."
+      },
+      "criticas": [
+        {
+          "id": "correctitud",
+          "texto": "Correctitud",
+          "rastro": "Construye un conciliador de CSV con validación y reporte reproducible."
+        },
+        {
+          "id": "trazabilidad",
+          "texto": "Trazabilidad",
+          "rastro": "Construye un conciliador de CSV con validación y reporte reproducible."
+        }
+      ],
+      "naturaleza": {
+        "valor": "a_mano"
+      },
+      "alcance": "local",
+      "etiquetas": []
+    },
+    {
+      "code": "F0-04",
+      "id": "cf000000-0000-4000-8000-0046302d3034",
+      "title": "F0-04 · TypeScript y contratos",
+      "cls": "ruta",
+      "flujo": "mision",
+      "compuerta": "mision",
+      "ficha": {
+        "foco": "TypeScript y contratos.",
+        "fuentes": [
+          {
+            "clave": "TS",
+            "etiqueta": "Ontology SDK • TypeScript OSDK • Palantir",
+            "url": "https://www.palantir.com/docs/foundry/ontology-sdk/typescript-osdk",
+            "tipo": "docs",
+            "acceso": "publico"
+          },
+          {
+            "clave": "FUN",
+            "etiqueta": "Functions • Overview • Palantir",
+            "url": "https://www.palantir.com/docs/foundry/functions/overview",
+            "tipo": "docs",
+            "acceso": "publico"
+          }
+        ],
+        "mision": "Define tipos de órdenes, estados y errores; implementa validadores de frontera.",
+        "defensa": "Demuestra cómo separas validación en runtime de garantías del compilador."
+      },
+      "capacidades": [
+        "producto",
+        "abstraccion"
+      ],
+      "rastroCapacidades": {
+        "producto": "Define tipos de órdenes, estados y errores; implementa validadores de frontera.",
+        "abstraccion": "TypeScript y contratos."
+      },
+      "criticas": [
+        {
+          "id": "correctitud",
+          "texto": "Correctitud",
+          "rastro": "implementa validadores de frontera."
+        }
+      ],
+      "naturaleza": {
+        "valor": "a_mano"
+      },
+      "alcance": "local",
+      "etiquetas": []
+    },
+    {
+      "code": "F0-05",
+      "id": "cf000000-0000-4000-8000-0046302d3035",
+      "title": "F0-05 · Git, pruebas y depuración",
+      "cls": "ruta",
+      "flujo": "mision",
+      "compuerta": "mision",
+      "ficha": {
+        "foco": "Git, pruebas y depuración.",
+        "fuentes": [
+          {
+            "clave": "PYTEST",
+            "etiqueta": "Python • Basic transforms • Unit tests • Palantir",
+            "url": "https://www.palantir.com/docs/foundry/transforms-python/unit-tests",
+            "tipo": "docs",
+            "acceso": "publico"
+          },
+          {
+            "clave": "MOCK",
+            "etiqueta": "Ontology SDK • Unit testing TypeScript OSDK code • Palantir",
+            "url": "https://www.palantir.com/docs/foundry/ontology-sdk/typescript-osdk-testing",
+            "tipo": "docs",
+            "acceso": "publico"
+          }
+        ],
+        "mision": "Entrega una corrección mínima desde un test fallido y una revisión de cambios.",
+        "defensa": "Reproduce el bug antes de corregirlo y explica por qué el test lo detecta."
+      },
+      "capacidades": [
+        "producto",
+        "comunicacion",
+        "responsabilidad"
+      ],
+      "rastroCapacidades": {
+        "producto": "Entrega una corrección mínima desde un test fallido y una revisión de cambios.",
+        "comunicacion": "Reproduce el bug antes de corregirlo y explica por qué el test lo detecta.",
+        "responsabilidad": "Reproduce el bug antes de corregirlo y explica por qué el test lo detecta."
+      },
+      "criticas": [
+        {
+          "id": "correctitud",
+          "texto": "Correctitud",
+          "rastro": "Git, pruebas y depuración."
+        }
+      ],
+      "naturaleza": {
+        "valor": "a_mano"
+      },
+      "alcance": "local",
+      "etiquetas": []
+    },
+    {
+      "code": "F0-06",
+      "id": "cf000000-0000-4000-8000-0046302d3036",
+      "title": "F0-06 · HTTP, concurrencia y límites",
+      "cls": "ruta",
+      "flujo": "mision",
+      "compuerta": "mision",
+      "ficha": {
+        "foco": "HTTP, concurrencia y límites.",
+        "fuentes": [
+          {
+            "clave": "ASYNC",
+            "etiqueta": "Coroutines and tasks — Python 3.15.2 documentation",
+            "url": "https://docs.python.org/3/library/asyncio-task.html",
+            "tipo": "otro",
+            "acceso": "publico"
+          },
+          {
+            "clave": "WEBHOOK",
+            "etiqueta": "Data Connection • Webhooks • Overview • Palantir",
+            "url": "https://www.palantir.com/docs/foundry/data-connection/webhooks-overview",
+            "tipo": "docs",
+            "acceso": "publico"
+          }
+        ],
+        "mision": "Construye un consumidor con timeout, cancelación y concurrencia acotada.",
+        "defensa": "Predice qué ocurre si la dependencia se congela o devuelve resultados parciales."
+      },
+      "capacidades": [
+        "producto",
+        "sistemas"
+      ],
+      "rastroCapacidades": {
+        "producto": "Construye un consumidor con timeout, cancelación y concurrencia acotada.",
+        "sistemas": "HTTP, concurrencia y límites."
+      },
+      "criticas": [
+        {
+          "id": "consistencia",
+          "texto": "Consistencia",
+          "rastro": "HTTP, concurrencia y límites."
+        },
+        {
+          "id": "recuperacion",
+          "texto": "Recuperación",
+          "rastro": "Construye un consumidor con timeout, cancelación y concurrencia acotada."
+        }
+      ],
+      "naturaleza": {
+        "valor": "a_mano"
+      },
+      "alcance": "local",
+      "etiquetas": []
+    },
+    {
+      "code": "F0-07",
+      "id": "cf000000-0000-4000-8000-0046302d3037",
+      "title": "F0-07 · Mapa Foundry, AIP y Apollo",
+      "cls": "ruta",
+      "flujo": "mision",
+      "compuerta": "mision",
+      "ficha": {
+        "foco": "Mapa Foundry, AIP y Apollo.",
+        "fuentes": [
+          {
+            "clave": "ARCH",
+            "etiqueta": "The Ontology system • Palantir",
+            "url": "https://www.palantir.com/docs/foundry/architecture-center/ontology-system",
+            "tipo": "docs",
+            "acceso": "publico"
+          },
+          {
+            "clave": "AIP",
+            "etiqueta": "AIP overview",
+            "url": "https://www.palantir.com/docs/foundry/aip/overview",
+            "tipo": "docs",
+            "acceso": "publico"
+          },
+          {
+            "clave": "APOLLO",
+            "etiqueta": "Introduction • Palantir",
+            "url": "https://www.palantir.com/docs/apollo/core/introduction/index.html",
+            "tipo": "docs",
+            "acceso": "publico"
+          }
+        ],
+        "mision": "Dibuja un workflow de una orden desde su origen hasta la acción externa.",
+        "defensa": "Ubica datos, lógica, acción y seguridad; señala qué no sabes del interior propietario."
+      },
+      "capacidades": [
+        "producto",
+        "datos",
+        "ia"
+      ],
+      "rastroCapacidades": {
+        "producto": "Dibuja un workflow de una orden desde su origen hasta la acción externa.",
+        "datos": "Ubica datos, lógica, acción y seguridad;",
+        "ia": "Mapa Foundry, AIP y Apollo."
+      },
+      "criticas": [
+        {
+          "id": "autorizacion",
+          "texto": "Autorización",
+          "rastro": "Ubica datos, lógica, acción y seguridad;"
+        }
+      ],
+      "naturaleza": {
+        "valor": "a_mano"
+      },
+      "alcance": "local",
+      "etiquetas": []
+    },
+    {
+      "code": "F0-08",
+      "id": "cf000000-0000-4000-8000-0046302d3038",
+      "title": "F0-08 · Primera vertical de extremo a extremo",
+      "cls": "ruta",
+      "flujo": "mision",
+      "compuerta": "mision",
+      "ficha": {
+        "foco": "Primera vertical de extremo a extremo.",
+        "fuentes": [
+          {
+            "clave": "SPEED",
+            "etiqueta": "Speedrun: Your first AIP workflow",
+            "url": "https://learn.palantir.com/speedrun-your-e2e-aip-workflow",
+            "tipo": "curso",
+            "acceso": "cuenta"
+          },
+          {
+            "clave": "USE",
+            "etiqueta": "Use case lifecycle • Overview • Palantir",
+            "url": "https://www.palantir.com/docs/foundry/use-case-life-cycle/overview",
+            "tipo": "docs",
+            "acceso": "publico"
+          }
+        ],
+        "mision": "Construye un flujo mínimo: dato, objeto, decisión, acción y evidencia.",
+        "defensa": "Repite la demo desde datos iniciales y explica qué parte fue práctica local o nativa."
+      },
+      "capacidades": [
+        "producto",
+        "datos",
+        "comunicacion"
+      ],
+      "rastroCapacidades": {
+        "producto": "Construye un flujo mínimo: dato, objeto, decisión, acción y evidencia.",
+        "datos": "dato, objeto, decisión, acción y evidencia.",
+        "comunicacion": "Repite la demo desde datos iniciales y explica qué parte fue práctica local o nativa."
+      },
+      "criticas": [
+        {
+          "id": "correctitud",
+          "texto": "Correctitud",
+          "rastro": "Repite la demo desde datos iniciales y explica qué parte fue práctica local o nativa."
+        }
+      ],
+      "naturaleza": {
+        "valor": "a_mano"
+      },
+      "alcance": "local+nativa",
+      "etiquetas": [
+        "requiere_cuenta"
+      ]
+    }
+  ],
+  "maestro_sha10": "38cbc7da42"
+}

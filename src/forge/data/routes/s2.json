@@ -1,0 +1,438 @@
+{
+  "v": 1,
+  "slug": "s2",
+  "code": "S2",
+  "name": "S2 · Sistemas distribuidos y system design",
+  "family": "Sistemas y diseño",
+  "header": {
+    "entrada": "S1-04; A1-05 y A1-06.",
+    "entradaRecomendada": [
+      "S1-04",
+      "A1-05",
+      "A1-06"
+    ],
+    "evidencia": "Expediente de diseño, números/supuestos, historial de fallas y prototipo del riesgo principal.",
+    "apoyo": [
+      {
+        "clave": "C-11",
+        "etiqueta": "MIT 6.5840: calendario",
+        "url": "https://pdos.csail.mit.edu/6.5840/schedule.html",
+        "tipo": "curso",
+        "acceso": "publico"
+      }
+    ]
+  },
+  "cells": [
+    {
+      "code": "S2-01",
+      "id": "cf000000-0000-4000-8000-0053322d3031",
+      "title": "S2-01 · Requisitos y números antes del dibujo",
+      "cls": "ruta",
+      "flujo": "mision",
+      "compuerta": "mision",
+      "ficha": {
+        "foco": "Requisitos y números antes del dibujo.",
+        "fuentes": [
+          {
+            "clave": "USE",
+            "etiqueta": "Use case lifecycle • Overview • Palantir",
+            "url": "https://www.palantir.com/docs/foundry/use-case-life-cycle/overview",
+            "tipo": "docs",
+            "acceso": "publico"
+          },
+          {
+            "clave": "SLO",
+            "etiqueta": "Google SRE - Continuous Improvement To Get Reliability",
+            "url": "https://sre.google/workbook/implementing-slos/",
+            "tipo": "otro",
+            "acceso": "publico"
+          }
+        ],
+        "mision": "Estima carga, almacenamiento, latencia y disponibilidad para alertas de planta.",
+        "defensa": "Declara supuestos y muestra qué número cambiaría la arquitectura."
+      },
+      "capacidades": [
+        "sistemas"
+      ],
+      "rastroCapacidades": {
+        "sistemas": "Estima carga, almacenamiento, latencia y disponibilidad para alertas de planta."
+      },
+      "criticas": [
+        {
+          "id": "correctitud",
+          "texto": "Correctitud",
+          "rastro": "Declara supuestos y muestra qué número cambiaría la arquitectura."
+        }
+      ],
+      "naturaleza": {
+        "valor": "a_mano"
+      },
+      "alcance": "local",
+      "etiquetas": []
+    },
+    {
+      "code": "S2-02",
+      "id": "cf000000-0000-4000-8000-0053322d3032",
+      "title": "S2-02 · Colas, reintentos e idempotencia",
+      "cls": "ruta",
+      "flujo": "mision",
+      "compuerta": "mision",
+      "ficha": {
+        "foco": "Colas, reintentos e idempotencia.",
+        "fuentes": [
+          {
+            "clave": "RETRY",
+            "etiqueta": "Tiempos de espera, reintentos y retardo con fluctuación",
+            "url": "https://aws.amazon.com/es/builders-library/timeouts-retries-and-backoff-with-jitter/",
+            "tipo": "otro",
+            "acceso": "publico"
+          },
+          {
+            "clave": "IDEMP",
+            "etiqueta": "Making retries safe with idempotent APIs",
+            "url": "https://aws.amazon.com/builders-library/making-retries-safe-with-idempotent-APIs/",
+            "tipo": "otro",
+            "acceso": "publico"
+          }
+        ],
+        "mision": "Construye un worker que sobreviva a duplicados y timeout tras completar una operación.",
+        "defensa": "Demuestra por qué timeout no equivale a operación fallida."
+      },
+      "capacidades": [
+        "sistemas"
+      ],
+      "rastroCapacidades": {
+        "sistemas": "Colas, reintentos e idempotencia."
+      },
+      "criticas": [
+        {
+          "id": "identidad",
+          "texto": "Identidad",
+          "rastro": "Construye un worker que sobreviva a duplicados y timeout tras completar una operación."
+        },
+        {
+          "id": "consistencia",
+          "texto": "Consistencia",
+          "rastro": "Colas, reintentos e idempotencia."
+        }
+      ],
+      "naturaleza": {
+        "valor": "a_mano"
+      },
+      "alcance": "local",
+      "etiquetas": []
+    },
+    {
+      "code": "S2-03",
+      "id": "cf000000-0000-4000-8000-0053322d3033",
+      "title": "S2-03 · Replicación y consistencia",
+      "cls": "ruta",
+      "flujo": "mision",
+      "compuerta": "mision",
+      "ficha": {
+        "foco": "Replicación y consistencia.",
+        "fuentes": [
+          {
+            "clave": "DIST",
+            "etiqueta": "6.5840 Schedule: Spring 2026",
+            "url": "https://pdos.csail.mit.edu/6.5840/schedule.html",
+            "tipo": "curso",
+            "acceso": "publico"
+          },
+          {
+            "clave": "CONSIST",
+            "etiqueta": "Action types • Consistency and isolation • Palantir",
+            "url": "https://www.palantir.com/docs/foundry/action-types/consistency-guarantees",
+            "tipo": "docs",
+            "acceso": "publico"
+          }
+        ],
+        "mision": "Traza historiales de lecturas y escrituras sobre dos réplicas.",
+        "defensa": "Escoge la garantía según la decisión del usuario y sus consecuencias."
+      },
+      "capacidades": [
+        "sistemas",
+        "producto"
+      ],
+      "rastroCapacidades": {
+        "sistemas": "Replicación y consistencia.",
+        "producto": "Escoge la garantía según la decisión del usuario y sus consecuencias."
+      },
+      "criticas": [
+        {
+          "id": "consistencia",
+          "texto": "Consistencia",
+          "rastro": "Replicación y consistencia."
+        },
+        {
+          "id": "trazabilidad",
+          "texto": "Trazabilidad",
+          "rastro": "Traza historiales de lecturas y escrituras sobre dos réplicas."
+        }
+      ],
+      "naturaleza": {
+        "valor": "a_mano"
+      },
+      "alcance": "local",
+      "etiquetas": []
+    },
+    {
+      "code": "S2-04",
+      "id": "cf000000-0000-4000-8000-0053322d3034",
+      "title": "S2-04 · Particiones, hotspots y cachés",
+      "cls": "ruta",
+      "flujo": "mision",
+      "compuerta": "mision",
+      "ficha": {
+        "foco": "Particiones, hotspots y cachés.",
+        "fuentes": [
+          {
+            "clave": "DIST",
+            "etiqueta": "6.5840 Schedule: Spring 2026",
+            "url": "https://pdos.csail.mit.edu/6.5840/schedule.html",
+            "tipo": "curso",
+            "acceso": "publico"
+          },
+          {
+            "clave": "OVER",
+            "etiqueta": "Google SRE: Handling Operational Overload, Workload Management",
+            "url": "https://sre.google/workbook/overload/",
+            "tipo": "otro",
+            "acceso": "publico"
+          }
+        ],
+        "mision": "Diseña particionamiento y mide un hot key con carga sintética.",
+        "defensa": "Explica invalidación, sesgo, balance y degradación bajo sobrecarga."
+      },
+      "capacidades": [
+        "sistemas",
+        "comunicacion"
+      ],
+      "rastroCapacidades": {
+        "sistemas": "Particiones, hotspots y cachés.",
+        "comunicacion": "Explica invalidación, sesgo, balance y degradación bajo sobrecarga."
+      },
+      "criticas": [
+        {
+          "id": "correctitud",
+          "texto": "Correctitud",
+          "rastro": "Explica invalidación, sesgo, balance y degradación bajo sobrecarga."
+        },
+        {
+          "id": "recuperacion",
+          "texto": "Recuperación",
+          "rastro": "Explica invalidación, sesgo, balance y degradación bajo sobrecarga."
+        }
+      ],
+      "naturaleza": {
+        "valor": "a_mano"
+      },
+      "alcance": "local",
+      "etiquetas": []
+    },
+    {
+      "code": "S2-05",
+      "id": "cf000000-0000-4000-8000-0053322d3035",
+      "title": "S2-05 · CDC, streams y datos tardíos",
+      "cls": "ruta",
+      "flujo": "mision",
+      "compuerta": "mision",
+      "ficha": {
+        "foco": "CDC, streams y datos tardíos.",
+        "fuentes": [
+          {
+            "clave": "CDC",
+            "etiqueta": "Core concepts • Change data capture (CDC) • Palantir",
+            "url": "https://www.palantir.com/docs/foundry/data-integration/change-data-capture",
+            "tipo": "docs",
+            "acceso": "publico"
+          },
+          {
+            "clave": "STREAM",
+            "etiqueta": "Resource guides • Streaming • Palantir",
+            "url": "https://www.palantir.com/docs/foundry/data-integration/streaming-guide",
+            "tipo": "docs",
+            "acceso": "publico"
+          }
+        ],
+        "mision": "Procesa eventos repetidos y fuera de orden con reconstrucción verificable.",
+        "defensa": "Distingue event time y processing time; especifica reparación y límites."
+      },
+      "capacidades": [
+        "sistemas",
+        "datos"
+      ],
+      "rastroCapacidades": {
+        "sistemas": "Procesa eventos repetidos y fuera de orden con reconstrucción verificable.",
+        "datos": "CDC, streams y datos tardíos."
+      },
+      "criticas": [
+        {
+          "id": "correctitud",
+          "texto": "Correctitud",
+          "rastro": "Procesa eventos repetidos y fuera de orden con reconstrucción verificable."
+        }
+      ],
+      "naturaleza": {
+        "valor": "a_mano"
+      },
+      "alcance": "local",
+      "etiquetas": []
+    },
+    {
+      "code": "S2-06",
+      "id": "cf000000-0000-4000-8000-0053322d3036",
+      "title": "S2-06 · Consenso y transacciones distribuidas",
+      "cls": "ruta",
+      "flujo": "mision",
+      "compuerta": "mision",
+      "ficha": {
+        "foco": "Consenso y transacciones distribuidas.",
+        "fuentes": [
+          {
+            "clave": "DIST",
+            "etiqueta": "6.5840 Schedule: Spring 2026",
+            "url": "https://pdos.csail.mit.edu/6.5840/schedule.html",
+            "tipo": "curso",
+            "acceso": "publico"
+          },
+          {
+            "clave": "DB",
+            "etiqueta": "Schedule | CMU 15-445/645 :: Intro to Database Systems (Fall 2026)",
+            "url": "https://15445.courses.cs.cmu.edu/fall2026/schedule.html",
+            "tipo": "curso",
+            "acceso": "publico"
+          }
+        ],
+        "mision": "Implementa una simulación de elección de líder y analiza fallas parciales.",
+        "defensa": "Separa elección, replicación y commit; no prometas consistencia sin un modelo."
+      },
+      "capacidades": [
+        "sistemas",
+        "responsabilidad"
+      ],
+      "rastroCapacidades": {
+        "sistemas": "Consenso y transacciones distribuidas.",
+        "responsabilidad": "Implementa una simulación de elección de líder y analiza fallas parciales."
+      },
+      "criticas": [
+        {
+          "id": "consistencia",
+          "texto": "Consistencia",
+          "rastro": "Consenso y transacciones distribuidas."
+        }
+      ],
+      "naturaleza": {
+        "valor": "a_mano"
+      },
+      "alcance": "local",
+      "etiquetas": []
+    },
+    {
+      "code": "S2-07",
+      "id": "cf000000-0000-4000-8000-0053322d3037",
+      "title": "S2-07 · Diseño de sistemas de recuperación e IA",
+      "cls": "ruta",
+      "flujo": "mision",
+      "compuerta": "mision",
+      "ficha": {
+        "foco": "Diseño de sistemas de recuperación e IA.",
+        "fuentes": [
+          {
+            "clave": "SEM",
+            "etiqueta": "Semantic search • Use Palantir-provided models to create a semantic search workflow • Palantir",
+            "url": "https://www.palantir.com/docs/foundry/ontology/using-palantir-provided-models-to-create-a-semantic-search-workflow",
+            "tipo": "docs",
+            "acceso": "publico"
+          },
+          {
+            "clave": "EVAL",
+            "etiqueta": "AIP Evals • Evaluation suites for Logic functions • Palantir",
+            "url": "https://www.palantir.com/docs/foundry/aip-evals/getting-started",
+            "tipo": "docs",
+            "acceso": "publico"
+          }
+        ],
+        "mision": "Diseña ingestión documental, retrieval, caché y evaluación con presupuesto.",
+        "defensa": "Distingue error de búsqueda, error del modelo, permiso y dato desactualizado."
+      },
+      "capacidades": [
+        "sistemas",
+        "datos",
+        "ia"
+      ],
+      "rastroCapacidades": {
+        "sistemas": "Diseña ingestión documental, retrieval, caché y evaluación con presupuesto.",
+        "datos": "Distingue error de búsqueda, error del modelo, permiso y dato desactualizado.",
+        "ia": "Diseño de sistemas de recuperación e IA."
+      },
+      "criticas": [
+        {
+          "id": "autorizacion",
+          "texto": "Autorización",
+          "rastro": "Distingue error de búsqueda, error del modelo, permiso y dato desactualizado."
+        },
+        {
+          "id": "recuperacion",
+          "texto": "Recuperación",
+          "rastro": "Diseño de sistemas de recuperación e IA."
+        }
+      ],
+      "naturaleza": {
+        "valor": "a_mano"
+      },
+      "alcance": "local",
+      "etiquetas": []
+    },
+    {
+      "code": "S2-08",
+      "id": "cf000000-0000-4000-8000-0053322d3038",
+      "title": "S2-08 · Design review adversarial",
+      "cls": "ruta",
+      "flujo": "expediente",
+      "compuerta": "expediente",
+      "ficha": {
+        "foco": "Design review adversarial.",
+        "fuentes": [
+          {
+            "clave": "OASD",
+            "etiqueta": "Índice comunitario de system design",
+            "url": "https://github.com/perixtar/Tech-OA-Interview-Questions/blob/master/formats/system-design.md",
+            "tipo": "otro",
+            "acceso": "publico"
+          },
+          {
+            "clave": "SLO",
+            "etiqueta": "Google SRE - Continuous Improvement To Get Reliability",
+            "url": "https://sre.google/workbook/implementing-slos/",
+            "tipo": "otro",
+            "acceso": "publico"
+          }
+        ],
+        "mision": "Defiende un diseño 45 minutos; recibe un cambio de escala y una caída regional.",
+        "defensa": "Replantea trade-offs con números y preserva invariantes prioritarios."
+      },
+      "capacidades": [
+        "sistemas",
+        "abstraccion"
+      ],
+      "rastroCapacidades": {
+        "sistemas": "Defiende un diseño 45 minutos; recibe un cambio de escala y una caída regional.",
+        "abstraccion": "Replantea trade-offs con números y preserva invariantes prioritarios."
+      },
+      "criticas": [
+        {
+          "id": "correctitud",
+          "texto": "Correctitud",
+          "rastro": "Replantea trade-offs con números y preserva invariantes prioritarios."
+        }
+      ],
+      "naturaleza": {
+        "valor": "a_mano"
+      },
+      "alcance": "local",
+      "etiquetas": []
+    }
+  ],
+  "maestro_sha10": "38cbc7da42"
+}
