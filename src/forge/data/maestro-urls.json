@@ -1,0 +1,580 @@
+{
+  "maestro_sha10": "38cbc7da42",
+  "urls": {
+    "A1-01": [
+      "https://www.ocw.mit.edu/courses/6-006-introduction-to-algorithms-spring-2020/pages/lecture-notes/"
+    ],
+    "A1-02": [
+      "https://www.ocw.mit.edu/courses/6-006-introduction-to-algorithms-spring-2020/pages/lecture-notes/",
+      "https://docs.python.org/3/tutorial/datastructures.html"
+    ],
+    "A1-03": [
+      "https://www.ocw.mit.edu/courses/6-006-introduction-to-algorithms-spring-2020/pages/lecture-notes/",
+      "https://docs.python.org/3/tutorial/datastructures.html"
+    ],
+    "A1-04": [
+      "https://www.ocw.mit.edu/courses/6-006-introduction-to-algorithms-spring-2020/pages/lecture-notes/",
+      "https://15445.courses.cs.cmu.edu/fall2026/schedule.html"
+    ],
+    "A1-05": [
+      "https://www.ocw.mit.edu/courses/6-006-introduction-to-algorithms-spring-2020/pages/lecture-notes/"
+    ],
+    "A1-06": [
+      "https://www.ocw.mit.edu/courses/6-006-introduction-to-algorithms-spring-2020/pages/lecture-notes/"
+    ],
+    "A1-07": [
+      "https://www.ocw.mit.edu/courses/6-006-introduction-to-algorithms-spring-2020/pages/lecture-notes/"
+    ],
+    "A1-08": [
+      "https://www.ocw.mit.edu/courses/6-006-introduction-to-algorithms-spring-2020/pages/lecture-notes/"
+    ],
+    "A2-01": [
+      "https://github.com/perixtar/Tech-OA-Interview-Questions/blob/master/formats/coding.md",
+      "https://www.ocw.mit.edu/courses/6-006-introduction-to-algorithms-spring-2020/pages/lecture-notes/"
+    ],
+    "A2-02": [
+      "https://github.com/perixtar/Tech-OA-Interview-Questions/blob/master/formats/coding.md",
+      "https://docs.python.org/3/tutorial/datastructures.html"
+    ],
+    "A2-03": [
+      "https://github.com/perixtar/Tech-OA-Interview-Questions/blob/master/formats/coding.md",
+      "https://www.ocw.mit.edu/courses/6-006-introduction-to-algorithms-spring-2020/pages/lecture-notes/"
+    ],
+    "A2-04": [
+      "https://15445.courses.cs.cmu.edu/fall2026/schedule.html",
+      "https://www.postgresql.org/docs/current/mvcc.html?trk=article-ssr-frontend-pulse_little-text-block"
+    ],
+    "A2-05": [
+      "https://github.com/perixtar/Tech-OA-Interview-Questions/blob/master/formats/coding.md"
+    ],
+    "A2-06": [
+      "https://github.com/perixtar/Tech-OA-Interview-Questions/blob/master/formats/ai-coding.md",
+      "https://www.palantir.com/docs/foundry/transforms-python/unit-tests"
+    ],
+    "A2-07": [
+      "https://github.com/perixtar/Tech-OA-Interview-Questions/blob/master/formats/coding.md"
+    ],
+    "A2-08": [
+      "https://github.com/perixtar/Tech-OA-Interview-Questions",
+      "https://www.palantir.com/careers/getting-hired"
+    ],
+    "D1": [],
+    "D2": [],
+    "D3": [],
+    "D4": [],
+    "D5": [],
+    "D6": [],
+    "D7": [],
+    "D8": [
+      "https://www.palantir.com/docs/foundry/use-case-life-cycle/solution-design"
+    ],
+    "F0-01": [
+      "https://blog.palantir.com/a-day-in-the-life-of-a-palantir-forward-deployed-software-engineer-45ef2de257b1",
+      "https://blog.palantir.com/dev-versus-delta-demystifying-engineering-roles-at-palantir-ad44c2a6e87",
+      "https://blog.palantir.com/who-wants-to-be-a-delta-8d2ea948035"
+    ],
+    "F0-02": [
+      "https://www.ocw.mit.edu/courses/6-006-introduction-to-algorithms-spring-2020/pages/lecture-notes/",
+      "https://docs.python.org/3/tutorial/datastructures.html",
+      "https://www.postgresql.org/docs/current/mvcc.html?trk=article-ssr-frontend-pulse_little-text-block"
+    ],
+    "F0-03": [
+      "https://docs.python.org/3/tutorial/datastructures.html"
+    ],
+    "F0-04": [
+      "https://www.palantir.com/docs/foundry/ontology-sdk/typescript-osdk",
+      "https://www.palantir.com/docs/foundry/functions/overview"
+    ],
+    "F0-05": [
+      "https://www.palantir.com/docs/foundry/transforms-python/unit-tests",
+      "https://www.palantir.com/docs/foundry/ontology-sdk/typescript-osdk-testing"
+    ],
+    "F0-06": [
+      "https://docs.python.org/3/library/asyncio-task.html",
+      "https://www.palantir.com/docs/foundry/data-connection/webhooks-overview"
+    ],
+    "F0-07": [
+      "https://www.palantir.com/docs/foundry/architecture-center/ontology-system",
+      "https://www.palantir.com/docs/foundry/aip/overview",
+      "https://www.palantir.com/docs/apollo/core/introduction/index.html"
+    ],
+    "F0-08": [
+      "https://learn.palantir.com/speedrun-your-e2e-aip-workflow",
+      "https://www.palantir.com/docs/foundry/use-case-life-cycle/overview"
+    ],
+    "F1-01": [
+      "https://blog.palantir.com/dev-versus-delta-demystifying-engineering-roles-at-palantir-ad44c2a6e87",
+      "https://blog.palantir.com/who-wants-to-be-a-delta-8d2ea948035",
+      "https://www.palantir.com/docs/foundry/architecture-center/ontology-system"
+    ],
+    "F1-02": [
+      "https://www.palantir.com/docs/foundry/use-case-life-cycle/overview",
+      "https://blog.palantir.com/a-day-in-the-life-of-a-palantir-forward-deployed-software-engineer-45ef2de257b1"
+    ],
+    "F1-03": [
+      "https://www.palantir.com/docs/foundry/use-case-life-cycle/overview"
+    ],
+    "F1-04": [
+      "https://www.palantir.com/docs/foundry/use-case-life-cycle/overview",
+      "https://blog.palantir.com/building-end-to-end-e3a8349aee70"
+    ],
+    "F1-05": [
+      "https://www.palantir.com/docs/foundry/agent-sdk/overview",
+      "https://www.palantir.com/docs/foundry/data-connection/overview"
+    ],
+    "F1-06": [
+      "https://blog.palantir.com/a-day-in-the-life-of-a-palantir-forward-deployed-software-engineer-45ef2de257b1",
+      "https://www.palantir.com/docs/foundry/use-case-life-cycle/overview"
+    ],
+    "F1-07": [
+      "https://sre.google/workbook/implementing-slos/",
+      "https://blog.palantir.com/who-wants-to-be-a-delta-8d2ea948035"
+    ],
+    "F1-08": [
+      "https://www.palantir.com/careers/getting-hired",
+      "https://blog.palantir.com/dev-versus-delta-demystifying-engineering-roles-at-palantir-ad44c2a6e87"
+    ],
+    "F2-01": [
+      "https://www.palantir.com/docs/foundry/use-case-life-cycle/overview",
+      "https://www.palantir.com/docs/foundry/ontology/overview",
+      "https://www.palantir.com/docs/foundry/workshop/getting-started"
+    ],
+    "F2-02": [
+      "https://www.palantir.com/docs/foundry/time-series/time-series-overview",
+      "https://www.palantir.com/docs/foundry/data-integration/change-data-capture",
+      "https://www.palantir.com/docs/foundry/automate/overview"
+    ],
+    "F2-03": [
+      "https://www.palantir.com/docs/foundry/document-intelligence/overview",
+      "https://www.palantir.com/docs/foundry/chatbot-studio/retrieval-context",
+      "https://www.palantir.com/docs/foundry/aip-evals/getting-started"
+    ],
+    "F2-04": [
+      "https://github.com/perixtar/Tech-OA-Interview-Questions/blob/master/formats/system-design.md",
+      "https://www.palantir.com/docs/foundry/action-types/consistency-guarantees"
+    ],
+    "F2-05": [
+      "https://www.palantir.com/docs/foundry/use-case-life-cycle/overview",
+      "https://pdos.csail.mit.edu/6.5840/schedule.html"
+    ],
+    "F2-06": [
+      "https://www.palantir.com/docs/foundry/global-branching",
+      "https://www.palantir.com/docs/foundry/observability/data-health",
+      "https://www.palantir.com/docs/foundry/security/access-control-propagation"
+    ],
+    "F2-07": [
+      "https://www.palantir.com/careers/getting-hired",
+      "https://github.com/perixtar/Tech-OA-Interview-Questions",
+      "https://github.com/perixtar/Tech-OA-Interview-Questions/blob/master/formats/system-design.md"
+    ],
+    "F2-08": [
+      "https://www.palantir.com/docs/foundry/use-case-life-cycle/overview",
+      "https://www.palantir.com/docs/foundry/aip-evals/getting-started",
+      "https://sre.google/workbook/implementing-slos/"
+    ],
+    "P1-01": [
+      "https://www.palantir.com/docs/foundry/data-connection/overview"
+    ],
+    "P1-02": [
+      "https://www.palantir.com/docs/foundry/pipeline-builder/overview"
+    ],
+    "P1-03": [
+      "https://www.palantir.com/docs/foundry/transforms-python/unit-tests",
+      "https://www.palantir.com/docs/foundry/transforms-python/incremental-usage"
+    ],
+    "P1-04": [
+      "https://www.palantir.com/docs/foundry/transforms-python/incremental-usage",
+      "https://www.palantir.com/docs/foundry/data-integration/change-data-capture"
+    ],
+    "P1-05": [
+      "https://www.palantir.com/docs/foundry/pipeline-builder/dataexpectations-overview",
+      "https://www.palantir.com/docs/foundry/observability/data-health"
+    ],
+    "P1-06": [
+      "https://www.palantir.com/docs/foundry/data-integration/streaming-guide",
+      "https://www.palantir.com/docs/foundry/object-indexing/overview"
+    ],
+    "P1-07": [
+      "https://www.palantir.com/docs/foundry/document-intelligence/overview",
+      "https://www.palantir.com/docs/foundry/data-integration/media-sets"
+    ],
+    "P1-08": [
+      "https://www.palantir.com/docs/foundry/data-connection/overview",
+      "https://www.palantir.com/docs/foundry/pipeline-builder/dataexpectations-overview",
+      "https://www.palantir.com/docs/foundry/global-branching"
+    ],
+    "P2-01": [
+      "https://www.palantir.com/docs/foundry/ontology/overview",
+      "https://www.palantir.com/docs/foundry/use-case-life-cycle/overview"
+    ],
+    "P2-02": [
+      "https://www.palantir.com/docs/foundry/object-link-types/link-types-overview/"
+    ],
+    "P2-03": [
+      "https://www.palantir.com/docs/foundry/ontology/overview"
+    ],
+    "P2-04": [
+      "https://www.palantir.com/docs/foundry/object-backend/overview",
+      "https://www.palantir.com/docs/foundry/object-indexing/overview"
+    ],
+    "P2-05": [
+      "https://www.palantir.com/docs/foundry/action-types/getting-started",
+      "https://www.palantir.com/docs/foundry/action-types/submission-criteria"
+    ],
+    "P2-06": [
+      "https://www.palantir.com/docs/foundry/action-types/consistency-guarantees",
+      "https://www.palantir.com/docs/foundry/data-connection/webhooks-overview"
+    ],
+    "P2-07": [
+      "https://www.palantir.com/docs/foundry/security/access-control-propagation",
+      "https://www.palantir.com/docs/foundry/object-permissioning/overview"
+    ],
+    "P2-08": [
+      "https://www.palantir.com/docs/foundry/architecture-center/ontology-system",
+      "https://www.palantir.com/docs/foundry/action-types/getting-started"
+    ],
+    "P3-01": [
+      "https://www.palantir.com/docs/foundry/workshop/getting-started"
+    ],
+    "P3-02": [
+      "https://www.palantir.com/docs/foundry/workshop/concepts-variables",
+      "https://www.palantir.com/docs/foundry/workshop/concepts-events"
+    ],
+    "P3-03": [
+      "https://www.palantir.com/docs/foundry/functions/overview",
+      "https://www.palantir.com/docs/foundry/functions/language-feature-support"
+    ],
+    "P3-04": [
+      "https://www.palantir.com/docs/foundry/ontology-sdk",
+      "https://www.palantir.com/docs/foundry/ontology-sdk/typescript-osdk"
+    ],
+    "P3-05": [
+      "https://www.palantir.com/docs/foundry/ontology-sdk/typescript-osdk-testing"
+    ],
+    "P3-06": [
+      "https://www.palantir.com/docs/foundry/automate/overview",
+      "https://www.palantir.com/docs/foundry/automate/condition-objects",
+      "https://www.palantir.com/docs/foundry/automate/evaluation-frequency"
+    ],
+    "P3-07": [
+      "https://www.palantir.com/docs/foundry/time-series/time-series-overview",
+      "https://www.palantir.com/docs/foundry/vertex/overview"
+    ],
+    "P3-08": [
+      "https://www.palantir.com/docs/foundry/workshop/getting-started",
+      "https://www.palantir.com/docs/foundry/use-case-life-cycle/overview"
+    ],
+    "P4-01": [
+      "https://www.palantir.com/docs/foundry/aip/overview",
+      "https://www.palantir.com/docs/foundry/use-case-life-cycle/overview"
+    ],
+    "P4-02": [
+      "https://www.palantir.com/docs/foundry/logic/getting-started"
+    ],
+    "P4-03": [
+      "https://www.palantir.com/docs/foundry/chatbot-studio/retrieval-context",
+      "https://www.palantir.com/docs/foundry/chatbot-studio/citations",
+      "https://www.palantir.com/docs/foundry/ontology/using-palantir-provided-models-to-create-a-semantic-search-workflow"
+    ],
+    "P4-04": [
+      "https://www.palantir.com/docs/foundry/chatbot-studio/getting-started",
+      "https://www.palantir.com/docs/foundry/chatbot-studio/retrieval-context"
+    ],
+    "P4-05": [
+      "https://www.palantir.com/docs/foundry/aip-evals/getting-started"
+    ],
+    "P4-06": [
+      "https://www.palantir.com/docs/foundry/aip/agent-stack",
+      "https://www.palantir.com/docs/foundry/agent-sdk/overview"
+    ],
+    "P4-07": [
+      "https://www.palantir.com/docs/foundry/agent-sdk/advanced-customization",
+      "https://www.palantir.com/docs/foundry/agent-manager/overview"
+    ],
+    "P4-08": [
+      "https://www.palantir.com/docs/foundry/aip-evals/getting-started",
+      "https://www.palantir.com/docs/foundry/logic/staged-writes",
+      "https://www.palantir.com/docs/foundry/security/access-control-propagation"
+    ],
+    "P5-01": [
+      "https://www.palantir.com/docs/foundry/global-branching"
+    ],
+    "P5-02": [
+      "https://www.palantir.com/docs/foundry/superrepo/overview"
+    ],
+    "P5-03": [
+      "https://www.palantir.com/docs/foundry/marketplace/overview"
+    ],
+    "P5-04": [
+      "https://www.palantir.com/docs/foundry/compute-modules/overview",
+      "https://www.palantir.com/docs/foundry/compute-modules/osdk-integration",
+      "https://www.palantir.com/docs/foundry/compute-modules/execution-modes"
+    ],
+    "P5-05": [
+      "https://www.palantir.com/docs/foundry/integrate-models/integrate-overview",
+      "https://www.palantir.com/docs/foundry/model-integration/what-to-use"
+    ],
+    "P5-06": [
+      "https://www.palantir.com/docs/foundry/security/access-control-propagation",
+      "https://www.palantir.com/docs/foundry/security/markings"
+    ],
+    "P5-07": [
+      "https://www.palantir.com/docs/foundry/observability/data-health",
+      "https://www.palantir.com/docs/foundry/resource-management/usage-types",
+      "https://sre.google/workbook/implementing-slos/"
+    ],
+    "P5-08": [
+      "https://www.palantir.com/docs/apollo/core/introduction/index.html",
+      "https://www.palantir.com/docs/foundry/global-branching",
+      "https://sre.google/workbook/implementing-slos/"
+    ],
+    "S1-01": [
+      "https://15445.courses.cs.cmu.edu/fall2026/schedule.html",
+      "https://www.palantir.com/docs/foundry/ontology/overview"
+    ],
+    "S1-02": [
+      "https://15445.courses.cs.cmu.edu/fall2026/schedule.html",
+      "https://www.postgresql.org/docs/current/mvcc.html?trk=article-ssr-frontend-pulse_little-text-block"
+    ],
+    "S1-03": [
+      "https://15445.courses.cs.cmu.edu/fall2026/schedule.html",
+      "https://www.palantir.com/docs/foundry/object-indexing/overview"
+    ],
+    "S1-04": [
+      "https://www.postgresql.org/docs/current/mvcc.html?trk=article-ssr-frontend-pulse_little-text-block",
+      "https://www.palantir.com/docs/foundry/action-types/consistency-guarantees"
+    ],
+    "S1-05": [
+      "https://www.palantir.com/docs/foundry/action-types/getting-started",
+      "https://www.palantir.com/docs/foundry/use-case-life-cycle/overview"
+    ],
+    "S1-06": [
+      "https://www.palantir.com/docs/foundry/developer-console/overview",
+      "https://www.palantir.com/docs/foundry/ontology-sdk"
+    ],
+    "S1-07": [
+      "https://www.palantir.com/docs/foundry/ontology-sdk/typescript-osdk-testing",
+      "https://www.palantir.com/docs/foundry/transforms-python/unit-tests"
+    ],
+    "S1-08": [
+      "https://15445.courses.cs.cmu.edu/fall2026/schedule.html",
+      "https://www.palantir.com/docs/foundry/global-branching"
+    ],
+    "S2-01": [
+      "https://www.palantir.com/docs/foundry/use-case-life-cycle/overview",
+      "https://sre.google/workbook/implementing-slos/"
+    ],
+    "S2-02": [
+      "https://aws.amazon.com/es/builders-library/timeouts-retries-and-backoff-with-jitter/",
+      "https://aws.amazon.com/builders-library/making-retries-safe-with-idempotent-APIs/"
+    ],
+    "S2-03": [
+      "https://pdos.csail.mit.edu/6.5840/schedule.html",
+      "https://www.palantir.com/docs/foundry/action-types/consistency-guarantees"
+    ],
+    "S2-04": [
+      "https://pdos.csail.mit.edu/6.5840/schedule.html",
+      "https://sre.google/workbook/overload/"
+    ],
+    "S2-05": [
+      "https://www.palantir.com/docs/foundry/data-integration/change-data-capture",
+      "https://www.palantir.com/docs/foundry/data-integration/streaming-guide"
+    ],
+    "S2-06": [
+      "https://pdos.csail.mit.edu/6.5840/schedule.html",
+      "https://15445.courses.cs.cmu.edu/fall2026/schedule.html"
+    ],
+    "S2-07": [
+      "https://www.palantir.com/docs/foundry/ontology/using-palantir-provided-models-to-create-a-semantic-search-workflow",
+      "https://www.palantir.com/docs/foundry/aip-evals/getting-started"
+    ],
+    "S2-08": [
+      "https://github.com/perixtar/Tech-OA-Interview-Questions/blob/master/formats/system-design.md",
+      "https://sre.google/workbook/implementing-slos/"
+    ],
+    "SD-01": [
+      "https://www.postgresql.org/docs/current/mvcc.html?trk=article-ssr-frontend-pulse_little-text-block",
+      "https://www.palantir.com/docs/foundry/action-types/consistency-guarantees",
+      "https://www.palantir.com/docs/foundry/use-case-life-cycle/overview"
+    ],
+    "SD-02": [
+      "https://github.com/perixtar/Tech-OA-Interview-Questions/blob/master/formats/system-design.md",
+      "https://www.ocw.mit.edu/courses/6-006-introduction-to-algorithms-spring-2020/pages/lecture-notes/",
+      "https://www.palantir.com/docs/foundry/action-types/getting-started"
+    ],
+    "SD-03": [
+      "https://github.com/perixtar/Tech-OA-Interview-Questions/blob/master/formats/system-design.md",
+      "https://www.ocw.mit.edu/courses/6-006-introduction-to-algorithms-spring-2020/pages/lecture-notes/",
+      "https://www.palantir.com/docs/foundry/ontology/overview"
+    ],
+    "SD-04": [
+      "https://www.palantir.com/docs/foundry/time-series/time-series-overview",
+      "https://www.palantir.com/docs/foundry/automate/overview",
+      "https://aws.amazon.com/es/builders-library/timeouts-retries-and-backoff-with-jitter/"
+    ],
+    "SD-05": [
+      "https://www.palantir.com/docs/foundry/data-integration/change-data-capture",
+      "https://www.palantir.com/docs/foundry/transforms-python/incremental-usage",
+      "https://pdos.csail.mit.edu/6.5840/schedule.html"
+    ],
+    "SD-06": [
+      "https://www.palantir.com/docs/foundry/chatbot-studio/retrieval-context",
+      "https://www.palantir.com/docs/foundry/chatbot-studio/citations",
+      "https://www.palantir.com/docs/foundry/security/access-control-propagation"
+    ],
+    "SD-07": [
+      "https://aws.amazon.com/builders-library/making-retries-safe-with-idempotent-APIs/",
+      "https://www.palantir.com/docs/foundry/data-connection/webhooks-overview",
+      "https://www.palantir.com/docs/foundry/action-types/consistency-guarantees"
+    ],
+    "SD-08": [
+      "https://github.com/perixtar/Tech-OA-Interview-Questions/blob/master/formats/system-design.md",
+      "https://www.palantir.com/docs/foundry/aip/agent-stack",
+      "https://www.palantir.com/docs/foundry/workshop/concepts-events"
+    ],
+    "SD-09": [
+      "https://www.palantir.com/docs/foundry/aip-evals/getting-started",
+      "https://sre.google/workbook/implementing-slos/"
+    ],
+    "SD-10": [
+      "https://www.palantir.com/docs/foundry/security/access-control-propagation",
+      "https://www.palantir.com/docs/foundry/security/markings",
+      "https://www.palantir.com/docs/foundry/object-permissioning/overview"
+    ],
+    "SD-11": [
+      "https://www.palantir.com/docs/foundry/aip/agent-stack",
+      "https://www.palantir.com/docs/foundry/agent-sdk/overview",
+      "https://www.palantir.com/docs/foundry/agent-sdk/advanced-customization"
+    ],
+    "SD-12": [
+      "https://www.palantir.com/docs/foundry/global-branching",
+      "https://www.palantir.com/docs/foundry/marketplace/overview",
+      "https://www.palantir.com/docs/apollo/core/introduction/index.html"
+    ],
+    "SW1-01": [
+      "https://ocw.mit.edu/ans7870/6/6.005/s16/"
+    ],
+    "SW1-02": [
+      "https://ocw.mit.edu/ans7870/6/6.005/s16/",
+      "https://sp25.datastructur.es/projects/"
+    ],
+    "SW1-03": [
+      "https://ocw.mit.edu/ans7870/6/6.005/s16/",
+      "https://sp25.datastructur.es/projects/"
+    ],
+    "SW1-04": [
+      "https://ocw.mit.edu/ans7870/6/6.005/s16/"
+    ],
+    "SW1-05": [
+      "https://ocw.mit.edu/ans7870/6/6.005/s16/",
+      "https://cs61a.org/fa26/projects/cats/"
+    ],
+    "SW1-06": [
+      "https://ocw.mit.edu/ans7870/6/6.005/s16/",
+      "https://missing.csail.mit.edu/2020/index.html"
+    ],
+    "SW1-07": [
+      "https://ocw.mit.edu/ans7870/6/6.005/s16/",
+      "https://sre.google/workbook/implementing-slos/"
+    ],
+    "SW2-01": [
+      "https://pages.cs.wisc.edu/~remzi/OSTEP/",
+      "https://cs61c.org/fa26/"
+    ],
+    "SW2-02": [
+      "https://pages.cs.wisc.edu/~remzi/OSTEP/"
+    ],
+    "SW2-03": [
+      "https://pages.cs.wisc.edu/~remzi/OSTEP/",
+      "https://ocw.mit.edu/ans7870/6/6.005/s16/"
+    ],
+    "SW2-04": [
+      "https://pages.cs.wisc.edu/~remzi/OSTEP/",
+      "https://ocw.mit.edu/ans7870/6/6.005/s16/"
+    ],
+    "SW2-05": [
+      "https://pages.cs.wisc.edu/~remzi/OSTEP/",
+      "https://cs61c.org/fa26/"
+    ],
+    "SW2-06": [
+      "https://pages.cs.wisc.edu/~remzi/OSTEP/",
+      "https://15445.courses.cs.cmu.edu/spring2025/assignments.html"
+    ],
+    "SW2-07": [
+      "https://missing.csail.mit.edu/2020/index.html",
+      "https://pages.cs.wisc.edu/~remzi/OSTEP/",
+      "https://sre.google/workbook/implementing-slos/"
+    ],
+    "SW3-01": [
+      "https://cs144.github.io/"
+    ],
+    "SW3-02": [
+      "https://cs144.github.io/"
+    ],
+    "SW3-03": [
+      "https://cs144.github.io/"
+    ],
+    "SW3-04": [
+      "https://portswigger.net/web-security/learning-paths/",
+      "https://ocw.mit.edu/ans7870/6/6.005/s16/"
+    ],
+    "SW3-05": [
+      "https://sre.google/workbook/implementing-slos/",
+      "https://pages.cs.wisc.edu/~remzi/OSTEP/"
+    ],
+    "SW3-06": [
+      "https://sre.google/workbook/implementing-slos/",
+      "https://pdos.csail.mit.edu/6.5840/schedule.html"
+    ],
+    "SW3-07": [
+      "https://sre.google/workbook/implementing-slos/",
+      "https://missing.csail.mit.edu/2020/index.html"
+    ],
+    "SW4-01": [
+      "https://15445.courses.cs.cmu.edu/spring2025/assignments.html"
+    ],
+    "SW4-02": [
+      "https://15445.courses.cs.cmu.edu/spring2025/assignments.html"
+    ],
+    "SW4-03": [
+      "https://15445.courses.cs.cmu.edu/spring2025/assignments.html"
+    ],
+    "SW4-04": [
+      "https://15445.courses.cs.cmu.edu/spring2025/assignments.html",
+      "https://pages.cs.wisc.edu/~remzi/OSTEP/"
+    ],
+    "SW4-05": [
+      "https://pdos.csail.mit.edu/6.5840/schedule.html"
+    ],
+    "SW4-06": [
+      "https://pdos.csail.mit.edu/6.5840/schedule.html"
+    ],
+    "SW4-07": [
+      "https://pdos.csail.mit.edu/6.5840/schedule.html"
+    ],
+    "X01": [],
+    "X02": [],
+    "X03": [],
+    "X04": [],
+    "X05": [],
+    "X06": [],
+    "X07": [],
+    "X08": [],
+    "X09": [],
+    "X10": [],
+    "X11": [],
+    "X12": [],
+    "X13": [],
+    "X14": [],
+    "X15": [],
+    "X16": [],
+    "X17": [],
+    "X18": [],
+    "X19": [],
+    "X20": [],
+    "X21": [],
+    "X22": [],
+    "X23": [],
+    "X24": []
+  }
+}

@@ -1,5 +1,5 @@
 import Dexie, { type Table } from "dexie";
-import { parseExercisesMd, type ExerciseBankMeta } from "@/lib/exercises-md";
+import { explainExercisesMd, parseExercisesMd, type ExerciseBankMeta } from "@/lib/exercises-md";
 import { validateBank, type ExecRunner } from "@/lib/exercises-validate";
 import { slugify } from "@/lib/book";
 import type { Exercise } from "@/lib/exercise";
@@ -25,6 +25,9 @@ export interface ExerciseBankRow {
   bytes: number;
   source: "seed" | "import";
   ts: number;
+  /** Exercise ids of Forge items whose ingestion check is still a Phase-0 stub (regla de pendientes, §9.2): the
+   *  bank was accepted, those items were NOT validated and loadBankForModule never offers them. Absent = none. */
+  pendientes?: string[];
 }
 
 class ExercisesDB extends Dexie {
@@ -39,7 +42,9 @@ function db(): ExercisesDB {
   return (_db ??= new ExercisesDB());
 }
 
-export type SaveBankResult = { ok: true; bank: { id: string; meta: ExerciseBankMeta; count: number } } | { ok: false; error: string; details?: string[] };
+export type SaveBankResult =
+  | { ok: true; bank: { id: string; meta: ExerciseBankMeta; count: number; pendientes: string[] } }
+  | { ok: false; error: string; details?: string[]; missingCheck?: true };
 
 export interface SaveBankOpts {
   source?: "seed" | "import";
@@ -52,12 +57,16 @@ export interface SaveBankOpts {
 /** Parse + VALIDATE (auto-consistency) + persist a bank .md. Returns the specific validation errors when a
  *  reference solution doesn't pass its own cases (honest — never ingests a broken bank). null-safe. */
 export async function saveExerciseBank(md: string, opts: SaveBankOpts = {}): Promise<SaveBankResult> {
-  const parsed = parseExercisesMd(md);
-  if (!parsed) {
-    return { ok: false, error: "Formato inválido: el .md no cumple el contrato de ejercicios (frontmatter kind: exercises + al menos un ejercicio bien formado)." };
+  const explained = explainExercisesMd(md);
+  if (!explained.ok) {
+    // the reason names the exercise and the field (CA-31), so an author knows what to fix
+    return { ok: false, error: "Formato inválido: el .md no cumple el contrato de ejercicios (frontmatter kind: exercises + al menos un ejercicio bien formado).", details: [explained.error] };
   }
-  const v = await validateBank(parsed, { pyRun: opts.pyRun, jsRun: opts.jsRun, trustPython: opts.source === "seed" });
+  const parsed = explained.bank;
+  const source = opts.source ?? "import";
+  const v = await validateBank(parsed, { pyRun: opts.pyRun, jsRun: opts.jsRun, trustPython: source === "seed", source });
   if (!v.ok) {
+    if (v.missingCheck) return { ok: false, error: "No descargado · requiere conexión una vez.", details: v.errors, missingCheck: true };
     return { ok: false, error: "El banco tiene ejercicios corruptos — la solución de referencia no pasa sus propios test cases:", details: v.errors };
   }
   const id = parsed.meta.moduleId ?? slugify(parsed.meta.title);
@@ -70,11 +79,12 @@ export async function saveExerciseBank(md: string, opts: SaveBankOpts = {}): Pro
     meta: parsed.meta,
     count: parsed.exercises.length,
     bytes: md.length,
-    source: opts.source ?? "import",
+    source,
     ts: Date.now(),
+    ...(v.pendientes.length ? { pendientes: v.pendientes } : {}),
   };
   await db().banks.put(row);
-  return { ok: true, bank: { id, meta: parsed.meta, count: parsed.exercises.length } };
+  return { ok: true, bank: { id, meta: parsed.meta, count: parsed.exercises.length, pendientes: v.pendientes } };
 }
 
 export async function getBank(id: string): Promise<ExerciseBankRow | null> {
@@ -113,5 +123,9 @@ export async function totalBankBytes(): Promise<number> {
  *  stored .md (deterministic, stable ids) so the exercise model is always fresh from the source of truth. */
 export async function loadBankForModule(moduleId: string): Promise<Exercise[]> {
   const banks = await getBanksForModule(moduleId);
-  return banks.flatMap((b) => parseExercisesMd(b.md)?.exercises ?? []);
+  return banks.flatMap((b) => {
+    const pending = new Set(b.pendientes ?? []);
+    // a pending item (stub check, §9.2) was never validated → it is never offered
+    return (parseExercisesMd(b.md)?.exercises ?? []).filter((ex) => !pending.has(ex.id));
+  });
 }

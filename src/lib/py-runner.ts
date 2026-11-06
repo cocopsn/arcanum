@@ -98,7 +98,15 @@ export function resetPy() {
 
 /** Run the learner's Python against the (non-hint) cases. Returns a RunResult, or a `pyUnavailable`
  *  flag when the runtime couldn't be loaded (honest — the caller says "descárgalo con conexión"). */
-export async function runPy(code: string, functionName: string, cases: TestCase[], timeoutMs = 15000): Promise<RunResult & { pyUnavailable?: boolean }> {
+export async function runPy(
+  code: string,
+  functionName: string,
+  cases: TestCase[],
+  timeoutMs = 15000,
+  // Frozen signature (Forge phase 0). STUB: `packages` is ignored for now (behaves exactly as before);
+  // forge/e2-datos writes the loadPackage(["sqlite3"]) body in phase 1.
+  _opts?: { packages?: "sqlite3"[] },
+): Promise<RunResult & { pyUnavailable?: boolean }> {
   const real = cases.filter((c) => !c.hint);
   if (typeof window === "undefined" || typeof Worker === "undefined") return { syntaxError: null, cases: [], pyUnavailable: true };
   const w = worker();
@@ -130,4 +138,16 @@ export async function runPy(code: string, functionName: string, cases: TestCase[
     return { input: c.input, expected: c.expected, output: r.value, pass: deepEqual(r.value, c.expected) };
   });
   return { syntaxError: null, cases: caseResults };
+}
+
+export type WarmPyResult = { ok: true } | { ok: false; reason: "sin-red" | "tiempo" | "no-disponible" };
+
+/** UI text for the stub answer (`no-disponible`): offline Python preparation is not in this version yet. */
+export const WARM_PY_UNAVAILABLE = "La preparación de Python sin red aún no está disponible en esta versión";
+
+/** Load Pyodide + `packages` in the worker WITHOUT running code, with its own limit (not runPy's 15 s).
+ *  Frozen signature (Forge phase 0). STUB: always answers `no-disponible` and loads nothing; the real body
+ *  (load, loadPackage, resetPy() on timeout) is forge/e2-datos' in phase 1. */
+export async function warmPy(_packages: "sqlite3"[], _timeoutMs = 120_000): Promise<WarmPyResult> {
+  return { ok: false, reason: "no-disponible" };
 }

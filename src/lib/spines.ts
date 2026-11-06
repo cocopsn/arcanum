@@ -6,6 +6,9 @@
 // JS-rendered / blocked (DW chapters, ResearchGate) the course URL is anchored honestly.
 // Regenerate via scratchpad/gen-spines.mjs from the extraction output.
 
+import { FORGE_SPINE } from "@/lib/spines-forge";
+import { isFetchableSourceUrl } from "@/lib/fetch-policy";
+
 /** A PATH declared on a spine — a parallel route with its OWN cells + fog-of-war. */
 export interface SpinePath {
   id: string;
@@ -55,6 +58,9 @@ export interface SpineCell {
   /** conceptual SEE-ALSO across spines (a genuinely SEPARATE cell of another nature, NOT a
    *  dedup) — e.g. competitive graphs relates to ITC's graphs but is reflex-under-clock, not depth. */
   related?: string[];
+  /** where the cell's content is authored when it cites no URL (Engineering Forge D1–D7 and X01–X24:
+   *  the master program's own tasks) — an anchor, never an invented source */
+  authoredIn?: string;
 }
 
 export interface Spine {
@@ -68,6 +74,9 @@ export interface Spine {
   paths: SpinePath[];
   /** ordered cells — course order IS the DAG dependency (a linear chain PER PATH) */
   cells: SpineCell[];
+  /** the world seeds itself in its OWN block (ids derived from codes, own prefixes and ts) — the positional
+   *  constructors of lib/seed.ts skip it (Engineering Forge, design §4.3) */
+  ownSeedBlock?: boolean;
 }
 
 /** The paths of a spine, by goalId → used by the seed + tests. */
@@ -889,7 +898,9 @@ export const SPINES: Spine[] = [
         }
       }
     ]
-  }
+  },
+  // Engineering Forge — LAST (RD-4), with its own seed block (ownSeedBlock). Generated: lib/spines-forge.ts.
+  FORGE_SPINE,
 ];
 
 const CELL_BY_ID = new Map<string, SpineCell>(SPINES.flatMap((s) => s.cells.map((c) => [c.id, c] as const)));
@@ -899,8 +910,10 @@ export function cellById(id: string): SpineCell | null {
 
 // The ALLOWLIST for the server-side source fetcher — only the curated, verified spine URLs may be
 // fetched (never an arbitrary client-supplied URL → no SSRF). Exact-match against every source/video.
+// Hosts that are never requested by the server (accounts, build, video players, internal hosts) are
+// filtered out here too (lib/fetch-policy.ts, CA-51).
 const SOURCE_ALLOWLIST = new Set<string>(
-  SPINES.flatMap((s) => s.cells.flatMap((c) => [...(c.sourceUrls ?? []), ...(c.videoUrls ?? [])])),
+  SPINES.flatMap((s) => s.cells.flatMap((c) => [...(c.sourceUrls ?? []), ...(c.videoUrls ?? [])])).filter(isFetchableSourceUrl),
 );
 export function isAllowedSource(url: string): boolean {
   return SOURCE_ALLOWLIST.has(url);

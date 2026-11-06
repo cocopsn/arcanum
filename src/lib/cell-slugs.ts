@@ -8,6 +8,7 @@
 // MATCHING: a book slug matches a key when it EQUALS it or starts with `${key}-` — so "itc-c1",
 // "itc-c1-asintotico", "itc-c1-lo-que-sea" all anchor to ITC C1. Keys carry the spine prefix (itc-/fred-)
 // so there is no cross-spine collision. To anchor a NEW cell's books, add its slug here (single source).
+import { FORGE_SLUG_TO_ID } from "@/forge/ids";
 
 export const CELL_SLUG_TO_ID: Record<string, string> = {
   // ITC (goal a0000000-…-001)
@@ -71,6 +72,9 @@ export const CELL_SLUG_TO_ID: Record<string, string> = {
   "oa-11": "ce000000-0000-4000-8000-000000000012",
   "oa-12": "ce000000-0000-4000-8000-000000000013",
   "oa-13": "ce000000-0000-4000-8000-000000000014",
+  // Engineering Forge (goal a0000000-…-006) — 168 slugs CALCULATED from the codes (src/forge/ids.ts):
+  // "forge-" + the code in lowercase (forge-f0-01 … forge-sw4-07, forge-d1 … forge-d8, forge-x01 …, forge-sd-01 …).
+  ...FORGE_SLUG_TO_ID,
 };
 
 const KNOWN_IDS = new Set(Object.values(CELL_SLUG_TO_ID));

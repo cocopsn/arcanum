@@ -1,0 +1,992 @@
+{
+  "v": 1,
+  "slug": "expedientes",
+  "code": "SD",
+  "name": "Expedientes de system design",
+  "family": "Evaluación",
+  "header": {
+    "entrada": "",
+    "entradaRecomendada": [],
+    "evidencia": "",
+    "apoyo": []
+  },
+  "cells": [
+    {
+      "code": "SD-01",
+      "id": "cf000000-0000-4000-8000-0053442d3031",
+      "title": "SD-01 · Agenda clínica",
+      "cls": "expediente",
+      "flujo": "expediente",
+      "compuerta": "expediente",
+      "ficha": {
+        "foco": "Agenda clínica",
+        "fuentes": [
+          {
+            "clave": "PG",
+            "etiqueta": "PostgreSQL: Documentation: 18: Chapter 13. Concurrency Control",
+            "url": "https://www.postgresql.org/docs/current/mvcc.html?trk=article-ssr-frontend-pulse_little-text-block",
+            "tipo": "otro",
+            "acceso": "publico"
+          },
+          {
+            "clave": "CONSIST",
+            "etiqueta": "Action types • Consistency and isolation • Palantir",
+            "url": "https://www.palantir.com/docs/foundry/action-types/consistency-guarantees",
+            "tipo": "docs",
+            "acceso": "publico"
+          },
+          {
+            "clave": "USE",
+            "etiqueta": "Use case lifecycle • Overview • Palantir",
+            "url": "https://www.palantir.com/docs/foundry/use-case-life-cycle/overview",
+            "tipo": "docs",
+            "acceso": "publico"
+          }
+        ],
+        "mision": "Asignar equipo y horario sin doble reserva; dos operadores compiten.",
+        "defensa": "Esquema, invariantes, historial de carrera y solución comprobable."
+      },
+      "gate": {
+        "pregunta": "Esquema, invariantes, historial de carrera y solución comprobable.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Sistemas ≥ 3: Asignar equipo y horario sin doble reserva; dos operadores compiten.",
+          "Abstracción ≥ 3: Esquema, invariantes, historial de carrera y solución comprobable.",
+          "Producto ≥ 3: dos operadores compiten.",
+          "Consistencia (condición crítica): Esquema, invariantes, historial de carrera y solución comprobable.",
+          "Trazabilidad (condición crítica): Esquema, invariantes, historial de carrera y solución comprobable."
+        ]
+      },
+      "capacidades": [
+        "sistemas",
+        "abstraccion",
+        "producto"
+      ],
+      "rastroCapacidades": {
+        "sistemas": "Asignar equipo y horario sin doble reserva; dos operadores compiten.",
+        "abstraccion": "Esquema, invariantes, historial de carrera y solución comprobable.",
+        "producto": "dos operadores compiten."
+      },
+      "criticas": [
+        {
+          "id": "consistencia",
+          "texto": "Consistencia",
+          "rastro": "Esquema, invariantes, historial de carrera y solución comprobable."
+        },
+        {
+          "id": "trazabilidad",
+          "texto": "Trazabilidad",
+          "rastro": "Esquema, invariantes, historial de carrera y solución comprobable."
+        }
+      ],
+      "naturaleza": {
+        "valor": "a_mano"
+      },
+      "alcance": "local",
+      "etiquetas": [],
+      "sd": {
+        "decision": "Asignar equipo y horario sin doble reserva; dos operadores compiten.",
+        "claves": [
+          "PG",
+          "CONSIST",
+          "USE"
+        ],
+        "entregable": "Esquema, invariantes, historial de carrera y solución comprobable.",
+        "inspiradoEnCatalogo": false,
+        "plantilla": "problema y usuario; requisitos funcionales; requisitos no funcionales con números y supuestos; límites del sistema; esquema/objetos; contratos de API/eventos; invariantes; camino de lectura; camino de escritura; consistencia; fallas y recuperación; permisos; observabilidad; capacidad/costo; alternativa descartada; plan de migración; experimento de validación; ADR de una página. No se exige dibujar microservicios si una aplicación simple resuelve el problema.",
+        "pasadas": "diseño simple correcto → demanda o restricción nueva → incidente. La evaluación verifica que el alumno sepa qué cambiar y qué preservar. Consenso o replicación solo aparecen cuando el caso los justifica."
+      }
+    },
+    {
+      "code": "SD-02",
+      "id": "cf000000-0000-4000-8000-0053442d3032",
+      "title": "SD-02 · Despacho de medicamentos",
+      "cls": "expediente",
+      "flujo": "expediente",
+      "compuerta": "expediente",
+      "ficha": {
+        "foco": "Despacho de medicamentos",
+        "fuentes": [
+          {
+            "clave": "OASD",
+            "etiqueta": "Índice comunitario de system design",
+            "url": "https://github.com/perixtar/Tech-OA-Interview-Questions/blob/master/formats/system-design.md",
+            "tipo": "otro",
+            "acceso": "publico"
+          },
+          {
+            "clave": "MIT",
+            "etiqueta": "Lecture Notes | Introduction to Algorithms | Electrical Engineering and Computer Science | MIT OpenCourseWare",
+            "url": "https://www.ocw.mit.edu/courses/6-006-introduction-to-algorithms-spring-2020/pages/lecture-notes/",
+            "tipo": "curso",
+            "acceso": "publico"
+          },
+          {
+            "clave": "ACTION",
+            "etiqueta": "Action types • Getting started • Palantir",
+            "url": "https://www.palantir.com/docs/foundry/action-types/getting-started",
+            "tipo": "docs",
+            "acceso": "publico"
+          }
+        ],
+        "mision": "Cumplir ventanas, stock y restricciones de entrega. Inspirado en el título del catálogo atribuido a Palantir.",
+        "defensa": "Modelo de pedidos, máquina de estados y reasignación con compensación."
+      },
+      "gate": {
+        "pregunta": "Modelo de pedidos, máquina de estados y reasignación con compensación.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Sistemas ≥ 3: Cumplir ventanas, stock y restricciones de entrega. Inspirado en el título del catálogo atribuido a Palantir.",
+          "Recuperación (condición crítica): Modelo de pedidos, máquina de estados y reasignación con compensación."
+        ]
+      },
+      "capacidades": [
+        "sistemas"
+      ],
+      "rastroCapacidades": {
+        "sistemas": "Cumplir ventanas, stock y restricciones de entrega. Inspirado en el título del catálogo atribuido a Palantir."
+      },
+      "criticas": [
+        {
+          "id": "recuperacion",
+          "texto": "Recuperación",
+          "rastro": "Modelo de pedidos, máquina de estados y reasignación con compensación."
+        }
+      ],
+      "naturaleza": {
+        "valor": "a_mano"
+      },
+      "alcance": "local",
+      "etiquetas": [
+        "inspirado_catalogo"
+      ],
+      "sd": {
+        "decision": "Cumplir ventanas, stock y restricciones de entrega. Inspirado en el título del catálogo atribuido a Palantir.",
+        "claves": [
+          "OASD",
+          "MIT",
+          "ACTION"
+        ],
+        "entregable": "Modelo de pedidos, máquina de estados y reasignación con compensación.",
+        "inspiradoEnCatalogo": true,
+        "plantilla": "problema y usuario; requisitos funcionales; requisitos no funcionales con números y supuestos; límites del sistema; esquema/objetos; contratos de API/eventos; invariantes; camino de lectura; camino de escritura; consistencia; fallas y recuperación; permisos; observabilidad; capacidad/costo; alternativa descartada; plan de migración; experimento de validación; ADR de una página. No se exige dibujar microservicios si una aplicación simple resuelve el problema.",
+        "pasadas": "diseño simple correcto → demanda o restricción nueva → incidente. La evaluación verifica que el alumno sepa qué cambiar y qué preservar. Consenso o replicación solo aparecen cuando el caso los justifica."
+      }
+    },
+    {
+      "code": "SD-03",
+      "id": "cf000000-0000-4000-8000-0053442d3033",
+      "title": "SD-03 · Asignación de aeronaves",
+      "cls": "expediente",
+      "flujo": "expediente",
+      "compuerta": "expediente",
+      "ficha": {
+        "foco": "Asignación de aeronaves",
+        "fuentes": [
+          {
+            "clave": "OASD",
+            "etiqueta": "Índice comunitario de system design",
+            "url": "https://github.com/perixtar/Tech-OA-Interview-Questions/blob/master/formats/system-design.md",
+            "tipo": "otro",
+            "acceso": "publico"
+          },
+          {
+            "clave": "MIT",
+            "etiqueta": "Lecture Notes | Introduction to Algorithms | Electrical Engineering and Computer Science | MIT OpenCourseWare",
+            "url": "https://www.ocw.mit.edu/courses/6-006-introduction-to-algorithms-spring-2020/pages/lecture-notes/",
+            "tipo": "curso",
+            "acceso": "publico"
+          },
+          {
+            "clave": "ONTO",
+            "etiqueta": "Overview • Ontology • Palantir",
+            "url": "https://www.palantir.com/docs/foundry/ontology/overview",
+            "tipo": "docs",
+            "acceso": "publico"
+          }
+        ],
+        "mision": "Resolver recursos escasos al introducir mantenimiento y retrasos. Inspirado en el catálogo.",
+        "defensa": "Grafo de restricciones, baseline, heurística y límites del algoritmo."
+      },
+      "gate": {
+        "pregunta": "Grafo de restricciones, baseline, heurística y límites del algoritmo.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Sistemas ≥ 3: Resolver recursos escasos al introducir mantenimiento y retrasos. Inspirado en el catálogo.",
+          "Algoritmos ≥ 3: Grafo de restricciones, baseline, heurística y límites del algoritmo.",
+          "Correctitud (condición crítica): Grafo de restricciones, baseline, heurística y límites del algoritmo."
+        ]
+      },
+      "capacidades": [
+        "sistemas",
+        "algoritmos"
+      ],
+      "rastroCapacidades": {
+        "sistemas": "Resolver recursos escasos al introducir mantenimiento y retrasos. Inspirado en el catálogo.",
+        "algoritmos": "Grafo de restricciones, baseline, heurística y límites del algoritmo."
+      },
+      "criticas": [
+        {
+          "id": "correctitud",
+          "texto": "Correctitud",
+          "rastro": "Grafo de restricciones, baseline, heurística y límites del algoritmo."
+        }
+      ],
+      "naturaleza": {
+        "valor": "a_mano"
+      },
+      "alcance": "local",
+      "etiquetas": [
+        "inspirado_catalogo"
+      ],
+      "sd": {
+        "decision": "Resolver recursos escasos al introducir mantenimiento y retrasos. Inspirado en el catálogo.",
+        "claves": [
+          "OASD",
+          "MIT",
+          "ONTO"
+        ],
+        "entregable": "Grafo de restricciones, baseline, heurística y límites del algoritmo.",
+        "inspiradoEnCatalogo": true,
+        "plantilla": "problema y usuario; requisitos funcionales; requisitos no funcionales con números y supuestos; límites del sistema; esquema/objetos; contratos de API/eventos; invariantes; camino de lectura; camino de escritura; consistencia; fallas y recuperación; permisos; observabilidad; capacidad/costo; alternativa descartada; plan de migración; experimento de validación; ADR de una página. No se exige dibujar microservicios si una aplicación simple resuelve el problema.",
+        "pasadas": "diseño simple correcto → demanda o restricción nueva → incidente. La evaluación verifica que el alumno sepa qué cambiar y qué preservar. Consenso o replicación solo aparecen cuando el caso los justifica."
+      }
+    },
+    {
+      "code": "SD-04",
+      "id": "cf000000-0000-4000-8000-0053442d3034",
+      "title": "SD-04 · Alertas industriales",
+      "cls": "expediente",
+      "flujo": "expediente",
+      "compuerta": "expediente",
+      "ficha": {
+        "foco": "Alertas industriales",
+        "fuentes": [
+          {
+            "clave": "TIME",
+            "etiqueta": "Time series • Overview • Palantir",
+            "url": "https://www.palantir.com/docs/foundry/time-series/time-series-overview",
+            "tipo": "docs",
+            "acceso": "publico"
+          },
+          {
+            "clave": "AUTO",
+            "etiqueta": "Automate • Overview • Palantir",
+            "url": "https://www.palantir.com/docs/foundry/automate/overview",
+            "tipo": "docs",
+            "acceso": "publico"
+          },
+          {
+            "clave": "RETRY",
+            "etiqueta": "Tiempos de espera, reintentos y retardo con fluctuación",
+            "url": "https://aws.amazon.com/es/builders-library/timeouts-retries-and-backoff-with-jitter/",
+            "tipo": "otro",
+            "acceso": "publico"
+          }
+        ],
+        "mision": "Detectar, deduplicar y resolver alertas sin tormenta de avisos.",
+        "defensa": "Pipeline de eventos, clave de deduplicación, estados y política de escalada."
+      },
+      "gate": {
+        "pregunta": "Pipeline de eventos, clave de deduplicación, estados y política de escalada.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Sistemas ≥ 3: Detectar, deduplicar y resolver alertas sin tormenta de avisos.",
+          "Datos ≥ 3: Pipeline de eventos, clave de deduplicación, estados y política de escalada.",
+          "Identidad (condición crítica): Detectar, deduplicar y resolver alertas sin tormenta de avisos."
+        ]
+      },
+      "capacidades": [
+        "sistemas",
+        "datos"
+      ],
+      "rastroCapacidades": {
+        "sistemas": "Detectar, deduplicar y resolver alertas sin tormenta de avisos.",
+        "datos": "Pipeline de eventos, clave de deduplicación, estados y política de escalada."
+      },
+      "criticas": [
+        {
+          "id": "identidad",
+          "texto": "Identidad",
+          "rastro": "Detectar, deduplicar y resolver alertas sin tormenta de avisos."
+        }
+      ],
+      "naturaleza": {
+        "valor": "a_mano"
+      },
+      "alcance": "local",
+      "etiquetas": [],
+      "sd": {
+        "decision": "Detectar, deduplicar y resolver alertas sin tormenta de avisos.",
+        "claves": [
+          "TIME",
+          "AUTO",
+          "RETRY"
+        ],
+        "entregable": "Pipeline de eventos, clave de deduplicación, estados y política de escalada.",
+        "inspiradoEnCatalogo": false,
+        "plantilla": "problema y usuario; requisitos funcionales; requisitos no funcionales con números y supuestos; límites del sistema; esquema/objetos; contratos de API/eventos; invariantes; camino de lectura; camino de escritura; consistencia; fallas y recuperación; permisos; observabilidad; capacidad/costo; alternativa descartada; plan de migración; experimento de validación; ADR de una página. No se exige dibujar microservicios si una aplicación simple resuelve el problema.",
+        "pasadas": "diseño simple correcto → demanda o restricción nueva → incidente. La evaluación verifica que el alumno sepa qué cambiar y qué preservar. Consenso o replicación solo aparecen cuando el caso los justifica."
+      }
+    },
+    {
+      "code": "SD-05",
+      "id": "cf000000-0000-4000-8000-0053442d3035",
+      "title": "SD-05 · Flujo CDC",
+      "cls": "expediente",
+      "flujo": "expediente",
+      "compuerta": "expediente",
+      "ficha": {
+        "foco": "Flujo CDC",
+        "fuentes": [
+          {
+            "clave": "CDC",
+            "etiqueta": "Core concepts • Change data capture (CDC) • Palantir",
+            "url": "https://www.palantir.com/docs/foundry/data-integration/change-data-capture",
+            "tipo": "docs",
+            "acceso": "publico"
+          },
+          {
+            "clave": "INCR",
+            "etiqueta": "Python • Incremental transforms • Usage guide • Palantir",
+            "url": "https://www.palantir.com/docs/foundry/transforms-python/incremental-usage",
+            "tipo": "docs",
+            "acceso": "publico"
+          },
+          {
+            "clave": "DIST",
+            "etiqueta": "6.5840 Schedule: Spring 2026",
+            "url": "https://pdos.csail.mit.edu/6.5840/schedule.html",
+            "tipo": "curso",
+            "acceso": "publico"
+          }
+        ],
+        "mision": "Mantener una proyección ante replays, deletes y eventos tardíos.",
+        "defensa": "Contrato del evento, offsets/checkpoints, reconstrucción y reconciliación."
+      },
+      "gate": {
+        "pregunta": "Contrato del evento, offsets/checkpoints, reconstrucción y reconciliación.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Sistemas ≥ 3: Mantener una proyección ante replays, deletes y eventos tardíos.",
+          "Abstracción ≥ 3: Contrato del evento, offsets/checkpoints, reconstrucción y reconciliación.",
+          "Recuperación (condición crítica): Contrato del evento, offsets/checkpoints, reconstrucción y reconciliación."
+        ]
+      },
+      "capacidades": [
+        "sistemas",
+        "abstraccion"
+      ],
+      "rastroCapacidades": {
+        "sistemas": "Mantener una proyección ante replays, deletes y eventos tardíos.",
+        "abstraccion": "Contrato del evento, offsets/checkpoints, reconstrucción y reconciliación."
+      },
+      "criticas": [
+        {
+          "id": "recuperacion",
+          "texto": "Recuperación",
+          "rastro": "Contrato del evento, offsets/checkpoints, reconstrucción y reconciliación."
+        }
+      ],
+      "naturaleza": {
+        "valor": "a_mano"
+      },
+      "alcance": "local",
+      "etiquetas": [],
+      "sd": {
+        "decision": "Mantener una proyección ante replays, deletes y eventos tardíos.",
+        "claves": [
+          "CDC",
+          "INCR",
+          "DIST"
+        ],
+        "entregable": "Contrato del evento, offsets/checkpoints, reconstrucción y reconciliación.",
+        "inspiradoEnCatalogo": false,
+        "plantilla": "problema y usuario; requisitos funcionales; requisitos no funcionales con números y supuestos; límites del sistema; esquema/objetos; contratos de API/eventos; invariantes; camino de lectura; camino de escritura; consistencia; fallas y recuperación; permisos; observabilidad; capacidad/costo; alternativa descartada; plan de migración; experimento de validación; ADR de una página. No se exige dibujar microservicios si una aplicación simple resuelve el problema.",
+        "pasadas": "diseño simple correcto → demanda o restricción nueva → incidente. La evaluación verifica que el alumno sepa qué cambiar y qué preservar. Consenso o replicación solo aparecen cuando el caso los justifica."
+      }
+    },
+    {
+      "code": "SD-06",
+      "id": "cf000000-0000-4000-8000-0053442d3036",
+      "title": "SD-06 · Conocimiento documental",
+      "cls": "expediente",
+      "flujo": "expediente",
+      "compuerta": "expediente",
+      "ficha": {
+        "foco": "Conocimiento documental",
+        "fuentes": [
+          {
+            "clave": "RAG",
+            "etiqueta": "AIP Chatbot Studio • Retrieval context • Context types • Palantir",
+            "url": "https://www.palantir.com/docs/foundry/chatbot-studio/retrieval-context",
+            "tipo": "docs",
+            "acceso": "publico"
+          },
+          {
+            "clave": "CITE",
+            "etiqueta": "AIP Chatbot Studio • Retrieval context • Citations • Palantir",
+            "url": "https://www.palantir.com/docs/foundry/chatbot-studio/citations",
+            "tipo": "docs",
+            "acceso": "publico"
+          },
+          {
+            "clave": "SEC",
+            "etiqueta": "Concepts • Access control propagation • Palantir",
+            "url": "https://www.palantir.com/docs/foundry/security/access-control-propagation",
+            "tipo": "docs",
+            "acceso": "publico"
+          }
+        ],
+        "mision": "Recuperar evidencia pertinente con permisos y fuentes contradictorias.",
+        "defensa": "Estrategia de ingestión/chunking, criterios de búsqueda y evaluación reservada."
+      },
+      "gate": {
+        "pregunta": "Estrategia de ingestión/chunking, criterios de búsqueda y evaluación reservada.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Sistemas ≥ 3: Recuperar evidencia pertinente con permisos y fuentes contradictorias.",
+          "Comunicación ≥ 3: Conocimiento documental",
+          "Responsabilidad ≥ 3: Recuperar evidencia pertinente con permisos y fuentes contradictorias.",
+          "Autorización (condición crítica): Recuperar evidencia pertinente con permisos y fuentes contradictorias.",
+          "Recuperación (condición crítica): Recuperar evidencia pertinente con permisos y fuentes contradictorias."
+        ]
+      },
+      "capacidades": [
+        "sistemas",
+        "comunicacion",
+        "responsabilidad"
+      ],
+      "rastroCapacidades": {
+        "sistemas": "Recuperar evidencia pertinente con permisos y fuentes contradictorias.",
+        "comunicacion": "Conocimiento documental",
+        "responsabilidad": "Recuperar evidencia pertinente con permisos y fuentes contradictorias."
+      },
+      "criticas": [
+        {
+          "id": "autorizacion",
+          "texto": "Autorización",
+          "rastro": "Recuperar evidencia pertinente con permisos y fuentes contradictorias."
+        },
+        {
+          "id": "recuperacion",
+          "texto": "Recuperación",
+          "rastro": "Recuperar evidencia pertinente con permisos y fuentes contradictorias."
+        }
+      ],
+      "naturaleza": {
+        "valor": "a_mano"
+      },
+      "alcance": "local",
+      "etiquetas": [],
+      "sd": {
+        "decision": "Recuperar evidencia pertinente con permisos y fuentes contradictorias.",
+        "claves": [
+          "RAG",
+          "CITE",
+          "SEC"
+        ],
+        "entregable": "Estrategia de ingestión/chunking, criterios de búsqueda y evaluación reservada.",
+        "inspiradoEnCatalogo": false,
+        "plantilla": "problema y usuario; requisitos funcionales; requisitos no funcionales con números y supuestos; límites del sistema; esquema/objetos; contratos de API/eventos; invariantes; camino de lectura; camino de escritura; consistencia; fallas y recuperación; permisos; observabilidad; capacidad/costo; alternativa descartada; plan de migración; experimento de validación; ADR de una página. No se exige dibujar microservicios si una aplicación simple resuelve el problema.",
+        "pasadas": "diseño simple correcto → demanda o restricción nueva → incidente. La evaluación verifica que el alumno sepa qué cambiar y qué preservar. Consenso o replicación solo aparecen cuando el caso los justifica."
+      }
+    },
+    {
+      "code": "SD-07",
+      "id": "cf000000-0000-4000-8000-0053442d3037",
+      "title": "SD-07 · Órdenes a sistema externo",
+      "cls": "expediente",
+      "flujo": "expediente",
+      "compuerta": "expediente",
+      "ficha": {
+        "foco": "Órdenes a sistema externo",
+        "fuentes": [
+          {
+            "clave": "IDEMP",
+            "etiqueta": "Making retries safe with idempotent APIs",
+            "url": "https://aws.amazon.com/builders-library/making-retries-safe-with-idempotent-APIs/",
+            "tipo": "otro",
+            "acceso": "publico"
+          },
+          {
+            "clave": "WEBHOOK",
+            "etiqueta": "Data Connection • Webhooks • Overview • Palantir",
+            "url": "https://www.palantir.com/docs/foundry/data-connection/webhooks-overview",
+            "tipo": "docs",
+            "acceso": "publico"
+          },
+          {
+            "clave": "CONSIST",
+            "etiqueta": "Action types • Consistency and isolation • Palantir",
+            "url": "https://www.palantir.com/docs/foundry/action-types/consistency-guarantees",
+            "tipo": "docs",
+            "acceso": "publico"
+          }
+        ],
+        "mision": "Sobrevivir a timeout cuando el ERP sí aplicó el cambio.",
+        "defensa": "Clave idempotente, estado pendiente, reconciliador y pruebas de duplicados."
+      },
+      "gate": {
+        "pregunta": "Clave idempotente, estado pendiente, reconciliador y pruebas de duplicados.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Sistemas ≥ 3: Sobrevivir a timeout cuando el ERP sí aplicó el cambio.",
+          "Correctitud (condición crítica): Clave idempotente, estado pendiente, reconciliador y pruebas de duplicados.",
+          "Identidad (condición crítica): Clave idempotente, estado pendiente, reconciliador y pruebas de duplicados."
+        ]
+      },
+      "capacidades": [
+        "sistemas"
+      ],
+      "rastroCapacidades": {
+        "sistemas": "Sobrevivir a timeout cuando el ERP sí aplicó el cambio."
+      },
+      "criticas": [
+        {
+          "id": "correctitud",
+          "texto": "Correctitud",
+          "rastro": "Clave idempotente, estado pendiente, reconciliador y pruebas de duplicados."
+        },
+        {
+          "id": "identidad",
+          "texto": "Identidad",
+          "rastro": "Clave idempotente, estado pendiente, reconciliador y pruebas de duplicados."
+        }
+      ],
+      "naturaleza": {
+        "valor": "a_mano"
+      },
+      "alcance": "local",
+      "etiquetas": [],
+      "sd": {
+        "decision": "Sobrevivir a timeout cuando el ERP sí aplicó el cambio.",
+        "claves": [
+          "IDEMP",
+          "WEBHOOK",
+          "CONSIST"
+        ],
+        "entregable": "Clave idempotente, estado pendiente, reconciliador y pruebas de duplicados.",
+        "inspiradoEnCatalogo": false,
+        "plantilla": "problema y usuario; requisitos funcionales; requisitos no funcionales con números y supuestos; límites del sistema; esquema/objetos; contratos de API/eventos; invariantes; camino de lectura; camino de escritura; consistencia; fallas y recuperación; permisos; observabilidad; capacidad/costo; alternativa descartada; plan de migración; experimento de validación; ADR de una página. No se exige dibujar microservicios si una aplicación simple resuelve el problema.",
+        "pasadas": "diseño simple correcto → demanda o restricción nueva → incidente. La evaluación verifica que el alumno sepa qué cambiar y qué preservar. Consenso o replicación solo aparecen cuando el caso los justifica."
+      }
+    },
+    {
+      "code": "SD-08",
+      "id": "cf000000-0000-4000-8000-0053442d3038",
+      "title": "SD-08 · Chat operacional",
+      "cls": "expediente",
+      "flujo": "expediente",
+      "compuerta": "expediente",
+      "ficha": {
+        "foco": "Chat operacional",
+        "fuentes": [
+          {
+            "clave": "OASD",
+            "etiqueta": "Índice comunitario de system design",
+            "url": "https://github.com/perixtar/Tech-OA-Interview-Questions/blob/master/formats/system-design.md",
+            "tipo": "otro",
+            "acceso": "publico"
+          },
+          {
+            "clave": "AGENT",
+            "etiqueta": "Overview • AIP • Palantir",
+            "url": "https://www.palantir.com/docs/foundry/aip/agent-stack",
+            "tipo": "docs",
+            "acceso": "publico"
+          },
+          {
+            "clave": "EVENTS",
+            "etiqueta": "Workshop • Core concepts • Events • Palantir",
+            "url": "https://www.palantir.com/docs/foundry/workshop/concepts-events",
+            "tipo": "docs",
+            "acceso": "publico"
+          }
+        ],
+        "mision": "Contexto, identidad y actualizaciones a varios operadores. Inspirado en el catálogo.",
+        "defensa": "APIs, orden de mensajes, consistencia y límites de retención."
+      },
+      "gate": {
+        "pregunta": "APIs, orden de mensajes, consistencia y límites de retención.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Sistemas ≥ 3: Contexto, identidad y actualizaciones a varios operadores. Inspirado en el catálogo.",
+          "Producto ≥ 3: Contexto, identidad y actualizaciones a varios operadores.",
+          "Identidad (condición crítica): Contexto, identidad y actualizaciones a varios operadores.",
+          "Consistencia (condición crítica): APIs, orden de mensajes, consistencia y límites de retención."
+        ]
+      },
+      "capacidades": [
+        "sistemas",
+        "producto"
+      ],
+      "rastroCapacidades": {
+        "sistemas": "Contexto, identidad y actualizaciones a varios operadores. Inspirado en el catálogo.",
+        "producto": "Contexto, identidad y actualizaciones a varios operadores."
+      },
+      "criticas": [
+        {
+          "id": "identidad",
+          "texto": "Identidad",
+          "rastro": "Contexto, identidad y actualizaciones a varios operadores."
+        },
+        {
+          "id": "consistencia",
+          "texto": "Consistencia",
+          "rastro": "APIs, orden de mensajes, consistencia y límites de retención."
+        }
+      ],
+      "naturaleza": {
+        "valor": "a_mano"
+      },
+      "alcance": "local",
+      "etiquetas": [
+        "inspirado_catalogo"
+      ],
+      "sd": {
+        "decision": "Contexto, identidad y actualizaciones a varios operadores. Inspirado en el catálogo.",
+        "claves": [
+          "OASD",
+          "AGENT",
+          "EVENTS"
+        ],
+        "entregable": "APIs, orden de mensajes, consistencia y límites de retención.",
+        "inspiradoEnCatalogo": true,
+        "plantilla": "problema y usuario; requisitos funcionales; requisitos no funcionales con números y supuestos; límites del sistema; esquema/objetos; contratos de API/eventos; invariantes; camino de lectura; camino de escritura; consistencia; fallas y recuperación; permisos; observabilidad; capacidad/costo; alternativa descartada; plan de migración; experimento de validación; ADR de una página. No se exige dibujar microservicios si una aplicación simple resuelve el problema.",
+        "pasadas": "diseño simple correcto → demanda o restricción nueva → incidente. La evaluación verifica que el alumno sepa qué cambiar y qué preservar. Consenso o replicación solo aparecen cuando el caso los justifica."
+      }
+    },
+    {
+      "code": "SD-09",
+      "id": "cf000000-0000-4000-8000-0053442d3039",
+      "title": "SD-09 · Motor de evaluación",
+      "cls": "expediente",
+      "flujo": "expediente",
+      "compuerta": "expediente",
+      "ficha": {
+        "foco": "Motor de evaluación",
+        "fuentes": [
+          {
+            "clave": "EVAL",
+            "etiqueta": "AIP Evals • Evaluation suites for Logic functions • Palantir",
+            "url": "https://www.palantir.com/docs/foundry/aip-evals/getting-started",
+            "tipo": "docs",
+            "acceso": "publico"
+          },
+          {
+            "clave": "SLO",
+            "etiqueta": "Google SRE - Continuous Improvement To Get Reliability",
+            "url": "https://sre.google/workbook/implementing-slos/",
+            "tipo": "otro",
+            "acceso": "publico"
+          }
+        ],
+        "mision": "Comparar prompts/modelos sin contaminación del conjunto reservado.",
+        "defensa": "Dataset versionado, evaluadores, costo, varianza y criterio de promoción."
+      },
+      "gate": {
+        "pregunta": "Dataset versionado, evaluadores, costo, varianza y criterio de promoción.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Sistemas ≥ 3: Comparar prompts/modelos sin contaminación del conjunto reservado.",
+          "Datos ≥ 3: Dataset versionado, evaluadores, costo, varianza y criterio de promoción.",
+          "IA ≥ 3: Comparar prompts/modelos sin contaminación del conjunto reservado.",
+          "Correctitud (condición crítica): Dataset versionado, evaluadores, costo, varianza y criterio de promoción."
+        ]
+      },
+      "capacidades": [
+        "sistemas",
+        "datos",
+        "ia"
+      ],
+      "rastroCapacidades": {
+        "sistemas": "Comparar prompts/modelos sin contaminación del conjunto reservado.",
+        "datos": "Dataset versionado, evaluadores, costo, varianza y criterio de promoción.",
+        "ia": "Comparar prompts/modelos sin contaminación del conjunto reservado."
+      },
+      "criticas": [
+        {
+          "id": "correctitud",
+          "texto": "Correctitud",
+          "rastro": "Dataset versionado, evaluadores, costo, varianza y criterio de promoción."
+        }
+      ],
+      "naturaleza": {
+        "valor": "a_mano"
+      },
+      "alcance": "local",
+      "etiquetas": [],
+      "sd": {
+        "decision": "Comparar prompts/modelos sin contaminación del conjunto reservado.",
+        "claves": [
+          "EVAL",
+          "SLO"
+        ],
+        "entregable": "Dataset versionado, evaluadores, costo, varianza y criterio de promoción.",
+        "inspiradoEnCatalogo": false,
+        "plantilla": "problema y usuario; requisitos funcionales; requisitos no funcionales con números y supuestos; límites del sistema; esquema/objetos; contratos de API/eventos; invariantes; camino de lectura; camino de escritura; consistencia; fallas y recuperación; permisos; observabilidad; capacidad/costo; alternativa descartada; plan de migración; experimento de validación; ADR de una página. No se exige dibujar microservicios si una aplicación simple resuelve el problema.",
+        "pasadas": "diseño simple correcto → demanda o restricción nueva → incidente. La evaluación verifica que el alumno sepa qué cambiar y qué preservar. Consenso o replicación solo aparecen cuando el caso los justifica."
+      }
+    },
+    {
+      "code": "SD-10",
+      "id": "cf000000-0000-4000-8000-0053442d3130",
+      "title": "SD-10 · Acceso multiárea",
+      "cls": "expediente",
+      "flujo": "expediente",
+      "compuerta": "expediente",
+      "ficha": {
+        "foco": "Acceso multiárea",
+        "fuentes": [
+          {
+            "clave": "SEC",
+            "etiqueta": "Concepts • Access control propagation • Palantir",
+            "url": "https://www.palantir.com/docs/foundry/security/access-control-propagation",
+            "tipo": "docs",
+            "acceso": "publico"
+          },
+          {
+            "clave": "MARK",
+            "etiqueta": "Concepts • Markings • Palantir",
+            "url": "https://www.palantir.com/docs/foundry/security/markings",
+            "tipo": "docs",
+            "acceso": "publico"
+          },
+          {
+            "clave": "SECRES",
+            "etiqueta": "Object permissioning • Overview • Palantir",
+            "url": "https://www.palantir.com/docs/foundry/object-permissioning/overview",
+            "tipo": "docs",
+            "acceso": "publico"
+          }
+        ],
+        "mision": "Compartir recursos manteniendo restricciones al derivar datos.",
+        "defensa": "Matriz de acceso y pruebas negativas de lectura, acción y salida."
+      },
+      "gate": {
+        "pregunta": "Matriz de acceso y pruebas negativas de lectura, acción y salida.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Sistemas ≥ 3: Compartir recursos manteniendo restricciones al derivar datos.",
+          "Datos ≥ 3: Compartir recursos manteniendo restricciones al derivar datos.",
+          "Correctitud (condición crítica): Matriz de acceso y pruebas negativas de lectura, acción y salida.",
+          "Autorización (condición crítica): Acceso multiárea"
+        ]
+      },
+      "capacidades": [
+        "sistemas",
+        "datos"
+      ],
+      "rastroCapacidades": {
+        "sistemas": "Compartir recursos manteniendo restricciones al derivar datos.",
+        "datos": "Compartir recursos manteniendo restricciones al derivar datos."
+      },
+      "criticas": [
+        {
+          "id": "correctitud",
+          "texto": "Correctitud",
+          "rastro": "Matriz de acceso y pruebas negativas de lectura, acción y salida."
+        },
+        {
+          "id": "autorizacion",
+          "texto": "Autorización",
+          "rastro": "Acceso multiárea"
+        }
+      ],
+      "naturaleza": {
+        "valor": "a_mano"
+      },
+      "alcance": "local",
+      "etiquetas": [],
+      "sd": {
+        "decision": "Compartir recursos manteniendo restricciones al derivar datos.",
+        "claves": [
+          "SEC",
+          "MARK",
+          "SECRES"
+        ],
+        "entregable": "Matriz de acceso y pruebas negativas de lectura, acción y salida.",
+        "inspiradoEnCatalogo": false,
+        "plantilla": "problema y usuario; requisitos funcionales; requisitos no funcionales con números y supuestos; límites del sistema; esquema/objetos; contratos de API/eventos; invariantes; camino de lectura; camino de escritura; consistencia; fallas y recuperación; permisos; observabilidad; capacidad/costo; alternativa descartada; plan de migración; experimento de validación; ADR de una página. No se exige dibujar microservicios si una aplicación simple resuelve el problema.",
+        "pasadas": "diseño simple correcto → demanda o restricción nueva → incidente. La evaluación verifica que el alumno sepa qué cambiar y qué preservar. Consenso o replicación solo aparecen cuando el caso los justifica."
+      }
+    },
+    {
+      "code": "SD-11",
+      "id": "cf000000-0000-4000-8000-0053442d3131",
+      "title": "SD-11 · Plataforma de agentes",
+      "cls": "expediente",
+      "flujo": "expediente",
+      "compuerta": "expediente",
+      "ficha": {
+        "foco": "Plataforma de agentes",
+        "fuentes": [
+          {
+            "clave": "AGENT",
+            "etiqueta": "Overview • AIP • Palantir",
+            "url": "https://www.palantir.com/docs/foundry/aip/agent-stack",
+            "tipo": "docs",
+            "acceso": "publico"
+          },
+          {
+            "clave": "SDK",
+            "etiqueta": "Agent SDK • Overview • Palantir",
+            "url": "https://www.palantir.com/docs/foundry/agent-sdk/overview",
+            "tipo": "docs",
+            "acceso": "publico"
+          },
+          {
+            "clave": "CUSTOM",
+            "etiqueta": "Agent SDK • Advanced customization • Palantir",
+            "url": "https://www.palantir.com/docs/foundry/agent-sdk/advanced-customization",
+            "tipo": "docs",
+            "acceso": "publico"
+          }
+        ],
+        "mision": "Sesiones durables, revisión humana y fallas de herramientas.",
+        "defensa": "Máquina de estados, historial, cancelación y continuidad entre participantes."
+      },
+      "gate": {
+        "pregunta": "Máquina de estados, historial, cancelación y continuidad entre participantes.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Sistemas ≥ 3: Sesiones durables, revisión humana y fallas de herramientas.",
+          "IA ≥ 3: Plataforma de agentes",
+          "Responsabilidad ≥ 3: Sesiones durables, revisión humana y fallas de herramientas.",
+          "Trazabilidad (condición crítica): Máquina de estados, historial, cancelación y continuidad entre participantes."
+        ]
+      },
+      "capacidades": [
+        "sistemas",
+        "ia",
+        "responsabilidad"
+      ],
+      "rastroCapacidades": {
+        "sistemas": "Sesiones durables, revisión humana y fallas de herramientas.",
+        "ia": "Plataforma de agentes",
+        "responsabilidad": "Sesiones durables, revisión humana y fallas de herramientas."
+      },
+      "criticas": [
+        {
+          "id": "trazabilidad",
+          "texto": "Trazabilidad",
+          "rastro": "Máquina de estados, historial, cancelación y continuidad entre participantes."
+        }
+      ],
+      "naturaleza": {
+        "valor": "a_mano"
+      },
+      "alcance": "local",
+      "etiquetas": [],
+      "sd": {
+        "decision": "Sesiones durables, revisión humana y fallas de herramientas.",
+        "claves": [
+          "AGENT",
+          "SDK",
+          "CUSTOM"
+        ],
+        "entregable": "Máquina de estados, historial, cancelación y continuidad entre participantes.",
+        "inspiradoEnCatalogo": false,
+        "plantilla": "problema y usuario; requisitos funcionales; requisitos no funcionales con números y supuestos; límites del sistema; esquema/objetos; contratos de API/eventos; invariantes; camino de lectura; camino de escritura; consistencia; fallas y recuperación; permisos; observabilidad; capacidad/costo; alternativa descartada; plan de migración; experimento de validación; ADR de una página. No se exige dibujar microservicios si una aplicación simple resuelve el problema.",
+        "pasadas": "diseño simple correcto → demanda o restricción nueva → incidente. La evaluación verifica que el alumno sepa qué cambiar y qué preservar. Consenso o replicación solo aparecen cuando el caso los justifica."
+      }
+    },
+    {
+      "code": "SD-12",
+      "id": "cf000000-0000-4000-8000-0053442d3132",
+      "title": "SD-12 · Liberación de una solución",
+      "cls": "expediente",
+      "flujo": "expediente",
+      "compuerta": "expediente",
+      "ficha": {
+        "foco": "Liberación de una solución",
+        "fuentes": [
+          {
+            "clave": "BRANCH",
+            "etiqueta": "Global Branching • Overview • Palantir",
+            "url": "https://www.palantir.com/docs/foundry/global-branching",
+            "tipo": "docs",
+            "acceso": "publico"
+          },
+          {
+            "clave": "MARKET",
+            "etiqueta": "Marketplace • Overview • Palantir",
+            "url": "https://www.palantir.com/docs/foundry/marketplace/overview",
+            "tipo": "docs",
+            "acceso": "publico"
+          },
+          {
+            "clave": "APOLLO",
+            "etiqueta": "Introduction • Palantir",
+            "url": "https://www.palantir.com/docs/apollo/core/introduction/index.html",
+            "tipo": "docs",
+            "acceso": "publico"
+          }
+        ],
+        "mision": "Cambiar esquema y aplicación manteniendo operación.",
+        "defensa": "Plan de rollout, compatibilidad, verificación y rollback o compensación."
+      },
+      "gate": {
+        "pregunta": "Plan de rollout, compatibilidad, verificación y rollback o compensación.",
+        "rubrica": [
+          "Para aprobar una misión se exige al menos 3 en sus capacidades esenciales y resolver todas las condiciones críticas declaradas.",
+          "Escala de rúbrica inicial: 0 sin evidencia; 1 parcial/inconsistente; 2 con ayuda o solo ejemplo conocido; 3 independiente en caso nuevo; 4 transferencia y defensa bajo cambio.",
+          "Sistemas ≥ 3: Cambiar esquema y aplicación manteniendo operación.",
+          "Responsabilidad ≥ 3: Plan de rollout, compatibilidad, verificación y rollback o compensación.",
+          "Correctitud (condición crítica): Plan de rollout, compatibilidad, verificación y rollback o compensación.",
+          "Recuperación (condición crítica): Plan de rollout, compatibilidad, verificación y rollback o compensación."
+        ]
+      },
+      "capacidades": [
+        "sistemas",
+        "responsabilidad"
+      ],
+      "rastroCapacidades": {
+        "sistemas": "Cambiar esquema y aplicación manteniendo operación.",
+        "responsabilidad": "Plan de rollout, compatibilidad, verificación y rollback o compensación."
+      },
+      "criticas": [
+        {
+          "id": "correctitud",
+          "texto": "Correctitud",
+          "rastro": "Plan de rollout, compatibilidad, verificación y rollback o compensación."
+        },
+        {
+          "id": "recuperacion",
+          "texto": "Recuperación",
+          "rastro": "Plan de rollout, compatibilidad, verificación y rollback o compensación."
+        }
+      ],
+      "naturaleza": {
+        "valor": "a_mano"
+      },
+      "alcance": "local",
+      "etiquetas": [],
+      "sd": {
+        "decision": "Cambiar esquema y aplicación manteniendo operación.",
+        "claves": [
+          "BRANCH",
+          "MARKET",
+          "APOLLO"
+        ],
+        "entregable": "Plan de rollout, compatibilidad, verificación y rollback o compensación.",
+        "inspiradoEnCatalogo": false,
+        "plantilla": "problema y usuario; requisitos funcionales; requisitos no funcionales con números y supuestos; límites del sistema; esquema/objetos; contratos de API/eventos; invariantes; camino de lectura; camino de escritura; consistencia; fallas y recuperación; permisos; observabilidad; capacidad/costo; alternativa descartada; plan de migración; experimento de validación; ADR de una página. No se exige dibujar microservicios si una aplicación simple resuelve el problema.",
+        "pasadas": "diseño simple correcto → demanda o restricción nueva → incidente. La evaluación verifica que el alumno sepa qué cambiar y qué preservar. Consenso o replicación solo aparecen cuando el caso los justifica."
+      }
+    }
+  ],
+  "maestro_sha10": "38cbc7da42"
+}
