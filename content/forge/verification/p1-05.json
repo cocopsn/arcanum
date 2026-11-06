@@ -13,14 +13,14 @@
    "tipo": "code",
    "lenguaje": "javascript",
    "resultado": "paso",
-   "ms": 4
+   "ms": 10
   },
   {
    "id": "evaluar-expectativas",
    "tipo": "code",
    "lenguaje": "python",
    "resultado": "paso",
-   "ms": 181
+   "ms": 85
   },
   {
    "id": "forense-panel-cobros",

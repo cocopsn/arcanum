@@ -13,14 +13,14 @@
    "tipo": "code",
    "lenguaje": "javascript",
    "resultado": "paso",
-   "ms": 195
+   "ms": 3
   },
   {
    "id": "evaluar-regla",
    "tipo": "code",
    "lenguaje": "python",
    "resultado": "paso",
-   "ms": 318
+   "ms": 107
   }
  ],
  "resumen": {

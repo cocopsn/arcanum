@@ -13,21 +13,21 @@
    "tipo": "code",
    "lenguaje": "javascript",
    "resultado": "paso",
-   "ms": 4
+   "ms": 2
   },
   {
    "id": "diagnostico-join",
    "tipo": "code",
    "lenguaje": "python",
    "resultado": "paso",
-   "ms": 200
+   "ms": 58
   },
   {
    "id": "resumen-medico",
    "tipo": "sql",
    "lenguaje": "sql",
    "resultado": "paso",
-   "ms": 214
+   "ms": 107
   },
   {
    "id": "forense-citas",

@@ -13,14 +13,14 @@
    "tipo": "code",
    "lenguaje": "javascript",
    "resultado": "paso",
-   "ms": 183
+   "ms": 2
   },
   {
    "id": "permisos-efectivos",
    "tipo": "code",
    "lenguaje": "python",
    "resultado": "paso",
-   "ms": 287
+   "ms": 57
   }
  ],
  "resumen": {

@@ -13,14 +13,14 @@
    "tipo": "code",
    "lenguaje": "javascript",
    "resultado": "paso",
-   "ms": 5
+   "ms": 8
   },
   {
    "id": "validar-salida",
    "tipo": "code",
    "lenguaje": "python",
    "resultado": "paso",
-   "ms": 159
+   "ms": 104
   }
  ],
  "resumen": {

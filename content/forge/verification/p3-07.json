@@ -13,14 +13,14 @@
    "tipo": "code",
    "lenguaje": "javascript",
    "resultado": "paso",
-   "ms": 27
+   "ms": 2
   },
   {
    "id": "tabla-dos-lados",
    "tipo": "code",
    "lenguaje": "python",
    "resultado": "paso",
-   "ms": 201
+   "ms": 72
   }
  ],
  "resumen": {

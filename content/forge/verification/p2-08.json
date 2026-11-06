@@ -13,14 +13,14 @@
    "tipo": "code",
    "lenguaje": "javascript",
    "resultado": "paso",
-   "ms": 11
+   "ms": 3
   },
   {
    "id": "reconstruir-estado",
    "tipo": "code",
    "lenguaje": "python",
    "resultado": "paso",
-   "ms": 134
+   "ms": 58
   }
  ],
  "resumen": {

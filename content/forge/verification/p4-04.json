@@ -13,14 +13,14 @@
    "tipo": "code",
    "lenguaje": "javascript",
    "resultado": "paso",
-   "ms": 205
+   "ms": 3
   },
   {
    "id": "clasificar-llamadas",
    "tipo": "code",
    "lenguaje": "python",
    "resultado": "paso",
-   "ms": 246
+   "ms": 79
   }
  ],
  "resumen": {
