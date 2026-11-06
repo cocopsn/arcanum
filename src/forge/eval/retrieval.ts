@@ -79,9 +79,11 @@ export function gradeQuestion(data: RecuperacionData, qid: string, a: RetrievalA
   if (stale) return { id: qid, ok: false, motivo: `citaste «${stale.doc}», vencido a la fecha de corte` };
   const k = charSet(key.spans);
   const c = charSet(a.spans);
-  const inter = intersection(k, c);
-  const cobertura = size(k) ? inter / size(k) : 0;
-  const precision = size(c) ? inter / size(c) : 0;
+  const cobertura = size(k) ? intersection(k, c) / size(k) : 0;
+  // The desk cites whole sentences (segments), so «inside the key» is measured against the key widened to the sentences
+  // it touches: citing exactly the key's sentences is 100 % precise even when the key is part of a long sentence.
+  const kw = charSet(keyUnits(data, key.spans));
+  const precision = size(c) ? intersection(kw, c) / size(c) : 0;
   if (cobertura < 0.5) return { id: qid, ok: false, motivo: `tus citas cubren el ${Math.round(cobertura * 100)} % de la clave (mínimo 50 %)` };
   if (precision < 0.5) return { id: qid, ok: false, motivo: `sólo el ${Math.round(precision * 100)} % de lo que citaste está en la clave (mínimo 50 %)` };
   return { id: qid, ok: true, motivo: `citas correctas: cubren el ${Math.round(cobertura * 100)} % de la clave` };
@@ -91,6 +93,17 @@ export function gradeRetrieval(data: RecuperacionData, answers: Record<string, R
   const porPregunta = data.preguntas.map((p) => gradeQuestion(data, p.id, answers[p.id]));
   const aciertos = porPregunta.filter((p) => p.ok).length;
   return { correcto: aciertos === porPregunta.length, aciertos, total: porPregunta.length, porPregunta };
+}
+
+/** The key widened to the citable sentences it overlaps (the key itself where a document has no segment). */
+export function keyUnits(data: RecuperacionData, spans: Span[]): Span[] {
+  const out: Span[] = [];
+  for (const s of spans) {
+    const doc = data.corpus.find((d) => d.id === s.doc);
+    const segs = doc ? segments(doc.texto).filter((g) => g.inicio < s.fin && s.inicio < g.fin) : [];
+    out.push(s, ...segs.map((g) => ({ doc: s.doc, inicio: g.inicio, fin: g.fin })));
+  }
+  return out;
 }
 
 /** Sentence-like segments of a text with their offsets: the citable units of the desk. */

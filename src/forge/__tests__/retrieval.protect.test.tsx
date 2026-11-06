@@ -47,6 +47,17 @@ describe("recuperacion · calificación local", () => {
     const g = gradeRetrieval(item().data, { p1: ok([D2_FIRST, { doc: "d1", inicio: 0, fin: 27 }]), p2: abst });
     expect(g.porPregunta[0]!.ok, "se aceptó una cita de un documento vencido").toBe(false);
   });
+  it("a key inside a long sentence is reachable by citing that sentence; extra sentences still lower the precision", () => {
+    const d = item().data;
+    const narrow = { ...d, clave: { ...d.clave, p1: { spans: [{ doc: "d2", inicio: 13, fin: 25 }] } } };
+    expect(gradeRetrieval(narrow, { p1: ok([D2_FIRST]), p2: abst }).porPregunta[0]!.ok, "una clave dentro de una oración quedó imposible de citar").toBe(true);
+    const texto = "La oficina abre a las nueve. El estacionamiento es gratuito.";
+    const wide = { ...narrow, corpus: [...d.corpus, { id: "d3", titulo: "Avisos", fecha: "2026-02-01", texto }] };
+    const extra = segments(texto).map((g) => ({ doc: "d3", inicio: g.inicio, fin: g.fin }));
+    const noisy = gradeRetrieval(wide, { p1: ok([D2_FIRST, ...extra]), p2: abst });
+    expect(noisy.porPregunta[0]!.ok, "se aceptaron citas de más").toBe(false);
+    expect(noisy.porPregunta[0]!.motivo).toContain("está en la clave");
+  });
   it("answering an unanswerable question is wrong", () => {
     const g = gradeRetrieval(item().data, { p1: ok([D2_FIRST]), p2: ok([D2_FIRST]) });
     expect(g.porPregunta[1]!.ok, "se aceptó una respuesta donde había que abstenerse").toBe(false);
