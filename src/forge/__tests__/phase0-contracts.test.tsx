@@ -76,7 +76,7 @@ describe("lazy check registry", () => {
       const paths = [...src.matchAll(/import\("(\.\/[^"]+)"\)/g)].map((m) => m[1]!);
       for (const p of new Set(paths)) expect(paths.filter((x) => x === p), `${rel}: ${p} no está a la vez en el registro y en sus cargadores`).toHaveLength(2);
     }
-  });
+  }, 60_000); // imports every real runner and flow of Phase 1: under a full parallel run it passes the 5 s default
   it("check/registry.ts never imports a check statically", () => {
     const src = readFileSync(join(process.cwd(), "src", "forge", "bank", "check", "registry.ts"), "utf8");
     const staticImports = src.split("\n").filter((l) => /^\s*import\s/.test(l) && !/^\s*import\s+type\s/.test(l));
@@ -101,8 +101,11 @@ describe("honest stubs", () => {
     expect((await submitForgeVerdict({ cellCode: "P2-06", kind: "mision", scope: "local" })).estado).not.toBe("acunado");
     expect(STUB_QUEUE_MOTIVO).toBe("el evaluador desplegado todavía no tiene la acción Forge");
     expect((await askSimulatedUser({ cellCode: "F1-03", itemId: "x", fase: "preguntas", question: "¿?" })).estado).toBe("sin-ia");
-  });
-  it("loaders answer «no descargado» or null, never a fabricated book, bank or route", async () => {
+  }, 30_000); // the port lazily imports use-actions when no runtime is bound
+  // Phase 1 replaces the loader stubs (forge/p-plataforma, §22.4): while loaders.ts is still the Phase-0 stub it answers
+  // «no descargado» or null; the real bodies are covered by books-loader.test.ts and banks-loader.test.ts.
+  const loadersStillStub = readFileSync(join(process.cwd(), "src", "forge", "loaders.ts"), "utf8").includes("these bodies are STUBS");
+  it.skipIf(!loadersStillStub)("loaders answer «no descargado» or null, never a fabricated book, bank or route", async () => {
     expect(await loadForgeRoute("p2")).toBeNull();
     expect(await loadForgeBookMd("P2-06")).toBeNull();
     expect(await ensureForgeBook("P2-06", project([]))).toEqual({ ok: false, reason: "no-descargado" });

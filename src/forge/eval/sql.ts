@@ -217,7 +217,9 @@ export async function gradeSqlQuery(
 ): Promise<SqlGrade> {
   const s = screenSqlQuery(consulta);
   if (!s.ok) return { estado: "rechazada", motivo: s.error };
-  const res = await run(SQL_HARNESS_PY, SQL_HARNESS_FN, sqlCases(data, data.solucion, s.sql));
+  const ref = screenSqlQuery(data.solucion);
+  if (!ref.ok) return { estado: "error-item", motivo: `la consulta de referencia no es una sola lectura (${ref.error})` };
+  const res = await run(SQL_HARNESS_PY, SQL_HARNESS_FN, sqlCases(data, ref.sql, s.sql));
   if (res.pyUnavailable) return { estado: "sin-python" };
   if (res.timedOut) return { estado: "tiempo" };
   if (res.syntaxError) return { estado: "error-item", motivo: res.syntaxError };

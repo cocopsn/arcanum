@@ -333,6 +333,100 @@ html[data-layout="desktop"] body {
   pointer-events: none;
 }
 
+/* ── Engineering Forge (design §14.1-§14.2, D4 monochrome «carbón místico») ──
+   While ForgeWorld is mounted, body[data-world="forge"] retints the layers painted OUTSIDE its subtree (reward
+   overlay, ascension ceremony). Same assignments as SUBJECT_THEMES.forge.vars; values only from --forge-* tokens. */
+body[data-world="forge"] {
+  --ink: var(--forge-void);
+  --ink-deep: var(--forge-abyss);
+  --surface: var(--forge-surface);
+  --surface-raised: var(--forge-surface-raised);
+  --line: var(--forge-line);
+  --text: var(--forge-text);
+  --text-muted: var(--forge-text-muted);
+  --text-faint: var(--forge-text-faint);
+  --topic: var(--forge-text);
+  --topic-deep: var(--forge-surface);
+  --gold: var(--forge-text);
+  --amber: var(--forge-text-muted);
+  --rank: var(--forge-text);
+}
+body[data-world="forge"]::before {
+  background: none;
+}
+/* reduced motion: ForgeWorld sets data-motion="off" on its root and everything freezes */
+[data-world="forge"][data-motion="off"] *,
+[data-world="forge"][data-motion="off"] *::before,
+[data-world="forge"][data-motion="off"] *::after {
+  animation: none !important;
+  transition: none !important;
+}
+[data-world="forge"] :focus-visible {
+  outline: 2px solid var(--text);
+  outline-offset: 2px;
+}
+[data-world="forge"] h1,
+[data-world="forge"] h2,
+[data-world="forge"] h3 {
+  font-family: var(--font-forge-sans), system-ui, sans-serif;
+  font-weight: 300;
+  letter-spacing: 0;
+}
+.forge-label {
+  font-family: var(--font-forge-mono), ui-monospace, monospace;
+  font-variant-caps: all-small-caps;
+  letter-spacing: 0.14em;
+}
+.forge-mono {
+  font-family: var(--font-forge-mono), ui-monospace, monospace;
+}
+@keyframes forge-drift-a {
+  from {
+    transform: translate3d(-4%, 0, 0);
+  }
+  to {
+    transform: translate3d(4%, 2%, 0);
+  }
+}
+@keyframes forge-drift-b {
+  from {
+    transform: translate3d(3%, 1%, 0);
+  }
+  to {
+    transform: translate3d(-3%, -2%, 0);
+  }
+}
+@keyframes forge-breathe {
+  0%,
+  100% {
+    opacity: 0.85;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+.forge-fog-a {
+  animation: forge-drift-a 90s ease-in-out infinite alternate;
+}
+.forge-fog-b {
+  animation: forge-drift-b 140s ease-in-out infinite alternate;
+}
+.forge-moon {
+  animation: forge-breathe 12s ease-in-out infinite;
+}
+.forge-cube-lit {
+  filter: drop-shadow(0 0 2px rgba(255, 255, 255, 0.55));
+}
+/* third-party figures keep their colour unless the learner picks «Figuras en escala de grises» */
+[data-forge-figuras="gris"] .forge-figure img {
+  filter: grayscale(1);
+}
+[data-forge-figuras="gris"] .forge-figure:hover img,
+[data-forge-figuras="gris"] .forge-figure:focus-within img,
+[data-forge-figuras="gris"] .forge-figure[data-touched] img {
+  filter: none;
+}
+
 /* ── Deep-reading book prose (EB Garamond, long-read comfort) ── */
 .book-prose {
   font-family: var(--font-serif), Georgia, serif;
