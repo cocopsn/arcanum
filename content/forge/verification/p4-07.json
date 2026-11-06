@@ -1,0 +1,32 @@
+{
+ "v": 1,
+ "code": "P4-07",
+ "sha10": "755f77caaa",
+ "versiones": {
+  "python": "3.12.10",
+  "sqlite": "3.49.1",
+  "node": "v24.22.1"
+ },
+ "items": [
+  {
+   "id": "limitar-llamadas",
+   "tipo": "code",
+   "lenguaje": "javascript",
+   "resultado": "paso",
+   "ms": 73
+  },
+  {
+   "id": "limitar-llamadas",
+   "tipo": "code",
+   "lenguaje": "python",
+   "resultado": "paso",
+   "ms": 276
+  }
+ ],
+ "resumen": {
+  "ejecutables": 2,
+  "cubiertos": 2,
+  "fallidos": 0,
+  "sin_verificar": 0
+ }
+}

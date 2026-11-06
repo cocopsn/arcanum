@@ -1,0 +1,40 @@
+{
+ "v": 1,
+ "code": "P1-08",
+ "sha10": "bb9380fcce",
+ "versiones": {
+  "python": "3.12.10",
+  "sqlite": "3.49.1",
+  "node": "v24.22.1"
+ },
+ "items": [
+  {
+   "id": "auditar-pasos",
+   "tipo": "code",
+   "lenguaje": "javascript",
+   "resultado": "paso",
+   "ms": 141
+  },
+  {
+   "id": "auditar-pasos",
+   "tipo": "code",
+   "lenguaje": "python",
+   "resultado": "paso",
+   "ms": 176
+  },
+  {
+   "id": "forense-inventario",
+   "tipo": "forense",
+   "lenguaje": "sql",
+   "resultado": "sin-verificar",
+   "ms": 0,
+   "detalle": "sin arnés scripts/forge/bank-check/forense.py"
+  }
+ ],
+ "resumen": {
+  "ejecutables": 3,
+  "cubiertos": 2,
+  "fallidos": 0,
+  "sin_verificar": 1
+ }
+}

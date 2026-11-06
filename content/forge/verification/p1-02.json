@@ -1,0 +1,47 @@
+{
+ "v": 1,
+ "code": "P1-02",
+ "sha10": "5d70833d17",
+ "versiones": {
+  "python": "3.12.10",
+  "sqlite": "3.49.1",
+  "node": "v24.22.1"
+ },
+ "items": [
+  {
+   "id": "diagnostico-join",
+   "tipo": "code",
+   "lenguaje": "javascript",
+   "resultado": "paso",
+   "ms": 4
+  },
+  {
+   "id": "diagnostico-join",
+   "tipo": "code",
+   "lenguaje": "python",
+   "resultado": "paso",
+   "ms": 289
+  },
+  {
+   "id": "resumen-medico",
+   "tipo": "sql",
+   "lenguaje": "sql",
+   "resultado": "paso",
+   "ms": 293
+  },
+  {
+   "id": "forense-citas",
+   "tipo": "forense",
+   "lenguaje": "sql",
+   "resultado": "sin-verificar",
+   "ms": 0,
+   "detalle": "sin arnés scripts/forge/bank-check/forense.py"
+  }
+ ],
+ "resumen": {
+  "ejecutables": 4,
+  "cubiertos": 3,
+  "fallidos": 0,
+  "sin_verificar": 1
+ }
+}

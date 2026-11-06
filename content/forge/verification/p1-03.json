@@ -1,0 +1,40 @@
+{
+ "v": 1,
+ "code": "P1-03",
+ "sha10": "029d59153b",
+ "versiones": {
+  "python": "3.12.10",
+  "sqlite": "3.49.1",
+  "node": "v24.22.1"
+ },
+ "items": [
+  {
+   "id": "nucleo-cobro-neto",
+   "tipo": "code",
+   "lenguaje": "javascript",
+   "resultado": "paso",
+   "ms": 390
+  },
+  {
+   "id": "nucleo-cobro-neto",
+   "tipo": "code",
+   "lenguaje": "python",
+   "resultado": "paso",
+   "ms": 137
+  },
+  {
+   "id": "fixtures-mutantes",
+   "tipo": "mutantes",
+   "lenguaje": "javascript",
+   "resultado": "sin-verificar",
+   "ms": 0,
+   "detalle": "sin arnés scripts/forge/bank-check/mutantes.py"
+  }
+ ],
+ "resumen": {
+  "ejecutables": 3,
+  "cubiertos": 2,
+  "fallidos": 0,
+  "sin_verificar": 1
+ }
+}
