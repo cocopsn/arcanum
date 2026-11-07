@@ -9,6 +9,16 @@ import { join } from "node:path";
 const ROOT = process.cwd();
 const RAICES = [join(ROOT, "src", "ui", "companion"), join(ROOT, "src", "lib", "companion")];
 const ESTILOS = join(ROOT, "src", "ui", "companion", "estilos.ts");
+const SENSOR = join(ROOT, "src", "ui", "companion", "sensor.ts");
+
+/** El sensor nunca lee el texto que el aprendiz escribe (§12.1): ni .value, ni innerText, ni FormData, ni
+ *  selectionStart. Patrones que, de aparecer en sensor.ts, nombran archivo y línea. */
+const LECTURAS_PROHIBIDAS: { re: RegExp; nombre: string }[] = [
+  { re: /\.value\b/, nombre: ".value" },
+  { re: /\binnerText\b/, nombre: "innerText" },
+  { re: /\bFormData\b/, nombre: "FormData" },
+  { re: /\bselectionStart\b/, nombre: "selectionStart" },
+];
 
 /** Sumideros de §15: HTML del modelo sin escapar. */
 const SUMIDEROS = ["dangerouslySetInnerHTML", "innerHTML", "outerHTML", "insertAdjacentHTML", "createContextualFragment", "DOMParser", "document.write", "foreignObject"] as const;
@@ -69,6 +79,13 @@ function analizar(sustituciones: Record<string, string> = {}): string[] {
     } else {
       for (const m of sinComentarios.matchAll(sa)) bad.push(`safe-area fuera de estilos.ts: ${m[0]} en ${rel(archivo)}:${lineaEn(sinComentarios, m.index!)}`);
     }
+    // §12.1: sensor.ts no lee el texto de un campo (sobre el código sin comentarios, para no contar la prosa).
+    if (archivo === SENSOR) {
+      for (const { re, nombre } of LECTURAS_PROHIBIDAS) {
+        const m = sinComentarios.match(re);
+        if (m) bad.push(`el compañero leyó lo que escribes en una compuerta: ${nombre} en ${rel(archivo)}:${lineaEn(sinComentarios, sinComentarios.indexOf(m[0]))}`);
+      }
+    }
   }
   return bad;
 }
@@ -109,5 +126,11 @@ describe("fuentes-seguras.test.ts (design §15, DP-5)", () => {
       "{hoja && <span className=\"cmp-asa\" aria-hidden=\"true\" />}\n        <meta httpEquiv=\"Content-Security-Policy\" content=\"default-src 'self'\" />",
     );
     redcheck(PANEL, panel, mut, "el compañero declara una CSP fuera de src/lib/csp.mjs: /src/ui/companion/Panel.tsx");
+  });
+
+  it("red-check (§12.1): .value agregado a una copia de sensor.ts → nombra archivo y línea", () => {
+    const sensor = readFileSync(SENSOR, "utf8");
+    const mut = sensor.replace("const resume = loadResume();", 'const resume = loadResume();\n  const robado = (doc.querySelector("textarea") as HTMLTextAreaElement | null)?.value;');
+    redcheck(SENSOR, sensor, mut, "el compañero leyó lo que escribes en una compuerta: .value en /src/ui/companion/sensor.ts");
   });
 });
