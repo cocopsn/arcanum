@@ -12,29 +12,28 @@
    "id": "s202-lab-escalera",
    "tipo": "historial",
    "lenguaje": "javascript",
-   "resultado": "sin-verificar",
-   "ms": 0,
-   "detalle": "sin arnés scripts/forge/bank-check/historial.py"
+   "resultado": "paso",
+   "ms": 0
   },
   {
    "id": "s202-code-presupuesto",
    "tipo": "code",
    "lenguaje": "javascript",
    "resultado": "paso",
-   "ms": 3
+   "ms": 2
   },
   {
    "id": "s202-code-presupuesto",
    "tipo": "code",
    "lenguaje": "python",
    "resultado": "paso",
-   "ms": 50
+   "ms": 49
   }
  ],
  "resumen": {
   "ejecutables": 3,
-  "cubiertos": 2,
+  "cubiertos": 3,
   "fallidos": 0,
-  "sin_verificar": 1
+  "sin_verificar": 0
  }
 }

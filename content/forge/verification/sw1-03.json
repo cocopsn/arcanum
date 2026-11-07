@@ -12,29 +12,28 @@
    "id": "mutantes-insertar-ordenado",
    "tipo": "mutantes",
    "lenguaje": "javascript",
-   "resultado": "sin-verificar",
-   "ms": 0,
-   "detalle": "sin arnés scripts/forge/bank-check/mutantes.py"
+   "resultado": "paso",
+   "ms": 0
   },
   {
    "id": "codigo-modelo-lru",
    "tipo": "code",
    "lenguaje": "javascript",
    "resultado": "paso",
-   "ms": 3
+   "ms": 2
   },
   {
    "id": "codigo-modelo-lru",
    "tipo": "code",
    "lenguaje": "python",
    "resultado": "paso",
-   "ms": 49
+   "ms": 50
   }
  ],
  "resumen": {
   "ejecutables": 3,
-  "cubiertos": 2,
+  "cubiertos": 3,
   "fallidos": 0,
-  "sin_verificar": 1
+  "sin_verificar": 0
  }
 }

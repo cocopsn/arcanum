@@ -7,7 +7,7 @@ import { validateBank } from "@/lib/exercises-validate";
 import { parseBook } from "@/lib/book";
 import { authoringState, type ForgeArtifacts } from "@/forge/model/authoring";
 import type { LibraryIndex } from "@/forge/model/library-types";
-import { buildLibraryIndex, executableIds } from "../../../scripts/forge/library-index.mjs";
+import { bankPendientes, buildLibraryIndex, executableIds } from "../../../scripts/forge/library-index.mjs";
 import { parseBank } from "../../../scripts/forge/bank-check.mjs";
 
 // PARIDAD de library-index.json (design poblar §5.2). El índice se arma en el build con sus propias reglas. Esta prueba
@@ -74,10 +74,21 @@ describe("library-index · paridad con authoring.ts y la ingesta (design poblar 
     120_000,
   );
 
-  it("P2-06 queda Autorado por sus 3 pendientes (desvanecido y retencion) aunque sus 4 ejecutables estén verificados", () => {
+  it("P2-06 queda Verificado: sin pendientes y sus 4 ejecutables con verificación vigente", () => {
     const c = index.celdas["P2-06"]!;
-    expect(c.banco!.pendientes.sort()).toEqual(["p206-desv-version", "p206-ret-inventario", "p206-ret-timeout"]);
-    expect(c.autoria).toEqual({ estado: "autorado", ejecutables: 4, sin_verificar: 0 });
+    expect(c.banco!.pendientes, "P2-06 quedó con pendientes tras volver reales los chequeos").toEqual([]);
+    expect(c.autoria).toEqual({ estado: "verificado", ejecutables: 4, sin_verificar: 0 });
+  });
+
+  it("bankPendientes sólo marca los tipos con stub (regla de pendientes, rc25)", () => {
+    const items = [
+      { id: "a", tipo: "mutantes", enunciado: "", secciones: [] },
+      { id: "b", tipo: "contraejemplo", enunciado: "", secciones: [] },
+      { id: "c", tipo: "historial", enunciado: "modo: fallas", secciones: [] },
+    ];
+    // con un tipo stub sintético «mutantes», sólo ese ítem queda pendiente; historial fallas ya NO es pendiente.
+    expect(bankPendientes(items, new Set(["mutantes"])), "bankPendientes ignoró un tipo con stub").toEqual(["a"]);
+    expect(bankPendientes(items, new Set()), "bankPendientes marcó un tipo sin stub").toEqual([]);
   });
 
   it("las 8 celdas de P5 no traen libro ni banco y quedan Especificadas", () => {

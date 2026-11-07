@@ -61,12 +61,9 @@ function stubTypes(root) {
   return out;
 }
 
-const itemText = (it) => [it.enunciado, ...it.secciones.map((s) => s.cuerpo)].join("\n");
-const MODO_FALLAS = /^\s*modo\s*:\s*["']?fallas["']?\s*$/im;
-
-/** Pendientes de un banco (regla de §9.2): tipos con stub y `historial` en modo fallas. Ids pelados. */
+/** Pendientes de un banco (regla de §9.2): tipos cuyo chequeo es todavía el stub. Ids pelados. */
 export function bankPendientes(items, stubs) {
-  return items.filter((it) => stubs.has(it.tipo) || (it.tipo === "historial" && MODO_FALLAS.test(itemText(it)))).map((it) => it.id);
+  return items.filter((it) => stubs.has(it.tipo)).map((it) => it.id);
 }
 
 /** Ítems con algún paso JavaScript, Python o SQL (executableItems de authoring.ts). */

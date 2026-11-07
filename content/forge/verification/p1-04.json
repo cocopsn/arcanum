@@ -20,21 +20,20 @@
    "tipo": "code",
    "lenguaje": "python",
    "resultado": "paso",
-   "ms": 49
+   "ms": 56
   },
   {
    "id": "contraejemplo-llegada",
    "tipo": "contraejemplo",
    "lenguaje": "javascript",
-   "resultado": "sin-verificar",
-   "ms": 0,
-   "detalle": "sin arnés scripts/forge/bank-check/contraejemplo.py"
+   "resultado": "paso",
+   "ms": 0
   }
  ],
  "resumen": {
   "ejecutables": 3,
-  "cubiertos": 2,
+  "cubiertos": 3,
   "fallidos": 0,
-  "sin_verificar": 1
+  "sin_verificar": 0
  }
 }

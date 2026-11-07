@@ -13,28 +13,27 @@
    "tipo": "code",
    "lenguaje": "javascript",
    "resultado": "paso",
-   "ms": 3
+   "ms": 2
   },
   {
    "id": "auditar-pasos",
    "tipo": "code",
    "lenguaje": "python",
    "resultado": "paso",
-   "ms": 81
+   "ms": 49
   },
   {
    "id": "forense-inventario",
    "tipo": "forense",
    "lenguaje": "sql",
-   "resultado": "sin-verificar",
-   "ms": 0,
-   "detalle": "sin arnés scripts/forge/bank-check/forense.py"
+   "resultado": "paso",
+   "ms": 74
   }
  ],
  "resumen": {
   "ejecutables": 3,
-  "cubiertos": 2,
+  "cubiertos": 3,
   "fallidos": 0,
-  "sin_verificar": 1
+  "sin_verificar": 0
  }
 }

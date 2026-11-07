@@ -1,5 +1,8 @@
 import { describe, expect, it } from "vitest";
 import type { ForenseData } from "@/forge/bank/types/forense";
+import type { BankCheckPy, ExecRunner } from "@/lib/exercises-validate";
+import { CHECK_GUARD_RUNNER } from "@/lib/exercises-validate";
+import * as checkForense from "@/forge/bank/check/forense";
 import {
   decideControl,
   FORENSE_CONTROL_DATOS,
@@ -212,4 +215,41 @@ describe.skipIf(!PY)("forense · arnés en CPython", () => {
     const g = await gradeForense(d, { pasos: ["unir"], controles: ["SELECT id FROM unidos GROUP BY id HAVING COUNT(*) > 1"] }, cpythonRunner);
     expect(g).toEqual({ estado: "calificada", correcto: true, porMentira: [{ pasoOk: true, control: { miente: { filas: 1 }, corregido: { filas: 0 }, limpios: null }, controlOk: true }] });
   }, 30_000);
+});
+
+// ── py.check without CPython: a fake pyRun returns a fixed shape per case, so each failure of the harness reaches
+//    the author with its own message (rc95–rc98), no Python needed (§5.4, task 2.4) ───────────────────────────────
+
+describe("forense · py.check lleva al autor la causa del fallo del arnés (sin CPython)", () => {
+  const item = forgeItem(BLOCKS.forense, "forense");
+  const py = checkForense.py!;
+  const runWith = (out: { syntaxError: string | null; cases: unknown[]; timedOut?: boolean }): ExecRunner => async () => out as never;
+  const prefijo = `«${item.title}» (forense): `;
+
+  const rows: { nombre: string; out: { syntaxError: string | null; cases: unknown[]; timedOut?: boolean }; esperado: string; contiene: string }[] = [
+    { nombre: "tiempo (rc96)", out: { syntaxError: null, cases: [], timedOut: true }, esperado: "una verificación forense agotada no dijo que agotó el tiempo", contiene: "agotó el tiempo" },
+    { nombre: "sintaxis (rc97)", out: { syntaxError: "SyntaxError: line 3", cases: [] }, esperado: "un arnés forense que no corrió no se reportó como tal", contiene: "el arnés forense no corrió (SyntaxError: line 3)" },
+    { nombre: "caso con error (rc95)", out: { syntaxError: null, cases: [{ input: [], expected: null, pass: false, error: "ValueError: identificador inválido: x" }] }, esperado: "un error del arnés forense no llegó al autor", contiene: "la verificación forense falló: ValueError: identificador inválido: x" },
+    { nombre: "sin lista problemas (rc98)", out: { syntaxError: null, cases: [{ input: [], expected: null, pass: true, output: { otra: 1 } }] }, esperado: "una salida del arnés forense sin problemas se leyó como lista", contiene: "no devolvió una lista de problemas" },
+  ];
+
+  it.each(rows)("$nombre: el error nombra el ítem y la causa", async ({ out, esperado, contiene }) => {
+    // A disabled guard may fall through to `out.problemas.map` and throw (rc98): that is also a failure of this
+    // protection, so a throw is turned into an empty-error result carrying the esperado message.
+    let r: { ok: true } | { ok: false; errors: string[] };
+    try {
+      r = await (py.check as BankCheckPy)(item, { source: "import", jsRun: CHECK_GUARD_RUNNER, pyRun: runWith(out) });
+    } catch {
+      r = { ok: false, errors: [] };
+    }
+    expect(r.ok, esperado).toBe(false);
+    if (r.ok) return;
+    expect(r.errors.join(" | "), esperado).toContain(contiene);
+    expect(r.errors.every((e) => e.startsWith(prefijo)), "un error de ingesta no nombra el ítem (CA-E14)").toBe(true);
+  });
+
+  it("py.check acepta BLOCKS.forense cuando el arnés no devuelve problemas", async () => {
+    const r = await (py.check as BankCheckPy)(item, { source: "import", jsRun: CHECK_GUARD_RUNNER, pyRun: runWith({ syntaxError: null, cases: [{ input: [], expected: null, pass: true, output: { problemas: [] } }] }) });
+    expect(r).toEqual({ ok: true });
+  });
 });
