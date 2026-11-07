@@ -44,14 +44,15 @@ function walk(dir, base = dir, out = []) {
   return out;
 }
 
-/** What may never sit in the page chunk (§6.7). Returns true when `p` is forbidden there. Pure. */
+/** What may never sit in the page chunk (§6.7; src/forge/offline/, the download modules behind the offline facade, since
+ *  poblar §10). Returns true when `p` is forbidden there. Pure. */
 export function forbiddenInPage(p) {
   if (p === "src/forge/ai.ts" || p === "src/forge/ai-drain.ts") return true;
   if (p.startsWith("src/forge/ui/")) return p !== "src/forge/ui/exercises/registry.ts";
   if (p.startsWith("src/forge/bank/check/")) return p !== "src/forge/bank/check/registry.ts";
   if (p.startsWith("src/forge/data/")) return p !== "src/forge/data/videos.json";
   if (p.startsWith("src/forge/atlas/")) return p !== "src/forge/atlas/types.ts";
-  return p.startsWith("src/forge/eval/") || p.startsWith("src/forge/model/") || p.startsWith("content/forge/");
+  return p.startsWith("src/forge/eval/") || p.startsWith("src/forge/model/") || p.startsWith("src/forge/offline/") || p.startsWith("content/forge/");
 }
 
 /** Category of a non-page Forge file from its module paths. Pure. */
