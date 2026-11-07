@@ -43,22 +43,26 @@ export function warmFigureUrl(url: string, nonce: string): string {
   return u.href;
 }
 
+/** Cómo terminó la carga de una figura: pintó, el navegador no pudo pintarla (`onerror`: un 404, un 503 o una página de
+ *  error, que el SW guarda igual porque la respuesta es opaca) o vencieron los `ms`. */
+export type FigureLoad = "ok" | "error" | "tiempo";
+
 /** Pide la figura como imagen (destino image → img-src, H9) y espera a que cargue, falle o venzan `ms`. */
-export function loadImage(src: string, ms = 10_000): Promise<boolean> {
+export function loadImage(src: string, ms = 10_000): Promise<FigureLoad> {
   return new Promise((resolve) => {
     const img = new Image();
     let done = false;
-    const end = (ok: boolean) => {
+    const end = (r: FigureLoad) => {
       if (done) return;
       done = true;
       clearTimeout(t);
       img.onload = img.onerror = null;
-      resolve(ok);
+      resolve(r);
     };
-    const t = setTimeout(() => end(false), ms);
+    const t = setTimeout(() => end("tiempo"), ms);
     img.referrerPolicy = "no-referrer";
-    img.onload = () => end(true);
-    img.onerror = () => end(false);
+    img.onload = () => end("ok");
+    img.onerror = () => end("error");
     img.src = src;
   });
 }

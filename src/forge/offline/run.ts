@@ -4,7 +4,7 @@ import type { ReadModel } from "@/core/read-model";
 import { ensureForgeBank, ensureForgeBook, type EnsureBankResult, type EnsureResult } from "@/forge/loaders";
 import { pruneAtlasCache } from "@/forge/atlas/cache";
 import { listRouteRows, saveRouteRow, type OfflineRouteRow } from "@/lib/offline-store";
-import { loadImage, warmFigureUrl, writePermittedFigures } from "@/lib/offline/figures";
+import { deleteFigures, loadImage, warmFigureUrl, writePermittedFigures, type FigureLoad } from "@/lib/offline/figures";
 import { warmPython } from "@/lib/offline/python";
 import { estimateWarning, previstoBytes } from "@/lib/offline/rules";
 import type { DownloadOptions, DownloadResult, OfflineKind, ScopeStatus } from "@/lib/offline/types";
@@ -26,7 +26,9 @@ export interface RunDeps {
   fetchOk(url: string): Promise<boolean>;
   warmPython(o: { sqlite: boolean }): Promise<{ ok: true } | { ok: false; motivo: string }>;
   writePermitted(urls: string[]): Promise<void>;
-  loadImage(src: string, ms: number): Promise<boolean>;
+  loadImage(src: string, ms: number): Promise<FigureLoad>;
+  /** borra la entrada canónica de una figura de arcanum-forge-figuras-v1 (la página es la única que ve que no pintó) */
+  forgetFigure(url: string): Promise<void>;
   nonce(): string;
   afterAtlas(): Promise<void>;
   now(): number;
@@ -56,6 +58,9 @@ export function realRunDeps(): RunDeps {
     warmPython,
     writePermitted: writePermittedFigures,
     loadImage,
+    async forgetFigure(url) {
+      await deleteFigures([url]);
+    },
     nonce: () => Date.now().toString(36),
     afterAtlas: async () => {
       await pruneAtlasCache();
@@ -63,6 +68,10 @@ export function realRunDeps(): RunDeps {
     now: () => Date.now(),
   };
 }
+
+/** Motivos de una figura que no pintó: el navegador no pudo pintarla, o vencieron los 10 s. */
+export const FIGURE_ERROR = "la figura respondió con un error";
+export const FIGURE_TIMEOUT = "no cargó en 10 s";
 
 const MB = (b: number) => Math.max(1, Math.round(b / 1e6)).toLocaleString("en-US");
 
@@ -179,7 +188,13 @@ export async function runDownload(plan: OfflinePlan, o: DownloadOptions, partial
     }
     const nonce = deps.nonce();
     await pool(plan.figuras, 2, stop, async (u) => {
-      if (!(await deps.loadImage(warmFigureUrl(u, nonce), 10_000))) fail("figuras", u, null, "no cargó en 10 s");
+      const r = await deps.loadImage(warmFigureUrl(u, nonce), 10_000);
+      if (r !== "ok") {
+        // the response is opaque, so the SW stored an error (404, 503) like a figure and serves it first, even online:
+        // forget it, so the state says it is missing and «Reintentar» goes back to the network (review of offline-motor, MEDIUM 1)
+        await deps.forgetFigure(u).catch((e: unknown) => console.warn("[offline] no se pudo olvidar la figura", e));
+        fail("figuras", u, null, r === "tiempo" ? FIGURE_TIMEOUT : FIGURE_ERROR);
+      }
       tick("figuras");
     });
   }

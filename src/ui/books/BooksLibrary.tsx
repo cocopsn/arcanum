@@ -143,7 +143,7 @@ export function BooksLibrary({ open, onClose }: { open: boolean; onClose: () => 
         {msg && <p className="mt-2 text-[12px] text-text-muted" role="status" aria-live="polite">{msg}</p>}
       </div>
 
-      <CatalogSlot books={books} banks={banks} readModel={readModel} onDeleteImport={deleteImport} onRead={setReading} />
+      <CatalogSlot books={books} banks={banks} readModel={readModel} onDeleteImport={deleteImport} onRefresh={refresh} onRead={setReading} />
 
       {reading && <BookReader book={reading} onClose={() => setReading(null)} />}
     </div>
@@ -152,11 +152,11 @@ export function BooksLibrary({ open, onClose }: { open: boolean; onClose: () => 
 
 // El catálogo vive en su propio chunk (design poblar §5.7) y sólo se pide con Lecturas abierta. Un chunk que no llega
 // deja la lista simple en pie.
-function CatalogSlot({ books, banks, readModel, onDeleteImport, onRead }: { books: BookRow[]; banks: ExerciseBankRow[]; readModel: ReadModel; onDeleteImport(row: LibraryRow): Promise<void>; onRead(b: BookRow): void }) {
+function CatalogSlot({ books, banks, readModel, onDeleteImport, onRefresh, onRead }: { books: BookRow[]; banks: ExerciseBankRow[]; readModel: ReadModel; onDeleteImport(row: LibraryRow): Promise<void>; onRefresh(): Promise<void>; onRead(b: BookRow): void }) {
   const catalog = useLazyModule(() => import("./library/LibraryCatalog"));
   if (catalog.estado === "listo") {
     const Catalog = catalog.mod.default;
-    return <Catalog books={books} banks={banks} readModel={readModel} onDeleteImport={onDeleteImport} />;
+    return <Catalog books={books} banks={banks} readModel={readModel} onDeleteImport={onDeleteImport} onRefresh={onRefresh} />;
   }
   if (catalog.estado === "cargando") return <p className="mx-auto w-full max-w-md px-safe pt-3 text-[12px] text-text-muted">Cargando el catálogo…</p>;
   return <SimpleList books={books} onRead={onRead} onRetry={catalog.reintentar} />;
