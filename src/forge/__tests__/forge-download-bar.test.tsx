@@ -129,6 +129,18 @@ describe("barra de descarga · estados (design poblar §5.5 y §6.4)", () => {
     expect(await screen.findByText("Descargada ✓ · 8/8 libros")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Borrar descarga" })).toBeInTheDocument();
     expect(screen.queryByRole("button", { name: /Descargar ruta/ })).toBeNull();
+    expect(screen.queryByRole("button", { name: "Reintentar figuras" })).toBeNull();
+    cleanup();
+    // completa con una figura que no pintó (se olvidó de la caché): sigue «Descargada ✓» y ofrece volver a pedirla
+    api.forgeRouteStatus.mockResolvedValue({ ...COMPLETA, figuras: rc(6, 7, null), cuotaFiguras: OPAQUE_PAD_BYTES });
+    bar();
+    expect(await screen.findByText("Descargada ✓ · 8/8 libros")).toBeInTheDocument();
+    expect(screen.getByText("Incluye 7 figuras de palantir.com (≈ 51 MB de cuota) · 6 guardadas")).toBeInTheDocument();
+    const rf = screen.queryByRole("button", { name: "Reintentar figuras" });
+    expect(rf, "una figura que faltaba no se pudo volver a pedir desde la barra").not.toBeNull();
+    api.downloadForgeRoute.mockResolvedValue({ ok: true, estado: COMPLETA, fallidos: [] });
+    await act(async () => fireEvent.click(rf!));
+    expect(api.downloadForgeRoute).toHaveBeenCalledWith("s1", expect.objectContaining({ readModel: rm }));
     cleanup();
     api.forgeRouteStatus.mockResolvedValue(PARCIAL);
     bar();
@@ -211,6 +223,21 @@ describe("barra de descarga · estados (design poblar §5.5 y §6.4)", () => {
     const forced = api.downloadForgeRoute.mock.calls[4]![1] as DownloadOptions;
     expect(forced.forzar, "«Descargar todo» no saltó el aviso de espacio").toBe(true);
     expect(forced.figuras).not.toBe(false);
+  });
+
+  it("al terminar, el progreso se queda hasta tener el estado nuevo: nunca vuelve a pintar el anterior", async () => {
+    api.downloadForgeRoute.mockResolvedValue({ ok: true, estado: COMPLETA, fallidos: [] });
+    bar();
+    const el = await screen.findByRole("button", { name: /Descargar ruta S1/ });
+    let release: (s: ScopeStatus) => void = () => {};
+    api.forgeRouteStatus.mockImplementation(() => new Promise<ScopeStatus>((r) => (release = r)));
+    store.rows = [row("forge:s1")];
+    await act(async () => fireEvent.click(el));
+    await waitFor(() => expect(api.forgeRouteStatus).toHaveBeenCalledTimes(2));
+    expect(screen.queryByText("Sin descargar"), "al terminar la descarga la barra volvió a pintar un instante «Sin descargar»").toBeNull();
+    expect(screen.getByRole("progressbar")).toBeInTheDocument();
+    await act(async () => release(COMPLETA));
+    expect(await screen.findByText("Descargada ✓ · 8/8 libros")).toBeInTheDocument();
   });
 
   it("al terminar una descarga, Lecturas vuelve a leer el dispositivo", async () => {

@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { project } from "@/core/projector";
 import type { OfflinePlan } from "@/forge/offline/plan";
-import { runDownload, spaceText, type RunDeps } from "@/forge/offline/run";
+import { FIGURE_ERROR, FIGURE_TIMEOUT, runDownload, spaceText, type RunDeps } from "@/forge/offline/run";
 import type { OfflineRouteRow } from "@/lib/offline-store";
 import { OPAQUE_PAD_BYTES } from "@/lib/offline/rules";
 import type { ScopeStatus } from "@/lib/offline/types";
@@ -45,7 +45,8 @@ function fakes(over: Partial<RunDeps> = {}) {
     fetchOk: async (u) => (log.push(`fetch ${u}`), true),
     warmPython: async () => (log.push("python"), { ok: true }),
     writePermitted: async (u) => void log.push(`permit ${u.length}`),
-    loadImage: async (src) => (images.push(src), true),
+    loadImage: async (src) => (images.push(src), "ok"),
+    forgetFigure: async (u) => void log.push(`forget ${u}`),
     nonce: () => `n${++n}`,
     afterAtlas: async () => void log.push("pruneAtlas"),
     now: () => 1,
@@ -71,6 +72,22 @@ describe("runDownload", () => {
       expect(FIG.includes(src), "la descarga pidió la figura con la URL del libro: el navegador la sirve sin pasar por el SW").toBe(false);
     }
     expect(f.images).toEqual([FIG[0] + "?arcanum_fig=n1", FIG[1] + "?arcanum_fig=n1", FIG[0] + "?arcanum_fig=n2", FIG[1] + "?arcanum_fig=n2"]);
+  });
+  it("una figura que no pinta se olvida de la caché (si no, el SW sirve el error guardado para siempre) y su motivo distingue error de plazo", async () => {
+    // review offline-motor, MEDIUM 1: the SW stores an opaque error like a figure; only the page sees onerror
+    const f = fakes({ loadImage: async (src) => (src.startsWith(FIG[0]!) ? "error" : "tiempo") });
+    const r = await runDownload(plan, { readModel: rm }, f.deps);
+    if (!r.ok) throw new Error("se esperaba ok con fallidos");
+    expect(f.log, "una figura que respondió con error quedó guardada: el SW la seguirá sirviendo rota y «Reintentar» no la reemplaza").toContain(`forget ${FIG[0]}`);
+    expect(f.log).toContain(`forget ${FIG[1]}`);
+    expect(r.fallidos).toEqual([
+      { tipo: "figuras", id: FIG[0], motivo: FIGURE_ERROR },
+      { tipo: "figuras", id: FIG[1], motivo: FIGURE_TIMEOUT },
+    ]);
+    expect(FIGURE_ERROR, "un onerror inmediato se reportó como plazo vencido").not.toBe(FIGURE_TIMEOUT);
+    const ok = fakes();
+    await runDownload(plan, { readModel: rm }, ok.deps);
+    expect(ok.log.some((x) => x.startsWith("forget")), "una figura que sí pintó se borró de la caché").toBe(false);
   });
   it("figuras: false no pide ninguna ni las registra", async () => {
     const f = fakes();

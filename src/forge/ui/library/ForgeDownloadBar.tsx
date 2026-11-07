@@ -113,10 +113,12 @@ export function ForgeDownloadBar({
     }
     if (!alive.current) return;
     if (ac.current === ctl) ac.current = null;
+    // el progreso se queda hasta tener el estado nuevo: así la barra nunca vuelve a pintar un instante el anterior
+    await load();
+    if (!alive.current) return;
     setProg(null);
     setCancelando(false);
     if (!r.ok) setAviso({ motivo: r.motivo, texto: r.detalle, figurasExtra: r.espacio?.figuras ?? 0, conFiguras: o.figuras !== false });
-    await load();
     await onChanged();
   }
 
@@ -138,8 +140,9 @@ export function ForgeDownloadBar({
       if (alive.current) setLiberado(chunkErrorText(chunkContext()).texto);
     }
     if (!alive.current) return;
-    setBorrando(false);
     await load();
+    if (!alive.current) return;
+    setBorrando(false);
     await onChanged();
   }
 
@@ -237,6 +240,12 @@ function Listo({
           {view.k === "parcial" && (
             <button type="button" onClick={() => onDescargar()} disabled={ocupado} className={btn}>
               Reintentar
+            </button>
+          )}
+          {view.k === "completa" && st.figuras.listos < st.figuras.total && (
+            // las figuras no deciden «Descargada»; una que no pintó se olvidó de la caché y aquí se vuelve a pedir
+            <button type="button" onClick={() => onDescargar()} disabled={ocupado} className={btn}>
+              Reintentar figuras
             </button>
           )}
           {view.k !== "sin-descargar" && (
