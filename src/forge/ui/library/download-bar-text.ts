@@ -42,7 +42,8 @@ export function figurasText(st: ScopeStatus): string | null {
   const n = st.figuras.total;
   if (!n) return null;
   const cuota = Math.round((n * OPAQUE_PAD_BYTES) / 1e6);
-  const guardadas = st.figuras.listos > 0 && st.figuras.listos < n ? ` · ${st.figuras.listos} guardadas` : "";
+  const l = st.figuras.listos;
+  const guardadas = l > 0 && l < n ? ` · ${l} guardada${l === 1 ? "" : "s"}` : "";
   return `Incluye ${n} figura${n === 1 ? "" : "s"} de palantir.com (≈ ${cuota} MB de cuota)${guardadas}`;
 }
 
