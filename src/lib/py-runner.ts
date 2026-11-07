@@ -1,14 +1,15 @@
 import type { CaseResult, RunResult, TestCase } from "@/lib/exercise";
 import { deepEqual } from "@/lib/exercise";
+import { PYODIDE_BASE, PYODIDE_CACHE, PYODIDE_FILES, PYODIDE_WORKER_REV, pyodideFilesFor } from "@/lib/pyodide-files";
 
-// Offline PYTHON execution via Pyodide (real CPython in WebAssembly). Loaded ONCE from a CDN and cached
-// by the Service Worker → runs 100% offline afterward (the user's condition: casi nunca hay datos). Runs
-// in an ISOLATED Worker with a TIMEOUT that terminates a runaway. Level 1 = the REAL Python SyntaxError
-// (line + message); Level 2 = deepEqual vs the saved cases. Honest degradation: if the runtime can't be
-// fetched (first run offline / blocked), the caller shows "descarga el runtime de Python con conexión".
+// Offline PYTHON execution via Pyodide (real CPython in WebAssembly). Loaded ONCE from a CDN; the WORKER itself keeps
+// the six files in `arcanum-pyodide` (design poblar §6.3) → runs 100% offline afterward (the user's condition: casi
+// nunca hay datos), without depending on the SW intercepting a blob: worker. Runs in an ISOLATED Worker with a TIMEOUT
+// that terminates a runaway. Level 1 = the REAL Python SyntaxError (line + message); Level 2 = deepEqual vs the saved
+// cases. Honest degradation: if the runtime can't be fetched (first run offline / blocked), the caller shows
+// "descarga el runtime de Python con conexión".
 
-export const PYODIDE_VERSION = "0.26.4";
-const PYODIDE_BASE = `https://cdn.jsdelivr.net/pyodide/v${PYODIDE_VERSION}/full/`;
+export { PYODIDE_VERSION } from "@/lib/pyodide-files";
 
 const RUNNER_PY = `
 import json
@@ -33,12 +34,65 @@ if _out["syntaxError"] is None:
 json.dumps(_out)
 `;
 
+const WORKER_FILES: Record<string, string> = Object.fromEntries(pyodideFilesFor(true).map((f) => [f, PYODIDE_FILES[f].sri]));
+
+// The worker (design poblar §6.3). 1) Native references are captured FIRST, before any learner code and before the
+// storage sever below wipes `caches` from the scope: the worker only ever uses these. 2) cachedFetch replaces
+// self.fetch: for exactly the six Pyodide URLs of this version it serves from arcanum-pyodide, or fetches CORS with
+// the file's integrity and stores only an ok + "cors" response; anything else goes to the native fetch untouched.
+// 3) pyodide.js and pyodide.asm.js come through cachedFetch and run from a blob: URL — never importScripts of another
+// origin, whose no-cors response is opaque and that nobody can store or verify.
 const WORKER_SRC = `
+const BASE = ${JSON.stringify(PYODIDE_BASE)};
+const CACHE = ${JSON.stringify(PYODIDE_CACHE)};
+const REV = ${JSON.stringify(PYODIDE_WORKER_REV)};
+const FILES = ${JSON.stringify(WORKER_FILES)};
+const _apply = Reflect.apply;
+const _fetch = self.fetch.bind(self);
+const _cs = typeof caches !== "undefined" ? caches : null;
+const _open = _cs ? _cs.open.bind(_cs) : null;
+const _match = typeof Cache !== "undefined" ? Cache.prototype.match : null;
+const _put = typeof Cache !== "undefined" ? Cache.prototype.put : null;
+const _clone = Response.prototype.clone;
+const _URL = URL;
+const _hasOwn = Object.prototype.hasOwnProperty;
+const URLS = {};
+for (const k in FILES) URLS[BASE + k] = k; // the six exact URLs of this version, compared with ===
+function urlOf(input) {
+  if (typeof input === "string") return input;
+  if (input instanceof _URL) return input.href;
+  return input && typeof input.url === "string" ? input.url : "";
+}
+async function cachedFetch(input, init) {
+  const url = urlOf(input);
+  const f = _hasOwn.call(URLS, url) ? URLS[url] : null;
+  if (f === null) return _fetch(input, init);
+  let cache = null;
+  try { cache = _open ? await _open(CACHE) : null; } catch (_e) { cache = null; }
+  if (cache && _match) {
+    try { const hit = await _apply(_match, cache, [url]); if (hit && hit.status === 200) return hit; } catch (_e) {}
+  }
+  const res = await _fetch(url, Object.assign({}, init || {}, { mode: "cors", credentials: "omit", integrity: (init && init.integrity) || FILES[f] }));
+  if (cache && _put && res.ok && res.type === "cors") {
+    try { await _apply(_put, cache, [url, _apply(_clone, res, [])]); } catch (_e) { /* quota / deleted cache: pyodideStatus reports what is missing */ }
+  }
+  return res;
+}
+async function loadClassic(url) {
+  const r = await cachedFetch(url);
+  if (!r.ok) throw new Error("http " + r.status + " " + url);
+  const u = _URL.createObjectURL(new Blob([await r.text()], { type: "text/javascript" }));
+  try { importScripts(u); } finally { _URL.revokeObjectURL(u); }
+}
 let _ready = null;
 function boot() {
   if (!_ready) {
-    importScripts("${PYODIDE_BASE}pyodide.js");
-    _ready = loadPyodide({ indexURL: "${PYODIDE_BASE}" }).then(function (py) {
+    _ready = (async function () {
+      self.fetch = cachedFetch; // Pyodide asks for lock, wasm, stdlib and packages with fetch
+      if (typeof loadPyodide !== "function") await loadClassic(BASE + "pyodide.js");
+      // defines _createPyodideModule, so loadPyodide no longer importScripts it from the CDN
+      if (typeof _createPyodideModule !== "function") await loadClassic(BASE + "pyodide.asm.js");
+      const py = await loadPyodide({ indexURL: BASE });
       // Sever the storage bridge: Pyodide's js module proxies this worker's globals, so a learner's
       // "import js; js.indexedDB.deleteDatabase('arcanum')" would otherwise reach the real event log.
       // 🔴 HARDENED (audit H3): the old sever used the SAME configurable:true shadow that was proven
@@ -53,7 +107,8 @@ function boot() {
         if (!hit) { try { Object.defineProperty(self, k, { value: undefined, configurable: false, writable: false }); } catch (_e2) { try { self[k] = undefined; } catch (_e3) {} } }
       });
       return py;
-    });
+    })();
+    _ready.catch(function () { _ready = null; }); // a failed boot (offline) does not leave the worker useless
   }
   return _ready;
 }
@@ -61,7 +116,7 @@ self.onmessage = async function (e) {
   const d = e.data;
   try {
     const py = await boot();
-    // Forge (§6.6, §9.3 k): sqlite3 is not in Pyodide's base image; loadPackage fetches it once (the SW caches it).
+    // Forge (§6.6, §9.3 k): sqlite3 is not in Pyodide's base image; loadPackage fetches it once (cachedFetch keeps it).
     if (d.packages && d.packages.length) await py.loadPackage(d.packages);
     if (d.warm) { self.postMessage({ rid: d.rid, ok: true, warm: true }); return; }
     py.globals.set("_code", d.code);
@@ -95,6 +150,9 @@ function packagesFor(code: string, opts?: { packages?: "sqlite3"[] }): string[] 
   if (IMPORTS_SQLITE3.test(code)) out.add("sqlite3");
   return [...out];
 }
+
+/** The worker's source, exported for py-runner.worker.test.ts (it runs it in node:vm with fake globals). */
+export const PYODIDE_WORKER_SRC = WORKER_SRC;
 
 let _rid = 0;
 /** Post one request to the singleton worker and wait for ITS reply (matched by id) or the timeout. */
@@ -177,8 +235,12 @@ export const WARM_PY_UNAVAILABLE = "La preparación de Python sin red aún no es
 /** UI texts of «Preparar ruta sin red» (§6.6). */
 export const WARM_PY_READY = "Python y SQLite listos sin red";
 export const WARM_PY_FAILED = "No se pudo descargar Python: conéctate y reintenta";
-/** Shown before opening a Python/SQL item when offline and Pyodide is not cached yet (§6.6). */
-export const PY_NEEDS_DOWNLOAD = "Este ejercicio necesita descargar Python una vez (≈ 10 MB)";
+export const WARM_PY_TIMEOUT = "La descarga de Python tardó demasiado y se detuvo: reintenta con mejor conexión";
+/** Shown before opening a Python/SQL item when offline and Pyodide is not cached yet (§6.6). The figures are H8 of
+ *  design poblar: the six files transfer ≈ 6 MB with brotli and take ≈ 15 MB on the device. */
+export const PY_NEEDS_DOWNLOAD = "Este ejercicio necesita descargar Python una vez (≈ 6 MB de descarga, ≈ 15 MB en el dispositivo)";
+/** Shown by the SQL runner when Pyodide with SQLite could not be loaded (anexo r2 [19]: same figures as above). */
+export const PY_SQL_UNAVAILABLE = "No se pudo cargar Python con SQLite: conéctate una vez para descargarlo (≈ 6 MB de descarga, ≈ 15 MB en el dispositivo).";
 
 /** Load Pyodide + `packages` in the worker WITHOUT running code, with its own limit (not runPy's 15 s): the first
  *  download of Pyodide with sqlite3 can pass 15 s on a slow network. On timeout the worker is dropped (resetPy), as
@@ -195,12 +257,30 @@ export async function warmPy(packages: "sqlite3"[], timeoutMs = 120_000): Promis
   return { ok: true };
 }
 
-/** Whether Pyodide is already in the Service Worker cache (`arcanum-pyodide`), so a Python/SQL item can run offline.
- *  `null` when it cannot be known (no Cache API). */
-export async function pyodideCached(): Promise<boolean | null> {
+/** What of Pyodide is on this device (design poblar §6.3): same shape as the facade's ResourceCount. */
+export interface PyodideStatus {
+  listos: number;
+  total: number;
+  faltan: string[];
+  /** bytes of the present files from PYODIDE_FILES (the stored Content-Length is the compressed body's) */
+  bytes: number;
+}
+
+/** Which of the five core files (six with `sqlite`) are in `arcanum-pyodide` with status 200 and not opaque, so a
+ *  Python/SQL item can run offline. `null` when it cannot be known (no Cache API). */
+export async function pyodideStatus(o: { sqlite?: boolean } = {}): Promise<PyodideStatus | null> {
   if (typeof caches === "undefined") return null;
+  const files = pyodideFilesFor(Boolean(o.sqlite));
   try {
-    return Boolean(await caches.match(`${PYODIDE_BASE}pyodide.js`, { cacheName: "arcanum-pyodide" }));
+    const present = await Promise.all(
+      files.map(async (f) => {
+        const r = await caches.match(PYODIDE_BASE + f, { cacheName: PYODIDE_CACHE });
+        return Boolean(r && r.status === 200 && r.type !== "opaque");
+      }),
+    );
+    const faltan = files.filter((_, i) => !present[i]);
+    const bytes = files.reduce((n, f, i) => n + (present[i] ? PYODIDE_FILES[f].bytes : 0), 0);
+    return { listos: files.length - faltan.length, total: files.length, faltan, bytes };
   } catch {
     return null;
   }

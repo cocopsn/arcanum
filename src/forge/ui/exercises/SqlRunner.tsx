@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import type { RunnerProps } from "./registry";
 import type { ForgeItemOf } from "@/forge/bank/registry";
 import { gradeSqlQuery, SQL_QUERY_MAX, type SqlGrade, type SqlTable } from "@/forge/eval/sql";
-import { pyodideCached, PY_NEEDS_DOWNLOAD, runPy } from "@/lib/py-runner";
+import { pyodideStatus, PY_NEEDS_DOWNLOAD, PY_SQL_UNAVAILABLE, runPy } from "@/lib/py-runner";
 import { useActions } from "@/ui/use-actions";
 
 // k · sql runner (design §9.3 k, §9.5, §16). The learner writes ONE read query; it runs in Pyodide's sqlite3 (Worker,
@@ -64,7 +64,7 @@ function SqlRunnerBody({ item, cellId, readModel }: Omit<RunnerProps, "item"> & 
   useEffect(() => {
     let alive = true;
     if (typeof navigator !== "undefined" && navigator.onLine === false) {
-      void pyodideCached().then((c) => alive && setNeedsDownload(c === false));
+      void pyodideStatus({ sqlite: true }).then((s) => alive && setNeedsDownload(s !== null && s.listos < s.total));
     }
     return () => {
       alive = false;
@@ -140,7 +140,7 @@ function SqlRunnerBody({ item, cellId, readModel }: Omit<RunnerProps, "item"> & 
         </button>
       </div>
       {grade?.estado === "rechazada" ? <p role="alert">✕ {grade.motivo}</p> : null}
-      {grade?.estado === "sin-python" ? <p role="alert">✕ No se pudo cargar Python con SQLite: conéctate una vez para descargarlo (≈ 10 MB).</p> : null}
+      {grade?.estado === "sin-python" ? <p role="alert">✕ {PY_SQL_UNAVAILABLE}</p> : null}
       {grade?.estado === "tiempo" ? <p role="alert">✕ La consulta tardó demasiado y se detuvo.</p> : null}
       {grade?.estado === "error-item" ? <p role="alert">✕ Este ítem está mal construido y no se puede calificar: {grade.motivo}</p> : null}
       {grade?.estado === "calificada" ? (

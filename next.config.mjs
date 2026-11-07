@@ -40,7 +40,14 @@ const CSP = buildCsp();
 const nextConfig = {
   reactStrictMode: true,
   async headers() {
-    return [{ source: "/:path*", headers: [{ key: "Content-Security-Policy", value: CSP }] }];
+    // /sw.js gets its own policy (design poblar §6.5, anexo r2 [21] plan B): the same one plus www.palantir.com in
+    // connect-src, so the SW can store the figures of a downloaded route. Listed LAST: for the same key, Next keeps
+    // the last matching rule. Imported here (not at the top) to keep this change inside headers().
+    const { buildSwCsp } = await import("./src/lib/csp.mjs");
+    return [
+      { source: "/:path*", headers: [{ key: "Content-Security-Policy", value: CSP }] },
+      { source: "/sw.js", headers: [{ key: "Content-Security-Policy", value: buildSwCsp() }] },
+    ];
   },
   // import seed books (content/books/*.md) as RAW strings so they bundle offline (no CDN, no fs).
   webpack: (config, { isServer, dev }) => {

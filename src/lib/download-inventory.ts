@@ -77,7 +77,10 @@ export interface Inventory {
   runtime: { present: boolean; bytes: number };
   /** the precached app shell */
   shell: { bytes: number };
-  /** honest grand total: distinct sources (each once) + books + banks + runtime + shell */
+  /** Engineering Forge downloads (design poblar §6.7): book files, Atlas files, and the figures of palantir.com, which
+   *  are opaque (no measurable bytes; the browser pads each one in the quota) so they are counted, not weighed */
+  forge: { libros: { count: number; bytes: number }; atlas: { count: number; bytes: number }; figuras: { count: number } };
+  /** honest grand total: distinct sources (each once) + books + banks + runtime + shell + Forge books and Atlas */
   grandTotal: number;
   /** the browser's own usage number, for a cross-check (may exceed grandTotal: the log DB, etc.) */
   storageUsageBytes: number | null;
@@ -125,6 +128,9 @@ export async function buildInventory(): Promise<Inventory> {
   const bankBytes = banks.reduce((n, b) => n + b.bytes, 0);
   const runtime = await measureCache("arcanum-pyodide");
   const shell = await measureCache("arcanum-shell");
+  const forgeBooks = await measureCache("arcanum-forge-books-v1");
+  const atlas = await measureCache("arcanum-atlas-v1");
+  const figuras = await measureCache("arcanum-forge-figuras-v1");
   return {
     spines: accounts,
     distinctSourceBytes,
@@ -132,7 +138,9 @@ export async function buildInventory(): Promise<Inventory> {
     banks: { count: banks.length, bytes: bankBytes },
     runtime: { present: runtime.count > 0, bytes: runtime.bytes },
     shell: { bytes: shell.bytes },
-    grandTotal: distinctSourceBytes + bookBytes + bankBytes + runtime.bytes + shell.bytes,
+    // the allowlist of figures lives in the same cache as a synthetic entry: it is not a figure
+    forge: { libros: forgeBooks, atlas, figuras: { count: Math.max(0, figuras.count - 1) } },
+    grandTotal: distinctSourceBytes + bookBytes + bankBytes + runtime.bytes + shell.bytes + forgeBooks.bytes + atlas.bytes,
     storageUsageBytes: await storageUsage(),
   };
 }

@@ -11,6 +11,7 @@ import { createHash } from "node:crypto";
 import { existsSync, readFileSync, readdirSync, statSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { brandIconPrecacheEntries } from "../brand-icons-precache.mjs";
 
 const KiB = 1024;
 const MiB = 1024 * 1024;
@@ -102,8 +103,10 @@ function urlsInOrder(v, out = []) {
 
 const TEXT = /\.(js|mjs|cjs|css|json|html|txt|map|md)$/;
 
-/** Run every check. Returns the report object (with `ok` and `fallas`). */
-export function evaluate({ root, nextDir, project = false }) {
+/** Run every check. Returns the report object (with `ok` and `fallas`). `iconUrls`: the brand icon URLs with ?v= that
+ *  must be precached (default: brandIconPrecacheEntries() over this repo's public/; tests pass their own). */
+/** @param {{ root: string; nextDir: string; project?: boolean; iconUrls?: string[] | null }} o */
+export function evaluate({ root, nextDir, project = false, iconUrls = null }) {
   const fallas = [];
   const avisos = [];
   const report = { v: 1, fallas, avisos };
@@ -219,7 +222,21 @@ export function evaluate({ root, nextDir, project = false }) {
     if (urls.length === 0) fallas.push("el manifiesto de public/sw.js no tiene entradas legibles");
     const bad = urls.filter((u) => u.includes("/atlas/") || u.includes("/forge/books/"));
     for (const u of bad) fallas.push(`el precache tiene una entrada de datos del Atlas o de libros: ${u}`);
-    precache = { entradas: urls.length, atlas_o_libros: bad.length };
+    // poblar §6.10: every emitted file of .next/static (≤ 5 MiB; Serwist leaves out the .json at the root of the
+    // output) is precached, so «Descargar» can verify the app against the SW; and every brand icon with ?v= too
+    const enPrecache = new Set(urls);
+    let fuera = 0;
+    for (const f of statics) {
+      if (f.bytes > LIMITS.archivo) continue;
+      if (f.rel.endsWith(".json") && !f.rel.slice("static/".length).includes("/")) continue;
+      if (!enPrecache.has(`/_next/${f.rel}`)) {
+        fuera++;
+        fallas.push(`un archivo de .next/static quedó fuera del precache: ${f.rel}`);
+      }
+    }
+    const iconos = iconUrls ?? brandIconPrecacheEntries().map((e) => e.url);
+    for (const u of iconos) if (!enPrecache.has(u)) fallas.push(`el ícono ${u} no está en el precache`);
+    precache = { entradas: urls.length, atlas_o_libros: bad.length, static_fuera: fuera, iconos: iconos.length };
   }
 
   // text scans of .next/static: a Forge book (CA-28) and the viewer's Atlas list

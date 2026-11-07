@@ -1,7 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
-import { buildCsp, isAllowedFrameUrl, isAllowedImageUrl } from "./csp.mjs";
+import { buildCsp, buildSwCsp, isAllowedFrameUrl, isAllowedImageUrl } from "./csp.mjs";
 
 // CA-68 (Forge design §12.1): the exact set of values per directive, the 14 directives present, and next.config.mjs
 // applying buildCsp() (one source for the header and for what SafeImage / VideoEmbed / SourceViewer embed).
@@ -54,6 +54,21 @@ describe("CSP (src/lib/csp.mjs, CA-68)", () => {
     expect(cfg.includes("img-src"), "next.config.mjs vuelve a declarar directivas de la CSP").toBe(false);
   });
 
+  it("/sw.js lleva la misma política más www.palantir.com en connect-src, y sólo /sw.js (poblar §6.5, anexo r2 [21])", async () => {
+    const sw = parse(buildSwCsp());
+    expect(sw.get("connect-src"), "el SW no puede guardar figuras: connect-src de sw.js sin www.palantir.com").toContain("https://www.palantir.com");
+    for (const [name, values] of Object.entries(EXPECTED)) {
+      const want = name === "connect-src" ? [...values, "https://www.palantir.com"] : values;
+      expect(sw.get(name), `la política de sw.js cambió ${name} más allá de connect-src`).toEqual(want);
+    }
+    expect(csp.get("connect-src"), "la política de la página ganó www.palantir.com en connect-src").not.toContain("https://www.palantir.com");
+    const cfg = (await import("../../next.config.mjs")).default as { headers: () => Promise<{ source: string; headers: { key: string; value: string }[] }[]> };
+    const rules = await cfg.headers();
+    expect(rules.map((r) => r.source), "next.config.mjs no sirve /sw.js con su política: el SW no guarda figuras").toEqual(["/:path*", "/sw.js"]);
+    // Next keeps the LAST matching rule for the same key: /sw.js must come after /:path*
+    expect(rules[1]!.headers).toEqual([{ key: "Content-Security-Policy", value: buildSwCsp() }]);
+    expect(rules[0]!.headers).toEqual([{ key: "Content-Security-Policy", value: buildCsp() }]);
+  });
   it("the embed rules follow the same origins as the header", () => {
     expect(isAllowedImageUrl("https://www.palantir.com/docs/resources/foundry/x.png")).toBe(true);
     expect(isAllowedImageUrl("https://build.palantir.com/a.png")).toBe(true);

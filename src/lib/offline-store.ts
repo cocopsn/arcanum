@@ -26,18 +26,53 @@ export interface OfflineSpineRow {
   ts: number;
 }
 
+/** Ownership record of a downloaded Forge route (design poblar §6.4 step 5). Device cache, not the log: it only
+ *  serves to delete WITHOUT breaking what another downloaded route shares (like `urls` in OfflineSpineRow). */
+export interface OfflineRouteRow {
+  /** "forge:<slug>" (or "forge:mundo" for the whole world) */
+  key: string;
+  world: "forge";
+  slug: string;
+  ts: number;
+  recursos: {
+    /** cell codes whose book and bank this download brought */
+    libros: string[];
+    /** Atlas files relative to /atlas/v1/ */
+    atlas: string[];
+    /** canonical figure URLs; empty when downloaded with `figuras: false` */
+    figuras: string[];
+  };
+}
+
 class OfflineDB extends Dexie {
   sources!: Table<OfflineSourceRow, string>;
   spines!: Table<OfflineSpineRow, string>;
+  routes!: Table<OfflineRouteRow, string>;
   constructor(name = "arcanum-offline") {
     super(name);
     this.version(1).stores({ sources: "url", spines: "goalId" });
+    // v2 (design poblar §6.4): + routes. Adding a table keeps every v1 row.
+    this.version(2).stores({ sources: "url", spines: "goalId", routes: "key" });
   }
 }
 
 let _db: OfflineDB | null = null;
 function db(): OfflineDB {
   return (_db ??= new OfflineDB());
+}
+
+export async function saveRouteRow(row: OfflineRouteRow): Promise<void> {
+  await db().routes.put(row);
+}
+export async function listRouteRows(): Promise<OfflineRouteRow[]> {
+  try {
+    return await db().routes.toArray();
+  } catch {
+    return [];
+  }
+}
+export async function deleteRouteRow(key: string): Promise<void> {
+  await db().routes.delete(key);
 }
 
 export async function saveOfflineSource(url: string, data: unknown): Promise<number> {

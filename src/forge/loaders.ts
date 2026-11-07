@@ -8,6 +8,7 @@ import { getBookForModule } from "@/lib/book-store";
 import { parseBook } from "@/lib/book";
 import { seedBooks } from "@/lib/seed-books";
 import { getBanksForModule, saveExerciseBank } from "@/lib/exercise-store";
+import { pruneBookVersions } from "@/lib/offline/books-cache";
 
 // LAZY LOADERS of Forge (design §6.2, §6.3, §22.3). Signatures frozen in Phase 0; these are the real bodies
 // (forge/p-plataforma). Nothing here builds a URL or a path from free text: every book and bank is looked up by its
@@ -61,7 +62,8 @@ interface BookIndexEntry {
   file: string;
   sha10: string;
   bytes: number;
-  minutes: number;
+  /** null when the book declares no reading time (H2 of design poblar) */
+  minutes: number | null;
   title: string;
 }
 const BOOK_FILE = /^[a-z0-9-]+\.[0-9a-f]{10}\.md$/;
@@ -127,6 +129,8 @@ export async function ensureForgeBook(code: string, readModel: ReadModel): Promi
     return row ? { ok: true, refreshed: false } : { ok: false, reason: "formato" };
   }
   await seedBooks([md]);
+  // the URL carries the sha10: a corrected book is another file, so the old ones go (design poblar §6.9)
+  await pruneBookVersions(code, entry.file);
   return { ok: true, refreshed: true };
 }
 
