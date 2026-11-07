@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Cinzel, EB_Garamond, Chakra_Petch } from "next/font/google";
 import { forgeSans, forgeMono } from "@/forge/fonts/plex";
+import { HEAD_ICONS } from "@/lib/brand-icons.mjs";
 import "./globals.css";
 
 // Cinzel — Trajan imperial caps: the crown, grade names, world titles, the ceremony.
@@ -36,13 +37,13 @@ export const metadata: Metadata = {
     statusBarStyle: "black-translucent",
     title: "Arcanum",
   },
-  // the guardian raven (`pnpm icons`); ?v= = sha256[:10] of each file, so browsers drop the old icon (brand-icons.test.ts)
+  // the guardian raven (`pnpm icons`); the URLs, with ?v= = sha256[:10] of each file, live in src/lib/brand-icons.mjs
   icons: {
     icon: [
-      { url: "/favicon.ico?v=746ff5c916", sizes: "16x16 32x32 48x48", type: "image/x-icon" },
-      { url: "/icons/favicon-32.png?v=ecfe2855bc", sizes: "32x32", type: "image/png" },
+      { url: HEAD_ICONS.favicon, sizes: "16x16 32x32 48x48", type: "image/x-icon" },
+      { url: HEAD_ICONS.favicon32, sizes: "32x32", type: "image/png" },
     ],
-    apple: "/icons/apple-touch-icon.png?v=bea11a0e15",
+    apple: HEAD_ICONS.appleTouch,
   },
 };
 

@@ -3,7 +3,8 @@ import { brandIconPrecacheEntries } from "./scripts/brand-icons-precache.mjs";
 import { ForgeChunkMapPlugin } from "./scripts/forge/forge-chunk-map.mjs";
 import { buildCsp } from "./src/lib/csp.mjs";
 
-const withSerwist = withSerwistInit({
+/** Serwist options. Exported so src/app/brand-icons.test.ts checks the precache (glob + transforms) the build makes. */
+export const serwistOptions = {
   swSrc: "src/app/sw.ts",
   swDest: "public/sw.js",
   disable: process.env.NODE_ENV === "development",
@@ -21,11 +22,15 @@ const withSerwist = withSerwistInit({
   reloadOnOnline: false,
   // Precache ONLY the icons from public/: public/atlas/** and public/forge/** (Atlas data, Forge books) are
   // loaded on demand and must never enter the install download (Forge design §6.6, CA-57).
-  globPublicPatterns: ["icons/**/*"],
+  // Only the icons the app requests WITHOUT ?v=: BrandMark (logo-256) and the audiobook lock-screen artwork (192, 512).
+  // The other brand icons are requested only with ?v= and come from the transform below (post-merge review #4);
+  // src/app/brand-icons.test.ts keeps this list equal to the bare URLs the app requests.
+  globPublicPatterns: ["icons/logo-256.png", "icons/icon-192.png", "icons/icon-512.png"],
   // ...plus the brand icons under the exact ?v= URLs that the <head> and the manifest request, so those resolve offline
   // too (scripts/brand-icons-precache.mjs). Appended here: `additionalPrecacheEntries` would replace the glob above.
   manifestTransforms: [(entries) => ({ manifest: [...entries, ...brandIconPrecacheEntries()], warnings: [] })],
-});
+};
+const withSerwist = withSerwistInit(serwistOptions);
 
 // Content-Security-Policy — the single source is src/lib/csp.mjs (Forge design §12.1). VideoEmbed and the figure
 // paragraph of BookReader check URLs against the same origin lists; everything else relies on this header alone.

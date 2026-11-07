@@ -55,11 +55,10 @@ export function AccessGate({ children }: { children: React.ReactNode }) {
 
   if (phase === "checking") {
     return (
-      <main className="grid min-h-screen place-items-center font-display text-sm tracking-[0.4em] text-text-faint">
-        <div className="flex flex-col items-center gap-4">
-          <BrandMark size={56} />
-          ARCANUM
-        </div>
+      // same markup as HomeView's "loading" screen, so the mark does not jump between the two boot screens (review #13)
+      <main className="mx-auto max-w-md px-5 py-16 text-center font-display text-sm tracking-[0.4em] text-text-faint">
+        <BrandMark size={56} className="mx-auto mb-4" />
+        ARCANUM
       </main>
     );
   }
