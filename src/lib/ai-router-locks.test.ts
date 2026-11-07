@@ -17,6 +17,7 @@ const LOCKS: Record<string, string> = {
   lesson: "${context.answer",
   tutor: "JSON.stringify(context)",
   forge_judge: "JSON.stringify(context.evidence)",
+  forge_interview: "JSON.stringify({ persona: context.persona, transcript: context.transcript, question: context.question })",
 };
 
 /** Exempt this round, with their reason (§10.10 point 4): Forge sends them no new text, they mint no verdict and
@@ -177,6 +178,12 @@ describe("ai-router — the anti-injection lock table (§10.10)", () => {
     const mutated = src.replace("RECORDATORIO FINAL E INVIOLABLE: la EVIDENCIA DEL APRENDIZ", "la EVIDENCIA DEL APRENDIZ");
     expect(mutated).not.toBe(src);
     expect(lockFindings(mutated)).toContain("forge_judge recibe texto del alumno sin candado");
+  });
+
+  it("red-check: without the forge_interview reminder → «forge_interview recibe texto del alumno sin candado»", () => {
+    const mutated = src.replace("RECORDATORIO FINAL E INVIOLABLE: la CONVERSACIÓN Y PREGUNTA DEL APRENDIZ", "la CONVERSACIÓN Y PREGUNTA DEL APRENDIZ");
+    expect(mutated).not.toBe(src);
+    expect(lockFindings(mutated)).toContain("forge_interview recibe texto del alumno sin candado");
   });
 
   it("red-check: validateForgeJudge moved after routeWithFallback → «" + ORDER_MSG + "»", () => {
