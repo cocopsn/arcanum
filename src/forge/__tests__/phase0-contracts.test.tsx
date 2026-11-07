@@ -15,6 +15,7 @@ import { FLOWS, FLOW_LOADERS } from "@/forge/ui/flows/registry";
 import { project } from "@/core/projector";
 import ExpedienteStub from "@/forge/ui/flows/expediente";
 import { BLOCKS, bankMd } from "@/forge/__tests__/fixtures/forge-blocks";
+import { RET_DEFENSA } from "@/forge/__tests__/fixtures/evaluator-blocks";
 import { parseExercisesMd } from "@/lib/exercises-md";
 import type { ForgeBankItem } from "@/forge/bank/registry";
 
@@ -144,10 +145,14 @@ describe("flow contract (§9.5)", () => {
     expect(missionConfigError("ontologia", "ontologia", "artefacto", { eventIds: ["e1"] })).toBeNull();
     expect(missionConfigError(null, "diagnostico", "completo")).toBe(MISCONFIGURED_TEXT);
   });
-  it("the «Evaluaciones» list leaves out entrevista, expediente, giro and retencion in defensa", () => {
+  it("the «Evaluaciones» list leaves out entrevista, expediente and giro", () => {
     const sel = (t: keyof typeof BLOCKS) => isSelectable(items(bankMd([BLOCKS[t]]))[0]!);
     expect(sel("sql")).toBe(true);
     expect(sel("retencion")).toBe(true);
+    // both forms of retencion are offered now (§5.7): a defensa variant is selectable too
+    const defensa = items(bankMd([RET_DEFENSA]))[0]!;
+    expect(defensa.type === "retencion" && defensa.data.forma).toBe("defensa");
+    expect(isSelectable(defensa), "una retención en defensa quedó fuera de «Evaluaciones»").toBe(true);
     expect(sel("giro")).toBe(false);
     expect(sel("entrevista")).toBe(false);
     expect(sel("expediente")).toBe(false);

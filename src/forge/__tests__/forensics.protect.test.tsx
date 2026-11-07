@@ -1,4 +1,5 @@
-import { describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
+import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import type { ForenseData } from "@/forge/bank/types/forense";
 import type { BankCheckPy, ExecRunner } from "@/lib/exercises-validate";
 import { CHECK_GUARD_RUNNER } from "@/lib/exercises-validate";
@@ -252,4 +253,74 @@ describe("forense · py.check lleva al autor la causa del fallo del arnés (sin 
     const r = await (py.check as BankCheckPy)(item, { source: "import", jsRun: CHECK_GUARD_RUNNER, pyRun: runWith({ syntaxError: null, cases: [{ input: [], expected: null, pass: true, output: { problemas: [] } }] }) });
     expect(r).toEqual({ ok: true });
   });
+});
+
+// ── DOM of ForenseRunner (design §5.4, §11.2 point 1): the lies, the correction, the reference controls and the
+//    per-lie step ✓/✗ appear ONLY after a correct submission is in the log (rc13, rc59). runPy is answered by the real
+//    CPython harness (the same text), so a correct submission over BLOCKS.forense actually grades to correct. ────────
+
+vi.mock("@/ui/use-actions", () => ({ useActions: () => ({ fire: domEnv.fire, passLesson: domEnv.passLesson }) }));
+vi.mock("@/app/providers", async () => (await import("@/forge/__tests__/helpers/flow-envelope")).providersMock);
+vi.mock("@/lib/py-runner", async (importOriginal) => {
+  const real = await importOriginal<typeof import("@/lib/py-runner")>();
+  const { cpythonRunner } = await import("@/forge/__tests__/helpers/cpython");
+  return { ...real, runPy: (code: string, fn: string, cases: unknown) => cpythonRunner(code, fn, cases as never) };
+});
+
+// A `fire` that writes a real evidence.recorded into the current envelope store (so the read model updates and
+// `revelado` can flip), and a passLesson spy. The reveal must come ONLY after a correct submission (rc13/rc59).
+const domEnv = vi.hoisted(() => ({
+  store: null as import("@/store/arcanum-store").ArcanumStore | null,
+  passLesson: vi.fn(async () => {}),
+  fire: vi.fn(async (type: string, payload: unknown, refs: { goalId?: string | null; moduleId?: string | null }) => {
+    const { makeEvent } = await import("@/core/event");
+    const ev = makeEvent(type as never, payload as never, { ts: Date.now(), deviceId: "t", goalId: refs.goalId ?? null, moduleId: refs.moduleId ?? null });
+    await domEnv.store!.getState().dispatch(ev, Date.now());
+  }),
+}));
+
+describe.skipIf(!PY)("forense · DOM del corredor revela sólo tras un acierto (rc13, rc59)", () => {
+  afterEach(() => cleanup());
+
+  it("las mentiras, la corrección y el paso ✓ aparecen sólo tras una entrega correcta", async () => {
+    const { createEnvelope } = await import("@/forge/__tests__/helpers/flow-envelope");
+    const ForenseRunner = (await import("@/forge/ui/exercises/ForenseRunner")).default;
+    const env = await createEnvelope();
+    domEnv.store = env.store;
+    domEnv.passLesson.mockClear();
+    const it = forgeItem(BLOCKS.forense, "forense");
+    const rm = () => env.store.getState().readModel;
+    const CELL = rm().modules[0]?.id ?? "cf000000-0000-4000-8000-0000000000aa";
+    const { rerender } = render(<ForenseRunner item={it} cellCode="P1-02" cellId={CELL} readModel={rm()} onClose={() => {}} />);
+    // before any submission: no lie id (m1), no correction, no step mark
+    expect(screen.queryByText(/nace en unir/), "las mentiras aparecieron antes de una entrega correcta").toBeNull();
+    expect(document.querySelector("[data-paso-ok]"), "el ✓/✗ de paso por mentira apareció antes del acierto").toBeNull();
+    // a correct submission: lie m1 is born in `unir`; the control counts the duplicated id
+    fireEvent.change(screen.getByLabelText("Paso de la mentira 1"), { target: { value: "unir" } });
+    fireEvent.change(screen.getByLabelText("Control de la mentira 1"), { target: { value: "SELECT id FROM unidos GROUP BY id HAVING COUNT(*) > 1" } });
+    fireEvent.click(screen.getByRole("button", { name: /Entregar/ }));
+    await waitFor(() => expect(document.body.textContent).toContain("✓ La mentira localizada"), { timeout: 30000 });
+    rerender(<ForenseRunner item={it} cellCode="P1-02" cellId={CELL} readModel={rm()} onClose={() => {}} />);
+    await waitFor(() => expect(screen.queryByText(/nace en unir/)).not.toBeNull());
+    expect(document.querySelector('[data-paso-ok="0"]')?.textContent).toBe("paso ✓");
+    expect(domEnv.passLesson, "no se dio XP por una entrega correcta").toHaveBeenCalled();
+  }, 40000);
+
+  it("una entrega con un paso mal marcado no revela el ✓/✗ de paso", async () => {
+    const { createEnvelope } = await import("@/forge/__tests__/helpers/flow-envelope");
+    const ForenseRunner = (await import("@/forge/ui/exercises/ForenseRunner")).default;
+    const env = await createEnvelope();
+    domEnv.store = env.store;
+    domEnv.passLesson.mockClear();
+    const it = forgeItem(BLOCKS.forense, "forense");
+    const CELL = env.store.getState().readModel.modules[0]?.id ?? "cf000000-0000-4000-8000-0000000000aa";
+    render(<ForenseRunner item={it} cellCode="P1-02" cellId={CELL} readModel={env.store.getState().readModel} onClose={() => {}} />);
+    // wrong step (`limpiar` instead of `unir`), with a distinguishing control: the submission is incorrect
+    fireEvent.change(screen.getByLabelText("Paso de la mentira 1"), { target: { value: "limpiar" } });
+    fireEvent.change(screen.getByLabelText("Control de la mentira 1"), { target: { value: "SELECT id FROM unidos GROUP BY id HAVING COUNT(*) > 1" } });
+    fireEvent.click(screen.getByRole("button", { name: /Entregar/ }));
+    await waitFor(() => expect(document.body.textContent).toContain("✕ Revisa las mentiras: hay al menos un paso mal marcado."), { timeout: 30000 });
+    expect(document.querySelector("[data-paso-ok]"), "el ✓/✗ de paso por mentira apareció antes del acierto").toBeNull();
+    expect(domEnv.passLesson).not.toHaveBeenCalled();
+  }, 40000);
 });

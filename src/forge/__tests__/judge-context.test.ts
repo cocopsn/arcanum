@@ -43,8 +43,14 @@ describe("buildForgeJudgeContext", () => {
   it("apoyo-pendiente for an evidence submission without apoyo", () => {
     expect(mintTargetFor(cell, "retencion")).toBe("evidence");
     expect(buildForgeJudgeContext({ route, cell, kind: "retencion", scope: "local", events: [], giro: null })).toEqual({ error: "apoyo-pendiente" });
-    const r = buildForgeJudgeContext({ route, cell, kind: "retencion", scope: "local", apoyo: "independiente", events: [], giro: null, retencionItemId: "r1", respuesta: "x" });
+    const r = buildForgeJudgeContext({ route, cell, kind: "retencion", scope: "local", apoyo: "independiente", events: [], giro: null, retencionItemId: "r1", retencion: { enunciado: "v", rubrica: ["r"] }, respuesta: "x" });
     expect("context" in r && r.context.apoyo).toBe("independiente");
+    expect("context" in r && r.context.evidence.retencion).toEqual({ itemId: "r1", enunciado: "v", rubrica: ["r"], respuesta: "x" });
+  });
+
+  it("retencion-desconocida when a retention submission arrives without the variant and rubric", () => {
+    const r = buildForgeJudgeContext({ route, cell, kind: "retencion", scope: "local", apoyo: "independiente", events: [], giro: null, retencionItemId: "r1", respuesta: "x" });
+    expect(r, "una retención sin su variante llegó al juez").toEqual({ error: "retencion-desconocida" });
   });
 
   it("clips a context above 90,000 characters, marking «[recortado]»", () => {

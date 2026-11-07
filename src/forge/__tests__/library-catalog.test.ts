@@ -72,7 +72,10 @@ describe("Lecturas · filas de Engineering Forge (design poblar §5.1)", () => {
     expect(b({}).disponible).toBe("no");
     expect(b({ precacheListo: true }).disponible).toBe("incluido");
     const p206 = b({});
-    expect(p206.items).toEqual({ total: index.celdas["P2-06"]!.banco!.items, disponibles: index.celdas["P2-06"]!.banco!.items - 3 });
+    // Once the evaluators are real (design §2.9), P2-06 has no pending items: every item is available.
+    const items = index.celdas["P2-06"]!.banco!.items;
+    const pendientes = index.celdas["P2-06"]!.banco!.pendientes?.length ?? 0;
+    expect(p206.items).toEqual({ total: items, disponibles: items - pendientes });
   });
 
   it("una celda sin módulo vivo se pinta sellada (fail-closed) y ninguna fila trae prosa reservada (D12)", () => {
