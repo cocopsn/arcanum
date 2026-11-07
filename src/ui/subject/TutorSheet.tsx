@@ -66,8 +66,7 @@ export function TutorSheet({ moduleId, accent, onClose }: { moduleId: string; ac
         aria-modal="true"
         aria-label="Tutor del tópico"
         tabIndex={-1}
-        className="scroll-touch flex max-h-[90vh] w-full max-w-md flex-col gap-4 overflow-y-auto rounded-t-[var(--r-lg)] border border-line bg-surface-raised p-6 outline-none sm:rounded-[var(--r-lg)]"
-        style={{ paddingBottom: "max(1.5rem, env(safe-area-inset-bottom))" }}
+        className="scroll-touch flex max-h-[90vh] w-full max-w-md flex-col gap-4 overflow-y-auto rounded-t-[var(--r-lg)] border border-line bg-surface-raised px-safe pb-safe-lg pt-6 outline-none sm:rounded-[var(--r-lg)] sm:px-safe-lg"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-start justify-between gap-3">
@@ -79,7 +78,7 @@ export function TutorSheet({ moduleId, accent, onClose }: { moduleId: string; ac
               Adversarial a propósito: no te regala la respuesta — te empuja al primer principio con tu contexto y tus notas.
             </p>
           </div>
-          <button onClick={onClose} aria-label="Cerrar" className="-mr-2 -mt-1 min-h-11 px-2 text-2xl leading-none text-text-faint transition hover:text-text">
+          <button onClick={onClose} aria-label="Cerrar" className="tap grid shrink-0 place-items-center text-2xl leading-none text-text-faint transition hover:text-text">
             ×
           </button>
         </div>

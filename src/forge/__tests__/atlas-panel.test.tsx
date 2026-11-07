@@ -3,6 +3,7 @@ import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/re
 import { AtlasEntry, AtlasPanel } from "@/forge/ui/atlas/AtlasPanel";
 import type { AtlasManifest, AtlasPartitionFile } from "@/forge/atlas/types";
 import { isAllowedSource } from "@/lib/spines";
+import { PARTITION_NOT_DOWNLOADED } from "@/lib/offline-texts";
 
 // Atlas P0 mínimo: conteo real del manifiesto, partición perezosa al expandir, búsqueda sólo sobre lo cargado
 // (y lo dice), filas con título, migas, enlace ↗ externo y la nota de captura. Y el visor del servidor NO se
@@ -62,12 +63,44 @@ describe("Atlas · entrada y panel", () => {
     expect(screen.queryByRole("link", { name: /Ontology overview/ })).toBeNull();
   });
 
-  it("una partición que no baja dice «no descargada», sin filas inventadas", async () => {
+  it("con red, una partición que no baja es un error que se puede reintentar, sin filas inventadas", async () => {
+    vi.stubGlobal("fetch", vi.fn(async () => { throw new TypeError("network"); }));
+    render(<AtlasPanel manifest={manifest} onClose={() => {}} />);
+    fireEvent.click(screen.getByRole("button", { name: /ontology · 2/ }));
+    expect(await screen.findByText(/No se pudo cargar la partición/)).toBeTruthy();
+    expect(screen.getByRole("button", { name: "Reintentar" })).toBeTruthy();
+    expect(screen.queryAllByRole("link")).toHaveLength(0);
+  });
+
+  it("sin red, una partición que no se descargó lo dice (§6.6), sin filas inventadas", async () => {
+    vi.spyOn(window.navigator, "onLine", "get").mockReturnValue(false);
     vi.stubGlobal("fetch", vi.fn(async () => { throw new TypeError("offline"); }));
     render(<AtlasPanel manifest={manifest} onClose={() => {}} />);
     fireEvent.click(screen.getByRole("button", { name: /ontology · 2/ }));
-    expect(await screen.findByText(/Partición no descargada en esta sesión/)).toBeTruthy();
+    expect(await screen.findByText(new RegExp(PARTITION_NOT_DOWNLOADED))).toBeTruthy();
+    expect(screen.queryByRole("button", { name: "Reintentar" })).toBeNull();
     expect(screen.queryAllByRole("link")).toHaveLength(0);
+    vi.restoreAllMocks();
+  });
+
+  it("al abrir sólo pide la partición de la raíz (_index_) y mueve la raíz del sitio a «Utilidades del sitio»", async () => {
+    const withRoot = {
+      ...manifest,
+      capas: { docs: { paginas: 12019, por_idioma: { en: 4, jp: 0, zh: 0, kr: 0 } } },
+      particiones: [
+        { id: "en/foundry/_index_", files: ["docs/en/foundry/_index_.r00t.json"], bytes: 10, pages: 2, sitemap: 2 },
+        ...manifest.particiones,
+      ],
+    } as unknown as AtlasManifest;
+    const page = (k: string, t: string) => ({ k, u: `https://www.palantir.com/docs${k ? `/${k}` : ""}`, t, b: [], p: "foundry", c: "", s: "", l: "en", h: [], i: [], vd: [], lm: null, cells: [] });
+    const rootFile = { v: 1, id: "en/foundry/_index_", pages: [page("", "Palantir Docs"), page("foundry", "Foundry")] };
+    const fetchMock = vi.fn(async () => new Response(JSON.stringify(rootFile), { status: 200 }));
+    vi.stubGlobal("fetch", fetchMock);
+    render(<AtlasPanel manifest={withRoot} onClose={() => {}} />);
+    expect(await screen.findByRole("button", { name: /Utilidades del sitio · 1 página · raíz del sitio/ })).toBeTruthy();
+    expect(fetchMock, "al abrir el Atlas se pidieron particiones además de _index_").toHaveBeenCalledTimes(1);
+    expect(fetchMock).toHaveBeenCalledWith("/atlas/v1/docs/en/foundry/_index_.r00t.json");
+    expect(screen.queryByRole("button", { name: /\(índice\) · 1/ }), "el «(índice)» de Foundry sigue contando la raíz que se movió").not.toBeNull();
   });
 });
 

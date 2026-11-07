@@ -29,7 +29,7 @@ function RangeRow({
         step={1}
         value={value}
         onChange={(e) => onChange(Number(e.target.value))}
-        className="w-full accent-[var(--topic)]"
+        className="w-full min-h-11 accent-[var(--topic)]"
       />
     </label>
   );
