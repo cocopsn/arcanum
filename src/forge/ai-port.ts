@@ -39,6 +39,9 @@ export interface SimulatedUserRequest {
   cellCode: string;
   itemId: string;
   fase: "preguntas" | "estructuracion" | "defensa";
+  /** id of the persona the question goes to (one of the item's personas); it travels as `context.persona` and the
+   *  answered turn keeps it (interview-context.ts) */
+  persona?: string;
   /** the learner's question (≤ 1,000 characters); travels as DATA under the lock */
   question: string;
 }
@@ -46,6 +49,8 @@ export interface SimulatedUserRequest {
 export type SimulatedUserResult =
   | { estado: "respuesta"; reply: string; revealed: string[] }
   | { estado: "sin-ia"; motivo: string }
+  /** the provider's content filter refused the question: the Edge's text; it is not a turn and reveals nothing */
+  | { estado: "bloqueado"; motivo: string }
   | { estado: "limite"; reintentaEnS: number };
 
 export const STUB_QUEUE_MOTIVO = "el evaluador desplegado todavía no tiene la acción Forge";
@@ -111,8 +116,9 @@ export async function submitForgeVerdict(req: ForgeSubmitRequest): Promise<Forge
   return { estado: "en-cola", motivo: r.motivo };
 }
 
-/** Ask the simulated user of an `entrevista`. `forge_interview` is not in this Edge version: honest unavailability,
- *  never an invented answer (§10.7). */
+/** Ask the simulated user of an `entrevista`. A stub until InterviewConsole exists: honest unavailability, never an
+ *  invented answer (§10.7). The pieces of its body are in src/forge/interview-context.ts: interviewTurnsFrom and
+ *  buildInterviewContext before the Edge's `forge_interview`, interviewResultFrom and interviewTurnPayload after it. */
 export async function askSimulatedUser(req: SimulatedUserRequest): Promise<SimulatedUserResult> {
   void req;
   return { estado: "sin-ia", motivo: "El usuario simulado requiere la versión nueva del evaluador; tus preguntas quedan guardadas" };

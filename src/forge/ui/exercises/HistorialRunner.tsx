@@ -16,7 +16,7 @@ import { useActions } from "@/ui/use-actions";
 const box: React.CSSProperties = { border: "1px solid var(--forge-line)", background: "var(--forge-surface)", padding: "0.75rem", borderRadius: 2 };
 const mono: React.CSSProperties = { fontFamily: "var(--font-mono, ui-monospace, monospace)", fontSize: "0.8rem", whiteSpace: "pre-wrap", margin: 0 };
 const meta: React.CSSProperties = { fontVariant: "small-caps", letterSpacing: "0.12em", color: "var(--forge-text-muted)", fontSize: "0.75rem" };
-const btn: React.CSSProperties = { ...box, padding: "0.35rem 0.6rem", color: "var(--forge-text)", cursor: "pointer" };
+const btn: React.CSSProperties = { ...box, padding: "0.35rem 0.6rem", minHeight: 44, minWidth: 44, color: "var(--forge-text)", cursor: "pointer" };
 
 const fmtState = (s: Record<string, number>) => Object.entries(s).map(([k, v]) => `${k}=${v}`).join(" · ");
 

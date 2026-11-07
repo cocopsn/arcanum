@@ -48,6 +48,132 @@
   overscroll-behavior: contain;
 }
 
+/* ── Áreas seguras y tamaño táctil (design poblar §7.1, Fase 0) ──
+   Las superficies leen var(--safe-*), nunca env() directo: una prueba las sobrescribe con un estilo en línea en
+   <html>. Cada utilidad suma su margen fijo al inset; ningún margen viaja por herencia a un overlay anidado. */
+:root {
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-right: env(safe-area-inset-right, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-left: env(safe-area-inset-left, 0px);
+  --companion-reserve-right: 0px; /* lo fija el orbe de feat/companion si ocupa la esquina (§11.4) */
+}
+@layer utilities {
+  .pt-safe {
+    padding-top: calc(var(--safe-top) + 0.75rem);
+  }
+  .pb-safe {
+    padding-bottom: calc(var(--safe-bottom) + 0.75rem);
+  }
+  .pb-safe-lg {
+    padding-bottom: calc(var(--safe-bottom) + 1.5rem);
+  }
+  .px-safe {
+    padding-left: calc(var(--safe-left) + 1rem);
+    padding-right: calc(var(--safe-right) + 1rem);
+  }
+  .px-safe-lg {
+    padding-left: calc(var(--safe-left) + 1.5rem);
+    padding-right: calc(var(--safe-right) + 1.5rem);
+  }
+  .tap {
+    min-width: 44px;
+    min-height: 44px;
+  }
+}
+
+/* ── Barra de desplazamiento sin blanco nativo (design poblar §7.5) ──
+   color-scheme: dark oscurece los controles y las barras nativas (las superpuestas de iOS y Android lo siguen).
+   scrollbar-color se declara en * para que var(--accent) se resuelva en cada elemento: dentro de un mundo clásico el
+   pulgar toma su acento. Forge queda monocromo (D4): pista carbón y pulgar gris, sólo tokens --forge-*. Una superficie
+   clara futura se marca con data-surface="light". Chrome 121+ usa scrollbar-color; Safari de macOS, los seudoelementos. */
+:root {
+  color-scheme: dark;
+}
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--scroll-thumb, color-mix(in srgb, var(--accent, var(--text-faint)) 35%, var(--surface-raised)))
+    var(--scroll-track, transparent);
+}
+[data-world="forge"],
+[data-world="forge"] * {
+  --scroll-thumb: var(--forge-grain);
+  --scroll-track: var(--forge-surface);
+}
+[data-world="forge"] *:hover {
+  --scroll-thumb: var(--forge-control);
+}
+[data-surface="light"],
+[data-surface="light"] * {
+  color-scheme: light;
+  --scroll-thumb: var(--forge-light-control);
+  --scroll-track: var(--forge-light-surface);
+}
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: var(--scroll-track, transparent);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--scroll-thumb, color-mix(in srgb, var(--accent, var(--text-faint)) 35%, var(--surface-raised)));
+  border-radius: 999px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+/* ── Controles de Forge sin clase ni estilo (design poblar §7.3) ──
+   Los botones, áreas de texto y radios de flows/mision.tsx y de varios corredores no traen clase. La regla los lleva a
+   44 px sin editar esos archivos y excluye los que traen style (un estilo en línea gana a la hoja; esos se corrigen en
+   su archivo). Sólo var(--forge-*). font-size: 16px evita el zoom de iOS al enfocar. El último selector quita el botón
+   nativo de limpiar búsqueda: el Atlas y Lecturas pintan uno propio. */
+[data-world="forge"] button:not([class]):not([style]),
+[data-world="forge"] summary:not([class]):not([style]) {
+  min-height: 44px;
+  min-width: 44px;
+  padding: 0 0.75rem;
+  font: inherit;
+  cursor: pointer;
+  color: var(--forge-text);
+  background: transparent;
+  border: 1px solid var(--forge-control);
+}
+[data-world="forge"] button:not([class]):not([style]):disabled {
+  border-style: dashed;
+  color: var(--forge-text-muted);
+  cursor: not-allowed;
+}
+[data-world="forge"] textarea:not([class]):not([style]),
+[data-world="forge"] input:not([type]):not([class]):not([style]),
+[data-world="forge"] input[type="text"]:not([class]):not([style]) {
+  width: 100%;
+  min-height: 44px;
+  font-size: 16px;
+  padding: 0.5rem 0.75rem;
+  color: var(--forge-text);
+  background: var(--forge-surface);
+  border: 1px solid var(--forge-control);
+}
+[data-world="forge"] label:has(> input[type="radio"]),
+[data-world="forge"] label:has(> input[type="checkbox"]) {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 44px;
+  padding-right: 0.75rem;
+}
+[data-world="forge"] input[type="radio"],
+[data-world="forge"] input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  accent-color: var(--forge-text);
+}
+input[type="search"]::-webkit-search-cancel-button {
+  -webkit-appearance: none;
+  appearance: none;
+}
+
 /* DESKTOP layout (html[data-layout="desktop"], set by LayoutModeProvider). The mobile-first design is the
    default; desktop widens the reading/dashboard surfaces and lets a wide screen breathe. Purely layout —
    same components, same aesthetic, all still driven by derived state. */

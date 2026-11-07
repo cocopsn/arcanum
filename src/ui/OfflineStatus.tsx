@@ -19,7 +19,7 @@ export function OfflinePill({ onOpen }: { onOpen: () => void }) {
   const online = useOnline();
   const pending = useArcanum((s) => s.readModel.pendingAi.length);
   return (
-    <button onClick={onOpen} className="flex items-center gap-1.5 text-[11px] tracking-wide text-text-faint transition hover:text-text-muted" aria-label="Estado offline">
+    <button onClick={onOpen} className="tap flex items-center gap-1.5 whitespace-nowrap text-[11px] tracking-wide text-text-faint transition hover:text-text-muted" aria-label="Estado offline">
       <span aria-hidden className="inline-block h-1.5 w-1.5 rounded-full" style={{ background: online ? "var(--topic)" : "var(--amber)" }} />
       {online ? "en línea" : "sin conexión"}
       {pending > 0 && <span style={{ color: "var(--amber)" }}> · {pending} pend.</span>}
@@ -80,13 +80,12 @@ export function OfflineSheet({ open, onClose }: { open: boolean; onClose: () => 
         role="dialog"
         aria-modal="true"
         aria-label="Offline"
-        className="scroll-touch flex max-h-[88vh] w-full max-w-md flex-col overflow-y-auto rounded-t-[var(--r-lg)] border border-line bg-surface-raised p-6 sm:rounded-[var(--r-lg)]"
-        style={{ paddingBottom: "max(1.5rem, env(safe-area-inset-bottom))" }}
+        className="scroll-touch flex max-h-[88vh] w-full max-w-md flex-col overflow-y-auto rounded-t-[var(--r-lg)] border border-line bg-surface-raised px-safe pb-safe-lg pt-6 sm:rounded-[var(--r-lg)] sm:px-safe-lg"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center justify-between">
           <h2 className="font-display text-lg tracking-[0.14em] text-rank">OFFLINE</h2>
-          <button onClick={onClose} aria-label="Cerrar" className="-mr-2 min-h-11 px-2 text-2xl leading-none text-text-faint transition hover:text-text">×</button>
+          <button onClick={onClose} aria-label="Cerrar" className="tap grid shrink-0 place-items-center text-2xl leading-none text-text-faint transition hover:text-text">×</button>
         </div>
 
         {/* connection */}

@@ -7,9 +7,8 @@ import { useCallback, useEffect, useState } from "react";
 import { useArcanum } from "@/app/providers";
 import { FORGE_SPINE } from "@/lib/spines-forge";
 import { forgeCodeForCellId } from "@/forge/ids";
-import { ensureForgeBank, ensureForgeBook, loadForgeBankItems, loadForgeRoute, type EnsureResult } from "@/forge/loaders";
-import { isSelectable, RUNNERS, type RunnerType } from "@/forge/ui/exercises/registry";
-import type { ForgeBankItem } from "@/forge/bank/registry";
+import { ensureForgeBank, ensureForgeBook, loadForgeRoute, type EnsureResult } from "@/forge/loaders";
+import { ForgeEvaluations } from "@/forge/ui/ForgeEvaluations";
 import { forgeCellState } from "@/forge/model/console-stats";
 import { FLOWS } from "@/forge/ui/flows/registry";
 import { closingMount, type FlowProps } from "@/forge/ui/flow-contract";
@@ -224,48 +223,6 @@ export function ForgeCellPanel({ moduleId }: { moduleId: string }) {
 
       {reading && row && <BookReader book={row} onClose={() => setReading(false)} />}
     </section>
-  );
-}
-
-// N2: the bank's practice items (§9.5 «Evaluaciones»), each mounted with its lazy runner. Practice records evidence and
-// never opens a gate; items whose bank check is still a stub carry «sin verificar».
-function ForgeEvaluations({ code, cellId, readModel }: { code: string; cellId: string; readModel: FlowProps["readModel"] }) {
-  const [bank, setBank] = useState<{ items: ForgeBankItem[]; pendientes: string[] } | null | "cargando">("cargando");
-  const [open, setOpen] = useState<ForgeBankItem | null>(null);
-  useEffect(() => {
-    let alive = true;
-    void (async () => {
-      let b = await loadForgeBankItems(code);
-      if (!b) {
-        const r = await ensureForgeBank(code);
-        if (r.ok) b = await loadForgeBankItems(code);
-      }
-      if (alive) setBank(b);
-    })();
-    return () => {
-      alive = false;
-    };
-  }, [code]);
-  if (bank === "cargando") return <p className="text-[12px] text-text-muted">Cargando el banco…</p>;
-  if (!bank) return <p className="text-[12px] text-text-muted">Banco no descargado · requiere conexión una vez</p>;
-  const items = bank.items.filter(isSelectable);
-  if (open && isSelectable(open)) {
-    const Runner = RUNNERS[open.type as RunnerType];
-    return <Runner item={open} cellCode={code} cellId={cellId} readModel={readModel} onClose={() => setOpen(null)} />;
-  }
-  if (!items.length) return <p className="text-[12px] text-text-muted">Sin evaluaciones de práctica en este banco</p>;
-  return (
-    <ul className="mt-1 space-y-1">
-      {items.map((it) => (
-        <li key={it.itemId}>
-          <button type="button" onClick={() => setOpen(it)} className="min-h-11 w-full border border-[var(--forge-control)] px-3 text-left text-[12px] text-text" data-forge-eval={it.type}>
-            <span className="forge-label mr-1.5 text-[10px] text-text-muted">{it.type}</span>
-            {it.title}
-            {bank.pendientes.includes(it.itemId) && <span className="ml-1 text-[11px] text-text-muted">· sin verificar</span>}
-          </button>
-        </li>
-      ))}
-    </ul>
   );
 }
 

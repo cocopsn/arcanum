@@ -259,7 +259,8 @@ export function SubjectMap({ goalId, onClose, initialCellId }: { goalId: string;
       <div aria-hidden className="pointer-events-none absolute inset-0" style={{ background: "radial-gradient(140% 80% at 50% 120%, rgba(0,0,0,0.55), transparent 55%)" }} />
 
       {/* extra top room when the path toggle is present, so it never overlaps the first cells */}
-      <div className="scroll-touch relative h-full overflow-y-auto" style={{ paddingTop: showPaths ? "max(8.5rem, calc(env(safe-area-inset-top) + 7.5rem))" : "max(5.5rem, calc(env(safe-area-inset-top) + 4.5rem))" }}>
+      {/* áreas seguras (design poblar §7.2): every offset is the inset PLUS its margin (var(--safe-*), never env()) */}
+      <div className="scroll-touch relative h-full overflow-y-auto" style={{ paddingTop: showPaths ? "calc(var(--safe-top) + 8.5rem)" : "calc(var(--safe-top) + 5.5rem)" }}>
         <div className="relative mx-auto" style={{ height, width: w }}>
           <svg className="pointer-events-none absolute inset-0" width={w} height={height} viewBox={`0 0 ${w} ${height}`} aria-hidden>
             <defs>
@@ -308,8 +309,8 @@ export function SubjectMap({ goalId, onClose, initialCellId }: { goalId: string;
              dead end (it goes through the path-aware createModule → real fog-of-war). ── */}
       {showPaths && (
         <div
-          className="pointer-events-none absolute inset-x-0 flex flex-col items-center gap-2 px-4"
-          style={{ top: "max(5.4rem, calc(env(safe-area-inset-top) + 4.4rem))" }}
+          className="pointer-events-none absolute inset-x-0 flex flex-col items-center gap-2 px-safe"
+          style={{ top: "calc(var(--safe-top) + 5.4rem)" }}
         >
           <div
             role="group"
@@ -329,7 +330,7 @@ export function SubjectMap({ goalId, onClose, initialCellId }: { goalId: string;
                     setPathId(p.id);
                     setCellOpen(false);
                   }}
-                  className="min-h-9 shrink-0 rounded-[var(--r-pill)] px-3 text-[11px] uppercase tracking-[0.14em] transition"
+                  className="tap shrink-0 rounded-[var(--r-pill)] px-3 text-[11px] uppercase tracking-[0.14em] transition"
                   style={{
                     color: on ? readableAccent(accent) : "var(--text-faint)",
                     background: on ? "color-mix(in srgb, var(--accent) 16%, transparent)" : "transparent",
@@ -343,7 +344,7 @@ export function SubjectMap({ goalId, onClose, initialCellId }: { goalId: string;
               onClick={() => { audio.cue("toggle"); setCellOpen((v) => !v); setNewOpen(false); }}
               aria-label="Añadir una celda a este path"
               aria-expanded={cellOpen}
-              className="min-h-9 shrink-0 rounded-[var(--r-pill)] px-2 text-[10px] uppercase tracking-wider leading-none transition"
+              className="tap shrink-0 rounded-[var(--r-pill)] px-2 text-[10px] uppercase tracking-wider leading-none transition"
               style={{ color: "var(--text-faint)" }}
             >
               + celda
@@ -352,7 +353,7 @@ export function SubjectMap({ goalId, onClose, initialCellId }: { goalId: string;
               onClick={() => { audio.cue("toggle"); setNewOpen((v) => !v); setCellOpen(false); }}
               aria-label="Crear un path nuevo"
               aria-expanded={newOpen}
-              className="min-h-9 min-w-9 shrink-0 rounded-[var(--r-pill)] text-[13px] leading-none transition"
+              className="tap shrink-0 rounded-[var(--r-pill)] text-[13px] leading-none transition"
               style={{ color: "var(--text-faint)" }}
             >
               +
@@ -439,7 +440,7 @@ export function SubjectMap({ goalId, onClose, initialCellId }: { goalId: string;
       )}
 
       {/* ── realm header — the crest, the temper, the name ── */}
-      <header className="pointer-events-none absolute inset-x-0 top-0 flex items-start justify-between gap-3 p-4" style={{ paddingTop: "max(1rem, env(safe-area-inset-top))" }}>
+      <header className="pointer-events-none absolute inset-x-0 top-0 flex items-start justify-between gap-3 px-safe pb-4" style={{ paddingTop: "calc(var(--safe-top) + 1rem)" }}>
         <button
           onClick={onClose}
           className="pointer-events-auto min-h-11 rounded-[var(--r-pill)] border px-4 text-[11px] uppercase tracking-[0.2em] backdrop-blur-sm transition"
