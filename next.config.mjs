@@ -3,7 +3,8 @@ import { brandIconPrecacheEntries } from "./scripts/brand-icons-precache.mjs";
 import { ForgeChunkMapPlugin } from "./scripts/forge/forge-chunk-map.mjs";
 import { buildCsp } from "./src/lib/csp.mjs";
 
-const withSerwist = withSerwistInit({
+/** Serwist options. Exported so src/app/brand-icons.test.ts checks the precache (glob + transforms) the build makes. */
+export const serwistOptions = {
   swSrc: "src/app/sw.ts",
   swDest: "public/sw.js",
   disable: process.env.NODE_ENV === "development",
@@ -25,7 +26,8 @@ const withSerwist = withSerwistInit({
   // ...plus the brand icons under the exact ?v= URLs that the <head> and the manifest request, so those resolve offline
   // too (scripts/brand-icons-precache.mjs). Appended here: `additionalPrecacheEntries` would replace the glob above.
   manifestTransforms: [(entries) => ({ manifest: [...entries, ...brandIconPrecacheEntries()], warnings: [] })],
-});
+};
+const withSerwist = withSerwistInit(serwistOptions);
 
 // Content-Security-Policy — the single source is src/lib/csp.mjs (Forge design §12.1). VideoEmbed and the figure
 // paragraph of BookReader check URLs against the same origin lists; everything else relies on this header alone.

@@ -1,4 +1,5 @@
 import type { MetadataRoute } from "next";
+import { MANIFEST_ICONS } from "@/lib/brand-icons.mjs";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
@@ -13,17 +14,12 @@ export default function manifest(): MetadataRoute.Manifest {
     background_color: "#0c0b12",
     theme_color: "#0c0b12",
     lang: "es",
-    // the guardian raven (`pnpm icons`). ?v= = sha256[:10] of each file: Chrome (144+) only re-fetches an installed
-    // app's icons when their URL changes (brand-icons.test.ts keeps it in step with the file).
+    // the guardian raven (`pnpm icons`). The URLs, with ?v= = sha256[:10] of each file, live in src/lib/brand-icons.mjs:
+    // Chrome (144+) only re-fetches an installed app's icons when their URL changes.
     icons: [
-      { src: "/icons/icon-192.png?v=af8f4bcc6d", sizes: "192x192", type: "image/png", purpose: "any" },
-      { src: "/icons/icon-512.png?v=65ebe62da3", sizes: "512x512", type: "image/png", purpose: "any" },
-      {
-        src: "/icons/icon-maskable-512.png?v=43190331ca",
-        sizes: "512x512",
-        type: "image/png",
-        purpose: "maskable",
-      },
+      { src: MANIFEST_ICONS.any192, sizes: "192x192", type: "image/png", purpose: "any" },
+      { src: MANIFEST_ICONS.any512, sizes: "512x512", type: "image/png", purpose: "any" },
+      { src: MANIFEST_ICONS.maskable512, sizes: "512x512", type: "image/png", purpose: "maskable" },
     ],
   };
 }

@@ -15,8 +15,8 @@
 //   public/icons/logo-256.png           in-app mark (home header, access screen, boot screens) — never in Forge
 //   src/app/opengraph-image.png         1200×630, raven centered on #0C0016
 //
-// The ?v= of the icon URLs in src/app/manifest.ts and src/app/layout.tsx is sha256[:10] of each file (printed at the
-// end); src/app/brand-icons.test.ts fails when a file and its ?v= drift apart.
+// The ?v= of the icon URLs in src/lib/brand-icons.mjs (the <head> and the manifest import them) is sha256[:10] of each
+// file (printed at the end); src/app/brand-icons.test.ts fails when a file and its ?v= drift apart.
 import sharp from "sharp";
 import { createHash } from "node:crypto";
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
