@@ -17,7 +17,7 @@ export function LayoutToggle() {
       aria-label={desktop ? "Cambiar a modo móvil" : "Cambiar a modo escritorio"}
       aria-pressed={desktop}
       title={desktop ? "Modo escritorio" : "Modo móvil / PWA"}
-      className="grid min-h-9 min-w-9 place-items-center rounded-[var(--r-pill)] border border-line text-text-faint transition hover:text-text-muted"
+      className="tap grid place-items-center rounded-[var(--r-pill)] border border-line text-text-faint transition hover:text-text-muted"
     >
       {desktop ? (
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden>

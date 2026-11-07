@@ -12,7 +12,7 @@ export function SyncStatus({ onOpen }: { onOpen: () => void }) {
   return (
     <button
       onClick={onOpen}
-      className="group flex items-center gap-1.5 text-[11px] tracking-wide text-text-faint transition hover:text-text-muted"
+      className="tap group flex items-center gap-1.5 whitespace-nowrap text-[11px] tracking-wide text-text-faint transition hover:text-text-muted"
     >
       <span
         aria-hidden
