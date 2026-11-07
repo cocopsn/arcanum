@@ -80,6 +80,8 @@ describe("runDownload", () => {
     if (!r.ok) throw new Error("se esperaba ok con fallidos");
     expect(f.log, "una figura que respondió con error quedó guardada: el SW la seguirá sirviendo rota y «Reintentar» no la reemplaza").toContain(`forget ${FIG[0]}`);
     expect(f.log).toContain(`forget ${FIG[1]}`);
+    expect(r.fallidos[0]?.motivo, "un onerror inmediato se reportó como plazo vencido").toBe(FIGURE_ERROR);
+    expect(r.fallidos[1]?.motivo, "un plazo vencido se reportó como error de la figura").toBe(FIGURE_TIMEOUT);
     expect(r.fallidos).toEqual([
       { tipo: "figuras", id: FIG[0], motivo: FIGURE_ERROR },
       { tipo: "figuras", id: FIG[1], motivo: FIGURE_TIMEOUT },

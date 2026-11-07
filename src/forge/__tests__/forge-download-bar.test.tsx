@@ -144,8 +144,9 @@ describe("barra de descarga · estados (design poblar §5.5 y §6.4)", () => {
     cleanup();
     api.forgeRouteStatus.mockResolvedValue(PARCIAL);
     bar();
-    await screen.findByText("7 de 8 libros listos sin red; 1 falló: Reintentar");
+    await waitFor(() => expect(document.querySelector("[data-lecturas-descarga-estado]")).not.toBeNull());
     expect(screen.queryByText(/Descargada ✓/), "la barra dijo Descargada ✓ con la ruta incompleta").toBeNull();
+    expect(screen.getByText("7 de 8 libros listos sin red; 1 falló: Reintentar")).toBeInTheDocument();
   });
 
   it("cancelado: «Cancelar» aborta la señal y la barra lo dice; lo guardado queda como parcial", async () => {
@@ -214,14 +215,14 @@ describe("barra de descarga · estados (design poblar §5.5 y §6.4)", () => {
     // sin figuras que pedir, el botón que fuerza es «Descargar de todos modos» y conserva figuras: false
     { const el = await screen.findByRole("button", { name: "Descargar de todos modos" }); await act(async () => fireEvent.click(el)); }
     const third = api.downloadForgeRoute.mock.calls[2]![1] as DownloadOptions;
-    expect(third.forzar).toBe(true);
+    expect(third.forzar, "el botón que fuerza no saltó el aviso de espacio").toBe(true);
     expect(third.figuras).toBe(false);
     cleanup();
     bar();
     { const el = await screen.findByRole("button", { name: /Descargar ruta S1/ }); await act(async () => fireEvent.click(el)); }
     { const el = await screen.findByRole("button", { name: "Descargar todo" }); await act(async () => fireEvent.click(el)); }
     const forced = api.downloadForgeRoute.mock.calls[4]![1] as DownloadOptions;
-    expect(forced.forzar, "«Descargar todo» no saltó el aviso de espacio").toBe(true);
+    expect(forced.forzar, "el botón que fuerza no saltó el aviso de espacio").toBe(true);
     expect(forced.figuras).not.toBe(false);
   });
 
@@ -339,7 +340,8 @@ describe("«Borrar del dispositivo» (design poblar §5.5)", () => {
     card(forgeBook({ key: "forge-banco:S1-02", kind: "banco", items: { total: 6, disponibles: 6 }, disponible: "incluido" }));
     expect(screen.queryByRole("button", { name: "Borrar del dispositivo" })).toBeNull();
     cleanup();
-    card(forgeBook({ key: "libro:x", source: "seed", disponible: "incluido", world: { goalId: "g", title: "ITC" }, cell: { id: "m", code: null, title: "Celda" } }));
+    // una semilla clásica nunca es de Forge: aunque dijera «si», su borrado lo repone el arranque y no tiene código de celda
+    card(forgeBook({ key: "libro:x", source: "seed", disponible: "si", world: { goalId: "g", title: "ITC" }, cell: { id: "m", code: null, title: "Celda" } }));
     expect(screen.queryByRole("button", { name: "Borrar del dispositivo" }), "una semilla clásica ofreció borrar: el arranque la repone").toBeNull();
   });
 });
@@ -365,7 +367,7 @@ describe("Lecturas · la barra y el botón en el catálogo", () => {
     const onRefresh = vi.fn(async () => {});
     const model = { goals: [{ id: FORGE_GOAL_ID, title: "Engineering Forge", archived: false }], paths: [], modules: [], edges: [], evidence: [], pendingAi: [] } as unknown as ReadModel;
     render(<LibraryCatalog books={[]} banks={[]} readModel={model} onDeleteImport={async () => {}} onRefresh={onRefresh} />);
-    expect(await screen.findByRole("button", { name: "Descargar ruta S1 · ≈ 2.5 MB" }), "con Forge y una ruta elegidos no apareció la barra de descarga").toBeInTheDocument();
+    await waitFor(() => expect(screen.queryByRole("button", { name: "Descargar ruta S1 · ≈ 2.5 MB" }), "con Forge y una ruta elegidos no apareció la barra de descarga").not.toBeNull());
     expect(api.forgeRouteStatus).toHaveBeenLastCalledWith("s1");
     const calls = api.forgeRouteStatus.mock.calls.length;
     await act(async () => fireEvent.click(screen.getByRole("button", { name: "Borrar del dispositivo" })));
