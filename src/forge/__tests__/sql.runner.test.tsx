@@ -11,7 +11,7 @@ import type { ForgeBankItem } from "@/forge/bank/registry";
 
 const spies = vi.hoisted(() => ({ fire: vi.fn(async () => {}), passLesson: vi.fn(async () => {}), runPy: vi.fn() }));
 vi.mock("@/ui/use-actions", () => ({ useActions: () => ({ fire: spies.fire, passLesson: spies.passLesson }) }));
-vi.mock("@/lib/py-runner", () => ({ runPy: spies.runPy, pyodideCached: async () => true, PY_NEEDS_DOWNLOAD: "descarga" }));
+vi.mock("@/lib/py-runner", () => ({ runPy: spies.runPy, pyodideStatus: async () => ({ listos: 6, total: 6, faltan: [], bytes: 0 }), PY_NEEDS_DOWNLOAD: "descarga", PY_SQL_UNAVAILABLE: "sin python" }));
 
 import SqlRunner from "@/forge/ui/exercises/SqlRunner";
 

@@ -70,19 +70,19 @@ export async function forgeBookCacheFiles(): Promise<Set<string> | null> {
   return null;
 }
 
-/** Archivos de Pyodide en arcanum-pyodide (con SQLite si se pide); null sin Cache API. Fase 0: null. */
+/** Archivos de Pyodide en arcanum-pyodide (con SQLite si se pide), status 200 y no opacos; null sin Cache API. */
 export async function pythonStatus(o?: { sqlite?: boolean }): Promise<ResourceCount | null> {
-  return null;
+  return (await import("./python")).pythonStatus(o);
 }
 
-/** Descarga y guarda Pyodide. Fase 0: no descarga nada. */
+/** Descarga Pyodide en el worker, que guarda él mismo sus archivos, y verifica en el almacenamiento que estén todos. */
 export async function warmPython(o: { sqlite: boolean }): Promise<{ ok: true } | { ok: false; motivo: string }> {
-  return { ok: false, motivo: NO_DISPONIBLE };
+  return (await import("./python")).warmPython(o);
 }
 
-/** Reinicia el worker y borra arcanum-pyodide. Fase 0: no borra nada y lo dice en `errores`. */
+/** Reinicia el worker y después borra arcanum-pyodide. */
 export async function deletePython(): Promise<DeleteResult> {
-  return nadaBorrado();
+  return (await import("./python")).deletePython();
 }
 
 /** Si la figura (por su URL canónica) está en arcanum-forge-figuras-v1; null sin Cache API. Fase 0: null. */

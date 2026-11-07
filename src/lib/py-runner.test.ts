@@ -1,5 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { resetPy, runPy, warmPy } from "@/lib/py-runner";
+import { pyodideStatus, resetPy, runPy, warmPy } from "@/lib/py-runner";
+import { deletePython, warmPython } from "@/lib/offline/api";
+import { PYODIDE_BASE, PYODIDE_CACHE, PYODIDE_CORE, PYODIDE_FILES } from "@/lib/pyodide-files";
 
 // py-runner bodies of Forge (design §6.6, §9.3 k): sqlite3 loading, warmPy with its own limit, and replies matched to
 // their request. Pyodide does not run under vitest, so the Worker is a fake that records what it receives.
@@ -65,6 +67,75 @@ describe("warmPy", () => {
     await tick();
     last().reply({ rid: last().posted[0]!.rid, loadError: "NetworkError" });
     expect(await p).toEqual({ ok: false, reason: "sin-red" });
+  });
+});
+
+// design poblar §6.3: a fake Cache Storage with arcanum-pyodide. Red-checks in redchecks-offline-motor.md.
+function fakeCaches(entries: Record<string, { status: number; type: string }>) {
+  const store = new Map(Object.entries(entries));
+  const log: { op: string; workerTerminated: boolean | null }[] = [];
+  return {
+    store,
+    log,
+    api: {
+      match: async (url: string, o?: { cacheName?: string }) => (o?.cacheName === PYODIDE_CACHE ? store.get(url) : undefined),
+      delete: async (name: string) => {
+        log.push({ op: `delete ${name}`, workerTerminated: FakeWorker.all[0]?.terminated ?? null });
+        if (name === PYODIDE_CACHE) store.clear();
+        return true;
+      },
+    },
+  };
+}
+const ok = { status: 200, type: "cors" };
+
+describe("pyodideStatus · Python listo sólo con sus archivos completos", () => {
+  it("con sólo pyodide.js no está listo: faltan los otros cuatro", async () => {
+    vi.stubGlobal("caches", fakeCaches({ [PYODIDE_BASE + "pyodide.js"]: ok }).api);
+    const s = await pyodideStatus();
+    expect(s!.faltan, "Python salió listo sin pyodide.asm.js").toContain("pyodide.asm.js");
+    expect(s).toMatchObject({ listos: 1, total: 5, bytes: PYODIDE_FILES["pyodide.js"].bytes });
+  });
+  it("los cinco con status 200 dan 5/5; con SQL falta sqlite3; una entrada opaca o un 404 no cuentan", async () => {
+    const all = Object.fromEntries(PYODIDE_CORE.map((f) => [PYODIDE_BASE + f, ok]));
+    vi.stubGlobal("caches", fakeCaches(all).api);
+    expect(await pyodideStatus()).toMatchObject({ listos: 5, total: 5, faltan: [] });
+    expect(await pyodideStatus({ sqlite: true })).toMatchObject({ listos: 5, total: 6, faltan: ["sqlite3-1.0.0.zip"] });
+    vi.stubGlobal(
+      "caches",
+      fakeCaches({ ...all, [PYODIDE_BASE + "pyodide.asm.wasm"]: { status: 0, type: "opaque" }, [PYODIDE_BASE + "pyodide.js"]: { status: 404, type: "cors" } }).api,
+    );
+    expect((await pyodideStatus())!.faltan).toEqual(["pyodide.js", "pyodide.asm.wasm"]);
+  });
+  it("sin Cache API es null", async () => {
+    vi.stubGlobal("caches", undefined);
+    expect(await pyodideStatus()).toBeNull();
+  });
+});
+
+describe("warmPython y deletePython (fachada)", () => {
+  it("si el worker dice ok pero falta un archivo en la caché, no cuenta como listo", async () => {
+    vi.stubGlobal("caches", fakeCaches({ [PYODIDE_BASE + "pyodide.js"]: ok }).api);
+    const p = warmPython({ sqlite: false });
+    // the facade reaches the worker through a dynamic import: wait for the request, however long the import takes
+    await vi.waitFor(() => expect(FakeWorker.all[0]?.posted.length).toBe(1), { timeout: 5000 });
+    last().reply({ rid: last().posted[0]!.rid, ok: true, warm: true });
+    const r = await p;
+    expect(r.ok).toBe(false);
+    expect(!r.ok && r.motivo).toBe("Python incompleto: faltan pyodide.asm.js, pyodide.asm.wasm, python_stdlib.zip, pyodide-lock.json");
+  });
+  it("reinicia el worker ANTES de borrar arcanum-pyodide y mide lo liberado", async () => {
+    const c = fakeCaches(Object.fromEntries(PYODIDE_CORE.map((f) => [PYODIDE_BASE + f, ok])));
+    vi.stubGlobal("caches", c.api);
+    const p = warmPy([]);
+    await tick();
+    last().reply({ rid: last().posted[0]!.rid, ok: true, warm: true });
+    await p;
+    const r = await deletePython();
+    expect(c.log).toHaveLength(1);
+    expect(c.log[0]!.workerTerminated, "borrar Python dejó vivo un worker que guarda en una caché borrada").toBe(true);
+    expect(r.errores).toEqual([]);
+    expect(r.liberadosBytes).toBe(PYODIDE_CORE.reduce((n, f) => n + PYODIDE_FILES[f].bytes, 0));
   });
 });
 
