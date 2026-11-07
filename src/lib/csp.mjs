@@ -39,6 +39,17 @@ export function buildCsp() {
   return CSP_DIRECTIVES.map(([name, values]) => `${name} ${values.join(" ")}`).join("; ");
 }
 
+/** Extra connect-src origins of the SERVICE WORKER only (design poblar §6.5, anexo r2 [21] plan B, measured in
+ *  Chromium on 2026-11-07): Chromium judges the SW's fetch(event.request) of a figure by connect-src, not img-src,
+ *  so without this the figures of a downloaded route never get stored. The page policy does not change, and learner
+ *  code runs in blob: workers of the page, which inherit the PAGE policy, so its egress stays the same. */
+export const SW_CONNECT_EXTRA = ["https://www.palantir.com"];
+
+/** The policy served with /sw.js: the page policy with SW_CONNECT_EXTRA added to connect-src. */
+export function buildSwCsp() {
+  return CSP_DIRECTIVES.map(([name, values]) => `${name} ${(name === "connect-src" ? [...values, ...SW_CONNECT_EXTRA] : values).join(" ")}`).join("; ");
+}
+
 /** True only for an https URL whose origin is in IMG_ORIGINS (what img-src allows beyond self/data/blob). */
 export function isAllowedImageUrl(src) {
   try {
