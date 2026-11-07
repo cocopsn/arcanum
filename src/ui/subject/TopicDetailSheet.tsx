@@ -168,7 +168,7 @@ export function TopicDetailSheet({
       >
         <div className="flex items-start justify-between gap-3">
           <div className="min-w-0">
-            <h2 id="topic-title" className="font-serif text-xl leading-tight text-text">
+            <h2 id="topic-title" title={mod.title} className="font-serif text-xl leading-tight text-text">
               {mod.title}
             </h2>
             <div className="mt-1 text-[11px] uppercase tracking-[0.16em] text-text-muted">

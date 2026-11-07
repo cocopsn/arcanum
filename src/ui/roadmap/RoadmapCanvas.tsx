@@ -217,7 +217,7 @@ function CanvasInner({ onClose }: { onClose: () => void }) {
         nodeOrigin={[0, 0]}
       >
         <Background variant={BackgroundVariant.Dots} gap={30} size={1} color="var(--line)" />
-        <Controls showInteractive={false} position="bottom-left" />
+        <Controls showInteractive={false} position="bottom-left" style={{ left: "var(--safe-left)", bottom: "var(--safe-bottom)", marginLeft: 16, marginBottom: 16 }} />
       </ReactFlow>
 
       <header

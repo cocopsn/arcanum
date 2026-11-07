@@ -23,7 +23,7 @@ export function AudioConfig({ open, onClose }: { open: boolean; onClose: () => v
         role="dialog"
         aria-modal="true"
         aria-label="Ajustes de audio"
-        className="w-full max-w-md rounded-t-[var(--r-lg)] border border-line bg-surface-raised px-safe pb-safe-lg pt-6 sm:rounded-[var(--r-lg)] sm:px-safe-lg"
+        className="scroll-touch max-h-[calc(100dvh-var(--safe-top)-12px)] w-full max-w-md overflow-y-auto rounded-t-[var(--r-lg)] border border-line bg-surface-raised px-safe pb-safe-lg pt-6 sm:rounded-[var(--r-lg)] sm:px-safe-lg"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center justify-between">
@@ -37,7 +37,7 @@ export function AudioConfig({ open, onClose }: { open: boolean; onClose: () => v
               <span>Volumen general</span>
               <span className="tnum text-text-faint">{Math.round(cfg.master * 100)}%</span>
             </div>
-            <input type="range" min={0} max={1} step={0.05} value={cfg.master} onChange={(e) => set({ master: Number(e.target.value) })} aria-label="Volumen general" className="w-full accent-[var(--rank)]" />
+            <input type="range" min={0} max={1} step={0.05} value={cfg.master} onChange={(e) => set({ master: Number(e.target.value) })} aria-label="Volumen general" className="w-full min-h-11 accent-[var(--rank)]" />
           </div>
 
           <Row label="Efectos (SFX)" sub="cada gesto responde: toggles, navegación, estados">
@@ -57,7 +57,7 @@ export function AudioConfig({ open, onClose }: { open: boolean; onClose: () => v
                 <span>Volumen de efectos</span>
                 <span className="tnum text-text-faint">{Math.round(cfg.sfxVol * 100)}%</span>
               </div>
-              <input type="range" min={0} max={1} step={0.05} value={cfg.sfxVol} onChange={(e) => set({ sfxVol: Number(e.target.value) })} aria-label="Volumen de efectos" className="w-full accent-[var(--rank)]" />
+              <input type="range" min={0} max={1} step={0.05} value={cfg.sfxVol} onChange={(e) => set({ sfxVol: Number(e.target.value) })} aria-label="Volumen de efectos" className="w-full min-h-11 accent-[var(--rank)]" />
             </div>
           )}
 
@@ -78,7 +78,7 @@ export function AudioConfig({ open, onClose }: { open: boolean; onClose: () => v
                 <span>Volumen de música</span>
                 <span className="tnum text-text-faint">{Math.round(cfg.musicVol * 100)}%</span>
               </div>
-              <input type="range" min={0} max={1} step={0.05} value={cfg.musicVol} onChange={(e) => set({ musicVol: Number(e.target.value) })} aria-label="Volumen de música" className="w-full accent-[var(--rank)]" />
+              <input type="range" min={0} max={1} step={0.05} value={cfg.musicVol} onChange={(e) => set({ musicVol: Number(e.target.value) })} aria-label="Volumen de música" className="w-full min-h-11 accent-[var(--rank)]" />
             </div>
           )}
 
@@ -160,10 +160,12 @@ function Toggle({ on, onChange, label }: { on: boolean; onChange: (v: boolean) =
       aria-checked={on}
       aria-label={label}
       onClick={() => onChange(!on)}
-      className="relative h-7 w-12 shrink-0 rounded-full border transition"
-      style={{ borderColor: on ? "var(--rank)" : "var(--line)", background: on ? "color-mix(in srgb, var(--rank) 30%, transparent)" : "transparent" }}
+      // 44 px de objetivo táctil (diseño poblar §7.2) sin cambiar el interruptor dibujado, que mide 48 × 28
+      className="tap grid shrink-0 place-items-center"
     >
-      <span className="absolute top-1/2 h-5 w-5 -translate-y-1/2 rounded-full transition-all" style={{ left: on ? "calc(100% - 22px)" : "2px", background: on ? "var(--rank)" : "var(--text-faint)" }} />
+      <span aria-hidden className="relative block h-7 w-12 rounded-full border transition" style={{ borderColor: on ? "var(--rank)" : "var(--line)", background: on ? "color-mix(in srgb, var(--rank) 30%, transparent)" : "transparent" }}>
+        <span className="absolute top-1/2 h-5 w-5 -translate-y-1/2 rounded-full transition-all" style={{ left: on ? "calc(100% - 22px)" : "2px", background: on ? "var(--rank)" : "var(--text-faint)" }} />
+      </span>
     </button>
   );
 }

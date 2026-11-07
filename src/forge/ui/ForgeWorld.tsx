@@ -157,7 +157,7 @@ export function ForgeWorld({ initialCellId = null, onClose }: { initialCellId?: 
                   type="button"
                   aria-pressed={on}
                   onClick={() => setSlug(s)}
-                  className={`forge-label min-h-11 border px-2.5 text-[11px] ${on ? "border-[var(--forge-text)] text-text" : "border-dashed border-[var(--forge-control)] text-text-muted"}`}
+                  className={`forge-label tap border px-2.5 text-[11px] ${on ? "border-[var(--forge-text)] text-text" : "border-dashed border-[var(--forge-control)] text-text-muted"}`}
                 >
                   {p.name.split(" · ")[0]}
                 </button>

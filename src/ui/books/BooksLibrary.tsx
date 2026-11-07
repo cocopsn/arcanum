@@ -150,7 +150,7 @@ export function BooksLibrary({ open, onClose }: { open: boolean; onClose: () => 
                         </div>
                       </button>
                       <div className="mt-2 flex gap-3">
-                        <button onClick={() => setReading(b)} className="min-h-11 text-[12px] uppercase tracking-wider transition hover:underline" style={{ color: readableAccent(theme.accent) }}>Leer</button>
+                        <button onClick={() => setReading(b)} className="tap px-2 text-[12px] uppercase tracking-wider transition hover:underline" style={{ color: readableAccent(theme.accent) }}>Leer</button>
                         <button onClick={async () => { await deleteBook(b.id); await refresh(); }} className="min-h-11 text-[12px] uppercase tracking-wider text-text-faint transition hover:text-amber">Borrar</button>
                       </div>
                     </div>
