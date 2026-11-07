@@ -386,4 +386,41 @@ describe("colores.test.ts (design §7, reglas 1-7)", () => {
     const mut = conClase('className="cmp-aviso" ref={(el) => el && Object.assign(el, { className: "text-violet-500" })}');
     redcheck(PANEL, panel, mut, "clase no verificable");
   });
+
+  // ---- FEAT-004: (i)(viii)(ix)(x)(xv)(xvi) repetidos sobre Mensaje.tsx ----
+  const MENSAJE = join(ROOT, "src", "ui", "companion", "Mensaje.tsx");
+  const mensaje = readFileSync(MENSAJE, "utf8");
+  const conClaseMensaje = (reemplazo: string) => mensaje.replace('className="cmp-fuentes"', reemplazo);
+
+  it("(i) #8b5cf6 en un objeto de estilo de Mensaje.tsx → pinta color en Forge", () => {
+    const mut = conClaseMensaje('className="cmp-fuentes" style={{ color: "#8b5cf6" }}');
+    redcheck(MENSAJE, mensaje, mut, "el compañero pinta color en Forge: #8b5cf6");
+  });
+
+  it("(viii) una clase ajena text-violet-500 en Mensaje.tsx", () => {
+    const mut = conClaseMensaje('className="cmp-fuentes text-violet-500"');
+    redcheck(MENSAJE, mensaje, mut, "el compañero usa una clase ajena: text-violet-500 en /src/ui/companion/Mensaje.tsx");
+  });
+
+  it("(ix) shadow-aura en una rama de ternario de className en Mensaje.tsx", () => {
+    const mut = conClaseMensaje('className={esAprendiz ? "cmp-fuentes" : "shadow-aura"}');
+    redcheck(MENSAJE, mensaje, mut, "el compañero usa una clase ajena: shadow-aura");
+  });
+
+  it("(x) className={clases} → clase no verificable en Mensaje.tsx", () => {
+    const mut = conClaseMensaje("className={clases}");
+    redcheck(MENSAJE, mensaje, mut, "clase no verificable en /src/ui/companion/Mensaje.tsx");
+  });
+
+  it("(xv) createElement(\"span\", props) con import de react en Mensaje.tsx → clase no verificable", () => {
+    const mut = mensaje
+      .replace('import { Markdown } from "./Markdown";', 'import { createElement } from "react";\nimport { Markdown } from "./Markdown";')
+      .replace("const esAprendiz = mensaje.rol === \"aprendiz\";", 'const esAprendiz = mensaje.rol === "aprendiz";\n  const props: Record<string, unknown> = {};\n  void createElement("span", props);');
+    redcheck(MENSAJE, mensaje, mut, "clase no verificable en /src/ui/companion/Mensaje.tsx");
+  });
+
+  it("(xvi) Object.assign(el, { className }) en Mensaje.tsx → clase no verificable", () => {
+    const mut = conClaseMensaje('className="cmp-fuentes" ref={(el: HTMLElement | null) => el && Object.assign(el, { className: "text-violet-500" })}');
+    redcheck(MENSAJE, mensaje, mut, "clase no verificable en /src/ui/companion/Mensaje.tsx");
+  });
 });
