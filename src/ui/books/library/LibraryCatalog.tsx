@@ -26,7 +26,9 @@ import {
 } from "@/lib/library/filter";
 import { forgeLibraryIndex, forgeRows } from "@/forge/model/library-catalog";
 import type { LibraryIndex } from "@/forge/model/library-types";
-import { forgeBookCacheFiles } from "@/lib/offline/api";
+import { deleteForgeBookLocal, forgeBookCacheFiles } from "@/lib/offline/api";
+import { ForgeDownloadBar } from "@/forge/ui/library/ForgeDownloadBar";
+import { sizeText } from "@/forge/ui/library/download-bar-text";
 import { FORGE_FAMILIES, FORGE_SPINE } from "@/lib/spines-forge";
 import { FORGE_GOAL_ID } from "@/core/forge-verdict";
 import { forgeCellId, isForgeCellId } from "@/forge/ids";
@@ -64,22 +66,28 @@ export default function LibraryCatalog({
   banks,
   readModel,
   onDeleteImport,
+  onRefresh,
 }: {
   books: BookRow[];
   banks: ExerciseBankRow[];
   readModel: ReadModel;
   /** borra una importación (libro o banco) y refresca la lista */
   onDeleteImport(row: LibraryRow): Promise<void>;
+  /** vuelve a leer libros y bancos de Dexie (después de descargar o borrar del dispositivo) */
+  onRefresh(): Promise<void>;
 }) {
   const [forge, setForge] = useState<ForgeState>({ estado: "cargando" });
   const [attempt, setAttempt] = useState(0);
   const [sheet, setSheet] = useState<Sheet>(null);
   const [rowNote, setRowNote] = useState<{ key: string; text: string; retry?: () => void } | null>(null);
+  // sube al borrar un libro desde su fila: la barra de descarga vuelve a verificar su alcance
+  const [deviceRev, setDeviceRev] = useState(0);
 
-  // ── filas de Forge: índice + instantánea del dispositivo (una vez por apertura, §5.3) ──
+  // ── filas de Forge: índice + instantánea del dispositivo (§5.3); se rehace al cambiar Dexie ──
   useEffect(() => {
     let alive = true;
-    setForge({ estado: "cargando" });
+    // al refrescar tras descargar o borrar, las filas viejas se quedan hasta tener las nuevas (la lista no salta)
+    setForge((f) => (f.estado === "listo" ? f : { estado: "cargando" }));
     void (async () => {
       const index: LibraryIndex | null = await forgeLibraryIndex();
       if (!index) {
@@ -173,6 +181,26 @@ export default function LibraryCatalog({
     }
   }
 
+  // «Borrar del dispositivo» de un libro de Forge (§5.5): la fila de Dexie (nunca una importación) y su archivo en
+  // arcanum-forge-books-v1, con los bytes liberados medidos
+  async function borrarLocal(row: LibraryRow) {
+    setRowNote(null);
+    const code = row.cell.code!;
+    try {
+      const r = await deleteForgeBookLocal(code);
+      setRowNote({ key: row.key, text: r.errores.length ? r.errores.join(" · ") : `Liberados ${sizeText(r.liberadosBytes)}` });
+    } catch (e) {
+      console.warn("[lecturas] no se pudo borrar el libro del dispositivo", e);
+      setRowNote({ key: row.key, text: chunkErrorText(chunkContext()).texto });
+    }
+    await onRefresh();
+    setDeviceRev((n) => n + 1);
+  }
+
+  // la barra de descarga: sólo con Engineering Forge elegido; sin ruta, el mundo entero
+  const forgePath = filter.world === FORGE_GOAL_ID && filter.route !== "*" ? FORGE_SPINE.paths.find((p) => p.id === filter.route) ?? null : null;
+  const barScope = forgePath ? { slug: forgePath.slug, code: forgePath.name.split(" · ")[0]! } : null;
+
   return (
     <div className="flex min-h-0 flex-1 flex-col">
       <div className="mx-auto w-full max-w-md shrink-0 px-safe pt-3 sm:max-w-2xl">
@@ -232,6 +260,7 @@ export default function LibraryCatalog({
                       onEjercicios={() => setSheet({ kind: "ejercicios", row })}
                       onEvaluaciones={() => setSheet({ kind: "evaluaciones", row })}
                       onBorrar={() => void onDeleteImport(row)}
+                      onBorrarLocal={() => void borrarLocal(row)}
                     />
                   ))}
                 </div>
@@ -278,6 +307,18 @@ export default function LibraryCatalog({
             ))}
           </select>
         </div>
+        {filter.world === FORGE_GOAL_ID && (
+          <div className="mx-auto w-full max-w-md px-safe pb-2 sm:max-w-2xl">
+            <ForgeDownloadBar
+              key={barScope?.slug ?? "mundo"}
+              slug={barScope?.slug ?? null}
+              code={barScope?.code ?? null}
+              readModel={readModel}
+              rev={deviceRev}
+              onChanged={onRefresh}
+            />
+          </div>
+        )}
       </div>
 
       {sheet?.kind === "leer" &&
@@ -360,6 +401,7 @@ export function RowCard({
   onEjercicios,
   onEvaluaciones,
   onBorrar,
+  onBorrarLocal,
 }: {
   row: LibraryRow;
   note: { text: string; retry?: () => void } | null;
@@ -367,6 +409,8 @@ export function RowCard({
   onEjercicios(): void;
   onEvaluaciones(): void;
   onBorrar(): void;
+  /** «Borrar del dispositivo» de un libro de Forge sembrado */
+  onBorrarLocal?(): void;
 }) {
   const theme = themeForGoal(row.world.title);
   const ink = readableAccent(theme.accent);
@@ -383,6 +427,9 @@ export function RowCard({
   const canEjercicios = row.kind === "banco" && row.source !== "forge" && !row.sealed && !!row.cell.id;
   const canEvaluaciones = row.kind === "banco" && row.source === "forge" && !row.sealed;
   const canBorrar = row.source === "import";
+  // §5.5: un libro de Forge con algo en el dispositivo y que no es una importación (ésa la borra su propia fila; las
+  // semillas clásicas no ofrecen borrar porque el arranque las repone)
+  const canBorrarLocal = row.source === "forge" && isBook && (row.disponible === "si" || row.disponible === "anterior") && row.autoria !== "importado";
   // Forge: libro y banco de una celda se nombran por la celda («P2-06 · Edits, …»); el tipo va en la línea de abajo
   const base = row.source === "forge" ? row.cell.title ?? row.title : row.title;
   const title = row.cell.code ? `${row.cell.code} · ${base.replace(new RegExp(`^${row.cell.code}\\s*·\\s*`), "")}` : base;
@@ -433,6 +480,11 @@ export function RowCard({
         {canBorrar && (
           <button type="button" onClick={onBorrar} className="tap px-2 text-[12px] uppercase tracking-wider text-text-faint transition hover:text-amber">
             Borrar
+          </button>
+        )}
+        {canBorrarLocal && onBorrarLocal && (
+          <button type="button" onClick={onBorrarLocal} className="tap px-2 text-[12px] uppercase tracking-wider text-text-faint transition hover:text-text">
+            Borrar del dispositivo
           </button>
         )}
       </div>
