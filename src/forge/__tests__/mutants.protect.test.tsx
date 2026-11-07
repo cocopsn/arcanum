@@ -1,10 +1,18 @@
-import { describe, expect, it, vi } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
+import { cleanup, fireEvent, screen, waitFor } from "@testing-library/react";
 import type { ExecRunner } from "@/lib/exercises-validate";
 import type { MutantesData } from "@/forge/bank/types/mutantes";
 import { gradeMutants, killedBy, parseMutantCases } from "@/forge/eval/mutants";
 import { BLOCKS } from "@/forge/__tests__/fixtures/forge-blocks";
 import { forgeItem, realForgeItem } from "@/forge/__tests__/fixtures/evaluator-blocks";
 import { execRunner } from "@/forge/__tests__/helpers/exec-runner";
+import { createEnvelope } from "@/forge/__tests__/helpers/flow-envelope";
+
+vi.mock("@/app/providers", async () => (await import("@/forge/__tests__/helpers/flow-envelope")).providersMock);
+
+import MutantesRunner from "@/forge/ui/exercises/MutantesRunner";
+
+const CELL = "cf000000-0000-4000-8000-0000000000d4";
 
 // d · mutantes (design §5.2, §11.1). Protections, each with its red-check in tools/redcheck-specs.json:
 //  rc04/rc51 a wrong expectation never kills a mutant (valid cases only, and mutants run only on them); rc05 a live
@@ -85,6 +93,36 @@ describe("mutantes · A1-01 real (comportamiento)", () => {
     expect(await gradeMutants(d, d.dorados, execRunner)).toMatchObject({ estado: "calificada", correcto: true, criticosVivos: 0 });
     const uno = await gradeMutants(d, [{ input: [[1, 3, 5], 3], expected: 1 }], execRunner);
     expect(uno).toMatchObject({ estado: "calificada", correcto: false });
+  });
+});
+
+describe("mutantes · interfaz (DOM)", () => {
+  afterEach(() => cleanup());
+  const text = () => document.body.textContent ?? "";
+  const mount = async () => {
+    const env = await createEnvelope();
+    const item = realForgeItem("A1-01", "a1-01-mut-frontera", "mutantes");
+    env.mount(MutantesRunner as never, { item, cellCode: "A1-01", cellId: CELL, readModel: env.store.getState().readModel, onClose: () => {} } as never);
+    return { env, item };
+  };
+
+  it("los ids y el código de las versiones aparecen sólo tras un acierto; un intento incorrecto no da XP", async () => {
+    const { env, item } = await mount();
+    const firstMut = item.data.mutantes[0]!;
+    expect(text(), "los mutantes se revelaron antes de un acierto registrado").not.toContain(firstMut.code);
+    // a single case: kills some but leaves a critical alive → incorrecto
+    fireEvent.change(screen.getByLabelText("Tus casos (lista JSON)"), { target: { value: '[{ "input": [[1, 3, 5], 3], "expected": 1 }]' } });
+    fireEvent.click(screen.getByRole("button", { name: /Correr mis casos/ }));
+    await waitFor(() => expect(env.store.getState().readModel.evidence.length).toBe(1));
+    expect(env.store.getState().readModel.evidence[0]).toMatchObject({ type: "mutantes", outcome: "incorrecto", source: "local" });
+    expect(text(), "los mutantes se revelaron antes de un acierto registrado").not.toContain(firstMut.code);
+    expect((await env.events()).some((e) => e.type === "checkpoint.passed")).toBe(false);
+    // the golden cases kill everything → correcto
+    fireEvent.change(screen.getByLabelText("Tus casos (lista JSON)"), { target: { value: JSON.stringify(item.data.dorados) } });
+    fireEvent.click(screen.getByRole("button", { name: /Correr mis casos/ }));
+    await waitFor(() => expect(env.store.getState().readModel.evidence.some((e) => e.outcome === "correcto")).toBe(true));
+    await waitFor(() => expect(text()).toContain(firstMut.code));
+    expect((await env.events()).some((e) => e.type === "checkpoint.passed")).toBe(true);
   });
 });
 

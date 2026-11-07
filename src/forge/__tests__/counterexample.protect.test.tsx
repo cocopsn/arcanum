@@ -1,8 +1,16 @@
-import { describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
+import { cleanup, fireEvent, screen, waitFor } from "@testing-library/react";
 import type { ContraejemploData } from "@/forge/bank/types/contraejemplo";
 import { CONTRA_ARGS_MAX, decideCounterexample, gradeCounterexample, parseContraArgs, type ContraFacts } from "@/forge/eval/counterexample";
 import { realForgeItem } from "@/forge/__tests__/fixtures/evaluator-blocks";
 import { execRunner } from "@/forge/__tests__/helpers/exec-runner";
+import { createEnvelope } from "@/forge/__tests__/helpers/flow-envelope";
+
+vi.mock("@/app/providers", async () => (await import("@/forge/__tests__/helpers/flow-envelope")).providersMock);
+
+import ContraejemploRunner from "@/forge/ui/exercises/ContraejemploRunner";
+
+const CELL = "cf000000-0000-4000-8000-0000000000e5";
 
 // e · contraejemplo (design §5.1, §11.1). Protections, each with its red-check in tools/redcheck-specs.json:
 //  rc01 an input outside the contract never counts; rc48 an invariant the reference also violates never counts;
@@ -99,5 +107,34 @@ describe("contraejemplo · parseContraArgs (comportamiento)", () => {
     expect(largo.length).toBe(CONTRA_ARGS_MAX + 1);
     expect(parseContraArgs(largo).ok).toBe(false);
     expect(parseContraArgs("[[1, 2], 3]")).toEqual({ ok: true, args: [[1, 2], 3] });
+  });
+});
+
+describe("contraejemplo · interfaz (DOM)", () => {
+  afterEach(() => cleanup());
+  const mount = async () => {
+    const env = await createEnvelope();
+    const item = realForgeItem("A1-01", "a1-01-contra-primera", "contraejemplo");
+    env.mount(ContraejemploRunner as never, { item, cellCode: "A1-01", cellId: CELL, readModel: env.store.getState().readModel, onClose: () => {} } as never);
+    return { env, item };
+  };
+  const text = () => document.body.textContent ?? "";
+
+  it("la referencia y el testigo aparecen sólo tras un contraejemplo aceptado; un intento incorrecto no da XP", async () => {
+    const { env, item } = await mount();
+    expect(text(), "la referencia y el testigo aparecieron antes de un contraejemplo aceptado").not.toContain(item.data.referencia);
+    // [[1, 3, 5], 3] coincide: incorrecto
+    fireEvent.change(screen.getByLabelText("Argumentos (lista JSON)"), { target: { value: "[[1, 3, 5], 3]" } });
+    fireEvent.click(screen.getByRole("button", { name: /Probar contraejemplo/ }));
+    await waitFor(() => expect(env.store.getState().readModel.evidence.length).toBe(1));
+    expect(env.store.getState().readModel.evidence[0]).toMatchObject({ type: "contraejemplo", outcome: "incorrecto", source: "local" });
+    expect(text(), "la referencia y el testigo aparecieron antes de un contraejemplo aceptado").not.toContain(item.data.referencia);
+    expect((await env.events()).some((e) => e.type === "checkpoint.passed")).toBe(false);
+    // a correct witness reveals the reference
+    fireEvent.change(screen.getByLabelText("Argumentos (lista JSON)"), { target: { value: JSON.stringify(item.data.testigo) } });
+    fireEvent.click(screen.getByRole("button", { name: /Probar contraejemplo/ }));
+    await waitFor(() => expect(env.store.getState().readModel.evidence.some((e) => e.outcome === "correcto")).toBe(true));
+    await waitFor(() => expect(text()).toContain(item.data.referencia));
+    expect((await env.events()).some((e) => e.type === "checkpoint.passed")).toBe(true);
   });
 });
