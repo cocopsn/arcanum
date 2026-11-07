@@ -9,8 +9,10 @@ import sharp from "sharp";
 import manifest from "@/app/manifest";
 import { metadata } from "@/app/layout";
 import { HEAD_ICONS, MANIFEST_ICONS } from "@/lib/brand-icons.mjs";
-import { BrandMark } from "@/ui/BrandMark";
+import { BRAND_ALT, BrandMark } from "@/ui/BrandMark";
 import { serwistOptions } from "../../next.config.mjs";
+import { BRAND_BG, RAVEN_THRESHOLD, borderOffender } from "../../scripts/brand-constants.mjs";
+import { VERSIONED_BRAND_ICONS } from "../../scripts/brand-icons-precache.mjs";
 
 // The guardian raven's icon set (scripts/generate-icons.mjs → `pnpm icons`). Pins what browsers rely on: every icon the
 // manifest and the <head> declare exists with its declared pixel size; the ?v= of each URL is the file's sha256[:10]
@@ -28,7 +30,7 @@ vi.mock("next/font/local", () => ({ default: () => ({ className: "", variable: "
 const ROOT = path.resolve(__dirname, "..", "..");
 const PUBLIC = path.join(ROOT, "public");
 const sha10 = (buf: Buffer) => createHash("sha256").update(buf).digest("hex").slice(0, 10);
-const BG = [0x0c, 0x00, 0x16]; // the raven's own background, #0C0016
+const BG = BRAND_BG; // the raven's own background, #0C0016 (scripts/brand-constants.mjs, shared with the generator)
 
 /** Pixel size, color type and chunk list of a PNG (IHDR is always the first chunk). */
 function png(buf: Buffer, what: string) {
@@ -137,6 +139,12 @@ describe("brand icons — the guardian raven", () => {
       ...icons.filter((i) => !declared.includes(i.src)).map((i) => `${i.src} (manifest.ts)`),
     ];
     expect(outside, "icon URLs declared outside src/lib/brand-icons.mjs: the module is their single source").toEqual([]);
+    // the other direction (review #7): every versioned entry the precache adds is a URL the <head> or the manifest requests
+    const requested = new Set([...head.all, ...icons.map((i) => i.src)].map((u) => u.split("?")[0]));
+    expect(
+      VERSIONED_BRAND_ICONS.filter((p) => !requested.has(p)),
+      "VERSIONED_BRAND_ICONS lists icons that neither the <head> nor the manifest requests: dead weight in the install download",
+    ).toEqual([]);
   });
 
   it("each of those versioned URLs is precached under that exact URL (next.config.mjs manifestTransforms → brandIconPrecacheEntries)", async () => {
@@ -153,6 +161,43 @@ describe("brand icons — the guardian raven", () => {
       [...unversionedRequests()].filter(([url]) => !glob.includes(url)).map(([url, who]) => `${url} (requested without ?v= by ${[...who].join(", ")})`),
       "URLs the app requests without ?v= that are not in the precache: next.config.mjs globPublicPatterns must cover them, or they break offline",
     ).toEqual([]);
+  });
+
+  it("the glob precaches nothing the app does not request without ?v= (no icon downloaded twice at install)", async () => {
+    const { glob } = await precache();
+    const bare = unversionedRequests();
+    expect(
+      glob.filter((url) => !bare.has(url)),
+      "next.config.mjs globPublicPatterns precaches files nobody requests without ?v=: they are already precached under their ?v= URL, so the install downloads them twice (review #4)",
+    ).toEqual([]);
+  });
+
+  it("the OG card is 1200x630 and has its alt text", () => {
+    expect(png(readFileSync(path.join(ROOT, "src/app/opengraph-image.png")), "opengraph-image.png").size, "opengraph-image.png size").toBe("1200x630");
+    const alt = path.join(ROOT, "src/app/opengraph-image.alt.txt");
+    expect(existsSync(alt), "src/app/opengraph-image.alt.txt is missing: Next would emit og:image without og:image:alt").toBe(true);
+    expect(readFileSync(alt, "utf8").trim(), "opengraph-image.alt.txt is empty").not.toBe("");
+  });
+
+  it("borderOffender (the generator's precondition) finds a non-background pixel on the canvas border, and only there", () => {
+    const W = 4, H = 3;
+    const canvas = () => Buffer.from(Array.from({ length: W * H }, () => BRAND_BG).flat());
+    expect(borderOffender(canvas(), W, H, BRAND_BG, RAVEN_THRESHOLD), "a flat background canvas has no offender").toBeNull();
+    const inner = canvas();
+    inner.set([255, 255, 255], (1 * W + 1) * 3);
+    expect(borderOffender(inner, W, H, BRAND_BG, RAVEN_THRESHOLD), "an interior subject pixel is not a border offender").toBeNull();
+    const edge = canvas();
+    edge.set([255, 255, 255], (1 * W + 3) * 3); // right column, middle row: only the column scan sees it
+    expect(borderOffender(edge, W, H, BRAND_BG, RAVEN_THRESHOLD), "a subject pixel on the border must be reported").toEqual({ x: 3, y: 1 });
+  });
+
+  it("BrandMark is decorative by default (its uses sit next to the word ARCANUM) and takes a descriptive alt when alone", () => {
+    const { container, unmount } = render(createElement(BrandMark, { size: 56 }));
+    expect(container.querySelector("img")?.getAttribute("alt"), "BrandMark default alt must be empty: screen readers would announce the brand twice").toBe("");
+    unmount();
+    const alone = render(createElement(BrandMark, { size: 56, alt: BRAND_ALT }));
+    expect(alone.container.querySelector("img")?.getAttribute("alt"), "BrandMark must pass its alt prop through").toBe(BRAND_ALT);
+    alone.unmount();
   });
 
   it("favicon.ico lives only in public/ and holds 16, 32 and 48 PNG entries of those sizes", () => {
@@ -181,18 +226,19 @@ describe("brand icons — the guardian raven", () => {
 
   it("the maskable icon is full-bleed #0C0016 with the whole raven inside the central 80 % safe circle", async () => {
     const icon = icons.find((i) => i.purpose === "maskable");
+    expect(icon, "manifest declares no purpose:maskable icon").toBeDefined();
     const { data, info } = await sharp(versioned(icon!.src).file).ensureAlpha().raw().toBuffer({ resolveWithObject: true });
     const { width: w, height: h } = info;
     const at = (x: number, y: number) => data.subarray((y * w + x) * 4, (y * w + x) * 4 + 4);
     const isBg = (p: Uint8Array) => p[3] === 255 && BG.every((c, k) => Math.abs(p[k]! - c) <= 2);
     const edge: [number, number][] = [[0, 0], [w >> 1, 0], [w - 1, 0], [0, h >> 1], [w - 1, h >> 1], [0, h - 1], [w >> 1, h - 1], [w - 1, h - 1]];
     expect(edge.filter(([x, y]) => !isBg(at(x, y))), "maskable is not full-bleed opaque #0C0016 at its edges").toEqual([]);
-    // a raven pixel: some channel more than 24 levels away from the background (RAVEN in scripts/generate-icons.mjs)
+    // a raven pixel: some channel more than RAVEN_THRESHOLD levels away from the background (as in the generator)
     let far = 0;
     for (let y = 0; y < h; y++)
       for (let x = 0; x < w; x++) {
         const p = at(x, y);
-        if (!BG.every((c, k) => Math.abs(p[k]! - c) <= 24)) far = Math.max(far, Math.hypot(x + 0.5 - w / 2, y + 0.5 - h / 2));
+        if (!BG.every((c, k) => Math.abs(p[k]! - c) <= RAVEN_THRESHOLD)) far = Math.max(far, Math.hypot(x + 0.5 - w / 2, y + 0.5 - h / 2));
       }
     expect(far, `maskable: a raven pixel sits ${far.toFixed(1)} px from the center, outside the 80 % safe circle (launchers crop it)`).toBeLessThanOrEqual(
       0.4 * w,
@@ -209,7 +255,9 @@ describe("brand icons — the guardian raven", () => {
   });
 
   it("Engineering Forge stays monochrome (D4): nothing under src/forge/ draws the raven", () => {
-    const offenders = walk(path.join(ROOT, "src/forge"))
+    const forgeDir = path.join(ROOT, "src/forge");
+    expect(existsSync(forgeDir), "src/forge/ does not exist: Forge moved, so this D4 check no longer looks at it — point it at the new folder").toBe(true);
+    const offenders = walk(forgeDir)
       .filter((f) => /\.(?:tsx?|jsx?|mjs|css|json)$/.test(f))
       .filter((f) => /BrandMark|\/icons\/(?:logo-|icon-|apple-touch-icon|favicon)|favicon\.ico|cuervo-guardian/.test(readFileSync(f, "utf8")))
       .map(rel);

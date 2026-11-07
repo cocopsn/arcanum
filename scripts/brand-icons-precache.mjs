@@ -19,7 +19,13 @@ export const VERSIONED_BRAND_ICONS = [...Object.values(HEAD_ICONS), ...Object.va
 /** Precache entries ({ url, revision: null, size }) for the versioned brand icon URLs, read from public/. */
 export function brandIconPrecacheEntries() {
   return VERSIONED_BRAND_ICONS.map((pathname) => {
-    const buf = readFileSync(path.join(PUBLIC_DIR, pathname));
+    const file = path.join(PUBLIC_DIR, pathname);
+    let buf;
+    try {
+      buf = readFileSync(file);
+    } catch (e) {
+      throw new Error(`brand icon ${pathname} (${file}) cannot be read for the precache: run \`pnpm icons\` to regenerate the brand icons (${e.code ?? e.message})`);
+    }
     const v = createHash("sha256").update(buf).digest("hex").slice(0, 10);
     return { url: `${pathname}?v=${v}`, revision: null, size: buf.length };
   });

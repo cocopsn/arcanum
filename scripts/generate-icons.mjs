@@ -20,9 +20,10 @@
 import sharp from "sharp";
 import { createHash } from "node:crypto";
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { BRAND_BG, RAVEN_THRESHOLD, borderOffender } from "./brand-constants.mjs";
 
 const SRC = "assets/brand/cuervo-guardian-1254.png";
-const RAVEN = 24; // a pixel is raven when some channel is more than this away from the background
+const RAVEN = RAVEN_THRESHOLD; // a pixel is raven when some channel is more than this away from the background
 const FLAT = 4; // grain amplitude flattened to the image's own flat colors
 const MASKABLE_FILL = 0.96; // the raven's enclosing circle uses 96 % of the 80 % safe circle's radius
 
@@ -55,6 +56,17 @@ for (const [bin, count] of [...counts.entries()].sort((a, b) => b[1] - a[1])) {
   if (!flats.some((f) => f.every((v, c) => Math.abs(v - color[c]) <= FLAT))) flats.push(color);
 }
 const BG = flats[0];
+// Precondition (post-merge review #11): the dominant flat color must BE the background. Every crop, the padding and the
+// raven geometry depend on it; a source whose subject outweighs its background would frame every icon wrong, silently.
+const offender = borderOffender(px, W, H, BG, RAVEN);
+if (offender) {
+  const i = (offender.y * W + offender.x) * 3;
+  throw new Error(
+    `${SRC}: the dominant flat color ${hex(BG)} does not cover the canvas border (pixel ${offender.x},${offender.y} is ${hex([px[i], px[i + 1], px[i + 2]])}); the source must sit on a flat background`,
+  );
+}
+if (BG.some((v, c) => Math.abs(v - BRAND_BG[c]) > FLAT))
+  throw new Error(`${SRC}: measured background ${hex(BG)} is not the brand background ${hex(BRAND_BG)} (scripts/brand-constants.mjs); update BRAND_BG if the brand changed`);
 const background = { r: BG[0], g: BG[1], b: BG[2] };
 
 // 2. flatten the grain
