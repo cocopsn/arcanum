@@ -19,29 +19,37 @@ describe("chunkErrorText · las tres filas de §5.7", () => {
   });
 
   it("sin controlador y sin red, la parte no está descargada", () => {
-    expect(chunkErrorText({ controlled: false, online: false })).toEqual({ tipo: "no-descargado", texto: NO_DESCARGADO });
+    expect(chunkErrorText({ controlled: false, online: false }), "sin controlador y sin red no se dijo que la parte no estaba descargada").toEqual({
+      tipo: "no-descargado",
+      texto: NO_DESCARGADO,
+    });
   });
 
   it("sin controlador y con red, es un desfase de despliegue", () => {
-    expect(chunkErrorText({ controlled: false, online: true })).toEqual({ tipo: "stale", texto: STALE });
+    expect(chunkErrorText({ controlled: false, online: true }), "sin controlador y con red no se dijo que recargar lo arregla").toEqual({
+      tipo: "stale",
+      texto: STALE,
+    });
   });
 });
 
 describe("isChunkError", () => {
   it("reconoce ChunkLoadError por su nombre", () => {
-    expect(isChunkError(Object.assign(new Error("x"), { name: "ChunkLoadError" }))).toBe(true);
+    expect(isChunkError(Object.assign(new Error("x"), { name: "ChunkLoadError" })), "un ChunkLoadError no se reconoció como error de chunk").toBe(true);
   });
 
   it("reconoce los tres mensajes: webpack (JS y CSS), Chrome y Safari", () => {
-    expect(isChunkError(new Error("Loading chunk 8462 failed.\n(error: https://arcanum-brown.vercel.app/_next/static/chunks/8462.js)"))).toBe(true);
-    expect(isChunkError(new Error("Loading CSS chunk app-page failed.\n(/_next/static/css/a.css)"))).toBe(true);
-    expect(isChunkError(new TypeError("Failed to fetch dynamically imported module: https://arcanum-brown.vercel.app/_next/static/chunks/x.js"))).toBe(true);
-    expect(isChunkError(new TypeError("Importing a module script failed."))).toBe(true);
+    const no = (fuente: string) => `el mensaje de ${fuente} no se reconoció como error de chunk`;
+    expect(isChunkError(new Error("Loading chunk 8462 failed.\n(error: https://arcanum-brown.vercel.app/_next/static/chunks/8462.js)")), no("webpack")).toBe(true);
+    expect(isChunkError(new Error("Loading CSS chunk app-page failed.\n(/_next/static/css/a.css)")), no("webpack (CSS)")).toBe(true);
+    expect(isChunkError(new TypeError("Failed to fetch dynamically imported module: https://arcanum-brown.vercel.app/_next/static/chunks/x.js")), no("Chrome")).toBe(true);
+    expect(isChunkError(new TypeError("Importing a module script failed.")), no("Safari")).toBe(true);
   });
 
   it("no confunde otros errores ni valores que no son errores", () => {
-    expect(isChunkError(new TypeError("Cannot read properties of undefined (reading 'goals')"))).toBe(false);
-    expect(isChunkError(new Error("Failed to fetch"))).toBe(false);
-    expect(isChunkError(null)).toBe(false);
+    const msg = "un error que no es de chunk se tomó por uno de chunk";
+    expect(isChunkError(new TypeError("Cannot read properties of undefined (reading 'goals')")), msg).toBe(false);
+    expect(isChunkError(new Error("Failed to fetch")), msg).toBe(false);
+    expect(isChunkError(null), msg).toBe(false);
   });
 });
