@@ -60,8 +60,7 @@ function CreateNodeSheet({
           await onCreate(goalId, title.trim());
           onClose();
         }}
-        className="w-full max-w-md rounded-t-[var(--r-lg)] border border-line bg-surface-raised p-6 sm:rounded-[var(--r-lg)]"
-        style={{ paddingBottom: "max(1.5rem, env(safe-area-inset-bottom))" }}
+        className="w-full max-w-md rounded-t-[var(--r-lg)] border border-line bg-surface-raised px-safe pb-safe-lg pt-6 sm:rounded-[var(--r-lg)] sm:px-safe-lg"
       >
         <h2 id="create-node-title" className="font-display text-lg tracking-[0.12em] text-text">NUEVO NODO</h2>
         <p className="mb-4 mt-1 text-[13px] text-text-muted">Un módulo nace sin prerrequisitos. Arrastra una conexión para sellarlo tras otro.</p>
@@ -222,19 +221,19 @@ function CanvasInner({ onClose }: { onClose: () => void }) {
       </ReactFlow>
 
       <header
-        className="pointer-events-none absolute inset-x-0 top-0 flex items-center justify-between gap-3 p-4"
-        style={{ paddingTop: "max(1rem, env(safe-area-inset-top))" }}
+        className="pointer-events-none absolute inset-x-0 top-0 flex items-center justify-between gap-3 px-safe pb-4"
+        style={{ paddingTop: "calc(var(--safe-top) + 1rem)" }}
       >
         <button
           onClick={onClose}
-          className="pointer-events-auto min-h-11 rounded-[var(--r-pill)] border border-line bg-surface/90 px-4 text-[11px] uppercase tracking-[0.2em] text-text-muted backdrop-blur-0 transition hover:text-text"
+          className="pointer-events-auto tap rounded-[var(--r-pill)] border border-line bg-surface/90 px-4 text-[11px] uppercase tracking-[0.2em] text-text-muted backdrop-blur-0 transition hover:text-text"
         >
           ‹ Cerrar
         </button>
         <span className="font-display text-sm tracking-[0.4em] text-text-faint">MAPA</span>
         <button
           onClick={() => setCreating(true)}
-          className="pointer-events-auto min-h-11 rounded-[var(--r-pill)] border border-topic bg-[var(--topic-deep)] px-4 text-[11px] uppercase tracking-[0.18em] text-topic transition hover:brightness-125"
+          className="pointer-events-auto tap rounded-[var(--r-pill)] border border-topic bg-[var(--topic-deep)] px-4 text-[11px] uppercase tracking-[0.18em] text-topic transition hover:brightness-125"
         >
           ＋ Nodo
         </button>
@@ -243,7 +242,7 @@ function CanvasInner({ onClose }: { onClose: () => void }) {
       {toast && (
         <div
           className="pointer-events-none absolute inset-x-0 z-[55] flex justify-center px-4"
-          style={{ top: "max(4.75rem, calc(env(safe-area-inset-top) + 3.75rem))" }}
+          style={{ top: "max(4.75rem, calc(var(--safe-top) + 3.75rem))" }}
         >
           <div
             role="alert"
@@ -253,7 +252,7 @@ function CanvasInner({ onClose }: { onClose: () => void }) {
             <button
               onClick={() => setToast(null)}
               aria-label="Descartar aviso"
-              className="min-h-11 shrink-0 px-2 text-lg leading-none text-text-faint transition hover:text-text"
+              className="tap grid shrink-0 place-items-center text-lg leading-none text-text-faint transition hover:text-text"
             >
               ×
             </button>

@@ -76,7 +76,12 @@ export function ForgeWorld({ initialCellId = null, onClose }: { initialCellId?: 
       aria-label="Engineering Forge"
     >
       <ForgeAtmosphere />
-      <div className="relative z-10 mx-auto w-full max-w-5xl px-4 pb-24 pt-4 sm:px-6">
+      {/* áreas seguras (design poblar §7.2): la ceja y «Salir del mundo» quedan bajo la Dynamic Island sin el inset;
+          var(--safe-*) y no env() para que la matriz de bordes pueda simular el teléfono */}
+      <div
+        className="relative z-10 mx-auto w-full max-w-5xl px-safe sm:px-safe-lg"
+        style={{ paddingTop: "calc(var(--safe-top) + 1rem)", paddingBottom: "calc(var(--safe-bottom) + 6rem)" }}
+      >
         <header className="flex items-start justify-between gap-3">
           <div className="min-w-0">
             <div className="forge-label text-[11px] text-text-muted">Arcanum · mundo</div>

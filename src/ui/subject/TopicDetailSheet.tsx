@@ -158,12 +158,12 @@ export function TopicDetailSheet({
         aria-labelledby="topic-title"
         tabIndex={-1}
         className={
+          // áreas seguras (design poblar §7.2): var(--safe-*) y no env(), para que la matriz de bordes simule el teléfono
           desktop
             ? // DESKTOP — a right-docked side panel (full height), not a bottom sheet that wastes the width
-              "scroll-touch flex h-full w-full max-w-[440px] flex-col overflow-y-auto border-l border-line bg-surface-raised p-6 shadow-aura outline-none"
-            : "scroll-touch flex max-h-[90vh] w-full max-w-md flex-col overflow-y-auto rounded-t-[var(--r-lg)] border border-line bg-surface-raised p-6 outline-none sm:rounded-[var(--r-lg)]"
+              "scroll-touch flex h-full w-full max-w-[440px] flex-col overflow-y-auto border-l border-line bg-surface-raised px-safe-lg pb-safe-lg pt-safe shadow-aura outline-none"
+            : "scroll-touch flex max-h-[calc(100dvh-var(--safe-top)-12px)] w-full max-w-md flex-col overflow-y-auto rounded-t-[var(--r-lg)] border border-line bg-surface-raised px-safe pb-safe-lg pt-6 outline-none sm:rounded-[var(--r-lg)]"
         }
-        style={desktop ? undefined : { paddingBottom: "max(1.5rem, env(safe-area-inset-bottom))" }}
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-start justify-between gap-3">
@@ -175,7 +175,7 @@ export function TopicDetailSheet({
               {STATUS_LABEL[status]} · maestría <span className="tnum" style={{ color: readableAccent(accent) }}>{Math.round(retrievability * 100)}%</span>
             </div>
           </div>
-          <button onClick={onClose} aria-label="Cerrar" className="-mr-2 -mt-1 min-h-11 px-2 text-2xl leading-none text-text-faint transition hover:text-text">
+          <button onClick={onClose} aria-label="Cerrar" className="tap shrink-0 text-2xl leading-none text-text-faint transition hover:text-text">
             ×
           </button>
         </div>
@@ -255,7 +255,7 @@ export function TopicDetailSheet({
                   </button>
                 </>
               ) : (
-                <p className="mt-1 text-[13px] leading-snug text-text-muted">Sin libro — genéralo con IA (Sonnet 5) en el formato de contrato e impórtalo en Lecturas. Cero contenido inventado.</p>
+                <p className="mt-1 text-[13px] leading-snug text-text-muted">Sin libro: importa uno en Lecturas que cumpla el contrato.</p>
               )}
             </div>
 
@@ -406,7 +406,7 @@ export function TopicDetailSheet({
             </div>
 
             <div className="mt-4 flex flex-wrap items-center gap-x-5">
-              <button onClick={() => setTutorOpen(true)} className="-mx-2 inline-flex min-h-11 items-center px-2 text-[11px] uppercase tracking-[0.16em] transition" style={{ color: readableAccent(accent) }}>
+              <button onClick={() => setTutorOpen(true)} className="inline-flex min-h-11 items-center text-[11px] uppercase tracking-[0.16em] transition" style={{ color: readableAccent(accent) }}>
                 Preguntar al tutor
               </button>
               <button onClick={() => setNotesOpen(true)} className="inline-flex min-h-11 items-center text-[11px] uppercase tracking-[0.16em] text-text-muted transition hover:text-topic">

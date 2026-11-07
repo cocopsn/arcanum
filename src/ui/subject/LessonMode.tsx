@@ -11,6 +11,7 @@ import { initRun, reduceRun, type LessonRun, type RunEffect } from "@/lib/lesson
 import { themeForGoal, worldVars } from "@/lib/subject-themes";
 import { readableAccent } from "@/lib/accent";
 import { audio } from "@/lib/audio";
+import { AI_QUEUED_LESSON_TEXT } from "@/lib/offline-texts";
 import type { LessonCourseReply, LessonGrade } from "@/sync/ai";
 
 // The step-by-step LIGHT lesson, full-screen. A sequence of micro-challenges against the cell's
@@ -57,6 +58,9 @@ export function LessonMode({
   const [answer, setAnswer] = useState("");
   const [grading, setGrading] = useState(false);
   const [hiccup, setHiccup] = useState(false);
+  // grading failed WITHOUT network (design poblar §6.8): the answer stays on screen, nothing is reinforced, and ONE
+  // `online` retries it once. The lesson run is session state, so it never goes to ai.queued (H18).
+  const [heldOffline, setHeldOffline] = useState<"graded" | "corrected" | null>(null);
   const [lastGrade, setLastGrade] = useState<LessonGrade | null>(null);
   const [attempts, setAttempts] = useState<string[]>([]); // normalized answers already tried for the CURRENT step
   const [scores, setScores] = useState<number[]>([]);
@@ -134,9 +138,13 @@ export function LessonMode({
     try {
       const g = await gradeLessonStep(cellTitle, step.prompt, step.rubric, answer);
       if (!g) {
-        setHiccup(true); // no AI mid-lesson → honest; stay in place, let them retry
+        // without network the answer is RETAINED (the field keeps it, nothing fires) and one `online` retries it;
+        // with network it is today's honest hiccup (a 422 from the content filter is an answer, not a missing network)
+        if (typeof navigator !== "undefined" && navigator.onLine === false) setHeldOffline(kind);
+        else setHiccup(true); // no AI mid-lesson → honest; stay in place, let them retry
         return;
       }
+      setHeldOffline(null);
       setLastGrade(g);
       const { next, effects } = reduceRun(run, { type: kind, understood: g.understood });
       playSounds(effects);
@@ -160,6 +168,21 @@ export function LessonMode({
     }
   }
 
+  // the retry on `online` grades the answer as it is THEN (the learner may have edited it): read the latest submit
+  const submitRef = useRef(submit);
+  submitRef.current = submit;
+  useEffect(() => {
+    if (!heldOffline || typeof window === "undefined") return;
+    const kind = heldOffline;
+    const onOnline = () => {
+      window.removeEventListener("online", onOnline); // one retry per offline failure, never a loop
+      setHeldOffline(null);
+      void submitRef.current(kind);
+    };
+    window.addEventListener("online", onOnline);
+    return () => window.removeEventListener("online", onOnline);
+  }, [heldOffline]);
+
   function restart() {
     if (!run || run.phase !== "failed") return;
     const { next, effects } = reduceRun(run, { type: "restart" });
@@ -171,6 +194,7 @@ export function LessonMode({
     setAttempts([]);
     setAnswer("");
     setHiccup(false);
+    setHeldOffline(null);
     setRun(next);
   }
 
@@ -194,8 +218,9 @@ export function LessonMode({
         {
           ...worldVars(theme),
           background: `radial-gradient(120% 80% at 50% -10%, ${theme.glow}, transparent 55%), linear-gradient(168deg, ${theme.bg2}, ${theme.bg})`,
-          paddingTop: "max(0.75rem, env(safe-area-inset-top))",
-          paddingBottom: "max(0.75rem, env(safe-area-inset-bottom))",
+          // áreas seguras (design poblar §7.2): the inset PLUS the margin, from var(--safe-*) (never env() directly)
+          paddingTop: "calc(var(--safe-top) + 0.75rem)",
+          paddingBottom: "calc(var(--safe-bottom) + 0.75rem)",
         } as CSSProperties
       }
     >
@@ -204,11 +229,11 @@ export function LessonMode({
         {entering && <EnterRitual title={cellTitle} glyph={theme.glyph} accent={accent} onDone={() => setEntering(false)} />}
       </AnimatePresence>
       {/* ── header: progress + hearts + close ── */}
-      <header className="mx-auto flex w-full max-w-md shrink-0 items-center gap-3 px-4">
+      <header className="mx-auto flex w-full max-w-md shrink-0 items-center gap-3 px-safe">
         <button
           onClick={onClose}
           aria-label="Salir de la lección"
-          className="-ml-1 min-h-11 px-1 text-2xl leading-none text-text-faint transition hover:text-text"
+          className="tap shrink-0 text-2xl leading-none text-text-faint transition hover:text-text"
         >
           ×
         </button>
@@ -227,7 +252,7 @@ export function LessonMode({
       </header>
 
       {/* ── body ── */}
-      <main className="scroll-touch mx-auto w-full max-w-md flex-1 overflow-y-auto px-4 pt-4">
+      <main className="scroll-touch mx-auto w-full max-w-md flex-1 overflow-y-auto px-safe pt-4">
         {loading && <Centered glyph={theme.glyph} accent={accent}>{kind === "review" ? "Forjando un repaso NUEVO contra la fuente real…" : "Forjando la lección contra la fuente real…"}</Centered>}
 
         {noAi && (
@@ -314,6 +339,11 @@ export function LessonMode({
             )}
             {hiccup && (
               <p role="status" aria-live="polite" className="mt-1 text-[12px] text-text-muted">La IA no respondió. Reintenta en un momento.</p>
+            )}
+            {heldOffline && (
+              <p role="status" aria-live="polite" className="mt-1 text-[12px] text-text-muted" data-lesson-held="">
+                {AI_QUEUED_LESSON_TEXT}
+              </p>
             )}
 
             <button

@@ -63,17 +63,18 @@ export function ExerciseMode({ moduleId, goalId, goalTitle, cellTitle, onClose }
       aria-label={`Ejercicios · ${cellTitle}`}
       tabIndex={-1}
       className="fixed inset-0 z-[78] flex flex-col outline-none"
-      style={{ ...worldVars(theme), background: `linear-gradient(172deg, ${theme.bg2}, ${theme.bg})`, paddingTop: "max(0.5rem, env(safe-area-inset-top))", paddingBottom: "max(0.5rem, env(safe-area-inset-bottom))" } as CSSProperties}
+      // áreas seguras (design poblar §7.2): the inset PLUS the margin, from var(--safe-*) so the matrix can simulate a phone
+      style={{ ...worldVars(theme), background: `linear-gradient(172deg, ${theme.bg2}, ${theme.bg})`, paddingTop: "calc(var(--safe-top) + 0.5rem)", paddingBottom: "calc(var(--safe-bottom) + 0.5rem)" } as CSSProperties}
       onKeyDown={(e) => {
         if (e.key === "Escape") (sel ? setSel(null) : onClose());
       }}
     >
-      <header className="mx-auto flex w-full max-w-2xl shrink-0 items-center gap-3 px-4">
-        <button onClick={() => (sel ? setSel(null) : onClose())} aria-label="Volver" className="-ml-1 min-h-11 px-1 text-2xl leading-none text-text-faint transition hover:text-text">×</button>
+      <header className="mx-auto flex w-full max-w-2xl shrink-0 items-center gap-3 px-safe">
+        <button onClick={() => (sel ? setSel(null) : onClose())} aria-label="Volver" className="tap shrink-0 text-2xl leading-none text-text-faint transition hover:text-text">×</button>
         <span className="font-display text-sm tracking-[0.24em]" style={{ color: ink }}>EJERCICIOS · FASE 2</span>
       </header>
 
-      <main className="scroll-touch mx-auto w-full max-w-2xl flex-1 overflow-y-auto px-4 pb-16 pt-3">
+      <main className="scroll-touch mx-auto w-full max-w-2xl flex-1 overflow-y-auto px-safe pb-16 pt-3">
         {!sel ? (
           <Picker
             curated={curated}
@@ -186,7 +187,7 @@ function Picker({ curated, bookQs, procLang, setProcLang, accent, onPick }: { cu
           <div className="text-[10px] uppercase tracking-[0.22em] text-text-faint">Práctica infinita · variantes</div>
           <div className="flex gap-1">
             {(["js", "python"] as Lang[]).map((l) => (
-              <button key={l} onClick={() => setProcLang(l)} aria-pressed={procLang === l} className="min-h-8 rounded-[var(--r-sm)] px-2 text-[11px] uppercase tracking-wider transition" style={{ color: procLang === l ? ink : "var(--text-faint)", background: procLang === l ? `color-mix(in srgb, ${accent} 12%, transparent)` : "transparent" }}>
+              <button key={l} onClick={() => setProcLang(l)} aria-pressed={procLang === l} className="tap rounded-[var(--r-sm)] px-2 text-[11px] uppercase tracking-wider transition" style={{ color: procLang === l ? ink : "var(--text-faint)", background: procLang === l ? `color-mix(in srgb, ${accent} 12%, transparent)` : "transparent" }}>
                 {l === "python" ? "Python" : "JS"}
               </button>
             ))}

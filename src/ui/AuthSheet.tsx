@@ -50,8 +50,7 @@ export function AuthSheet({ open, onClose }: { open: boolean; onClose: () => voi
       onClick={onClose}
     >
       <div
-        className="w-full max-w-md rounded-t-[var(--r-lg)] border border-line bg-surface-raised p-6 sm:rounded-[var(--r-lg)]"
-        style={{ paddingBottom: "max(1.5rem, env(safe-area-inset-bottom))" }}
+        className="w-full max-w-md rounded-t-[var(--r-lg)] border border-line bg-surface-raised px-safe pb-safe-lg pt-6 sm:rounded-[var(--r-lg)] sm:px-safe-lg"
         onClick={(e) => e.stopPropagation()}
       >
         {email ? (
