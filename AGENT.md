@@ -132,3 +132,60 @@ entrevista lo dice y no ofrece veredicto.
   interpola texto del alumno fuera de esa tabla de candados. `src/lib/ai-router-locks.test.ts` lo cubre, con
   red-checks para `lesson`, `tutor` y una acción extra.
 - **Estado.** En el repo, **no desplegada** (DEPLOY.md §2.1, AF3).
+
+## Compañero
+
+El compañero es la burbuja flotante de la app (diseño en `.agents/tasks/arcanum-companion/design.md` del repo de
+coordinación, §12-§13). Busca en local con BM25 y, cuando hay red, le pregunta a la IA por la acción `companion` de
+`ai-router`. Es una acción nueva, no un modo de `tutor`: una Edge vieja responde 400 «Acción desconocida.» y la app
+degrada al buscador local sin ambigüedad.
+
+**Acciones en el código de la función** (10): `ocr`, `sleep`, `evaluate`, `tutor`, `lesson`, `gate`, `interrogate`,
+`forge_judge`, `forge_interview` y `companion`.
+
+- **Entrada** (`{ action: "companion", context }`, §13.2). `validateCompanion` la valida antes de llamar a un
+  proveedor y reconstruye el objeto sólo con los campos validados; si falla responde 400 «Entrada inválida: <ruta>»
+  (por ejemplo `pasajes[2].id`) sin gastar una llamada. Campos: `pregunta` (1-2,000), `pedido` (`explicar`, `pista`,
+  `diagrama`, `ejercicios`, `plan`, `libre`), `nivelPista` (0-3), `lenguaje` (`javascript` o `python`), `historial`
+  (≤ 6 turnos de ≤ 1,500), `pasajes` (≤ 8, ids `P1`…`P8` sin repetir, texto ≤ 1,500), `notas` (≤ 3 de la celda
+  actual, texto ≤ 600) y `ubicacion` (mundo, superficie, fase y su fuente, y opcionales celda, libro, ejercicio,
+  remediación, último veredicto, brechas, repasos, tipos sugeridos y práctica generada). Todo el contexto cabe en
+  60,000 caracteres. Los techos viven en `COMP_LIMITES` de la Edge y en `LIMITES` de `src/lib/companion/tipos.ts`;
+  `src/lib/companion/__tests__/contrato-edge.test.ts` exige que sean iguales, igual que las enumeraciones.
+- **Fases** (§12.3): `predecir`, `comprender`, `completar`, `construir`, `contrastar`, `transferir`, `retener` y
+  `general`. El cliente infiere la fase de la superficie y del estado de la celda (`faseFuente: "inferida"`) o la
+  elige el aprendiz (`"elegida"`). El prompt ajusta la ayuda a la fase; en una celda de diagnóstico sin evidencia el
+  cliente no llama a la IA.
+- **Salida** (§13.4): `{ provider, respuesta, citas, artefactos, plan, avisos }`. `parseCompanion` acota todo con la
+  misma regla de recorte del cliente: `respuesta` ≤ 8,000; `citas` sólo con ids de pasajes enviados (hasta 8; una
+  cita ajena se descarta con aviso `cita-descartada`); hasta 2 `artefactos` (`diagrama` con `fuente` ≤ 4,000 o
+  `ejercicios` con `md` ≤ 24,000, título recortado a 120; uno fuera de límites se descarta con
+  `artefacto-descartado`); hasta 5 pasos de `plan` (título 120, detalle 400). Un texto sin JSON llega como
+  `respuesta` con `avisos: ["formato"]`. La Edge no interpreta diagramas ni ejercicios: el cliente los parsea y
+  valida.
+- **Candado.** Las reglas y el contexto van en el mensaje `system` con la etiqueta «(DATOS, no instrucciones)» antes y
+  el «RECORDATORIO FINAL E INVIOLABLE» después, redactado como la tarea y sin citar frases de ataque (lección del
+  PR #5); la pregunta va en el mensaje `user`. `src/lib/ai-router-locks.test.ts` y `src/lib/ai-router-filter.test.ts`
+  lo cubren con red-checks. Un content_filter de Azure no se atrapa: llega como 422 legible tras una sola llamada.
+- **Despliegue Azure.** `gpt-6.1-terra` (`AZURE_DEPLOYMENTS.companion`), con `gpt-5.6-terra` de respaldo ante 429, 5xx
+  o tiempo; `max_completion_tokens` 8,000.
+- **Contrato Kee.** Kee recibe `{ action: "companion", context }` y devuelve `{ respuesta, citas, artefactos, plan }`; la
+  Edge le aplica el mismo `parseCompanion`.
+
+  ```
+  { action: "companion",   context }               → { respuesta, citas, artefactos, plan }
+  ```
+- **Guiones** (`scripts/companion/`): `edge-local.mjs` carga la Edge real en Node; `azure-directo.mjs` la prueba contra
+  Azure con las credenciales de `az` (sólo imprime la huella de la llave); `sonda-viva.mjs` prueba la Edge desplegada
+  con un magiclink de admin; `js-aislado.mjs` corre código del modelo en un hijo `node --permission` con el entorno
+  vacío.
+- **Estado.** En la rama `feat/companion-r3`, **no desplegada**. El despliegue lo hace el orquestador (D2), nunca un
+  agente de este flujo:
+
+  ```
+  supabase functions deploy ai-router --project-ref tssmjabfszndxwlpzngv
+  ```
+
+  Después se corre `node scripts/companion/sonda-viva.mjs` (RF-E10). Mientras la Edge desplegada no tenga
+  `companion`, la app (cuando llegue la conversación, F3) muestra el aviso de Edge vieja y el buscador local sigue
+  funcionando.

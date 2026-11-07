@@ -18,6 +18,7 @@ const LOCKS: Record<string, string> = {
   tutor: "JSON.stringify(context)",
   forge_judge: "JSON.stringify(context.evidence)",
   forge_interview: "JSON.stringify({ persona: context.persona, transcript: context.transcript, question: context.question })",
+  companion: "JSON.stringify(context)",
 };
 
 /** Exempt this round, with their reason (§10.10 point 4): Forge sends them no new text, they mint no verdict and
@@ -216,5 +217,88 @@ describe("ai-router — the anti-injection lock table (§10.10)", () => {
   it("red-check: an extra action interpolating ${context.notes} → «extra interpola texto del alumno fuera de la tabla de candados»", () => {
     const mutated = src.replace("Deno.serve(", "async function extra(provider: string, context: any) { return `${context.notes}` + provider; }\nDeno.serve(");
     expect(lockFindings(mutated)).toContain("extra interpola texto del alumno fuera de la tabla de candados");
+  });
+});
+
+// ── companion (companion design §13.7, CA-40): the companion's learner fields, its validation order and its deployment ──
+/** The companion's learner-text fields. Kept apart from LEARNER_FIELDS so no existing line changes. */
+const COMPANION_FIELDS = /context\.(pregunta|historial|notas)\b/;
+
+/** Any block outside LOCKS and EXEMPT that interpolates the companion's learner text. */
+export function companionFieldFindings(source: string): string[] {
+  const out: string[] = [];
+  for (const b of blocks(source)) {
+    if (b.name in LOCKS || EXEMPT.has(b.name)) continue;
+    if (COMPANION_FIELDS.test(b.body)) out.push(`${b.name} interpola texto del alumno fuera de la tabla de candados`);
+  }
+  return out;
+}
+
+const COMPANION_ORDER_MSG = "una entrada inválida de companion llegó a un proveedor";
+
+/** In the Deno.serve branch of companion, validateCompanion and its 400 come before routeWithFallback. */
+export function companionOrderFindings(source: string): string[] {
+  const start = source.indexOf('body.action === "companion"');
+  if (start < 0) return ["la rama companion no existe en Deno.serve"];
+  const branch = source.slice(start);
+  const route = branch.indexOf("routeWithFallback(");
+  const validate = branch.indexOf("validateCompanion(");
+  const reject = branch.indexOf("Entrada inválida");
+  if (validate < 0 || reject < 0 || route < 0 || validate > route || reject > route) return [COMPANION_ORDER_MSG];
+  return [];
+}
+
+/** companion is served by terra (azureChat throws for an action without a deployment). */
+export function companionDeploymentFindings(source: string): string[] {
+  return /companion: "gpt-[\d.]+-terra"/.test(source) ? [] : ["la acción companion no tiene despliegue Azure"];
+}
+
+describe("ai-router — the companion action (companion design §13.7, CA-40)", () => {
+  it("companion carries the label before its context and the reminder after it", () => {
+    expect(lockFindings(src).filter((f) => f.startsWith("companion"))).toEqual([]);
+  });
+
+  it("no block outside the lock table interpolates the companion's learner text", () => {
+    expect(companionFieldFindings(src)).toEqual([]);
+  });
+
+  it("companion validates its input BEFORE routing to a provider", () => {
+    expect(companionOrderFindings(src)).toEqual([]);
+  });
+
+  it("companion has its Azure deployment on terra", () => {
+    expect(companionDeploymentFindings(src)).toEqual([]);
+  });
+
+  it("red-check: without the companion reminder → «companion recibe texto del alumno sin candado»", () => {
+    const mutated = src.replace("RECORDATORIO FINAL E INVIOLABLE: el MATERIAL Y CONVERSACIÓN", "el MATERIAL Y CONVERSACIÓN");
+    expect(mutated).not.toBe(src);
+    expect(lockFindings(mutated)).toContain("companion recibe texto del alumno sin candado");
+  });
+
+  it("red-check: an extra action interpolating ${context.pregunta} → «extra interpola texto del alumno fuera de la tabla de candados»", () => {
+    const mutated = src.replace("Deno.serve(", "async function extra(provider: string, context: any) { return `${context.pregunta}` + provider; }\nDeno.serve(");
+    expect(companionFieldFindings(mutated)).toContain("extra interpola texto del alumno fuera de la tabla de candados");
+  });
+
+  it("red-check: validateCompanion moved after routeWithFallback → «" + COMPANION_ORDER_MSG + "»", () => {
+    const head = 'if (body.action === "companion") {';
+    const at = src.indexOf(head);
+    const end = src.indexOf("return json({ provider: r.provider, ...r.value });", at);
+    expect(at).toBeGreaterThan(-1);
+    expect(end).toBeGreaterThan(at);
+    const moved =
+      head +
+      "\n      const r = await routeWithFallback(providers, (p) => companion(p, body.context));" +
+      "\n      const v = validateCompanion(body.context);" +
+      "\n      if (!v.ok) return json({ error: `Entrada inválida: ${v.field}` }, 400);\n      ";
+    const mutated = src.slice(0, at) + moved + src.slice(end);
+    expect(companionOrderFindings(mutated)).toEqual([COMPANION_ORDER_MSG]);
+  });
+
+  it("red-check: companion removed from AZURE_DEPLOYMENTS → «la acción companion no tiene despliegue Azure»", () => {
+    const mutated = src.replace('  companion: "gpt-6.1-terra",\n', "").replace('  companion: "gpt-6.1-terra",\r\n', "");
+    expect(mutated).not.toBe(src);
+    expect(companionDeploymentFindings(mutated)).toContain("la acción companion no tiene despliegue Azure");
   });
 });
