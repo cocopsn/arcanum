@@ -114,7 +114,7 @@ function SqlRunnerBody({ item, cellId, readModel }: Omit<RunnerProps, "item"> & 
         <p style={{ whiteSpace: "pre-wrap", margin: 0 }}>{item.statement}</p>
       </header>
       <details open style={box}>
-        <summary style={meta}>esquema y datos base</summary>
+        <summary style={{ ...meta, display: "flex", alignItems: "center", minHeight: 44, cursor: "pointer" }}>esquema y datos base</summary>
         <pre style={mono}>{d.esquema}</pre>
         <pre style={{ ...mono, marginTop: "0.5rem" }}>{d.datos}</pre>
       </details>
@@ -135,7 +135,7 @@ function SqlRunnerBody({ item, cellId, readModel }: Omit<RunnerProps, "item"> & 
         />
       </label>
       <div>
-        <button type="button" onClick={() => void onRun()} disabled={busy || !query.trim()} style={{ ...box, cursor: busy ? "wait" : "pointer", color: "var(--forge-text)" }}>
+        <button type="button" onClick={() => void onRun()} disabled={busy || !query.trim()} style={{ ...box, minHeight: 44, minWidth: 44, cursor: busy ? "wait" : "pointer", color: "var(--forge-text)" }}>
           {busy ? "Ejecutando…" : "Ejecutar y calificar ↗"}
         </button>
       </div>
@@ -165,7 +165,7 @@ function SqlRunnerBody({ item, cellId, readModel }: Omit<RunnerProps, "item"> & 
       {logError ? <p role="alert">✕ {logError}</p> : null}
       {solved ? (
         <details style={box}>
-          <summary style={meta}>consulta de referencia</summary>
+          <summary style={{ ...meta, display: "flex", alignItems: "center", minHeight: 44, cursor: "pointer" }}>consulta de referencia</summary>
           <pre style={mono}>{d.solucion}</pre>
         </details>
       ) : null}

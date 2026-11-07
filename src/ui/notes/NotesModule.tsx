@@ -102,7 +102,7 @@ export function NotesModule({
       aria-label="Notas"
       tabIndex={-1}
       className="fixed inset-0 z-[70] flex flex-col bg-ink outline-none"
-      style={{ paddingTop: "max(0.75rem, env(safe-area-inset-top))", paddingBottom: "max(0.75rem, env(safe-area-inset-bottom))" }}
+      style={{ paddingTop: "calc(var(--safe-top) + 0.75rem)", paddingBottom: "calc(var(--safe-bottom) + 0.75rem)" }}
       // full-screen → it owns its clicks; stop them reaching any click-to-close backdrop it's nested in
       onClick={(e) => e.stopPropagation()}
       onKeyDown={(e) => {
@@ -114,7 +114,7 @@ export function NotesModule({
         }
       }}
     >
-      <header className="mx-auto flex w-full max-w-md items-center justify-between px-4">
+      <header className="mx-auto flex w-full max-w-md items-center justify-between px-safe">
         <span className="font-display text-sm tracking-[0.3em] text-rank">NOTAS</span>
         <div className="flex items-center gap-1">
           {view !== "editor" && (
@@ -123,7 +123,7 @@ export function NotesModule({
               <Tab on={view === "graph"} onClick={() => setView("graph")}>Grafo</Tab>
             </>
           )}
-          <button onClick={onClose} aria-label="Cerrar notas" className="min-h-11 px-2 text-2xl leading-none text-text-faint transition hover:text-text">×</button>
+          <button onClick={onClose} aria-label="Cerrar notas" className="tap grid shrink-0 place-items-center text-2xl leading-none text-text-faint transition hover:text-text">×</button>
         </div>
       </header>
 

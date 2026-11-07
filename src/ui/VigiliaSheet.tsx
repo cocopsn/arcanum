@@ -55,8 +55,7 @@ export function VigiliaSheet({ open, onClose }: { open: boolean; onClose: () => 
       onClick={onClose}
     >
       <div
-        className="scroll-touch flex max-h-[88vh] w-full max-w-md flex-col gap-4 overflow-y-auto rounded-t-[var(--r-lg)] border border-line bg-surface-raised p-6 sm:rounded-[var(--r-lg)]"
-        style={{ paddingBottom: "max(1.5rem, env(safe-area-inset-bottom))" }}
+        className="scroll-touch flex max-h-[88vh] w-full max-w-md flex-col gap-4 overflow-y-auto rounded-t-[var(--r-lg)] border border-line bg-surface-raised px-safe pb-safe-lg pt-6 sm:rounded-[var(--r-lg)] sm:px-safe-lg"
         onClick={(e) => e.stopPropagation()}
       >
         <div>

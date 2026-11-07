@@ -23,7 +23,7 @@ export function InstallCoachMark() {
   return (
     <div
       className="flex items-center gap-3 rounded-[var(--r-md)] border border-line bg-surface-raised px-4 py-3 text-sm text-text-muted"
-      style={{ paddingBottom: "max(0.75rem, env(safe-area-inset-bottom))" }}
+      style={{ paddingBottom: "calc(var(--safe-bottom) + 0.75rem)" }}
     >
       <span className="flex-1">
         Instala Arcanum: toca{" "}

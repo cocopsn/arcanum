@@ -168,9 +168,9 @@ export function InkCanvas({
   }
 
   return (
-    <div className="fixed inset-0 z-[90] flex flex-col bg-ink" style={{ paddingTop: "max(0.5rem, env(safe-area-inset-top))", paddingBottom: "max(0.5rem, env(safe-area-inset-bottom))" }}>
-      <div className="mx-auto flex w-full max-w-md items-center justify-between px-4">
-        <button onClick={onClose} aria-label="Cerrar el lienzo" className="min-h-11 px-1 text-2xl leading-none text-text-faint hover:text-text">×</button>
+    <div className="fixed inset-0 z-[90] flex flex-col bg-ink" style={{ paddingTop: "calc(var(--safe-top) + 0.5rem)", paddingBottom: "calc(var(--safe-bottom) + 0.5rem)" }}>
+      <div className="mx-auto flex w-full max-w-md items-center justify-between px-safe">
+        <button onClick={onClose} aria-label="Cerrar el lienzo" className="tap grid shrink-0 place-items-center text-2xl leading-none text-text-faint hover:text-text">×</button>
         <span className="text-[11px] uppercase tracking-[0.2em] text-text-faint">Plumita</span>
         <button onClick={undo} disabled={!hasInk} className="min-h-11 px-2 text-[12px] uppercase tracking-wider text-text-muted disabled:opacity-30">Deshacer</button>
       </div>

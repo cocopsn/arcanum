@@ -268,14 +268,14 @@ export function BookReader({ book, onClose }: { book: BookRow; onClose: () => vo
       aria-label={parsed.meta.title}
       tabIndex={-1}
       className="fixed inset-0 z-[75] flex flex-col outline-none"
-      style={{ ...worldVars(theme), background: `linear-gradient(178deg, ${theme.bg2}, ${theme.bg})`, paddingTop: "max(0.5rem, env(safe-area-inset-top))", paddingBottom: "max(0.5rem, env(safe-area-inset-bottom))" } as CSSProperties}
+      style={{ ...worldVars(theme), background: `linear-gradient(178deg, ${theme.bg2}, ${theme.bg})`, paddingTop: "calc(var(--safe-top) + 0.5rem)", paddingBottom: "calc(var(--safe-bottom) + 0.5rem)" } as CSSProperties}
       onKeyDown={(e) => {
         if (e.key === "Escape") onClose();
       }}
     >
       {/* top bar: close · Escuchar · reading progress */}
-      <div className="mx-auto flex w-full max-w-2xl shrink-0 items-center gap-2 px-4">
-        <button onClick={onClose} aria-label="Cerrar el libro" className="-ml-1 min-h-11 px-1 text-2xl leading-none text-text-faint transition hover:text-text">×</button>
+      <div className="mx-auto flex w-full max-w-2xl shrink-0 items-center gap-2 px-safe">
+        <button onClick={onClose} aria-label="Cerrar el libro" className="tap grid shrink-0 place-items-center text-2xl leading-none text-text-faint transition hover:text-text">×</button>
         {player.supported && (
           <button
             onClick={() => {
@@ -310,7 +310,7 @@ export function BookReader({ book, onClose }: { book: BookRow; onClose: () => vo
         )}
       </div>
 
-      <main ref={scrollRef} onScroll={onScroll} className="scroll-touch mx-auto w-full max-w-2xl flex-1 overflow-y-auto px-4 pb-16 pt-4">
+      <main ref={scrollRef} onScroll={onScroll} className="scroll-touch mx-auto w-full max-w-2xl flex-1 overflow-y-auto px-safe pb-16 pt-4">
         <div className="text-[10px] uppercase tracking-[0.28em] text-text-faint">{parsed.meta.spine} · lectura profunda</div>
         <h1 className="mt-1 font-display text-[26px] leading-tight" style={{ color: ink, textShadow: `0 0 20px ${theme.glow}` }}>{parsed.meta.title}</h1>
         {parsed.meta.subtitle && <p className="mt-1 font-serif text-[15px] italic text-text-muted">{parsed.meta.subtitle}</p>}

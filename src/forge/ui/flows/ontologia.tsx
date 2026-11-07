@@ -60,7 +60,7 @@ export default function OntologyForge(props: FlowProps) {
           <p style={{ whiteSpace: "pre-wrap" }}>{load.item.statement}</p>
           <OntologyEditor item={load.item} cellId={cellId} onDelivered={(id) => setMission(id)} deliverLabel="Entregar el modelo" />
           {delivered && !mission && (
-            <button type="button" onClick={() => setMission(delivered)} style={{ background: "#2f3234", color: "#ffffff", border: "1px solid #9b9b9b", padding: "0.35rem 0.7rem", minHeight: 36 }}>
+            <button type="button" onClick={() => setMission(delivered)} style={{ background: "#2f3234", color: "#ffffff", border: "1px solid #9b9b9b", padding: "0.35rem 0.7rem", minHeight: 44 }}>
               Continuar a la entrega de la misión con el modelo entregado
             </button>
           )}
