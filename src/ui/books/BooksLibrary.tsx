@@ -11,12 +11,18 @@ import { runPy } from "@/lib/py-runner";
 import { getStorageStatus, type StorageStatus } from "@/lib/storage";
 import { saveResume } from "@/lib/resume";
 import { BookReader } from "@/ui/books/BookReader";
-import { themeForGoal } from "@/lib/subject-themes";
-import { readableAccent } from "@/lib/accent";
+import { useArcanum } from "@/app/providers";
+import type { LibraryRow } from "@/lib/library/types";
+import type { ReadModel } from "@/core/read-model";
+import { chunkErrorText } from "@/lib/chunk-error";
+import { useLazyModule, chunkContext } from "@/ui/books/library/use-lazy-module";
 
 // The DEEP-READING library — the door for the 100 books. Lists downloaded books by spine (readable
 // offline, always), imports a .md the user generated externally (file or paste), and shows honest
 // storage use. A .md that doesn't satisfy the contract is rejected honestly (never a faked book).
+
+export const INTRO_TEXT = "Libros y bancos de todos los mundos. Cada uno dice quién lo generó.";
+export const EMPTY_TEXT = "Importa un .md que cumpla el contrato de libros.";
 
 const MB = (b: number) => (b >= 1e6 ? `${(b / 1e6).toFixed(1)} MB` : `${Math.max(1, Math.round(b / 1e3))} KB`);
 
@@ -31,7 +37,9 @@ export function BooksLibrary({ open, onClose }: { open: boolean; onClose: () => 
   const [pasteOpen, setPasteOpen] = useState(false);
   const [paste, setPaste] = useState("");
   const [msg, setMsg] = useState<string | null>(null);
+  const [importOpen, setImportOpen] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
+  const readModel = useArcanum((s) => s.readModel);
   const rootRef = useRef<HTMLDivElement>(null);
 
   // resume: remember the Lecturas overlay across reloads. This component stays MOUNTED with an
@@ -93,102 +101,87 @@ export function BooksLibrary({ open, onClose }: { open: boolean; onClose: () => 
     await ingest(text);
   }
 
-  const bySpine = new Map<string, BookRow[]>();
-  for (const b of books) {
-    const key = b.spine || "Sueltos";
-    (bySpine.get(key) ?? bySpine.set(key, []).get(key)!).push(b);
+  async function deleteImport(row: LibraryRow) {
+    const [kind, ...rest] = row.key.split(":");
+    const id = rest.join(":");
+    if (kind === "libro") await deleteBook(id);
+    else if (kind === "banco") await deleteBank(id);
+    await refresh();
   }
 
   return (
     <div ref={rootRef} role="dialog" aria-modal="true" aria-label="Lecturas" tabIndex={-1} className="fixed inset-0 z-[70] flex flex-col bg-ink pb-safe pt-safe outline-none" onKeyDown={(e) => { if (e.key === "Escape") onClose(); }}>
-      <header className="mx-auto flex w-full max-w-md items-center justify-between px-safe">
+      <header className="mx-auto flex w-full max-w-md shrink-0 items-center justify-between px-safe sm:max-w-2xl">
         <span className="font-display text-sm tracking-[0.3em] text-rank">LECTURAS</span>
         <button onClick={onClose} aria-label="Cerrar" className="tap grid shrink-0 place-items-center text-2xl leading-none text-text-faint transition hover:text-text">×</button>
       </header>
 
-      <main className="scroll-touch mx-auto w-full max-w-md flex-1 overflow-y-auto px-safe pt-3">
-        <p className="text-[12px] leading-snug text-text-muted">
-          Libros y bancos de ejercicios .md generados afuera (en Sonnet 5) e ingeridos aquí. Descargados = sin datos, en el camión. {books.length} libro{books.length === 1 ? "" : "s"} · {banks.length} banco{banks.length === 1 ? "" : "s"} · {MB(bytes)}
+      <div className="mx-auto w-full max-w-md shrink-0 px-safe pt-2 sm:max-w-2xl">
+        <p className="text-[12px] leading-snug text-text-muted" data-lecturas-intro="">
+          {INTRO_TEXT} {MB(bytes)} en este dispositivo
           {storage?.usageMB != null && <> · {storage.usageMB} MB usados{storage?.persisted === true ? " (durable ✓)" : storage?.persisted === false ? " (no garantizado)" : ""}</>}
         </p>
-
-        {/* import */}
-        <div className="mt-3 flex gap-2">
-          <button onClick={() => fileRef.current?.click()} disabled={importing} className="min-h-11 flex-1 rounded-[var(--r-sm)] border border-rank bg-rank-soft text-sm text-rank transition hover:brightness-125 disabled:opacity-40">
-            {importing ? "Importando…" : "Importar .md"}
-          </button>
-          <button onClick={() => setPasteOpen((v) => !v)} className="min-h-11 rounded-[var(--r-sm)] border border-line px-3 text-sm text-text-muted transition hover:text-text">Pegar</button>
-        </div>
-        <input ref={fileRef} type="file" accept=".md,text/markdown,text/plain" className="hidden" onChange={(e) => { const f = e.target.files?.[0]; e.target.value = ""; void onFile(f); }} />
-        {pasteOpen && (
-          <div className="mt-2">
-            <textarea value={paste} onChange={(e) => setPaste(e.target.value)} rows={5} placeholder="Pega el .md del libro (con su frontmatter ---)…" className="scroll-touch w-full resize-none rounded-[var(--r-sm)] border border-line bg-surface p-3 font-mono text-[12px] text-text placeholder:text-text-faint focus:outline-none" />
-            <button onClick={() => void ingest(paste)} disabled={!paste.trim() || importing} className="mt-1 min-h-11 w-full rounded-[var(--r-sm)] border border-rank px-3 text-sm text-rank transition hover:bg-rank-soft disabled:opacity-40">Ingerir el pegado</button>
-          </div>
-        )}
-        {msg && <p className="mt-2 text-[12px] text-text-muted" role="status" aria-live="polite">{msg}</p>}
-
-        {/* books by spine */}
-        {books.length === 0 && <p className="mt-6 text-[13px] text-text-faint">Aún no hay libros. Genera uno en Sonnet 5 (formato de contrato) e impórtalo — es la puerta por donde entran.</p>}
-        <div className="mt-4 space-y-5">
-          {[...bySpine.entries()].map(([spine, list]) => {
-            const theme = themeForGoal(spine);
-            return (
-              <div key={spine}>
-                <div className="text-[10px] uppercase tracking-[0.24em]" style={{ color: readableAccent(theme.accent) }}>{spine}</div>
-                <div className="mt-1.5 space-y-2">
-                  {list.map((b) => (
-                    <div key={b.id} className="rounded-[var(--r-md)] border border-line bg-surface p-3">
-                      <button onClick={() => setReading(b)} className="block w-full text-left">
-                        <div className="font-serif text-[15px] text-text">{b.title}</div>
-                        {b.meta.subtitle && <div className="mt-0.5 text-[12px] italic text-text-muted">{b.meta.subtitle}</div>}
-                        <div className="mt-1 flex flex-wrap gap-x-3 text-[10px] uppercase tracking-wider text-text-faint">
-                          {b.meta.readingMinutes != null && <span style={{ color: readableAccent(theme.accent) }}>{b.meta.readingMinutes} min</span>}
-                          <span>{MB(b.bytes)}</span>
-                          {b.source === "seed" && <span>ejemplo semilla</span>}
-                          {b.moduleId && <span>anclado</span>}
-                        </div>
-                      </button>
-                      <div className="mt-2 flex gap-3">
-                        <button onClick={() => setReading(b)} className="tap px-2 text-[12px] uppercase tracking-wider transition hover:underline" style={{ color: readableAccent(theme.accent) }}>Leer</button>
-                        <button onClick={async () => { await deleteBook(b.id); await refresh(); }} className="min-h-11 text-[12px] uppercase tracking-wider text-text-faint transition hover:text-amber">Borrar</button>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            );
-          })}
-        </div>
-
-        {/* exercise banks (Layer 1 curada, ingerida) */}
-        {banks.length > 0 && (
-          <div className="mt-6">
-            <div className="text-[10px] uppercase tracking-[0.24em] text-text-faint">Bancos de ejercicios</div>
-            <div className="mt-1.5 space-y-2">
-              {banks.map((bk) => {
-                const theme = themeForGoal(bk.spine);
-                return (
-                  <div key={bk.id} className="rounded-[var(--r-md)] border border-line bg-surface p-3">
-                    <div className="font-serif text-[15px] text-text">{bk.title}</div>
-                    <div className="mt-1 flex flex-wrap gap-x-3 text-[10px] uppercase tracking-wider text-text-faint">
-                      <span style={{ color: readableAccent(theme.accent) }}>{bk.spine || "—"}</span>
-                      <span>{bk.count} ejercicios</span>
-                      {bk.source === "seed" && <span>ejemplo semilla</span>}
-                      {bk.moduleId && <span>anclado</span>}
-                    </div>
-                    <div className="mt-2">
-                      <button onClick={async () => { await deleteBank(bk.id); await refresh(); }} className="min-h-11 text-[12px] uppercase tracking-wider text-text-faint transition hover:text-amber">Borrar</button>
-                    </div>
-                  </div>
-                );
-              })}
+        <details className="mt-2 rounded-[var(--r-sm)] border border-line" open={importOpen} onToggle={(e) => setImportOpen((e.target as HTMLDetailsElement).open)}>
+          <summary className="flex min-h-11 cursor-pointer items-center px-3 text-[12px] uppercase tracking-wider text-text-muted">Importar .md</summary>
+          <div className="px-3 pb-3">
+            <div className="flex gap-2">
+              <button onClick={() => fileRef.current?.click()} disabled={importing} className="min-h-11 flex-1 rounded-[var(--r-sm)] border border-rank bg-rank-soft text-sm text-rank transition hover:brightness-125 disabled:opacity-40">
+                {importing ? "Importando…" : "Elegir archivo"}
+              </button>
+              <button onClick={() => setPasteOpen((v) => !v)} className="min-h-11 rounded-[var(--r-sm)] border border-line px-3 text-sm text-text-muted transition hover:text-text">Pegar</button>
             </div>
+            <input ref={fileRef} type="file" accept=".md,text/markdown,text/plain" className="hidden" onChange={(e) => { const f = e.target.files?.[0]; e.target.value = ""; void onFile(f); }} />
+            {pasteOpen && (
+              <div className="mt-2">
+                <textarea value={paste} onChange={(e) => setPaste(e.target.value)} rows={5} placeholder="Pega el .md del libro o del banco (con su frontmatter ---)…" className="scroll-touch w-full resize-none rounded-[var(--r-sm)] border border-line bg-surface p-3 font-mono text-[12px] text-text placeholder:text-text-faint focus:outline-none" />
+                <button onClick={() => void ingest(paste)} disabled={!paste.trim() || importing} className="mt-1 min-h-11 w-full rounded-[var(--r-sm)] border border-rank px-3 text-sm text-rank transition hover:bg-rank-soft disabled:opacity-40">Ingerir el pegado</button>
+              </div>
+            )}
+            {books.length === 0 && banks.length === 0 && <p className="mt-2 text-[12px] text-text-faint">{EMPTY_TEXT}</p>}
           </div>
-        )}
-      </main>
+        </details>
+        {msg && <p className="mt-2 text-[12px] text-text-muted" role="status" aria-live="polite">{msg}</p>}
+      </div>
+
+      <CatalogSlot books={books} banks={banks} readModel={readModel} onDeleteImport={deleteImport} onRead={setReading} />
 
       {reading && <BookReader book={reading} onClose={() => setReading(null)} />}
     </div>
+  );
+}
+
+// El catálogo vive en su propio chunk (design poblar §5.7) y sólo se pide con Lecturas abierta. Un chunk que no llega
+// deja la lista simple en pie.
+function CatalogSlot({ books, banks, readModel, onDeleteImport, onRead }: { books: BookRow[]; banks: ExerciseBankRow[]; readModel: ReadModel; onDeleteImport(row: LibraryRow): Promise<void>; onRead(b: BookRow): void }) {
+  const catalog = useLazyModule(() => import("./library/LibraryCatalog"));
+  if (catalog.estado === "listo") {
+    const Catalog = catalog.mod.default;
+    return <Catalog books={books} banks={banks} readModel={readModel} onDeleteImport={onDeleteImport} />;
+  }
+  if (catalog.estado === "cargando") return <p className="mx-auto w-full max-w-md px-safe pt-3 text-[12px] text-text-muted">Cargando el catálogo…</p>;
+  return <SimpleList books={books} onRead={onRead} onRetry={catalog.reintentar} />;
+}
+/** Lo que queda en pie si el chunk del catálogo no llega (§5.7): la lista de Dexie de este dispositivo, el texto de
+ *  chunkErrorText() y «Reintentar» (más «Recargar» si es un desfase de versión). */
+function SimpleList({ books, onRead, onRetry }: { books: BookRow[]; onRead(b: BookRow): void; onRetry(): void }) {
+  const { tipo, texto } = chunkErrorText(chunkContext());
+  return (
+    <main className="scroll-touch mx-auto w-full max-w-md flex-1 overflow-y-auto px-safe pt-3" data-lecturas-simple="">
+      <div role="alert" className="rounded-[var(--r-sm)] border border-line p-3">
+        <p className="text-[12px] text-text-muted">{texto}</p>
+        <div className="mt-2 flex gap-2">
+          <button type="button" onClick={onRetry} className="tap border border-line px-3 text-[12px] text-text">Reintentar</button>
+          {tipo === "stale" && <button type="button" onClick={() => window.location.reload()} className="tap border border-line px-3 text-[12px] text-text">Recargar</button>}
+        </div>
+      </div>
+      <div className="mt-3 space-y-2">
+        {books.map((b) => (
+          <div key={b.id} className="flex items-center justify-between gap-2 rounded-[var(--r-md)] border border-line bg-surface p-3">
+            <span className="min-w-0 truncate font-serif text-[15px] text-text" title={b.title}>{b.title}</span>
+            <button type="button" onClick={() => onRead(b)} className="tap shrink-0 px-2 text-[12px] uppercase tracking-wider text-text-muted">Leer</button>
+          </div>
+        ))}
+      </div>
+    </main>
   );
 }

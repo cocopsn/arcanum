@@ -22,7 +22,7 @@ export function CodeBlock({ code, lang }: { code: string; lang: string }) {
             setCopied(true);
             window.setTimeout(() => setCopied(false), 1200);
           }}
-          className="min-h-8 text-[10px] uppercase tracking-wider text-text-faint transition hover:text-text"
+          className="tap -my-1 px-2 text-[10px] uppercase tracking-wider text-text-faint transition hover:text-text"
         >
           {copied ? "copiado ✓" : "copiar"}
         </button>
