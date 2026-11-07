@@ -8,6 +8,7 @@ import { avisoCarga } from "./aviso-carga";
 import { useTrampaCompanero } from "./foco";
 import { IconoAviso, IconoMenu, IconoNueva, IconoVacio } from "./iconos";
 import { consumirEscape, type Pantalla } from "./teclado";
+import { Conversacion, type ConversacionDeps } from "./Conversacion";
 
 const ESQUINAS: { esquina: Esquina; texto: string }[] = [
   { esquina: "inf-der", texto: "Abajo a la derecha" },
@@ -35,6 +36,7 @@ export function Panel({
   activo,
   despachar,
   precargar,
+  conversacion,
 }: {
   esquina: Esquina;
   /** false durante una ceremonia: la trampa de foco se suspende (§3.2) */
@@ -42,6 +44,8 @@ export function Panel({
   despachar: (e: EventoUi) => void;
   /** carga en reposo de las partes perezosas; si falla, el panel pinta el contrato de chunks (§9.1) */
   precargar?: () => Promise<unknown>;
+  /** dependencias de la conversación; si están, el cuerpo pinta la conversación en vez del estado vacío */
+  conversacion?: ConversacionDeps;
 }) {
   const hoja = useHoja();
   const panel = useRef<HTMLDivElement>(null);
@@ -202,11 +206,15 @@ export function Panel({
                 )}
               </div>
             )}
-            <div className="cmp-vacio">
-              <IconoVacio />
-              <p className="cmp-vacio-titulo">Empecemos.</p>
-              <p className="cmp-vacio-texto">Escribe tu pregunta y envíala para empezar.</p>
-            </div>
+            {pantalla === "conversacion" && conversacion ? (
+              <Conversacion deps={conversacion} />
+            ) : (
+              <div className="cmp-vacio">
+                <IconoVacio />
+                <p className="cmp-vacio-titulo">Empecemos.</p>
+                <p className="cmp-vacio-texto">Escribe tu pregunta y envíala para empezar.</p>
+              </div>
+            )}
           </div>
         </div>
       </div>

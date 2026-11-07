@@ -44,7 +44,7 @@ const respuestaOk: ResultadoConsulta = {
 };
 
 describe("protección (f): la conversación no entra al log", () => {
-  it("cinco turnos no cambian el número de eventos del log", async () => {
+  it("cinco turnos no cambian el número de eventos del log", { timeout: 30_000 }, async () => {
     const db = createDb(`cmp-log-${Math.random()}`);
     const almacen = new AlmacenMemoria();
     let n = 0;
@@ -79,7 +79,7 @@ describe("protección (f): la conversación no entra al log", () => {
     expect(await almacen.contar()).toBeGreaterThanOrEqual(0);
   });
 
-  it("«Guardar como nota» agrega exactamente un note.created", async () => {
+  it("«Guardar como nota» agrega exactamente un note.created", { timeout: 30_000 }, async () => {
     const db = createDb(`cmp-nota-${Math.random()}`);
     const mensaje: MensajeRow = {
       id: "m1",

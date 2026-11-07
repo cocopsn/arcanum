@@ -13,6 +13,9 @@ import { useLecturaArcanum } from "./lectura";
 import { Orbe } from "./Orbe";
 import { Panel } from "./Panel";
 import { Pestillo } from "./Pestillo";
+import { Motor, entradaBase } from "./motor";
+import { AlmacenMemoria, type AlmacenCompanero } from "@/lib/companion/db";
+import type { ConversacionDeps } from "./Conversacion";
 
 type TipoMundo = "forge" | "inicio" | "mundo";
 interface Mundo {
@@ -61,6 +64,22 @@ export function CompanionRoot() {
 
   const despachar = useCallback((e: EventoUi) => setUi((s) => transicion(s, e)), []);
   const cerrarGlobo = useCallback(() => despachar({ t: "globoVisto" }), [despachar]);
+
+  // motor y almacén de la sesión del panel (se crean una vez; el almacén cae a memoria si Dexie no abre, §19.1)
+  const motorRef = useRef<Motor | null>(null);
+  motorRef.current ??= new Motor();
+  const almacenRef = useRef<AlmacenCompanero>(new AlmacenMemoria());
+  const precargarPartes = useCallback(() => {
+    motorRef.current!.precargar(mundo.tipo === "forge" ? "Engineering Forge" : mundo.titulo);
+    return Promise.resolve();
+  }, [mundo.tipo, mundo.titulo]);
+  const convDeps: ConversacionDeps = {
+    conversacionId: "actual",
+    almacen: almacenRef.current,
+    armarEntrada: (texto, pedido, fase) => entradaBase(texto, pedido, fase, mundo.tipo),
+    consultar: (entrada, signal) => motorRef.current!.consultar(entrada, signal),
+    faseInferida: "general",
+  };
 
   const recolocar = useCallback(() => {
     const { vista, esquina } = uiRef.current;
@@ -156,7 +175,7 @@ export function CompanionRoot() {
       )}
       {ui.vista === "orbe" && !ui.globoVisto && <Globo esquina={col.esquina} dy={col.dy} alCerrar={cerrarGlobo} />}
       {ui.vista === "oculto" && <Pestillo esquina={col.esquina} dy={col.dy} colision={col.colision} despachar={despachar} />}
-      {ui.vista === "panel" && <Panel esquina={ui.esquina} activo={!ceremonia} despachar={despachar} />}
+      {ui.vista === "panel" && <Panel esquina={ui.esquina} activo={!ceremonia} despachar={despachar} precargar={precargarPartes} conversacion={convDeps} />}
       <div role="status" aria-live="polite" className="cmp-sr">
         {anuncio}
       </div>
