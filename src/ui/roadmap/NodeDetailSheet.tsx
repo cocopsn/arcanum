@@ -111,10 +111,9 @@ export function NodeDetailSheet({ moduleId, onClose }: { moduleId: string; onClo
         aria-modal="true"
         aria-labelledby="node-detail-title"
         tabIndex={-1}
-        className="scroll-touch flex max-h-[90vh] w-full max-w-md flex-col overflow-y-auto rounded-t-[var(--r-lg)] border border-line bg-surface-raised p-6 outline-none sm:rounded-[var(--r-lg)]"
+        className="scroll-touch flex max-h-[90vh] w-full max-w-md flex-col overflow-y-auto rounded-t-[var(--r-lg)] border border-line bg-surface-raised px-safe pb-safe-lg pt-6 outline-none sm:rounded-[var(--r-lg)] sm:px-safe-lg"
         style={
           {
-            paddingBottom: "max(1.5rem, env(safe-area-inset-bottom))",
             ["--topic" as string]: goalColor,
           } as React.CSSProperties
         }
@@ -135,7 +134,7 @@ export function NodeDetailSheet({ moduleId, onClose }: { moduleId: string; onClo
           </div>
           <button
             onClick={onClose}
-            className="-mr-2 -mt-1 min-h-11 px-2 text-2xl leading-none text-text-faint transition hover:text-text"
+            className="tap grid shrink-0 place-items-center text-2xl leading-none text-text-faint transition hover:text-text"
             aria-label="Cerrar"
           >
             ×

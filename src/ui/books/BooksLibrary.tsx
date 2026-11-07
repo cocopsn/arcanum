@@ -100,13 +100,13 @@ export function BooksLibrary({ open, onClose }: { open: boolean; onClose: () => 
   }
 
   return (
-    <div ref={rootRef} role="dialog" aria-modal="true" aria-label="Lecturas" tabIndex={-1} className="fixed inset-0 z-[70] flex flex-col bg-ink outline-none" style={{ paddingTop: "max(0.75rem, env(safe-area-inset-top))", paddingBottom: "max(0.75rem, env(safe-area-inset-bottom))" }} onKeyDown={(e) => { if (e.key === "Escape") onClose(); }}>
-      <header className="mx-auto flex w-full max-w-md items-center justify-between px-4">
+    <div ref={rootRef} role="dialog" aria-modal="true" aria-label="Lecturas" tabIndex={-1} className="fixed inset-0 z-[70] flex flex-col bg-ink pb-safe pt-safe outline-none" onKeyDown={(e) => { if (e.key === "Escape") onClose(); }}>
+      <header className="mx-auto flex w-full max-w-md items-center justify-between px-safe">
         <span className="font-display text-sm tracking-[0.3em] text-rank">LECTURAS</span>
-        <button onClick={onClose} aria-label="Cerrar" className="min-h-11 px-2 text-2xl leading-none text-text-faint transition hover:text-text">×</button>
+        <button onClick={onClose} aria-label="Cerrar" className="tap grid shrink-0 place-items-center text-2xl leading-none text-text-faint transition hover:text-text">×</button>
       </header>
 
-      <main className="scroll-touch mx-auto w-full max-w-md flex-1 overflow-y-auto px-4 pt-3">
+      <main className="scroll-touch mx-auto w-full max-w-md flex-1 overflow-y-auto px-safe pt-3">
         <p className="text-[12px] leading-snug text-text-muted">
           Libros y bancos de ejercicios .md generados afuera (en Sonnet 5) e ingeridos aquí. Descargados = sin datos, en el camión. {books.length} libro{books.length === 1 ? "" : "s"} · {banks.length} banco{banks.length === 1 ? "" : "s"} · {MB(bytes)}
           {storage?.usageMB != null && <> · {storage.usageMB} MB usados{storage?.persisted === true ? " (durable ✓)" : storage?.persisted === false ? " (no garantizado)" : ""}</>}

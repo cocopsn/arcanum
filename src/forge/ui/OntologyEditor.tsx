@@ -89,9 +89,9 @@ export function useDeliveredModelId(cellId: string, itemId: string): string | nu
 const S = {
   panel: { border: "1px solid #494a4b", background: "#1e2124", color: "#ffffff", padding: "0.75rem", marginBottom: "0.75rem" },
   meta: { fontFamily: "ui-monospace, monospace", fontSize: "0.7rem", letterSpacing: "0.12em", textTransform: "uppercase" as const, color: "#b9b9b9" },
-  input: { background: "#0a0a0b", color: "#ffffff", border: "1px solid #494a4b", padding: "0.25rem 0.4rem", minHeight: 32 },
-  btn: { background: "#2f3234", color: "#ffffff", border: "1px solid #9b9b9b", padding: "0.35rem 0.7rem", minHeight: 36, cursor: "pointer" },
-  btnOff: { background: "#1e2124", color: "#767676", border: "1px dashed #636363", padding: "0.35rem 0.7rem", minHeight: 36, cursor: "not-allowed" },
+  input: { background: "#0a0a0b", color: "#ffffff", border: "1px solid #494a4b", padding: "0.25rem 0.4rem", minHeight: 44, fontSize: 16 },
+  btn: { background: "#2f3234", color: "#ffffff", border: "1px solid #9b9b9b", padding: "0.35rem 0.7rem", minHeight: 44, minWidth: 44, cursor: "pointer" },
+  btnOff: { background: "#1e2124", color: "#767676", border: "1px dashed #636363", padding: "0.35rem 0.7rem", minHeight: 44, minWidth: 44, cursor: "not-allowed" },
 };
 
 interface EditorProps {

@@ -23,13 +23,12 @@ export function AudioConfig({ open, onClose }: { open: boolean; onClose: () => v
         role="dialog"
         aria-modal="true"
         aria-label="Ajustes de audio"
-        className="w-full max-w-md rounded-t-[var(--r-lg)] border border-line bg-surface-raised p-6 sm:rounded-[var(--r-lg)]"
-        style={{ paddingBottom: "max(1.5rem, env(safe-area-inset-bottom))" }}
+        className="w-full max-w-md rounded-t-[var(--r-lg)] border border-line bg-surface-raised px-safe pb-safe-lg pt-6 sm:rounded-[var(--r-lg)] sm:px-safe-lg"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center justify-between">
           <h2 className="font-display text-lg tracking-[0.14em] text-text">Audio</h2>
-          <button onClick={onClose} aria-label="Cerrar" className="-mr-2 min-h-11 px-2 text-2xl leading-none text-text-faint transition hover:text-text">×</button>
+          <button onClick={onClose} aria-label="Cerrar" className="tap grid shrink-0 place-items-center text-2xl leading-none text-text-faint transition hover:text-text">×</button>
         </div>
 
         <div className="mt-5 space-y-5">
