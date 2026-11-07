@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, type CSSProperties } from "react";
+import { useEffect, useLayoutEffect, useRef, useState, type CSSProperties } from "react";
 import { AnimatePresence } from "framer-motion";
 import { useArcanum, useArcanumStore } from "@/app/providers";
 import { useActions } from "@/ui/use-actions";
@@ -45,6 +45,8 @@ import { audio } from "@/lib/audio";
 import { useLayoutMode } from "@/ui/layout-mode";
 import { LayoutToggle } from "@/ui/LayoutToggle";
 import { getSupabase } from "@/sync/client";
+import { applyOrder, clearHomeOrder, isDefaultOrder, loadHomeOrder, moveId, saveHomeOrder } from "@/lib/home-order";
+import { ORDER_DEVICE_ONLY } from "@/lib/offline-texts";
 import { isMastered, nodeStatus } from "@/core/roadmap";
 import type { ReadModel, Stats } from "@/core/read-model";
 import type { ViewModel } from "@/core/present";
@@ -122,10 +124,10 @@ export function HomeView() {
           // labels like «sin conexión»), the status group drops whole to a second row instead of splitting its labels.
           <header className="flex flex-wrap items-center justify-between gap-y-2">
             <span className="flex items-center gap-1.5 sm:gap-2.5">
-              <BrandMark size={28} className="h-5 w-5 sm:h-7 sm:w-7" />
-              <span className="-mr-[0.4em] font-display text-sm tracking-[0.4em] text-text-muted">ARCANUM</span>
+              <BrandMark size={28} className="h-4 w-4 min-[375px]:h-5 min-[375px]:w-5 sm:h-7 sm:w-7" />
+              <span className="-mr-[0.3em] font-display text-sm tracking-[0.3em] text-text-muted min-[375px]:-mr-[0.4em] min-[375px]:tracking-[0.4em]">ARCANUM</span>
             </span>
-            <div className="ml-auto flex items-center gap-2 sm:gap-3">
+            <div className="ml-auto flex items-center gap-1.5 min-[375px]:gap-2 sm:gap-3">
               <LayoutToggle />
               <OfflinePill onOpen={() => setOfflineOpen(true)} />
               <SyncStatus onOpen={() => setAuthOpen(true)} />
@@ -208,7 +210,10 @@ function HomeShell({
   const { mode } = useLayoutMode();
   if (mode !== "desktop") {
     return (
-      <main className="scroll-touch mx-auto flex min-h-full max-w-md flex-col gap-6 px-5 pb-10" style={{ paddingTop: "max(1.5rem, env(safe-area-inset-top))" }}>
+      <main
+        className="scroll-touch mx-auto flex min-h-full max-w-md flex-col gap-6 px-safe"
+        style={{ paddingTop: "calc(var(--safe-top) + 1.5rem)", paddingBottom: "calc(var(--safe-bottom) + 2.5rem)" }}
+      >
         {header}
         <Hero stats={readModel.stats} viewModel={viewModel} />
         <RitoDelDia pending={viewModel.ritoPending} />
@@ -219,7 +224,15 @@ function HomeShell({
     );
   }
   return (
-    <main className="scroll-touch mx-auto min-h-full w-full max-w-6xl px-10 pb-16 pt-8">
+    <main
+      className="scroll-touch mx-auto min-h-full w-full max-w-6xl pb-16"
+      // el modo escritorio se puede forzar en un teléfono horizontal: también respeta la muesca y el indicador
+      style={{
+        paddingLeft: "calc(var(--safe-left) + 2.5rem)",
+        paddingRight: "calc(var(--safe-right) + 2.5rem)",
+        paddingTop: "calc(var(--safe-top) + 2rem)",
+      }}
+    >
       {header}
       <div className="mt-8 grid items-start gap-10 lg:grid-cols-[minmax(320px,384px)_1fr]">
         <div className="flex flex-col gap-6 lg:sticky lg:top-8">
@@ -279,25 +292,73 @@ function Hero({ stats, viewModel }: { stats: Stats; viewModel: ViewModel }) {
   );
 }
 
+// Orden de los mundos (diseño poblar §8.2). Preferencia del dispositivo en localStorage (src/lib/home-order.ts): no
+// escribe eventos ni toca goal.priority. En modo «Ordenar» cada portal deja de abrir su mundo y gana «↑»/«↓».
 function WorldPortals({ readModel, onOpen, grid = false }: { readModel: ReadModel; onOpen: (goalId: string) => void; grid?: boolean }) {
   const byId = new Map(readModel.modules.map((m) => [m.id, m]));
+  const liveGoals = readModel.goals.filter((g) => !g.archived);
+  const liveIds = liveGoals.map((g) => g.id);
+  const goalById = new Map(liveGoals.map((g) => [g.id, g]));
+  const [stored, setStored] = useState<string[] | null>(() => (typeof window === "undefined" ? null : loadHomeOrder()));
+  const [editing, setEditing] = useState(false);
+  const [announce, setAnnounce] = useState("");
+  const order = applyOrder(liveIds, stored);
+  const isDefault = isDefaultOrder(order, liveIds);
+  // React reinserta el nodo movido y el foco se pierde: se recuerda { id, dir } y se devuelve tras pintar.
+  const pendingFocus = useRef<{ id: string; dir: -1 | 1 } | null>(null);
+  const moveButtons = useRef(new Map<string, HTMLButtonElement>());
+
+  useLayoutEffect(() => {
+    const p = pendingFocus.current;
+    if (!p) return;
+    pendingFocus.current = null;
+    const pos = order.indexOf(p.id);
+    const atEnd = p.dir === -1 ? pos === 0 : pos === order.length - 1;
+    moveButtons.current.get(`${p.id}:${atEnd ? -p.dir : p.dir}`)?.focus();
+  });
+
+  const move = (id: string, dir: -1 | 1) => {
+    const next = moveId(order, id, dir);
+    if (next === order) return;
+    setStored(next);
+    saveHomeOrder(next);
+    pendingFocus.current = { id, dir };
+    setAnnounce(`${goalById.get(id)?.title ?? "El mundo"} ahora está en la posición ${next.indexOf(id) + 1} de ${next.length}`);
+  };
+  const reset = () => {
+    clearHomeOrder();
+    setStored(null);
+    setAnnounce("Orden de los mundos restablecido");
+  };
+
   return (
     <div className="space-y-3">
-      <div className="text-[10px] uppercase tracking-[0.3em] text-text-faint">Los mundos · elige territorio</div>
+      <div className="flex items-center justify-between gap-3">
+        <div className="text-[10px] uppercase tracking-[0.3em] text-text-faint">Los mundos · elige territorio</div>
+        <button
+          type="button"
+          aria-pressed={editing}
+          onClick={() => setEditing((e) => !e)}
+          className="tap shrink-0 rounded-[var(--r-md)] border border-line px-3 text-[10px] uppercase tracking-[0.25em] text-text-muted transition hover:text-text"
+        >
+          {editing ? "Listo" : "Ordenar"}
+        </button>
+      </div>
       <div className={grid ? "grid gap-3 sm:grid-cols-2" : "space-y-3"}>
-      {readModel.goals
-        .filter((g) => !g.archived)
-        .map((goal) => {
+      {order.map((id, i) => {
+          const goal = goalById.get(id)!;
           const theme = themeForGoal(goal.title);
           const mods = readModel.modules.filter((m) => m.goalId === goal.id && !m.archived);
           const mastered = mods.filter((m) => isMastered(m)).length;
           const available = mods.filter((m) => nodeStatus(m, readModel.edges, byId) === "available").length;
           const frac = mods.length ? mastered / mods.length : 0;
-          return (
+          const portal = (
             <button
-              key={goal.id}
-              onClick={() => onOpen(goal.id)}
-              className="group relative block w-full overflow-hidden rounded-[var(--r-lg)] border p-4 text-left transition hover:brightness-110"
+              key={editing ? undefined : goal.id}
+              type="button"
+              onClick={() => (editing ? undefined : onOpen(goal.id))}
+              aria-disabled={editing ? "true" : undefined}
+              className={`group relative block w-full min-w-0 overflow-hidden rounded-[var(--r-lg)] border p-4 text-left transition ${editing ? "cursor-default opacity-90" : "hover:brightness-110"}`}
               style={
                 {
                   ...worldVars(theme),
@@ -320,7 +381,7 @@ function WorldPortals({ readModel, onOpen, grid = false }: { readModel: ReadMode
                   <div className="font-display text-base leading-tight" style={{ color: readableAccent(theme.accent) }}>{goal.title}</div>
                   <div className="truncate font-serif text-[11px] italic text-text-muted">{theme.tagline}</div>
                 </div>
-                <span aria-hidden className="font-display text-base" style={{ color: "var(--accent)" }}>›</span>
+                {!editing && <span aria-hidden className="font-display text-base" style={{ color: "var(--accent)" }}>›</span>}
               </div>
               <div className="relative mt-3 flex items-center gap-3">
                 <div className="h-[3px] flex-1 overflow-hidden rounded-full bg-line">
@@ -333,7 +394,48 @@ function WorldPortals({ readModel, onOpen, grid = false }: { readModel: ReadMode
               </div>
             </button>
           );
+          if (!editing) return portal;
+          return (
+            <div key={goal.id} className="flex items-stretch gap-2">
+              {portal}
+              <div className="flex shrink-0 flex-col justify-center gap-2">
+                {([-1, 1] as const).map((dir) => (
+                  <button
+                    key={dir}
+                    type="button"
+                    ref={(el) => {
+                      const k = `${goal.id}:${dir}`;
+                      if (el) moveButtons.current.set(k, el);
+                      else moveButtons.current.delete(k);
+                    }}
+                    aria-label={`${dir === -1 ? "Subir" : "Bajar"} ${goal.title}`}
+                    disabled={dir === -1 ? i === 0 : i === order.length - 1}
+                    onClick={() => move(goal.id, dir)}
+                    className="tap grid place-items-center rounded-[var(--r-md)] border border-line font-display text-base text-text-muted transition hover:text-text disabled:opacity-30"
+                  >
+                    <span aria-hidden>{dir === -1 ? "↑" : "↓"}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+          );
         })}
+      </div>
+      {editing && (
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <p className="font-serif text-[11px] italic text-text-muted">{ORDER_DEVICE_ONLY}</p>
+          <button
+            type="button"
+            onClick={reset}
+            disabled={isDefault}
+            className="tap shrink-0 rounded-[var(--r-md)] border border-line px-3 text-[10px] uppercase tracking-[0.25em] text-text-muted transition hover:text-text disabled:opacity-30"
+          >
+            Restablecer orden
+          </button>
+        </div>
+      )}
+      <div aria-live="polite" className="sr-only">
+        {announce}
       </div>
     </div>
   );
@@ -357,7 +459,7 @@ function Footer({
   onAudio: () => void;
 }) {
   const { rebuild } = useActions();
-  const item = "min-h-11 text-[11px] uppercase tracking-[0.2em] text-text-faint transition";
+  const item = "tap px-2 text-[11px] uppercase tracking-[0.2em] text-text-faint transition";
   const sep = (
     <span className="text-text-faint" aria-hidden>
       ·
