@@ -28,6 +28,15 @@ export const SAFE_AREA_FILES = [
   "src/ui/VigiliaSheet.tsx",
   "src/ui/AuthSheet.tsx",
   "src/ui/InstallCoachMark.tsx",
+  // integración de la tanda 1 (anexo r2 [2]): el resto de la tabla de §7.2
+  "src/ui/HomeView.tsx",
+  "src/ui/LayoutToggle.tsx",
+  "src/ui/SyncStatus.tsx",
+  "src/forge/ui/ForgeCellPanel.tsx",
+  "src/forge/ui/OntologyEditor.tsx",
+  "src/forge/ui/flows/ontologia.tsx",
+  "src/forge/ui/exercises/HistorialRunner.tsx",
+  "src/forge/ui/exercises/SqlRunner.tsx",
 ] as const;
 
 const read = (rel: string) => readFileSync(path.join(ROOT, rel), "utf8");

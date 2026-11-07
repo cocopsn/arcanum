@@ -62,6 +62,8 @@ export interface DownloadOptions {
   figuras?: boolean;
   /** salta el aviso de espacio */
   forzar?: boolean;
+  /** Cancela la descarga (anexo r2 [17]): devuelve { ok: false, motivo: "cancelado" }, conserva lo ya guardado y la
+   *  fila de routes; la barra de Lecturas cancela al cerrarse. */
   signal?: AbortSignal;
   onProgress?(hecho: number, total: number, tipo: OfflineKind): void;
 }
@@ -70,7 +72,7 @@ export type DownloadResult =
   | { ok: true; estado: ScopeStatus; fallidos: { tipo: OfflineKind; id: string; motivo: string }[] }
   | {
       ok: false;
-      motivo: "sin-red" | "sin-espacio" | "no-disponible";
+      motivo: "sin-red" | "sin-espacio" | "no-disponible" | "cancelado";
       detalle: string;
       espacio?: { libreBytes: number; previstoBytes: number; cuotaFigurasBytes: number; figuras: number };
     };
