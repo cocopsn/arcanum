@@ -24,6 +24,9 @@ export const ESTILOS = `
   --cmp-texto: var(--text);
   --cmp-tenue: var(--text-muted);
   --cmp-acento: var(--text);
+  --cmp-dg-texto: var(--text);
+  --cmp-dg-trazo: var(--text-muted);
+  --cmp-dg-acento: var(--text);
   color: var(--cmp-texto);
 }
 #arcanum-companion .cmp-sr {
@@ -354,6 +357,68 @@ export const ESTILOS = `
   font: inherit;
   cursor: pointer;
 }
+#arcanum-companion .cmp-dg {
+  margin: 8px 0;
+  padding: 10px;
+  border-radius: 12px;
+  border: 1px solid var(--cmp-borde-panel);
+  background: var(--cmp-elevado);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+#arcanum-companion .cmp-dg-titulo {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+}
+#arcanum-companion .cmp-dg-svg {
+  width: 100%;
+  height: auto;
+  max-height: 60dvh;
+}
+#arcanum-companion .cmp-dg-marca {
+  margin: 0;
+  font-size: 12px;
+  color: var(--cmp-tenue);
+}
+#arcanum-companion .cmp-dg-aviso {
+  margin: 0 0 6px;
+  font-size: 13px;
+  color: var(--cmp-tenue);
+}
+#arcanum-companion .cmp-dg-codigo {
+  margin: 0;
+  padding: 8px;
+  overflow-x: auto;
+  font-family: ui-monospace, Menlo, monospace;
+  font-size: 12px;
+  white-space: pre-wrap;
+  word-break: break-word;
+  border-radius: 8px;
+  border: 1px solid var(--cmp-borde);
+}
+#arcanum-companion .cmp-dg-ta {
+  width: 100%;
+  min-height: 120px;
+  box-sizing: border-box;
+  padding: 8px;
+  font-family: ui-monospace, Menlo, monospace;
+  font-size: 12px;
+  border-radius: 8px;
+  border: 1px solid var(--cmp-borde);
+  background: var(--cmp-fondo);
+  color: var(--cmp-texto);
+}
+#arcanum-companion .cmp-dg-texto {
+  color: var(--cmp-dg-texto);
+}
+#arcanum-companion .cmp-dg-trazo {
+  color: var(--cmp-dg-trazo);
+}
+#arcanum-companion .cmp-dg-acento {
+  color: var(--cmp-dg-acento);
+}
 @keyframes cmp-parpadeo {
   0%, 96%, 100% { transform: scaleY(1); }
   98% { transform: scaleY(0.1); }
@@ -380,16 +445,25 @@ export const ESTILOS = `
   --cmp-texto: var(--forge-text);
   --cmp-tenue: var(--forge-text-muted);
   --cmp-acento: #ffffff;
+  --cmp-dg-texto: var(--forge-text);
+  --cmp-dg-trazo: var(--forge-control);
+  --cmp-dg-acento: var(--forge-text);
 }
 /* cmp:otros-mundos */
 #arcanum-companion [data-cmp-mundo]:not([data-cmp-mundo="forge"])[data-cmp-mundo="inicio"] {
   --cmp-acento: var(--rank);
   --cmp-borde-panel: var(--rank);
+  --cmp-dg-texto: var(--text);
+  --cmp-dg-trazo: var(--text-muted);
+  --cmp-dg-acento: var(--rank);
 }
 #arcanum-companion [data-cmp-mundo]:not([data-cmp-mundo="forge"])[data-cmp-mundo="mundo"] {
   --cmp-acento: var(--accent);
   --cmp-fondo: var(--surface);
   --cmp-borde-panel: color-mix(in srgb, var(--accent) 28%, var(--line));
+  --cmp-dg-texto: var(--text);
+  --cmp-dg-trazo: var(--text-muted);
+  --cmp-dg-acento: var(--accent);
 }
 #arcanum-companion [data-cmp-mundo]:not([data-cmp-mundo="forge"]) .cmp-aviso {
   border-color: var(--amber);

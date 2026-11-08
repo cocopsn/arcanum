@@ -4,10 +4,11 @@
 // de cita abren el visor por `alAbrirCita`.
 "use client";
 import { Markdown } from "./Markdown";
+import { Artefactos, BotonPdf } from "./Artefactos";
 import { citasValidas, enlazarCitas, idsEnviados, lineaFuentes } from "@/lib/companion/citas";
 import type { MensajeRow } from "@/lib/companion/db";
 
-export function Mensaje({ mensaje, alAbrirCita }: { mensaje: MensajeRow; alAbrirCita?: (id: string) => void }) {
+export function Mensaje({ mensaje, alAbrirCita, celdaId }: { mensaje: MensajeRow; alAbrirCita?: (id: string) => void; celdaId?: string | null }) {
   const esAprendiz = mensaje.rol === "aprendiz";
   const texto = mensaje.textoEditado ?? mensaje.texto;
 
@@ -27,6 +28,7 @@ export function Mensaje({ mensaje, alAbrirCita }: { mensaje: MensajeRow; alAbrir
     <div className="cmp-mensaje cmp-mensaje-companero">
       <Markdown texto={md} citasValidas={enviados} alAbrirCita={alAbrirCita} />
       <p className="cmp-fuentes">{lineaFuentes(resueltas)}</p>
+      {mensaje.artefactos.length > 0 && <Artefactos artefactos={mensaje.artefactos} celdaId={celdaId} />}
       {mensaje.plan.length > 0 && (
         <div className="cmp-plan">
           <p className="cmp-plan-titulo">Siguientes pasos</p>
@@ -40,6 +42,7 @@ export function Mensaje({ mensaje, alAbrirCita }: { mensaje: MensajeRow; alAbrir
           </ol>
         </div>
       )}
+      <BotonPdf respuesta={texto} titulo="Respuesta del compañero" citas={resueltas.map((c) => ({ titulo: c.titulo, seccion: c.seccion }))} />
     </div>
   );
 }

@@ -423,4 +423,19 @@ describe("colores.test.ts (design §7, reglas 1-7)", () => {
     const mut = conClaseMensaje('className="cmp-fuentes" ref={(el: HTMLElement | null) => el && Object.assign(el, { className: "text-violet-500" })}');
     redcheck(MENSAJE, mensaje, mut, "clase no verificable en /src/ui/companion/Mensaje.tsx");
   });
+
+  // ---- FEAT-005: (vi) sobre Diagrama.tsx y (vii) sobre svg-texto.ts ----
+  const DIAGRAMA = join(ROOT, "src", "ui", "companion", "diagrama", "Diagrama.tsx");
+  const diagrama = readFileSync(DIAGRAMA, "utf8");
+
+  it("(vi) stroke=\"purple\" en Diagrama.tsx → pinta color en Forge", () => {
+    const mut = diagrama.replace('stroke="currentColor" strokeDasharray="2 2"', 'stroke="purple" strokeDasharray="2 2"');
+    redcheck(DIAGRAMA, diagrama, mut, "el compañero pinta color en Forge: purple");
+  });
+
+  it("(vii) #8b5cf6 en svg-texto.ts → color fuera de la escala del diagrama", () => {
+    const svg = readFileSync(SVG_TEXTO, "utf8");
+    const mut = svg.replace('const TRAZO = "#494a4b";', 'const TRAZO = "#8b5cf6";');
+    redcheck(SVG_TEXTO, svg, mut, "la exportación del diagrama usa un color fuera de la escala: #8b5cf6");
+  });
 });

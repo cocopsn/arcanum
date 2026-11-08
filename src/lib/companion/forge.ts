@@ -45,6 +45,89 @@ export function diagnosticoVisible(code: string, readModel: ReadModel): boolean 
   return readModel.evidence.some((e) => e.moduleId === id);
 }
 
+// ---- Atlas (P1, §9.3) ----
+import { ATLAS_BASE, ATLAS_MANIFEST_PATH, type AtlasIndexRow, type AtlasManifest } from "@/forge/atlas/types";
+import { kAtlasValida } from "./citas";
+
+/** Tamaño de tanda al armar el índice en memoria (§9.3): 500 filas con `await` entre tandas. */
+export const TANDA_ATLAS = 500;
+
+/** Lee una URL del Atlas: primero `caches.match` (CacheFirst de arcanum-atlas-v1, sin red), si no, `fetch`. null si no
+ *  está en caché y no hay red (o la API no existe en este entorno). */
+async function leerAtlas(url: string): Promise<Response | null> {
+  try {
+    if (typeof caches !== "undefined" && typeof caches.match === "function") {
+      const c = await caches.match(url);
+      if (c) return c;
+    }
+  } catch {
+    /* sin Cache API: se intenta fetch */
+  }
+  if (typeof fetch !== "function") return null;
+  try {
+    const r = await fetch(url);
+    return r.ok ? r : null;
+  } catch {
+    return null;
+  }
+}
+
+/** Una fila `AtlasIndexRow` es válida si es la tupla de 10 campos esperada y su `k` es un path seguro (sin `..`). */
+export function filaAtlasValida(fila: unknown): fila is AtlasIndexRow {
+  if (!Array.isArray(fila) || fila.length !== 10) return false;
+  const [k, archivo, titulo, migas, tokens, encabezados, p, c, s, codigos] = fila as unknown[];
+  if (typeof k !== "string" || !kAtlasValida(k)) return false;
+  if (typeof archivo !== "string" || typeof titulo !== "string" || typeof tokens !== "string") return false;
+  if (typeof p !== "string" || typeof c !== "string" || typeof s !== "string") return false;
+  if (!Array.isArray(migas) || !Array.isArray(encabezados) || !Array.isArray(codigos)) return false;
+  return true;
+}
+
+/**
+ * Arma el índice del Atlas en inglés (§9.3): recorre `indices[lang="en"].files` del manifiesto, lee cada archivo con
+ * `caches.match` y si no con `fetch`, valida cada fila y su `k` (una fila inválida se SALTA, nunca da enlace) y las va
+ * entregando en tandas de 500 con `await` entre tandas (`alAvanzar` pinta «Cargando el Atlas»). Devuelve las filas
+ * válidas; una fila con `k` que trae `..` o fuera de la lista blanca no entra, así el visor nunca arma un enlace fuera
+ * de palantir.com/docs. Inyectables (`leer`, `base`) para las pruebas.
+ */
+export async function cargarIndiceAtlas(
+  opts: { base?: string; leer?: (url: string) => Promise<Response | null>; alAvanzar?: (cargadas: number, total: number) => void; manifiesto?: AtlasManifest } = {},
+): Promise<{ filas: AtlasIndexRow[]; saltadas: number }> {
+  const base = opts.base ?? ATLAS_BASE;
+  const leer = opts.leer ?? leerAtlas;
+  const manifiesto = opts.manifiesto ?? (await (async () => {
+    const r = await leer(opts.base ? `${base}/manifest.json` : ATLAS_MANIFEST_PATH);
+    return r ? ((await r.json()) as AtlasManifest) : null;
+  })());
+  if (!manifiesto) return { filas: [], saltadas: 0 };
+  const en = manifiesto.indices.find((i) => i.lang === "en");
+  if (!en) return { filas: [], saltadas: 0 };
+
+  const filas: AtlasIndexRow[] = [];
+  let saltadas = 0;
+  const total = en.rows || 0;
+  for (const archivo of en.files) {
+    const r = await leer(`${base}/${archivo}`);
+    if (!r) continue;
+    let datos: unknown;
+    try {
+      datos = await r.json();
+    } catch {
+      continue;
+    }
+    const crudas: unknown[] = Array.isArray(datos) ? datos : Array.isArray((datos as { rows?: unknown[] }).rows) ? (datos as { rows: unknown[] }).rows : [];
+    for (let i = 0; i < crudas.length; i += TANDA_ATLAS) {
+      for (const fila of crudas.slice(i, i + TANDA_ATLAS)) {
+        if (filaAtlasValida(fila)) filas.push(fila);
+        else saltadas++;
+      }
+      opts.alAvanzar?.(filas.length, total);
+      await Promise.resolve(); // cede el hilo entre tandas (§9.3)
+    }
+  }
+  return { filas, saltadas };
+}
+
 /** Lo que forge.ts expone al resto del compañero (pasajes.ts, ubicacion.ts), inyectado tras el import() perezoso. */
 export interface AdaptadorForge {
   libroForgeMd: typeof libroForgeMd;

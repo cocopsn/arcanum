@@ -10,6 +10,10 @@ const ROOT = process.cwd();
 const RAICES = [join(ROOT, "src", "ui", "companion"), join(ROOT, "src", "lib", "companion")];
 const ESTILOS = join(ROOT, "src", "ui", "companion", "estilos.ts");
 const SENSOR = join(ROOT, "src", "ui", "companion", "sensor.ts");
+const EDITOR_PLANO = join(ROOT, "src", "ui", "companion", "practica", "EditorPlano.tsx");
+/** La declaración exacta de `plano` (§18.5, regla 2 de §15): devuelve NODOS de React, nunca una cadena (si devolviera
+ *  una cadena, react-simple-code-editor la pintaría con dangerouslySetInnerHTML). */
+const PLANO_EXACTO = "const plano = (code: string): ReactNode => <>{code}<br /></>;";
 
 /** El sensor nunca lee el texto que el aprendiz escribe (§12.1): ni .value, ni innerText, ni FormData, ni
  *  selectionStart. Patrones que, de aparecer en sensor.ts, nombran archivo y línea. */
@@ -24,6 +28,10 @@ const LECTURAS_PROHIBIDAS: { re: RegExp; nombre: string }[] = [
 const SUMIDEROS = ["dangerouslySetInnerHTML", "innerHTML", "outerHTML", "insertAdjacentHTML", "createContextualFragment", "DOMParser", "document.write", "foreignObject"] as const;
 /** Declaraciones de CSP (DP-5): sólo src/lib/csp.mjs puede tenerlas. */
 const CSP = [/Content-Security-Policy/i, /\bhttp-equiv\b/i, /\bhttpEquiv\b/, /["'@/]*csp\.mjs/];
+/** Reglas 1-2 de §15 (sumidero de react-simple-code-editor). `react-simple-code-editor` sólo lo importa EditorPlano.tsx
+ *  (único lugar donde vive el sumidero `highlight`); nadie importa `prism-react-renderer`. */
+const RSCE = /from\s+["']react-simple-code-editor["']|require\(\s*["']react-simple-code-editor["']\s*\)/;
+const PRISM = /from\s+["']prism-react-renderer["']|require\(\s*["']prism-react-renderer["']\s*\)/;
 
 function esPrueba(p: string): boolean {
   return /[\\/]__tests__[\\/]/.test(p) || /\.test\.[cm]?tsx?$/.test(p) || /[\\/]generated[\\/]/.test(p);
@@ -55,23 +63,24 @@ function analizar(sustituciones: Record<string, string> = {}): string[] {
   const bad: string[] = [];
   for (const archivo of archivos) {
     const texto = sustituciones[archivo] ?? readFileSync(archivo, "utf8");
-    // sumideros
+    // Los comentarios (prosa que nombra foreignObject, dangerouslySetInnerHTML, --safe-*, etc. para explicar lo que el
+    // código NO hace) se blanquean conservando los saltos de línea: una regla sólo cuenta sobre código real.
+    const sinComentarios = texto.replace(/\/\*[\s\S]*?\*\/|\/\/[^\n]*/g, (c) => c.replace(/[^\n]/g, " "));
+    // sumideros (sobre el código sin comentarios)
     for (const s of SUMIDEROS) {
-      let idx = texto.indexOf(s);
+      let idx = sinComentarios.indexOf(s);
       while (idx >= 0) {
-        bad.push(`el compañero usa un sumidero de HTML sin escapar: ${s} en ${rel(archivo)}:${lineaEn(texto, idx)}`);
-        idx = texto.indexOf(s, idx + s.length);
+        bad.push(`el compañero usa un sumidero de HTML sin escapar: ${s} en ${rel(archivo)}:${lineaEn(sinComentarios, idx)}`);
+        idx = sinComentarios.indexOf(s, idx + s.length);
       }
     }
-    // CSP (DP-5)
+    // CSP (DP-5) (sobre el código sin comentarios)
     for (const re of CSP) {
-      const m = texto.match(re);
-      if (m) bad.push(`el compañero declara una CSP fuera de src/lib/csp.mjs: ${rel(archivo)}:${lineaEn(texto, texto.indexOf(m[0]))}`);
+      const m = sinComentarios.match(re);
+      if (m) bad.push(`el compañero declara una CSP fuera de src/lib/csp.mjs: ${rel(archivo)}:${lineaEn(sinComentarios, sinComentarios.indexOf(m[0]))}`);
     }
-    // safe-area: fuera de estilos.ts, en ningún lado; en estilos.ts, sólo en las cuatro líneas. Los comentarios
-    // (prosa: el encabezado nombra --safe-*) no cuentan; se blanquean conservando los saltos de línea.
+    // safe-area: fuera de estilos.ts, en ningún lado; en estilos.ts, sólo en las cuatro líneas.
     const sa = /safe-area-inset|--safe-/g;
-    const sinComentarios = texto.replace(/\/\*[\s\S]*?\*\/|\/\/[^\n]*/g, (c) => c.replace(/[^\n]/g, " "));
     if (archivo === ESTILOS) {
       let resto = sinComentarios;
       for (const l of LINEAS_SA) resto = resto.replace(l, " ".repeat(l.length));
@@ -85,6 +94,17 @@ function analizar(sustituciones: Record<string, string> = {}): string[] {
         const m = sinComentarios.match(re);
         if (m) bad.push(`el compañero leyó lo que escribes en una compuerta: ${nombre} en ${rel(archivo)}:${lineaEn(sinComentarios, sinComentarios.indexOf(m[0]))}`);
       }
+    }
+    // §15 regla 1: react-simple-code-editor sólo lo importa EditorPlano.tsx; nadie importa prism-react-renderer.
+    if (RSCE.test(sinComentarios) && archivo !== EDITOR_PLANO) {
+      bad.push(`el compañero importa react-simple-code-editor fuera de EditorPlano.tsx: ${rel(archivo)}:${lineaEn(sinComentarios, sinComentarios.search(RSCE))}`);
+    }
+    if (PRISM.test(sinComentarios)) {
+      bad.push(`el compañero importa prism-react-renderer: ${rel(archivo)}:${lineaEn(sinComentarios, sinComentarios.search(PRISM))}`);
+    }
+    // §15 regla 2: la declaración de `plano` de EditorPlano.tsx es EXACTA (devuelve nodos de React, nunca una cadena).
+    if (archivo === EDITOR_PLANO && !texto.includes(PLANO_EXACTO)) {
+      bad.push(`la declaración de plano en EditorPlano.tsx no es la exacta de §18.5 (podría devolver una cadena y la librería pintaría con dangerouslySetInnerHTML): ${rel(archivo)}`);
     }
   }
   return bad;
@@ -132,5 +152,29 @@ describe("fuentes-seguras.test.ts (design §15, DP-5)", () => {
     const sensor = readFileSync(SENSOR, "utf8");
     const mut = sensor.replace("const resume = loadResume();", 'const resume = loadResume();\n  const robado = (doc.querySelector("textarea") as HTMLTextAreaElement | null)?.value;');
     redcheck(SENSOR, sensor, mut, "el compañero leyó lo que escribes en una compuerta: .value en /src/ui/companion/sensor.ts");
+  });
+
+  // ---- FEAT-005 tarea 33: reglas 1-2 de §15 (sumidero de react-simple-code-editor) ----
+  it("sólo EditorPlano.tsx importa react-simple-code-editor; nadie importa prism-react-renderer; plano es la exacta", () => {
+    expect(analizar()).toEqual([]);
+  });
+
+  it("red-check: react-simple-code-editor importado en una copia de Practica.tsx → fuera de EditorPlano.tsx", () => {
+    const PRACTICA = join(ROOT, "src", "ui", "companion", "practica", "Practica.tsx");
+    const practica = readFileSync(PRACTICA, "utf8");
+    const mut = practica.replace('import { EditorPlano } from "./EditorPlano";', 'import { EditorPlano } from "./EditorPlano";\nimport Editor from "react-simple-code-editor";');
+    redcheck(PRACTICA, practica, mut, "el compañero importa react-simple-code-editor fuera de EditorPlano.tsx");
+  });
+
+  it("red-check: prism-react-renderer importado en una copia de EditorPlano.tsx → nombrado", () => {
+    const editorPlano = readFileSync(EDITOR_PLANO, "utf8");
+    const mut = editorPlano.replace('import Editor from "react-simple-code-editor";', 'import Editor from "react-simple-code-editor";\nimport { Highlight } from "prism-react-renderer";');
+    redcheck(EDITOR_PLANO, editorPlano, mut, "el compañero importa prism-react-renderer");
+  });
+
+  it("red-check: plano devuelve una cadena en una copia de EditorPlano.tsx → no es la declaración exacta", () => {
+    const editorPlano = readFileSync(EDITOR_PLANO, "utf8");
+    const mut = editorPlano.replace(PLANO_EXACTO, "const plano = (code: string): string => code;");
+    redcheck(EDITOR_PLANO, editorPlano, mut, "la declaración de plano en EditorPlano.tsx no es la exacta");
   });
 });
