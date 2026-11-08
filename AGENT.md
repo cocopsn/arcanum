@@ -118,9 +118,9 @@ POST $KEE_ENDPOINT   (Authorization: Bearer $KEE_API_KEY  — opcional)
 
 ## Engineering Forge: acciones de `ai-router`
 
-Acciones en el código de la función: `ocr`, `sleep`, `evaluate`, `tutor`, `lesson`, `gate`, `interrogate` y
-`forge_judge` (8). El diseño contaba 9 con `forge_interview`, que **no está implementada** en esta versión: la
-entrevista lo dice y no ofrece veredicto.
+Acciones en el código de la función: `ocr`, `sleep`, `evaluate`, `tutor`, `lesson`, `gate`, `interrogate`,
+`forge_judge` y `companion` (9). El diseño de Forge contaba 9 con `forge_interview`, que **no está implementada** en
+esta versión: la entrevista lo dice y no ofrece veredicto. `companion` la agregó este flujo (ver «Compañero»).
 
 - **`forge_judge`.** Recibe el contexto que arma `buildForgeJudgeContext` (entrega, giro, apoyo y evidencia local) y
   responde JSON con `capabilities` (0-4 por esencial), `critical` (`id`, `passed`), `failureMode`, `questions`,
@@ -179,13 +179,16 @@ degrada al buscador local sin ambigüedad.
   Azure con las credenciales de `az` (sólo imprime la huella de la llave); `sonda-viva.mjs` prueba la Edge desplegada
   con un magiclink de admin; `js-aislado.mjs` corre código del modelo en un hijo `node --permission` con el entorno
   vacío.
-- **Estado.** En la rama `feat/companion-r3`, **no desplegada**. El despliegue lo hace el orquestador (D2), nunca un
-  agente de este flujo:
+- **Estado final (cierre F5).** El compañero está **implementado y probado en local** en la rama `feat/companion-r3`:
+  F0 contratos e índice, F1 acción `companion` de la Edge, F2 burbuja, F3 buscar y conversar, F4 artefactos y F5
+  cierre (documentos, puertas, E2E aislado y controles). **No está en `main` ni desplegado.** El merge, el despliegue
+  de la app (Vercel) y el de la Edge los hace el orquestador (D2), nunca un agente de este flujo:
 
   ```
   supabase functions deploy ai-router --project-ref tssmjabfszndxwlpzngv
   ```
 
   Después se corre `node scripts/companion/sonda-viva.mjs` (RF-E10). Mientras la Edge desplegada no tenga
-  `companion`, la app (cuando llegue la conversación, F3) muestra el aviso de Edge vieja y el buscador local sigue
-  funcionando.
+  `companion`, la app muestra el aviso de Edge vieja y el buscador local sigue funcionando. Las cifras de las siete
+  puertas y la evidencia del E2E viven en `.agents/tasks/arcanum-companion/` (`puertas-impl.json`,
+  `e2e/resultados.json`, `e2e/conteo.json`, `redchecks.md`).

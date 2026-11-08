@@ -188,4 +188,54 @@ and none silently worse; #1–#3 keep their low rating for a single-user trusted
 - **Banks.** Every Forge bank is authored in this repo. Debt #7 (structural sandbox) is unchanged: it becomes
   blocking only if banks are ever imported from third parties.
 
-See also: [ARCHITECTURE.md](ARCHITECTURE.md) · [OPERATIONS.md](OPERATIONS.md).
+## 8. The Companion (floating bubble)
+
+The companion is the app's floating helper: a local BM25 search over the owner's books and banks, plus an optional
+call to the `companion` action of the Edge `ai-router`. Its whole surface treats model output and learner text as
+untrusted. Design: `.agents/tasks/arcanum-companion/design.md` (§12-§18).
+
+- **Model markdown renders without HTML.** `src/ui/companion/Markdown.tsx` wraps `ReactMarkdown` with `remark-gfm`
+  and **no `rehype-raw`**, so any HTML the model emits stays as text, never nodes. `urlTransform` (`markdown-urls.ts`)
+  keeps only `https:` links and `#cita-P[1-8]` anchors; every other protocol (including `javascript:`) is emptied.
+  The model never paints an `<img>` (it degrades to `[imagen: alt]`, so no request leaves through a model image),
+  `https:` links open in a new tab with `rel="noopener noreferrer"`, and a citation becomes a button only when its id
+  is in the message's passage table. `markdown.test.tsx` has the red-check: adding `rehype-raw` in the test makes a
+  `script`/`img` appear and names it (CA-28).
+- **Diagrams carry no model HTML.** The companion parses only a small subset of the diagram language; a sentence
+  outside the subset is dropped. The SVG is built from parsed nodes, never from a model-provided string, and the
+  renderer does not use `dangerouslySetInnerHTML`. `diagrama-svg.test.tsx`'s red-check copies the component with
+  `dangerouslySetInnerHTML` and fails with «un diagrama ejecutó HTML del modelo» (CA-25, CA-26).
+- **Practice editor — the `react-simple-code-editor` sink.** The library paints with `dangerouslySetInnerHTML` **only
+  when its `highlight` prop returns a string**. `src/ui/companion/practica/EditorPlano.tsx` passes
+  `highlight={plano}`, where `plano` returns **React nodes** (`<>{code}<br/></>`), which React escapes. So the model's
+  hostile signature and whatever the learner types are never interpreted as HTML — that is the reason for the plain
+  highlight, with no Prism. `editor-hostil.test.tsx`'s red-check copies the editor with `highlight={(c) => c}`
+  (a string) and fails with «el editor de práctica interpretó HTML del modelo» (protection h). A `fuentes-seguras`
+  rule also forbids importing `react-simple-code-editor` from any other companion file or using a string highlight.
+- **PDF has no actions.** The exported PDF is assembled byte by byte with no `/OpenAction`, `/URI` or other action
+  entries. `pdf.test.ts`'s red-check injects `/OpenAction` into the bytes and fails with «el PDF trae una acción:
+  /OpenAction» (CA-29).
+- **Generated code runs only in the Worker or in `js-aislado`.** Code the model generates for a practice batch is
+  validated in the Pyodide/JS Worker, or, for the server-side isolation path, in a `node --permission` child with an
+  empty environment (`scripts/companion/js-aislado.mjs`): a `vm` timeout, the child killed if it hangs, no inherited
+  env, and `--allow-fs-read` scoped to the child only. It never runs on the main thread or touches the owner's event
+  log. Its red-checks live in `js-aislado.test.ts` (timeout, env wiped, permission model, parent kills the child).
+- **What goes to the AI** (§12.5). Only the passages the search selected, the minimal location/phase context and the
+  learner's question — never the whole book, never other cells' notes, never retention text, never the conversation
+  log. A reserved-content redactor runs fail-closed before the request: if the reserved table can't load for a Forge
+  world, no request leaves (the transport is never called) and the UI shows the fail-closed notice. `consultar.test.ts`
+  and `contexto-edge.test.ts` carry those red-checks.
+- **Base `arcanum-companion`.** UI state, the per-minute rate limit and the conversation live in the IndexedDB base
+  `arcanum-companion`, separate from the app's event log. The conversation never becomes an `event`:
+  `conversacion-log.test.tsx`'s red-check fires an event per message and fails with «la conversación entró al log».
+- **CSP is unchanged.** The companion adds no CSP directive and imports no `csp.mjs`. CSP still lives in the single
+  source `src/lib/csp.mjs` applied by `next.config.mjs`. A `fuentes-seguras` rule forbids any companion file from
+  declaring `Content-Security-Policy`/`http-equiv`/`httpEquiv` or importing `csp.mjs`, and the finalize step checks
+  `git diff origin/main -- src/lib/csp.mjs next.config.mjs` is empty (DP-5).
+- **The D12 reserved-text filter is an interface, not a security boundary.** The filter keeps Forge's reserved
+  twist/retention text out of the index and out of what is sent to the model, so the companion doesn't spoil a
+  diagnostic. It is a product honesty measure (a clean interface), not a sandbox: the security boundaries are the
+  no-HTML render, the code isolation and the no-action PDF above. If the reserved table is missing it fails closed
+  (above), but it is not relied on to contain a malicious model.
+
+See also: [ARCHITECTURE.md](ARCHITECTURE.md) · [OPERATIONS.md](OPERATIONS.md) · [AGENT.md](AGENT.md).
