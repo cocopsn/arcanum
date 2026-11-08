@@ -4,12 +4,12 @@
   "private": true,
   "packageManager": "pnpm@10.33.2",
   "scripts": {
-    "dev": "node scripts/forge/books-publish.mjs && node scripts/forge/library-index.mjs && node scripts/forge/offline-index.mjs && next dev",
-    "build": "node scripts/forge/books-publish.mjs && node scripts/forge/library-index.mjs && node scripts/forge/offline-index.mjs && node scripts/forge/oembed-fetch.mjs --build && node scripts/forge/youtube-import.mjs --if-key && next build",
+    "dev": "node scripts/forge/books-publish.mjs && node scripts/forge/library-index.mjs && node scripts/forge/offline-index.mjs && node scripts/companion/build-index.mjs && next dev",
+    "build": "node scripts/forge/books-publish.mjs && node scripts/forge/library-index.mjs && node scripts/forge/offline-index.mjs && node scripts/forge/oembed-fetch.mjs --build && node scripts/forge/youtube-import.mjs --if-key && node scripts/companion/build-index.mjs && next build",
     "start": "next start",
     "lint": "next lint",
-    "typecheck": "node scripts/forge/books-publish.mjs && node scripts/forge/library-index.mjs && node scripts/forge/offline-index.mjs && tsc --noEmit",
-    "test": "node scripts/forge/books-publish.mjs && node scripts/forge/library-index.mjs && node scripts/forge/offline-index.mjs && vitest run",
+    "typecheck": "node scripts/forge/books-publish.mjs && node scripts/forge/library-index.mjs && node scripts/forge/offline-index.mjs && node scripts/companion/build-index.mjs && tsc --noEmit",
+    "test": "node scripts/forge/books-publish.mjs && node scripts/forge/library-index.mjs && node scripts/forge/offline-index.mjs && node scripts/companion/build-index.mjs && vitest run",
     "test:watch": "vitest",
     "icons": "node scripts/generate-icons.mjs",
     "loc": "node scripts/loc.mjs",
@@ -24,7 +24,9 @@
     "forge:bank-check": "node scripts/forge/bank-check.mjs",
     "forge:anticopy": "node scripts/forge/anticopy.mjs",
     "forge:budget": "node scripts/forge/budget-report.mjs",
-    "forge:probe": "node scripts/forge/probe-prod.mjs"
+    "forge:probe": "node scripts/forge/probe-prod.mjs",
+    "companion:index": "node scripts/companion/build-index.mjs",
+    "companion:budget": "node scripts/companion/budget.mjs"
   },
   "dependencies": {
     "@dagrejs/dagre": "^3.0.0",
