@@ -3,7 +3,7 @@ import { forgeVerdictPasses, type ForgeCapability, type ForgeFailureMode, type F
 import type { PendingAiRM } from "@/core/read-model";
 import { buildForgeJudgeContext, FORGE_QUEUE_MOTIVOS, invokeForge, mintTargetFor, slugForCode, type ForgeInvokeResult, type ForgeJudgeContext, type ForgeJudgeReply } from "@/forge/ai";
 import type { ForgeApoyo, ForgeScope, ForgeVerdictKind } from "@/forge/ai-port";
-import type { ForgeBankItem } from "@/forge/bank/registry";
+import type { ForgeBankItem, ForgeItemOf } from "@/forge/bank/registry";
 import { ensureForgeBank, loadForgeBankItems, loadForgeRoute, type EnsureBankResult } from "@/forge/loaders";
 import type { ForgeRouteData } from "@/forge/route-data";
 
@@ -16,6 +16,8 @@ import type { ForgeRouteData } from "@/forge/route-data";
 
 export const MOTIVO_SIN_BANCO = "falta el banco de la ruta en este dispositivo: descárgalo";
 export const MOTIVO_SIN_RUTA = "faltan los datos de la ruta en este dispositivo";
+export const MOTIVO_BANCO_IMPORTADO = "el banco importado es de una versión anterior: vuelve a importarlo";
+const motivoPendiente = (r: EnsureBankResult | null) => (r?.ok && !r.refreshed ? MOTIVO_BANCO_IMPORTADO : MOTIVO_SIN_BANCO);
 
 /** The queued input (§10.6). `entrega` and `apoyo` of a gate never travel here: `missionEventId` does. */
 export interface ForgeQueuedInput {
@@ -103,14 +105,21 @@ export async function drainForgeItem(p: PendingAiRM, deps: ForgeDrainDeps, now =
   const cell = route?.cells.find((c) => c.code === input.cellCode && c.id === p.moduleId) ?? null;
   if (!route || !cell) return keep(MOTIVO_SIN_RUTA);
 
-  // M2: the bank must be on this device; ensure it, and never grade without it.
+  // M2: the bank must be on this device; ensure it, and never grade without it. A row with old pendings (a
+  // retention whose type was a stub before this release) is revalidated before a retention is looked up (H13).
   let bank = await deps.loadBankItems(cell.code);
-  if (!bank) {
-    const r = await deps.ensureBank(cell.code);
-    if (!r.ok) return keep(MOTIVO_SIN_BANCO);
-    bank = await deps.loadBankItems(cell.code);
-    if (!bank) return keep(MOTIVO_SIN_BANCO);
+  let reval: EnsureBankResult | null = null;
+  if (!bank || (input.retencionItemId && bank.pendientes.length > 0)) {
+    reval = await deps.ensureBank(cell.code);
+    if (reval.ok) bank = (await deps.loadBankItems(cell.code)) ?? bank;
   }
+  if (!bank) return keep(MOTIVO_SIN_BANCO);
+  const ret = input.retencionItemId
+    ? bank.items.find((i): i is ForgeItemOf<"retencion"> => i.type === "retencion" && i.itemId === input.retencionItemId)
+    : undefined;
+  if (input.retencionItemId && (!ret || ret.data.forma !== "defensa")) return invalida("retencion-desconocida");
+  if (ret && bank.pendientes.includes(ret.id)) return keep(motivoPendiente(reval));
+  const retencion = ret ? { enunciado: ret.statement, rubrica: ret.data.forma === "defensa" ? ret.data.rubrica : [] } : undefined;
 
   const events = await deps.events();
   const built = buildForgeJudgeContext({
@@ -124,6 +133,7 @@ export async function drainForgeItem(p: PendingAiRM, deps: ForgeDrainDeps, now =
     giro: bankGiro(bank),
     artefactoEventIds: input.artefactoEventIds,
     retencionItemId: input.retencionItemId,
+    retencion,
     respuesta: input.respuesta,
     local: input.local,
   });

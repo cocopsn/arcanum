@@ -259,8 +259,11 @@ interface BankCheckModule {
   the caller's runners (`runJs` Worker, `runPy`); without them the bank is rejected, never run on the main thread.
 - **Pending rule.** A check answering `{ disponible: false }` (a Phase-0 stub) leaves its item **pending**: accepted
   without validation, stored in `ExerciseBankRow.pendientes`, never returned by `loadBankForModule`. A real check that
-  fails still rejects the whole bank. Real checks shipped in Phase 0: `giro`, `expediente`, `entrevista`, `gameday`,
-  `recuperacion`, `senal`, `prediccion`; the other 9 are stubs that their owner branch replaces file by file.
+  fails still rejects the whole bank. Real checks: `giro`, `expediente`, `entrevista`, `gameday`, `recuperacion`,
+  `senal`, `prediccion`, `sql`, `ontologia`, `permisos`, `historial` (both `traza` and `fallas`), and the five that
+  were stubs — `contraejemplo`, `desvanecido`, `forense`, `mutantes`, `retencion` — each with its `check` (structure,
+  never executes) and, where there is author code, a `js`/`py` step run only at import; `diagnostico`, `proyecto`
+  and the remaining flow stubs are what their owner branch still replaces file by file.
 - `banks.test.ts` fails on a current verification that records `resultado: "fallo"`; with `FORGE_BANKS_STRICT=1` it
   also fails when a bank with executable author steps has no current run.
 
@@ -291,17 +294,17 @@ is not merged yet (maestro, catalog, Atlas, videos) is reported as pending, not 
 ### 6.5 State at integration (2026-11-06)
 
 - **128 books and 128 banks** across F0-F2, P1-P4, S1-S2, SW1-SW4, A1-A2 and SD-01 to SD-12, with their
-  verification files. `bank-check --all`: 0 failures; 21 banks keep items «sin verificar» for types without a
-  harness. The strict gate passes.
+  verification files. `bank-check --all`: 0 failures and **0 items «sin verificar»** (the 21 banks that used to keep
+  `contraejemplo`, `mutantes`, `forense` and S2-02's `historial` fallas unverified now run them in `node:vm` and the
+  forense harness). The strict gate passes. `library-index.json`: no cell has pending items.
 - **Without book or bank («Libro pendiente», state «Especificado»):** P5-01 to P5-08. D1-D8 and X01-X24 are
   statement + deliverable cells and have no book by design.
-- **Types with their stub** («aún no está disponible en esta versión», never offered): runners `contraejemplo`,
-  `desvanecido`, `forense`, `gameday`, `mutantes`, `retencion`; flows `diagnostico`, `entrevista`, `expediente`,
-  `gameday`, `proyecto`. Ingestion checks still on the shared stub: `contraejemplo`, `desvanecido`, `forense`,
-  `mutantes`, `retencion`; banks that use them are accepted with those items pending and stay «Autorado» at most.
-- **Interactive types:** `ontologia` (Ontology Forge), `sql`, `historial` (mode `traza`; mode `fallas` keeps the
-  pending text), `permisos`, `recuperacion`,
-  `prediccion`, `senal`, plus the mission flow (`ForgeMission`), whose verdicts queue until the Edge is deployed.
+- **Types now real (with their evaluator, runner and ingestion check):** `contraejemplo`, `desvanecido`, `forense`,
+  `mutantes`, `retencion`, and `historial` in mode `fallas`. No bank stays «Autorado» for one of these types any
+  more; `diagnostico`, `gameday`, `entrevista`, `expediente` and `proyecto` flows are still pending by design.
+- **Interactive types:** `ontologia` (Ontology Forge), `sql`, `historial` (both `traza` and `fallas`), `permisos`,
+  `recuperacion`, `prediccion`, `senal`, plus the five above and the mission flow (`ForgeMission`), whose retention
+  defense verdicts queue until the Edge is deployed.
 
 ---
 

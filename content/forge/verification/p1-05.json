@@ -20,21 +20,20 @@
    "tipo": "code",
    "lenguaje": "python",
    "resultado": "paso",
-   "ms": 49
+   "ms": 55
   },
   {
    "id": "forense-panel-cobros",
    "tipo": "forense",
    "lenguaje": "sql",
-   "resultado": "sin-verificar",
-   "ms": 0,
-   "detalle": "sin arnés scripts/forge/bank-check/forense.py"
+   "resultado": "paso",
+   "ms": 65
   }
  ],
  "resumen": {
   "ejecutables": 3,
-  "cubiertos": 2,
+  "cubiertos": 3,
   "fallidos": 0,
-  "sin_verificar": 1
+  "sin_verificar": 0
  }
 }

@@ -4,8 +4,9 @@ import type { ReadModel } from "@/core/read-model";
 import type { ForgeBankItem, ForgeType } from "@/forge/bank/registry";
 
 // LAZY REGISTRY of the practice runners of the Forge types that appear in ExerciseMode's «Evaluaciones» list
-// (design §9.5, §22.3): a–f, k, `retencion` (forma codigo) and l–p where they are bank practice. `entrevista`,
-// `expediente`, `giro` and `retencion` in forma defensa are NOT here: the cell's flows consume them. Every entry is
+// (design §9.5, §22.3, §5.7): a–f, k, `retencion` (both forms) and l–p where they are bank practice. `entrevista`,
+// `expediente` and `giro` are NOT here: the cell's flows consume them. Retention in forma defensa IS offered now
+// (its runner queues the defense to the AI through submitForgeVerdict). Every entry is
 // next/dynamic with ssr:false over a dynamic import, never a static import; nobody edits this map after Phase 0 (a
 // branch replaces its <Tipo>Runner.tsx file). Tests call RUNNER_LOADERS (the components themselves are imported
 // statically in UI tests).
@@ -58,9 +59,8 @@ export const RUNNERS: Record<RunnerType, ComponentType<RunnerProps>> = {
   gameday: dynamic(() => import("./GamedayRunner"), { ssr: false, loading }),
 };
 
-/** Whether an item is offered in the «Evaluaciones» list (retencion only in forma codigo). */
+/** Whether an item is offered in the «Evaluaciones» list (both forms of retencion, §5.7). */
 export function isSelectable(item: ForgeBankItem): boolean {
   if (item.type === "entrevista" || item.type === "expediente" || item.type === "giro") return false;
-  if (item.type === "retencion") return item.data.forma === "codigo";
   return true;
 }

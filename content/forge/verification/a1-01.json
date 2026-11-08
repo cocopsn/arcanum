@@ -13,43 +13,41 @@
    "tipo": "desvanecido",
    "lenguaje": "javascript",
    "resultado": "paso",
-   "ms": 3
+   "ms": 5
   },
   {
    "id": "a1-01-contra-primera",
    "tipo": "contraejemplo",
    "lenguaje": "javascript",
-   "resultado": "sin-verificar",
-   "ms": 0,
-   "detalle": "sin arnés scripts/forge/bank-check/contraejemplo.py"
+   "resultado": "paso",
+   "ms": 0
   },
   {
    "id": "a1-01-code-inversiones",
    "tipo": "code",
    "lenguaje": "javascript",
    "resultado": "paso",
-   "ms": 6
+   "ms": 2
   },
   {
    "id": "a1-01-code-inversiones",
    "tipo": "code",
    "lenguaje": "python",
    "resultado": "paso",
-   "ms": 151
+   "ms": 140
   },
   {
    "id": "a1-01-mut-frontera",
    "tipo": "mutantes",
    "lenguaje": "javascript",
-   "resultado": "sin-verificar",
-   "ms": 0,
-   "detalle": "sin arnés scripts/forge/bank-check/mutantes.py"
+   "resultado": "paso",
+   "ms": 0
   }
  ],
  "resumen": {
   "ejecutables": 5,
-  "cubiertos": 3,
+  "cubiertos": 5,
   "fallidos": 0,
-  "sin_verificar": 2
+  "sin_verificar": 0
  }
 }

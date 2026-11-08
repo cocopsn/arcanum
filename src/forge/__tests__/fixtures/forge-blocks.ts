@@ -80,7 +80,7 @@ function suma(xs) {
 
 ### Niveles
 - 1: 1
-- 2: 1, 2
+- 2: 1, 2, 3
 
 ### Rúbrica
 - Menciona el elemento neutro de la suma.`,
@@ -344,6 +344,7 @@ CREATE TABLE pedidos (id INTEGER, total REAL);
 ### Datos
 ~~~sql
 INSERT INTO pedidos VALUES (1, 10.0);
+INSERT INTO pedidos VALUES (2, 5.0);
 ~~~
 
 ### Pipeline
@@ -351,12 +352,12 @@ INSERT INTO pedidos VALUES (1, 10.0);
 -- paso: limpiar
 CREATE VIEW limpios AS SELECT * FROM pedidos;
 -- paso: unir
-CREATE VIEW unidos AS SELECT * FROM limpios;
+CREATE VIEW unidos AS SELECT l.id, l.total FROM limpios l JOIN pedidos p ON p.id >= l.id;
 ~~~
 
 ### Invariantes
 ~~~json
-[{ "id": "inv-conteo", "tipo": "conteo", "sobre": "unidos", "esperado": 1 }]
+[{ "id": "inv-conteo", "tipo": "conteo", "sobre": "unidos", "esperado": 2 }]
 ~~~
 
 ### Mentiras
@@ -368,11 +369,13 @@ CREATE VIEW unidos AS SELECT * FROM limpios;
 ~~~sql
 -- paso: limpiar
 CREATE VIEW limpios AS SELECT * FROM pedidos;
+-- paso: unir
+CREATE VIEW unidos AS SELECT l.id, l.total FROM limpios l JOIN pedidos p ON p.id = l.id;
 ~~~
 
 ### Control de referencia
 ~~~sql
-SELECT 1 FROM unidos HAVING COUNT(*) > 1;
+SELECT id FROM unidos GROUP BY id HAVING COUNT(*) > 1
 ~~~`,
 
   permisos: `## Quién ve el join

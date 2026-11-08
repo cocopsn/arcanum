@@ -12,22 +12,21 @@
    "id": "s1-03-contra-primera-posicion",
    "tipo": "contraejemplo",
    "lenguaje": "javascript",
-   "resultado": "sin-verificar",
-   "ms": 0,
-   "detalle": "sin arnés scripts/forge/bank-check/contraejemplo.py"
+   "resultado": "paso",
+   "ms": 0
   },
   {
    "id": "s1-03-sql-ventana",
    "tipo": "sql",
    "lenguaje": "sql",
    "resultado": "paso",
-   "ms": 84
+   "ms": 110
   }
  ],
  "resumen": {
   "ejecutables": 2,
-  "cubiertos": 1,
+  "cubiertos": 2,
   "fallidos": 0,
-  "sin_verificar": 1
+  "sin_verificar": 0
  }
 }

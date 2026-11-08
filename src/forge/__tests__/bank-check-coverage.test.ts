@@ -105,7 +105,7 @@ const EXEC_FENCE = /^\s*(?:```|~~~)\s*(js|javascript|mjs|py|python|python3|sql|s
 describe("bank-check · no executable item of the bank is left without an entry (D9)", () => {
   const items = parseBank(BANK) as { id: string; tipo: string; secciones: { cuerpo: string }[] }[];
   const executable = items.filter((it) => it.secciones.some((s) => EXEC_FENCE.test(`\n${s.cuerpo}`))).map((it) => it.id);
-  const r = checkBank(root, "P2-06") as { ok: boolean; error?: string; ver: { items: { id: string; lenguaje: string; resultado: string }[] } };
+  const r = checkBank(root, "P2-06") as { ok: boolean; error?: string; ver: { items: { id: string; lenguaje: string; resultado: string; detalle?: string }[] } };
 
   it("the bank has executable items of several types", () => {
     expect(r.error).toBeUndefined();
@@ -164,11 +164,15 @@ ${J}
     expect(h.ver.items.map((e) => e.lenguaje).sort()).toEqual(["javascript", "python"]);
   });
 
-  it("JS steps shaped like code run under node:vm; the rest stays «sin-verificar», never «paso»", () => {
+  it("JS types with a verifier (code shaped and contraejemplo/mutantes/fallas) run under node:vm; Python/SQL without a harness stays «sin-verificar»", () => {
     const by = (id: string) => r.ver.items.filter((e) => e.id === id).map((e) => `${e.lenguaje}:${e.resultado}`);
+    const detail = (id: string) => r.ver.items.filter((e) => e.id === id).map((e) => e.detalle ?? "");
     expect(by("p206-desv-version")).toEqual(["javascript:paso"]);
     expect(by("p206-ret-timeout")).toEqual(["javascript:paso"]);
-    expect(by("p206-mut")).toEqual(["javascript:sin-verificar"]);
+    // p206-mut has only ### Referencia (no Firma, no Mutantes, no Casos dorados): the JS verifier runs and fails,
+    // naming the missing section — never «sin-verificar», which would hide a broken item behind «Verificado».
+    expect(by("p206-mut")).toEqual(["javascript:fallo"]);
+    expect(detail("p206-mut").join(" ")).toContain("secciones de mutantes");
     expect(by("p206-sql")).toEqual(["sql:sin-verificar"]);
     expect(by("p206-giro")).toEqual([]);
   });

@@ -20,28 +20,27 @@
    "tipo": "code",
    "lenguaje": "python",
    "resultado": "paso",
-   "ms": 50
+   "ms": 48
   },
   {
    "id": "resumen-medico",
    "tipo": "sql",
    "lenguaje": "sql",
    "resultado": "paso",
-   "ms": 85
+   "ms": 80
   },
   {
    "id": "forense-citas",
    "tipo": "forense",
    "lenguaje": "sql",
-   "resultado": "sin-verificar",
-   "ms": 0,
-   "detalle": "sin arnés scripts/forge/bank-check/forense.py"
+   "resultado": "paso",
+   "ms": 70
   }
  ],
  "resumen": {
   "ejecutables": 4,
-  "cubiertos": 3,
+  "cubiertos": 4,
   "fallidos": 0,
-  "sin_verificar": 1
+  "sin_verificar": 0
  }
 }

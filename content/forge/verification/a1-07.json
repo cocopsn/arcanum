@@ -13,15 +13,14 @@
    "tipo": "desvanecido",
    "lenguaje": "javascript",
    "resultado": "paso",
-   "ms": 3
+   "ms": 2
   },
   {
    "id": "a1-07-contra-corto",
    "tipo": "contraejemplo",
    "lenguaje": "javascript",
-   "resultado": "sin-verificar",
-   "ms": 0,
-   "detalle": "sin arnés scripts/forge/bank-check/contraejemplo.py"
+   "resultado": "paso",
+   "ms": 0
   },
   {
    "id": "a1-07-code-dijkstra",
@@ -41,15 +40,14 @@
    "id": "a1-07-mut-greedy",
    "tipo": "mutantes",
    "lenguaje": "javascript",
-   "resultado": "sin-verificar",
-   "ms": 0,
-   "detalle": "sin arnés scripts/forge/bank-check/mutantes.py"
+   "resultado": "paso",
+   "ms": 0
   }
  ],
  "resumen": {
   "ejecutables": 5,
-  "cubiertos": 3,
+  "cubiertos": 5,
   "fallidos": 0,
-  "sin_verificar": 2
+  "sin_verificar": 0
  }
 }
