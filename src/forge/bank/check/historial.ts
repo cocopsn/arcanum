@@ -1,21 +1,24 @@
-import type { BankCheck } from "@/lib/exercises-validate";
+import type { BankCheck, BankCheckJs, BankCheckModule } from "@/lib/exercises-validate";
 import type { ForgeBankItem } from "@/forge/bank/registry";
+import type { Lang } from "@/lib/exercise";
 import { compileActors, compileInvariant, enumerateInterleavings, simulateHistory } from "@/forge/eval/history-sim";
+import { gradeFaults } from "@/forge/eval/history-faults";
 
-// Ingestion check of `historial` (design §9.3 c, §9.2, D8).
+// Ingestion check of `historial` (design §9.3 c, §9.2, D8, §5.6).
 // - Modo `traza`: everything is TypeScript over the block's data (closed grammar, no eval), so it runs in `check`
 //   and never executes code: every step and the invariant parse; with `violar`, the reference history is feasible and
 //   violates; with `proteger`, the reference protocol does not violate in any feasible interleaving and at least one
 //   other protocol does; ≤ 50,000 feasible interleavings.
-// - Modo `fallas`: its grading (the learner's code + the harness in the Worker) is not in this version yet, so the item
-//   stays PENDING (`{ disponible: false }`): accepted, never offered, and the bank at most «Autorado» (§9.2, §22.5).
+// - Modo `fallas`: `check` returns { ok: true } (the parser already demands the harness, calendars, solution and
+//   naive per language); `js.check`/`py.check` run ONLY at import: the solution passes every calendar and the naive
+//   one fails some. In the seed it never runs: bank-check.mjs verified it (js-verify.mjs, §5.7).
 
 const label = (item: ForgeBankItem) => `«${item.title}» (historial)`;
 
 export const check: BankCheck = async (item) => {
   if (item.type !== "historial") return { ok: false, errors: [`${label(item)}: el chequeo de historial recibió un ítem ${item.type}`] };
   const d = item.data;
-  if (d.modo === "fallas") return { disponible: false };
+  if (d.modo === "fallas") return { ok: true };
   const fail = (m: string) => ({ ok: false as const, errors: [`${label(item)}: ${m}`] });
   const vars = Object.keys(d.estado);
   const inv = compileInvariant(d.invariante, vars);
@@ -48,4 +51,28 @@ export const check: BankCheck = async (item) => {
   } catch (e) {
     return fail(e instanceof Error ? e.message : String(e));
   }
+};
+
+const fallasCheck = (lang: Lang): BankCheckJs => async (item, ctx) => {
+  if (item.type !== "historial" || item.data.modo !== "fallas") return { ok: false, errors: [`${label(item)}: el chequeo de fallas recibió otra cosa`] };
+  const d = item.data;
+  const run = lang === "python" ? ctx.pyRun! : ctx.jsRun;
+  const errors: string[] = [];
+  const gs = await gradeFaults(d, lang, d.solucion[lang]!, run);
+  const fallanSol = gs.estado === "calificada" ? gs.calendarios.filter((c) => !c.correcto) : [{ nombre: "(todos)", fallan: [gs.estado] }];
+  if (fallanSol.length) errors.push(`${label(item)}: la solución falla el calendario «${fallanSol[0]!.nombre}»: ${fallanSol[0]!.fallan.join(", ")}`);
+  const gi = await gradeFaults(d, lang, d.ingenua[lang]!, run);
+  const naiveFails = gi.estado === "calificada" ? gi.calendarios.some((c) => !c.correcto) : true;
+  if (!naiveFails) errors.push(`${label(item)}: la ingenua pasa todos los calendarios: no hay nada que distinguir`);
+  return errors.length ? { ok: false, errors } : { ok: true };
+};
+
+export const js: NonNullable<BankCheckModule["js"]> = {
+  needs: (item) => item.type === "historial" && item.data.modo === "fallas" && !!item.data.arnes.js,
+  check: fallasCheck("js"),
+};
+
+export const py: NonNullable<BankCheckModule["py"]> = {
+  needs: (item) => item.type === "historial" && item.data.modo === "fallas" && !!item.data.arnes.python,
+  check: fallasCheck("python"),
 };

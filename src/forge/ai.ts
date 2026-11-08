@@ -38,7 +38,7 @@ export interface ForgeJudgeContext {
   evidence: Record<string, unknown>;
 }
 
-export type ForgeContextError = "entrega-pendiente" | "giro-pendiente" | "apoyo-pendiente";
+export type ForgeContextError = "entrega-pendiente" | "giro-pendiente" | "apoyo-pendiente" | "retencion-desconocida";
 
 export interface BuildContextArgs {
   route: ForgeRouteData;
@@ -54,6 +54,7 @@ export interface BuildContextArgs {
   giro: { texto: string } | null;
   artefactoEventIds?: string[];
   retencionItemId?: string;
+  retencion?: { enunciado: string; rubrica: string[] };
   respuesta?: string;
   local?: unknown;
 }
@@ -156,8 +157,15 @@ export function buildForgeJudgeContext(a: BuildContextArgs): { context: ForgeJud
         return { type: p.type, phase: p.phase, data: p.data };
       });
   }
-  if (a.retencionItemId) evidence.retencion = { itemId: a.retencionItemId, respuesta: a.respuesta ?? "" };
-  else if (a.respuesta) evidence.respuesta = a.respuesta;
+  if (a.retencionItemId) {
+    if (!a.retencion) return { error: "retencion-desconocida" };
+    evidence.retencion = {
+      itemId: a.retencionItemId,
+      enunciado: a.retencion.enunciado.slice(0, 4000),
+      rubrica: a.retencion.rubrica.slice(0, 12).map((r) => r.slice(0, 400)),
+      respuesta: (a.respuesta ?? "").slice(0, 6000),
+    };
+  } else if (a.respuesta) evidence.respuesta = a.respuesta;
   if (a.local !== undefined) evidence.local = a.local;
   const critical = a.cell.criticas.map((k) => ({ id: k.id.slice(0, 64), texto: k.texto.slice(0, 300) }));
   if (a.cell.requireEnglish) critical.push({ id: "ingles", texto: "La defensa se presenta en inglés con claridad, precisión y escucha" });

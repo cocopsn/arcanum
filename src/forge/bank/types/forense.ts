@@ -45,7 +45,7 @@ export const lines = ["corte"] as const;
 
 const SQL = ["sql"];
 
-function pasosOf(sql: string): { id: string; sql: string }[] | string {
+export function pasosOf(sql: string): { id: string; sql: string }[] | string {
   const out: { id: string; lines: string[] }[] = [];
   for (const line of sql.split(/\r?\n/)) {
     const m = line.trim().match(/^--\s*paso:\s*(\S+)\s*$/);

@@ -51,6 +51,29 @@ export function routeBankRule(code: string, items: Exercise[], bytes: number): s
   return out;
 }
 
+const norm = (s: string) => s.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/\s+/g, " ").trim();
+
+/** Content rule of retencion (design §5.5, rc60/rc39): every `variante_de` that is not `mision` is the id of
+ *  another item of the same bank, and the retention's statement is not a copy of that item's. check/ sees one item;
+ *  this sees the whole bank, so it lives here. */
+export function retentionContentProblems(code: string, items: Exercise[]): string[] {
+  const problems: string[] = [];
+  const byItemId = new Map<string, Exercise>();
+  for (const e of items) if (e.itemId) byItemId.set(e.itemId, e);
+  for (const ret of items) {
+    if (ret.kind !== "forge" || ret.type !== "retencion") continue;
+    const varianteDe = ret.data.varianteDe;
+    if (varianteDe === "mision") continue;
+    const base = byItemId.get(varianteDe);
+    if (!base) {
+      problems.push(`${code}: la retención ${ret.itemId} apunta a variante_de «${varianteDe}», que no está en el banco`);
+      continue;
+    }
+    if (norm(ret.statement) === norm(base.statement)) problems.push(`${code}: la retención ${ret.itemId} repite el enunciado de «${varianteDe}»`);
+  }
+  return problems;
+}
+
 async function executableItems(items: Exercise[]): Promise<string[]> {
   const out: string[] = [];
   for (const e of items) {
@@ -121,5 +144,26 @@ describe("banks · content/forge/exercises (zero banks is green)", () => {
       if (STRICT) expect.fail(`${code} tiene Python o SQL sin corrida vigente de bank-check (ítems ejecutables: ${exec.join(", ")})`);
       else console.info(`[banks.test] ${code}: ${exec.length} ítem(s) ejecutable(s) sin verificar (sin corrida vigente de bank-check)`);
     }
+
+    const retProblems = retentionContentProblems(code, r.bank.exercises);
+    expect(retProblems, retProblems.join(" | ")).toEqual([]);
+  });
+});
+
+describe("banks · la regla de contenido de la retención (rc60, rc39)", () => {
+  const RET = (statement: string, varianteDe: string, itemId: string): Exercise =>
+    ({ id: `m:${itemId}`, itemId, kind: "forge", type: "retencion", title: itemId, statement, moduleId: "m", source: "curated", data: { dias: 7, varianteDe, forma: "defensa", rubrica: ["a", "b"] } }) as unknown as Exercise;
+  const BASE = (statement: string, itemId: string): Exercise =>
+    ({ id: `m:${itemId}`, itemId, kind: "forge", type: "giro", title: itemId, statement, moduleId: "m", source: "curated", data: {} }) as unknown as Exercise;
+
+  it("un variante_de que no está en el banco es un problema", () => {
+    expect(retentionContentProblems("p9-99", [RET("Defiende X.", "no-existe", "ret-x")]).join(" "), "la regla aceptó un variante_de que no está en el banco").toContain("que no está en el banco");
+  });
+  it("una retención que repite el enunciado de su base es un problema", () => {
+    const items = [BASE("El mismo enunciado.", "base-x"), RET("El mismo enunciado.", "base-x", "ret-x")];
+    expect(retentionContentProblems("p9-99", items).join(" "), "la regla aceptó una retención que repite el enunciado").toContain("repite el enunciado de");
+  });
+  it("una variante con otro enunciado y variante_de mision no es problema", () => {
+    expect(retentionContentProblems("p9-99", [BASE("Enunciado base.", "base-x"), RET("Otra redacción distinta.", "base-x", "ret-x"), RET("Una misión.", "mision", "ret-y")])).toEqual([]);
   });
 });

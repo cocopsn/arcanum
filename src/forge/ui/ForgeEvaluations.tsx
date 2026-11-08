@@ -2,7 +2,8 @@
 // never opens a gate; items whose bank check is still a stub carry «sin verificar». Extracted from ForgeCellPanel so
 // Lecturas can mount it too (design poblar §5.5). One fix on the way: the ingestion stores each pending item as
 // `<idBase>:<itemId>` (H25), which is the item's `id`, so the pending mark compares with `it.id` (it never matched
-// `itemId`, and «· sin verificar» was never painted).
+// `itemId`, and «· sin verificar» was never painted). A row with old pendings is revalidated before listing it
+// (design evaluadores §5.7, H13): after this release no type is a stub, so the first revalidation empties it.
 import { useEffect, useState } from "react";
 import { ensureForgeBank, loadForgeBankItems } from "@/forge/loaders";
 import { isSelectable, RUNNERS, type RunnerType } from "@/forge/ui/exercises/registry";
@@ -21,9 +22,9 @@ export function ForgeEvaluations({ code, cellId, readModel }: { code: string; ce
     let alive = true;
     void (async () => {
       let b = await loadForgeBankItems(code);
-      if (!b) {
+      if (!b || b.pendientes.length > 0) {
         const r = await ensureForgeBank(code);
-        if (r.ok) b = await loadForgeBankItems(code);
+        if (r.ok) b = (await loadForgeBankItems(code)) ?? b;
       }
       if (alive) setBank(b);
     })();

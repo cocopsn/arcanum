@@ -13,21 +13,20 @@
    "tipo": "code",
    "lenguaje": "javascript",
    "resultado": "paso",
-   "ms": 4
+   "ms": 8
   },
   {
    "id": "s1-05-contra-terminal",
    "tipo": "contraejemplo",
    "lenguaje": "javascript",
-   "resultado": "sin-verificar",
-   "ms": 0,
-   "detalle": "sin arnés scripts/forge/bank-check/contraejemplo.py"
+   "resultado": "paso",
+   "ms": 0
   }
  ],
  "resumen": {
   "ejecutables": 2,
-  "cubiertos": 1,
+  "cubiertos": 2,
   "fallidos": 0,
-  "sin_verificar": 1
+  "sin_verificar": 0
  }
 }

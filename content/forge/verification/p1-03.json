@@ -13,28 +13,27 @@
    "tipo": "code",
    "lenguaje": "javascript",
    "resultado": "paso",
-   "ms": 6
+   "ms": 2
   },
   {
    "id": "nucleo-cobro-neto",
    "tipo": "code",
    "lenguaje": "python",
    "resultado": "paso",
-   "ms": 61
+   "ms": 49
   },
   {
    "id": "fixtures-mutantes",
    "tipo": "mutantes",
    "lenguaje": "javascript",
-   "resultado": "sin-verificar",
-   "ms": 0,
-   "detalle": "sin arnés scripts/forge/bank-check/mutantes.py"
+   "resultado": "paso",
+   "ms": 0
   }
  ],
  "resumen": {
   "ejecutables": 3,
-  "cubiertos": 2,
+  "cubiertos": 3,
   "fallidos": 0,
-  "sin_verificar": 1
+  "sin_verificar": 0
  }
 }

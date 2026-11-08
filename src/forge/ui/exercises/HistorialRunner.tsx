@@ -1,11 +1,15 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import type { Lang } from "@/lib/exercise";
+import { runJs } from "@/lib/js-runner";
+import { runPy } from "@/lib/py-runner";
 import type { RunnerProps } from "./registry";
 import type { ForgeItemOf } from "@/forge/bank/registry";
-import { PENDING_TEXT } from "@/forge/ui/flow-contract";
 import { gradeTraza, stepId, type TrazaData, type TrazaGrade } from "@/forge/eval/history-sim";
+import { FALLAS_CODE_MAX, gradeFaults, type FaultsGrade } from "@/forge/eval/history-faults";
 import { useActions } from "@/ui/use-actions";
+import { area, box as kitBox, btn as kitBtn, meta as kitMeta, mono as kitMono, summaryStyle as kitSummary, RunnerFrame, useEvidenceWriter, useItemEvidence } from "./kit";
 
 // c · historial runner (design §9.3 c, §9.5). Modo traza: with `violar` the learner builds a history by tapping the
 // actors' steps in order and the simulator runs it; with `proteger` the learner picks a protocol and the app shows the
@@ -179,16 +183,141 @@ function TrazaBody({ item, cellId, readModel, d }: Omit<RunnerProps, "item"> & {
   );
 }
 
+// c · historial in mode `fallas` (design §5.6). The learner's function plus the bank's harness run as one program
+// over every calendar; a calendar is correct when every property of `espera` has its value. Local verdict, evidence
+// before the reveal (kit guard); the solution and the naive version appear only after a correct attempt.
+type FallasData = Extract<ForgeItemOf<"historial">["data"], { modo: "fallas" }>;
+function FallasBody({ item, cellId, readModel, onClose, d }: Omit<RunnerProps, "item"> & { item: ForgeItemOf<"historial">; d: FallasData }) {
+  const itemId = item.itemId;
+  const { passLesson } = useActions();
+  const goalId = readModel.modules.find((m) => m.id === cellId)?.goalId ?? null;
+  const { record, guarded, logError } = useEvidenceWriter(cellId, readModel);
+  const langs = Object.keys(d.arnes) as Lang[];
+  const [lang, setLang] = useState<Lang>(langs[0] ?? "js");
+  const [code, setCode] = useState(d.firma[langs[0] ?? "js"] ?? "");
+  const [busy, setBusy] = useState(false);
+  const [grade, setGrade] = useState<FaultsGrade | null>(null);
+  const resuelta = !!useItemEvidence(cellId, itemId, "historial", "respuesta", "correcto");
+  const pyRun = (c: string, f: string, k: Parameters<typeof runPy>[2]) => runPy(c, f, k);
+
+  const ejecutar = guarded(async () => {
+    setBusy(true);
+    try {
+      const g = await gradeFaults(d, lang, code, lang === "python" ? pyRun : runJs);
+      if (g.estado === "calificada") {
+        await record({
+          itemId,
+          type: "historial",
+          phase: "respuesta",
+          outcome: g.correcto ? "correcto" : "incorrecto",
+          data: { modo: "fallas", lang, calendarios: g.calendarios.map((c) => ({ nombre: c.nombre, correcto: c.correcto, fallan: c.fallan })) },
+          source: "local",
+        });
+        if (g.correcto) void passLesson({ goalId, moduleId: cellId }, 1);
+      }
+      setGrade(g);
+    } finally {
+      setBusy(false);
+    }
+  });
+
+  const props2 = d.calendarios.length ? Object.keys(d.calendarios[0]!.espera) : [];
+
+  return (
+    <RunnerFrame tipo="historial" itemId={itemId} title={item.title} statement={item.statement} juez="local" onClose={onClose}>
+      <div style={kitBox}>
+        <p style={kitMeta}>firma</p>
+        <pre style={kitMono}>{d.firma[lang]}</pre>
+      </div>
+      <details style={kitBox}>
+        <summary style={{ ...kitMeta, ...kitSummary }}>cómo funciona el servicio simulado</summary>
+        <pre style={kitMono}>{d.arnes[lang]}</pre>
+      </details>
+      <div style={kitBox}>
+        <p style={kitMeta}>calendarios y propiedades que se revisan</p>
+        <ul style={{ ...kitMono, paddingLeft: "1.1rem" }}>
+          {d.calendarios.map((c) => (
+            <li key={c.nombre}>{c.nombre}</li>
+          ))}
+        </ul>
+        <p style={kitMeta}>propiedades: {props2.join(" · ")}</p>
+      </div>
+      {langs.length > 1 ? (
+        <fieldset style={{ border: "none", padding: 0, margin: 0 }}>
+          <legend style={kitMeta}>lenguaje</legend>
+          {langs.map((l) => (
+            <label key={l} style={{ display: "inline-flex", alignItems: "center", gap: "0.5rem", minHeight: 44, marginRight: "0.75rem" }}>
+              <input type="radio" name={`fallas-lang-${itemId}`} checked={lang === l} onChange={() => (setLang(l), setCode(d.firma[l] ?? ""))} /> {l}
+            </label>
+          ))}
+        </fieldset>
+      ) : null}
+      <label style={{ display: "grid", gap: "0.25rem" }}>
+        <span style={kitMeta}>tu función · {code.length.toLocaleString("en-US")} / {FALLAS_CODE_MAX.toLocaleString("en-US")}</span>
+        <textarea
+          value={code}
+          onChange={(e) => setCode(e.target.value.slice(0, FALLAS_CODE_MAX))}
+          rows={8}
+          spellCheck={false}
+          autoCapitalize="off"
+          autoCorrect="off"
+          maxLength={FALLAS_CODE_MAX}
+          aria-label="Tu función"
+          style={area}
+        />
+      </label>
+      <div>
+        <button type="button" style={kitBtn} onClick={() => void ejecutar()} disabled={busy || !code.trim()}>
+          {busy ? "Ejecutando…" : "Ejecutar calendarios ↗"}
+        </button>
+      </div>
+      {grade?.estado === "sin-python" ? <p role="alert">✕ No se pudo cargar Python: conéctate una vez para descargarlo.</p> : null}
+      {grade?.estado === "tiempo" ? <p role="alert">✕ Tu código tardó demasiado y se detuvo.</p> : null}
+      {grade?.estado === "sintaxis" ? <p role="alert">✕ {grade.motivo}</p> : null}
+      {grade?.estado === "calificada" ? (
+        <div role="status" style={{ ...kitBox, borderStyle: grade.correcto ? "solid" : "dashed" }}>
+          <p style={{ margin: 0 }}>
+            {grade.correcto ? "✓" : "✕"} {grade.calendarios.filter((c) => c.correcto).length} de {grade.calendarios.length} calendarios.
+          </p>
+          <table style={{ ...kitMono, borderCollapse: "collapse", marginTop: "0.5rem" }}>
+            <thead>
+              <tr>
+                <th style={{ padding: "0.1rem 0.5rem", textAlign: "left" }}>calendario</th>
+                {props2.map((p) => (
+                  <th key={p} style={{ padding: "0.1rem 0.5rem" }}>{p}</th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {grade.calendarios.map((c) => (
+                <tr key={c.nombre}>
+                  <td style={{ padding: "0.1rem 0.5rem" }}>{c.nombre}</td>
+                  {props2.map((p) => (
+                    <td key={p} style={{ padding: "0.1rem 0.5rem", textAlign: "center" }}>{c.error ? "·" : c.fallan.includes(p) ? "✕" : "✓"}</td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      ) : null}
+      {logError ? <p role="alert">✕ {logError}</p> : null}
+      {resuelta ? (
+        <div style={kitBox}>
+          <p style={kitMeta}>solución</p>
+          <pre style={kitMono}>{d.solucion[lang]}</pre>
+          <p style={{ ...kitMeta, marginTop: "0.5rem" }}>versión ingenua</p>
+          <pre style={kitMono}>{d.ingenua[lang]}</pre>
+        </div>
+      ) : null}
+    </RunnerFrame>
+  );
+}
+
 export default function HistorialRunner(props: RunnerProps) {
   const item = props.item;
   if (item.type !== "historial") return <p role="status">Este ítem no es de tipo historial.</p>;
   const d = item.data;
-  if (d.modo !== "traza") {
-    return (
-      <p role="status" data-forge-pending="historial-fallas" data-item={item.itemId}>
-        {PENDING_TEXT}
-      </p>
-    );
-  }
+  if (d.modo !== "traza") return <FallasBody {...props} item={item} d={d} />;
   return <TrazaBody {...props} item={item} d={d} />;
 }

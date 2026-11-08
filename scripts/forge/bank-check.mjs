@@ -30,6 +30,7 @@ import { tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import vm from "node:vm";
+import { JS_VERIFIERS, vmRun } from "./bank-check/js-verify.mjs";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..", "..");
 export const EXEC_TYPES = new Set(["code", "sql", "forense", "historial", "mutantes", "contraejemplo"]);
@@ -245,6 +246,12 @@ const runnableAsCode = (item) => {
 export function verifyItem(code, item, { harnessDir, tmp }) {
   const entries = [];
   const push = (lenguaje, r) => entries.push({ id: item.id, tipo: item.tipo, lenguaje, resultado: r.resultado, ms: r.ms ?? 0, ...(r.detalle ? { detalle: r.detalle } : {}) });
+  // JS verifiers (contraejemplo, mutantes, historial fallas) run in node:vm, before the `code` branch (§6.2).
+  const jv = JS_VERIFIERS[item.tipo]?.(item, vmRun);
+  if (jv) {
+    for (const e of jv) push(e.lenguaje, e.resultado === "sin-verificar" ? e : { resultado: e.ok ? "paso" : "fallo", detalle: e.detalle });
+    return entries;
+  }
   const harness = path.join(harnessDir, `${item.tipo}.py`);
   const hasHarness = Boolean(item.tipo) && existsSync(harness);
   if (item.tipo === "code" || (!hasHarness && runnableAsCode(item))) {

@@ -12,15 +12,14 @@
    "id": "s1-07-mut-traslape",
    "tipo": "mutantes",
    "lenguaje": "javascript",
-   "resultado": "sin-verificar",
-   "ms": 0,
-   "detalle": "sin arnés scripts/forge/bank-check/mutantes.py"
+   "resultado": "paso",
+   "ms": 0
   }
  ],
  "resumen": {
   "ejecutables": 1,
-  "cubiertos": 0,
+  "cubiertos": 1,
   "fallidos": 0,
-  "sin_verificar": 1
+  "sin_verificar": 0
  }
 }

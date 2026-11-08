@@ -73,7 +73,7 @@ export const SQL_HARNESS_FN = "run_sql";
 
 /** Blank out comments and the inside of strings and quoted identifiers, keeping every position (same length), so
  *  keyword and `;` checks never look inside a literal and a position in the skeleton is a position in the query. */
-function codeSkeleton(sql: string): string {
+export function codeSkeleton(sql: string): string {
   let out = "";
   let i = 0;
   const blank = (s: string) => s.replace(/[^\n]/g, " ");
