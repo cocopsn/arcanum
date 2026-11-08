@@ -20,6 +20,16 @@ export function Mensaje({ mensaje, alAbrirCita, celdaId }: { mensaje: MensajeRow
     );
   }
 
+  // Un turno del compañero con estado 'aviso' (resultado no-ok del transporte, §14.1-§14.2) no es una respuesta del
+  // modelo: se pinta como texto plano, por el mismo camino seguro que los turnos locales, sin markdown, citas ni plan.
+  if (mensaje.estado === "aviso") {
+    return (
+      <div className="cmp-mensaje cmp-mensaje-companero cmp-mensaje-aviso" role="status">
+        <p className="cmp-mensaje-texto">{texto}</p>
+      </div>
+    );
+  }
+
   const enviados = idsEnviados(mensaje.pasajesEnviados);
   const resueltas = citasValidas(mensaje.citas, mensaje.pasajesEnviados);
   const md = enlazarCitas(texto, enviados);

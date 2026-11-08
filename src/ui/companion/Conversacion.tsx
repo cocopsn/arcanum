@@ -11,7 +11,8 @@ import { aplicarResultado } from "@/lib/companion/turnos";
 import type { MensajeRow } from "@/lib/companion/db";
 import type { AlmacenCompanero } from "@/lib/companion/db";
 import type { EntradaSolicitud, Fase, Pedido } from "@/lib/companion/tipos";
-import type { ResultadoConsulta } from "@/lib/companion/consultar";
+import { textoLimite, type ResultadoConsulta } from "@/lib/companion/consultar";
+import type { Clasificacion } from "@/lib/companion/transporte";
 
 export interface ConversacionDeps {
   /** id de la conversación abierta */
@@ -30,6 +31,34 @@ export interface ConversacionDeps {
 
 let contador = 0;
 const idPorOmision = () => `m-${Date.now()}-${contador++}`;
+
+/**
+ * Texto seguro (plano, en español, sin volcar datos crudos del modelo ni del servidor) para una clasificación del
+ * transporte que no es `ok` (§14.1-§14.2, CA-38/RF-E5). Devuelve null para `cancelada`: el usuario canceló a propósito
+ * y no se pinta nada, igual que el camino de abort. Para `ok` también devuelve null porque esa rama la pinta `enviar`.
+ * `invalida` registra el campo en un aviso interno pero el texto visible queda neutro (no se filtra el campo crudo).
+ */
+export function avisoDeClasificacion(c: Clasificacion): { texto: string; interno?: string } | null {
+  switch (c.tipo) {
+    case "ok":
+    case "cancelada":
+      return null;
+    case "sin-sesion":
+      return { texto: "Inicia sesión para usar la IA." };
+    case "limite":
+      return { texto: textoLimite(c.esperaS) };
+    case "edge-vieja":
+      return { texto: "La función del servidor aún no reconoce esta acción; inténtalo de nuevo en un momento." };
+    case "invalida":
+      return { texto: "No pudimos procesar tu solicitud; inténtalo de nuevo.", interno: `entrada inválida: ${c.campo}` };
+    case "filtrado":
+      return { texto: c.texto };
+    case "no-disponible":
+      return { texto: "El compañero no está disponible ahora; inténtalo de nuevo en un momento." };
+    case "sin-red":
+      return { texto: "El compañero requiere conexión; revisa tu red e inténtalo de nuevo." };
+  }
+}
 
 export function Conversacion({ deps }: { deps: ConversacionDeps }) {
   const [mensajes, setMensajes] = useState<MensajeRow[]>([]);
@@ -93,6 +122,13 @@ export function Conversacion({ deps }: { deps: ConversacionDeps }) {
       });
     } else if (r.tipo === "local") {
       await guardar(turno(nuevoId(), deps.conversacionId, mensajes.length + 1, "companero", r.texto, ahora()));
+    } else if (r.tipo === "sin-filtro" || r.tipo === "limite") {
+      // Resultados terminales del nivel superior (§14.1): su `.texto` ya viene redactado (limite trae textoLimite).
+      await guardar(aviso(nuevoId(), deps.conversacionId, mensajes.length + 1, r.texto, ahora()));
+    } else if (r.tipo === "respuesta") {
+      // Clasificación del transporte distinta de `ok` (§14.2): un aviso seguro por variante; `cancelada` no pinta nada.
+      const av = avisoDeClasificacion(r.clasificacion);
+      if (av) await guardar(aviso(nuevoId(), deps.conversacionId, mensajes.length + 1, av.texto, ahora(), av.interno));
     }
     setEnCurso(false);
     reqIdRef.current = null;
@@ -119,4 +155,9 @@ export function Conversacion({ deps }: { deps: ConversacionDeps }) {
 
 function turno(id: string, conversacionId: string, orden: number, rol: "aprendiz" | "companero", texto: string, creado: number): MensajeRow {
   return { id, conversacionId, orden, rol, mundo: "inicio", texto, citas: [], pasajesEnviados: [], artefactos: [], plan: [], proveedor: "", avisos: [], estado: "ok", creado };
+}
+
+/** Un turno del compañero con estado 'aviso' (resultado no-ok del transporte): texto plano, nunca respuesta del modelo. */
+function aviso(id: string, conversacionId: string, orden: number, texto: string, creado: number, interno?: string): MensajeRow {
+  return { id, conversacionId, orden, rol: "companero", mundo: "inicio", texto, citas: [], pasajesEnviados: [], artefactos: [], plan: [], proveedor: "", avisos: interno ? [interno] : [], estado: "aviso", creado };
 }

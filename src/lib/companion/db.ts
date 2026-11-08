@@ -37,7 +37,7 @@ export interface MensajeRow {
   plan: PasoPlan[];
   proveedor: string;
   avisos: string[];
-  estado: "ok" | "error" | "cancelado";
+  estado: "ok" | "error" | "cancelado" | "aviso";
   creado: number;
 }
 
