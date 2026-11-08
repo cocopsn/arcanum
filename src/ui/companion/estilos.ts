@@ -419,6 +419,552 @@ export const ESTILOS = `
 #arcanum-companion .cmp-dg-acento {
   color: var(--cmp-dg-acento);
 }
+#arcanum-companion .cmp-conversacion {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  gap: 8px;
+}
+#arcanum-companion .cmp-mensajes {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 8px 0;
+}
+#arcanum-companion .cmp-mensaje {
+  max-width: 88%;
+  padding: 10px 12px;
+  border-radius: 14px;
+  border: 1px solid var(--cmp-borde);
+  background: var(--cmp-elevado);
+  color: var(--cmp-texto);
+  font-size: 14px;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+#arcanum-companion .cmp-mensaje-aprendiz {
+  align-self: flex-end;
+  background: var(--cmp-fondo);
+  border-color: var(--cmp-borde-panel);
+}
+#arcanum-companion .cmp-mensaje-companero {
+  align-self: flex-start;
+}
+#arcanum-companion .cmp-mensaje-aviso {
+  align-self: stretch;
+  max-width: none;
+  border-style: dashed;
+  color: var(--cmp-tenue);
+}
+#arcanum-companion .cmp-mensaje-texto {
+  margin: 0;
+  white-space: pre-wrap;
+}
+#arcanum-companion .cmp-markdown {
+  font-size: 14px;
+  line-height: 1.55;
+}
+#arcanum-companion .cmp-markdown p {
+  margin: 0 0 8px;
+}
+#arcanum-companion .cmp-markdown p:last-child {
+  margin-bottom: 0;
+}
+#arcanum-companion .cmp-markdown ul,
+#arcanum-companion .cmp-markdown ol {
+  margin: 0 0 8px;
+  padding-left: 20px;
+}
+#arcanum-companion .cmp-enlace {
+  color: var(--cmp-acento);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+#arcanum-companion .cmp-enlace-inerte {
+  color: var(--cmp-tenue);
+}
+#arcanum-companion .cmp-codigo {
+  padding: 1px 5px;
+  border-radius: 6px;
+  border: 1px solid var(--cmp-borde);
+  font-family: ui-monospace, Menlo, monospace;
+  font-size: 12.5px;
+}
+#arcanum-companion .cmp-pre-caja {
+  position: relative;
+  margin: 8px 0;
+}
+#arcanum-companion .cmp-pre {
+  margin: 0;
+  padding: 10px 12px;
+  overflow-x: auto;
+  border-radius: 10px;
+  border: 1px solid var(--cmp-borde);
+  background: var(--cmp-fondo);
+  font-family: ui-monospace, Menlo, monospace;
+  font-size: 12.5px;
+  line-height: 1.5;
+}
+#arcanum-companion .cmp-copiar {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  min-height: 44px;
+  min-width: 44px;
+  padding: 0 10px;
+  border-radius: 8px;
+  border: 1px solid var(--cmp-borde);
+  background: var(--cmp-elevado);
+  color: var(--cmp-tenue);
+  font: inherit;
+  font-size: 12px;
+  cursor: pointer;
+}
+#arcanum-companion .cmp-tabla-caja {
+  margin: 8px 0;
+  overflow-x: auto;
+}
+#arcanum-companion .cmp-tabla {
+  border-collapse: collapse;
+  font-size: 13px;
+}
+#arcanum-companion .cmp-tabla th,
+#arcanum-companion .cmp-tabla td {
+  padding: 6px 8px;
+  border: 1px solid var(--cmp-borde);
+  text-align: left;
+}
+#arcanum-companion .cmp-imagen {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+}
+#arcanum-companion .cmp-fuentes {
+  margin: 8px 0 0;
+  padding: 8px 0 0;
+  border-top: 1px solid var(--cmp-borde);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+#arcanum-companion .cmp-cita {
+  min-height: 44px;
+  padding: 0 12px;
+  border-radius: 999px;
+  border: 1px solid var(--cmp-borde);
+  background: var(--cmp-fondo);
+  color: var(--cmp-texto);
+  font: inherit;
+  font-size: 12.5px;
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+}
+#arcanum-companion .cmp-cita-rota {
+  color: var(--cmp-tenue);
+  border-style: dashed;
+  cursor: default;
+}
+#arcanum-companion .cmp-artefactos {
+  margin: 8px 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+#arcanum-companion .cmp-guardar,
+#arcanum-companion .cmp-guardar-nota,
+#arcanum-companion .cmp-exportar-pdf,
+#arcanum-companion .cmp-atlas-enlace {
+  min-height: 44px;
+  padding: 0 14px;
+  border-radius: 12px;
+  border: 1px solid var(--cmp-borde);
+  background: var(--cmp-elevado);
+  color: var(--cmp-texto);
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+}
+#arcanum-companion .cmp-plan {
+  margin: 8px 0 0;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid var(--cmp-borde);
+}
+#arcanum-companion .cmp-plan-titulo {
+  margin: 0 0 6px;
+  font-size: 14px;
+  font-weight: 600;
+}
+#arcanum-companion .cmp-plan-lista {
+  margin: 0;
+  padding-left: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+#arcanum-companion .cmp-plan-paso-titulo {
+  font-weight: 600;
+}
+#arcanum-companion .cmp-plan-paso-detalle {
+  margin: 2px 0 0;
+  color: var(--cmp-tenue);
+  font-size: 13px;
+}
+#arcanum-companion .cmp-pasos {
+  padding: 8px 12px;
+  border-radius: 12px;
+  border: 1px dashed var(--cmp-borde);
+  color: var(--cmp-tenue);
+  font-size: 13px;
+  flex: none;
+}
+#arcanum-companion .cmp-pasos-lista {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+#arcanum-companion .cmp-pasos-item {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+}
+#arcanum-companion .cmp-pasos-tiempo {
+  font-variant-numeric: tabular-nums;
+}
+#arcanum-companion .cmp-compositor {
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 12px 0 4px;
+  border-top: 1px solid var(--cmp-borde);
+}
+#arcanum-companion .cmp-fase-fila {
+  display: flex;
+  align-items: center;
+}
+#arcanum-companion .cmp-fase-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--cmp-tenue);
+}
+#arcanum-companion .cmp-fase-select {
+  min-height: 44px;
+  padding: 0 32px 0 12px;
+  border-radius: 10px;
+  border: 1px solid var(--cmp-borde);
+  background-color: var(--cmp-elevado);
+  color: var(--cmp-texto);
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+}
+#arcanum-companion .cmp-pedido-fila {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+#arcanum-companion .cmp-chip {
+  min-height: 44px;
+  padding: 0 14px;
+  border-radius: 999px;
+  border: 1px solid var(--cmp-borde);
+  background: transparent;
+  color: var(--cmp-tenue);
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+}
+#arcanum-companion .cmp-chip-activo {
+  border-color: var(--cmp-acento);
+  background: var(--cmp-elevado);
+  color: var(--cmp-texto);
+  font-weight: 600;
+}
+#arcanum-companion .cmp-entrada {
+  width: 100%;
+  box-sizing: border-box;
+  min-height: 72px;
+  max-height: 40dvh;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid var(--cmp-borde);
+  background: var(--cmp-elevado);
+  color: var(--cmp-texto);
+  font: inherit;
+  font-size: 15px;
+  line-height: 1.45;
+  resize: vertical;
+}
+#arcanum-companion .cmp-entrada:focus,
+#arcanum-companion .cmp-fase-select:focus,
+#arcanum-companion .cmp-chip:focus-visible,
+#arcanum-companion .cmp-boton:focus-visible {
+  outline: 2px solid var(--cmp-acento);
+  outline-offset: 1px;
+}
+#arcanum-companion .cmp-compositor-pie {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+}
+#arcanum-companion .cmp-contador {
+  margin-right: auto;
+  font-size: 12px;
+  color: var(--cmp-tenue);
+  font-variant-numeric: tabular-nums;
+}
+#arcanum-companion .cmp-enviar {
+  font-weight: 600;
+  border-color: var(--cmp-acento);
+}
+#arcanum-companion .cmp-boton:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+#arcanum-companion .cmp-cancelar {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+#arcanum-companion .cmp-cuadro {
+  display: block;
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+  background: currentColor;
+}
+#arcanum-companion .cmp-historial-lista {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+#arcanum-companion .cmp-historial-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+#arcanum-companion .cmp-historial-abrir {
+  flex: 1;
+  min-height: 44px;
+  padding: 0 12px;
+  border-radius: 10px;
+  border: 1px solid var(--cmp-borde);
+  background: var(--cmp-elevado);
+  color: var(--cmp-texto);
+  font: inherit;
+  font-size: 14px;
+  text-align: left;
+  cursor: pointer;
+}
+#arcanum-companion .cmp-historial-vacio {
+  margin: 16px 0;
+  text-align: center;
+  color: var(--cmp-tenue);
+  font-size: 14px;
+}
+#arcanum-companion .cmp-borrar,
+#arcanum-companion .cmp-borrar-todo,
+#arcanum-companion .cmp-volver,
+#arcanum-companion .cmp-recargar,
+#arcanum-companion .cmp-ver-ref,
+#arcanum-companion .cmp-esquina,
+#arcanum-companion .cmp-practica-editar,
+#arcanum-companion .cmp-dg-editar {
+  min-height: 44px;
+  padding: 0 12px;
+  border-radius: 10px;
+  border: 1px solid var(--cmp-borde);
+  background: transparent;
+  color: var(--cmp-tenue);
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+}
+#arcanum-companion .cmp-visor {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+#arcanum-companion .cmp-visor-encabezado {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+#arcanum-companion .cmp-visor-titulo {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 600;
+}
+#arcanum-companion .cmp-visor-cuerpo {
+  font-size: 14px;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+#arcanum-companion .cmp-visor-seccion {
+  margin: 0 0 4px;
+  font-size: 12px;
+  color: var(--cmp-tenue);
+}
+#arcanum-companion .cmp-practica,
+#arcanum-companion .cmp-lote-oferta {
+  margin: 8px 0 0;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid var(--cmp-borde);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+#arcanum-companion .cmp-practica-lista {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+#arcanum-companion .cmp-practica-item {
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid var(--cmp-borde);
+}
+#arcanum-companion .cmp-practica-barra {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+#arcanum-companion .cmp-practica-error,
+#arcanum-companion .cmp-lote-rechazado {
+  color: var(--cmp-tenue);
+  font-size: 13px;
+}
+#arcanum-companion .cmp-item-titulo,
+#arcanum-companion .cmp-lote-titulo {
+  margin: 0 0 4px;
+  font-size: 14px;
+  font-weight: 600;
+}
+#arcanum-companion .cmp-item-enunciado,
+#arcanum-companion .cmp-lote-nota,
+#arcanum-companion .cmp-item-feedback {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.5;
+}
+#arcanum-companion .cmp-item-etiqueta {
+  font-size: 12px;
+  color: var(--cmp-tenue);
+}
+#arcanum-companion .cmp-opciones {
+  margin: 6px 0 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+#arcanum-companion .cmp-opcion {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 0 10px;
+  border-radius: 10px;
+  border: 1px solid var(--cmp-borde);
+  font-size: 14px;
+}
+#arcanum-companion .cmp-casilla {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  font-size: 14px;
+}
+#arcanum-companion .cmp-casilla-input {
+  width: 18px;
+  height: 18px;
+}
+#arcanum-companion .cmp-editor-ta,
+#arcanum-companion .cmp-lote-ta,
+#arcanum-companion .cmp-prod-ta {
+  width: 100%;
+  box-sizing: border-box;
+  min-height: 96px;
+  padding: 8px 10px;
+  border-radius: 10px;
+  border: 1px solid var(--cmp-borde);
+  background: var(--cmp-fondo);
+  color: var(--cmp-texto);
+  font-family: ui-monospace, Menlo, monospace;
+  font-size: 12.5px;
+  line-height: 1.5;
+}
+#arcanum-companion .cmp-prod-modelo,
+#arcanum-companion .cmp-prod-regla,
+#arcanum-companion .cmp-prod-respuesta,
+#arcanum-companion .cmp-prod-rubrica,
+#arcanum-companion .cmp-rubrica-item {
+  font-size: 13px;
+  line-height: 1.5;
+}
+#arcanum-companion .cmp-cargando {
+  color: var(--cmp-tenue);
+  font-size: 13px;
+}
+#arcanum-companion .cmp-historial {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 8px 0;
+}
+#arcanum-companion .cmp-dg-fuera {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+#arcanum-companion .cmp-item-choice,
+#arcanum-companion .cmp-item-code,
+#arcanum-companion .cmp-item-produccion,
+#arcanum-companion .cmp-practica-edicion {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+#arcanum-companion .cmp-item-ref {
+  margin: 0;
+  padding: 10px 12px;
+  overflow-x: auto;
+  border-radius: 10px;
+  border: 1px solid var(--cmp-borde);
+  background: var(--cmp-fondo);
+  font-family: ui-monospace, Menlo, monospace;
+  font-size: 12.5px;
+  line-height: 1.5;
+}
+#arcanum-companion .cmp-practica-marca {
+  font-size: 12px;
+  color: var(--cmp-tenue);
+}
+#arcanum-companion .cmp-pasos-etiqueta {
+  min-width: 0;
+}
+#arcanum-companion .cmp-plan-item {
+  font-size: 14px;
+  line-height: 1.5;
+}
 @keyframes cmp-parpadeo {
   0%, 96%, 100% { transform: scaleY(1); }
   98% { transform: scaleY(0.1); }
